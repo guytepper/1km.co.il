@@ -19,6 +19,14 @@ const ProtestList = styled.div`
 
   @media (min-width: 1024px) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px 25px;
+  }
+
+  @media (min-width: 1280px) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    padding: 25px 30px;
   }
 `;
 
