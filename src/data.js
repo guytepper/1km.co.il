@@ -1,5 +1,6 @@
 export default [
   {
+    id: '3234',
     displayName: 'הבימה',
     whatsAppLink: null,
     telegramLink: null,
@@ -12,6 +13,7 @@ export default [
     },
   },
   {
+    id: '32324',
     displayName: 'בלפור',
     whatsAppLink: null,
     telegramLink: null,

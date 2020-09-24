@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useGeolocation = ({ latitude, longitude }) => {
+const useGeolocation = ({ lat: latitude, lng: longitude }) => {
   const [state, setState] = useState({
     latitude,
     longitude,
@@ -19,6 +19,7 @@ const useGeolocation = ({ latitude, longitude }) => {
   };
 
   const onError = (error) => {
+    error.error = true;
     setState(error);
   };
 
