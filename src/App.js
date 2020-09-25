@@ -95,11 +95,14 @@ function App() {
                         </a>
                       </ProtestListHeader>
                     )}
-
-                    <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
-                    {farProtests.map((protest) => (
-                      <ProtestCard key={protest.id} protestInfo={protest} />
-                    ))}
+                    {farProtests.length > 0 && (
+                      <>
+                        <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
+                        {farProtests.map((protest) => (
+                          <ProtestCard key={protest.id} protestInfo={protest} />
+                        ))}
+                      </>
+                    )}
                   </>
                 )}
               </>
