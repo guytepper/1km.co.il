@@ -66,7 +66,7 @@ function App() {
             <>
               {protests.length === 0 ? (
                 <ProtestListHeader>
-                  לא נמצאו הפגנות ברדיוס של קילומטר.
+                  לא נמצאו הפגנות ברדיוס של קילומטר ממך.
                   <br />
                   <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
                     הוסיפו את ההפגנה הראשונה!
@@ -76,14 +76,14 @@ function App() {
                 <>
                   {closeProtests.length > 0 ? (
                     <>
-                      <ProtestListHeader>1 קילומטר ממך</ProtestListHeader>
+                      <ProtestListHeader>עד קילומטר אחד ממך</ProtestListHeader>
                       {closeProtests.map((protest) => (
                         <ProtestCard key={protest.id} protestInfo={protest} />
                       ))}
                     </>
                   ) : (
                     <ProtestListHeader>
-                      לא נמצאו הפגנות ברדיוס של קילומטר.
+                      לא נמצאו הפגנות ברדיוס של קילומטר ממך.
                       <br />
                       <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
                         הוסיפו את ההפגנה הראשונה!
