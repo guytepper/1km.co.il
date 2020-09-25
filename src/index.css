@@ -21,7 +21,7 @@
 }
 
 @font-face {
-  font-family: 'Simpler Black';
+  font-family: 'Simpler';
   font-weight: 800;
   src: local('Simpler Black'), url('/fonts/Simpler-Black.woff') format('woff');
 }
