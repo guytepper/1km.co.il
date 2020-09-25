@@ -16,12 +16,12 @@ function ProtestCard({ displayName, streetAddress, distance }) {
       <ProtestCardInfo>
         {streetAddress && (
           <ProtestCardDetail>
-            <ProtestCardIcon src="/icons/location.svg" />
+            <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
             {streetAddress}
           </ProtestCardDetail>
         )}
         <ProtestCardDetail>
-          <ProtestCardIcon src="/icons/ruler.svg" />
+          <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
           {formatDistance(distance)}
         </ProtestCardDetail>
       </ProtestCardInfo>
