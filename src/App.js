@@ -59,65 +59,67 @@ function App() {
       </Header>
       <HomepageWrapper>
         <Map position={currentLatLng} protests={[...closeProtests, ...farProtests]}></Map>
-        <ProtestList>
-          {loading ? (
-            <p>טוען...</p>
-          ) : (
-            <>
-              {protests.length === 0 ? (
-                <ProtestListHeader>
-                  לא נמצאו הפגנות ברדיוס של קילומטר ממך.
-                  <br />
-                  <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-                    הוסיפו את ההפגנה הראשונה!
-                  </a>
-                </ProtestListHeader>
-              ) : (
-                <>
-                  {closeProtests.length > 0 ? (
-                    <>
-                      <ProtestListHeader>עד קילומטר אחד ממך</ProtestListHeader>
-                      {closeProtests.map((protest) => (
-                        <ProtestCard key={protest.id} protestInfo={protest} />
-                      ))}
-                    </>
-                  ) : (
-                    <ProtestListHeader>
-                      לא נמצאו הפגנות ברדיוס של קילומטר ממך.
-                      <br />
-                      <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-                        הוסיפו את ההפגנה הראשונה!
-                      </a>
-                    </ProtestListHeader>
-                  )}
+        <ProtestListWrapper>
+          <ProtestListItems>
+            {loading ? (
+              <p>טוען...</p>
+            ) : (
+              <>
+                {protests.length === 0 ? (
+                  <ProtestListHeader>
+                    לא נמצאו הפגנות ברדיוס של קילומטר ממך.
+                    <br />
+                    <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
+                      הוסיפו את ההפגנה הראשונה!
+                    </a>
+                  </ProtestListHeader>
+                ) : (
+                  <>
+                    {closeProtests.length > 0 ? (
+                      <>
+                        <ProtestListHeader>עד קילומטר אחד ממך</ProtestListHeader>
+                        {closeProtests.map((protest) => (
+                          <ProtestCard key={protest.id} protestInfo={protest} />
+                        ))}
+                      </>
+                    ) : (
+                      <ProtestListHeader>
+                        לא נמצאו הפגנות ברדיוס של קילומטר ממך.
+                        <br />
+                        <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
+                          הוסיפו את ההפגנה הראשונה!
+                        </a>
+                      </ProtestListHeader>
+                    )}
 
-                  <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
-                  {farProtests.map((protest) => (
-                    <ProtestCard key={protest.id} protestInfo={protest} />
-                  ))}
-                </>
-              )}
-            </>
-          )}
-        </ProtestList>
+                    <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
+                    {farProtests.map((protest) => (
+                      <ProtestCard key={protest.id} protestInfo={protest} />
+                    ))}
+                  </>
+                )}
+              </>
+            )}
+          </ProtestListItems>
+          <Footer>
+            <FooterLink href="https://github.com/guytepper/1km" target="_blank">
+              <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
+              גיטהאב
+            </FooterLink>
+            <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
+              <FooterLinkIcon src="/icons/email.svg" alt="Github Repo" />
+              פידבק
+            </FooterLink>
+          </Footer>
+        </ProtestListWrapper>
       </HomepageWrapper>
-      <Footer>
-        <FooterLink href="https://github.com/guytepper/1km" target="_blank">
-          <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
-          גיטהאב
-        </FooterLink>
-        <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
-          <FooterLinkIcon src="/icons/email.svg" alt="Github Repo" />
-          פידבק
-        </FooterLink>
-      </Footer>
     </AppWrapper>
   );
 }
 
 const AppWrapper = styled.div`
   display: grid;
-  grid-template-rows: 60px 1fr 30px;
+  grid-template-rows: 60px 1fr;
   min-height: 100vh;
 `;
 
@@ -155,24 +157,34 @@ const HomepageWrapper = styled.div`
     grid-template-columns: 300px 1fr;
   }
 
+  @media (min-width: 1280px) {
+    grid-template-columns: 330px 1fr;
+  }
+
   @media (min-width: 1700px) {
-    grid-template-columns: 350px 1fr;
+    grid-template-columns: 375px 1fr;
   }
 `;
 
-const ProtestList = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  padding: 15px;
-  grid-column: 1/2;
-  grid-auto-rows: min-content;
+const ProtestListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  grid-column: 1 / 2;
   grid-row: 2;
 
   @media (min-width: 768px) {
-    padding: 0 15px;
     grid-row: 1;
+    padding: 0 15px;
   }
+`;
+
+const ProtestListItems = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: min-content;
+  gap: 15px;
+  padding: 15px;
 `;
 
 const ProtestListHeader = styled.h2`
@@ -181,9 +193,14 @@ const ProtestListHeader = styled.h2`
 const Footer = styled.footer`
   display: flex;
   align-items: center;
+  padding: 15px;
+  opacity: 0.6;
   justify-content: flex-end;
-  grid-row: 3;
-  padding: 0 10px;
+
+  @media (min-width: 768px) {
+    padding: 10px 0;
+    justify-content: flex-start;
+  }
 `;
 
 const FooterLink = styled.a`

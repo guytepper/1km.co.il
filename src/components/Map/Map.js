@@ -53,8 +53,11 @@ function AppMap({ position, protests }) {
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 350px;
+  grid-row: 1;
+  grid-column: 2 / -1;
 
   @media (min-width: 768px) {
+    grid-row: 1;
     height: 100%;
   }
 `;
