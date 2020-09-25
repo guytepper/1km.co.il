@@ -9,7 +9,8 @@ function formatDistance(distance) {
   }
 }
 
-function ProtestCard({ displayName, streetAddress, distance }) {
+function ProtestCard({ protestInfo }) {
+  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime } = protestInfo;
   return (
     <ProtestCardWrapper>
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
@@ -20,12 +21,22 @@ function ProtestCard({ displayName, streetAddress, distance }) {
             {streetAddress}
           </ProtestCardDetail>
         )}
+        {meetingTime && (
+          <ProtestCardDetail>
+            <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
+            {meetingTime}
+          </ProtestCardDetail>
+        )}
         <ProtestCardDetail>
           <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
           {formatDistance(distance)}
         </ProtestCardDetail>
       </ProtestCardInfo>
-      <ProtestCardGroupButton type={'whatsapp'}>קבוצת וואטסאפ</ProtestCardGroupButton>
+      {(whatsAppLink || telegramLink) && (
+        <ProtestCardGroupButton type={whatsAppLink ? 'whatsapp' : 'telegram'} href={whatsAppLink || telegramLink} target="_blank">
+          קבוצת {whatsAppLink ? 'וואטסאפ' : 'טלגרם'}
+        </ProtestCardGroupButton>
+      )}
     </ProtestCardWrapper>
   );
 }
@@ -39,6 +50,7 @@ const ProtestCardWrapper = styled.div`
 const ProtestCardTitle = styled.h2`
   margin: 0;
   font-size: 22px;
+  margin-bottom: 7.5px;
 `;
 
 const ProtestCardInfo = styled.div`
@@ -51,6 +63,7 @@ const ProtestCardDetail = styled.h3`
   align-items: center;
   font-size: 18px;
   font-weight: 100;
+  margin-bottom: 5px;
 `;
 
 const ProtestCardIcon = styled.img`
@@ -59,14 +72,15 @@ const ProtestCardIcon = styled.img`
   user-select: none;
 `;
 
-const ProtestCardGroupButton = styled.button`
-  width: 100%;
-  height: 40px;
-  background: ${(props) => (props.type.whatsapp ? '#6AB2E4' : '#1ED96E')};
+const ProtestCardGroupButton = styled.a`
+  display: block;
+  max-width: 100%;
+  background: ${(props) => (props.type.whatsapp ? '#1ED96E' : '#6AB2E4')};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;
   font-weight: 600;
+  text-align: center;
   padding: 4px 16px;
   border: none;
   border-radius: 3px;

@@ -14,27 +14,38 @@ const defaultPosition = [31.775028, 35.217614];
 function App() {
   const state = useGeolocation(defaultPosition);
   const [protests, setProtests] = useState([]);
-  const latlng = [state.latitude, state.longitude];
+  const currentLatLng = [state.latitude, state.longitude];
 
   useEffect(() => {
     const geocollection = GeoFirestore.collection('protests');
-    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(31.775028, 35.217614), radius: 15 });
+    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(31.775028, 35.217614), radius: 20 });
     async function fetchProtests() {
       try {
         const snapshot = await query.limit(10).get();
-        const protests = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          latlng: [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude],
-          ...doc.data(),
-        }));
-        console.log(latlng, protests[0].latlng);
+        const protests = snapshot.docs.map((doc) => {
+          const protestLatlng = [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude];
+          return {
+            id: doc.id,
+            latlng: protestLatlng,
+            distance: getDistance(currentLatLng, protestLatlng),
+            ...doc.data(),
+          };
+        });
+
         setProtests(protests);
       } catch (err) {
         console.log(err);
       }
     }
     fetchProtests();
-  }, []);
+  }, [currentLatLng]);
+
+  let closeProtests = [],
+    farProtests = [];
+  if (protests.length > 0) {
+    closeProtests = protests.filter((p) => p.distance <= 1000);
+    farProtests = protests.filter((p) => p.distance > 1000);
+  }
 
   return (
     <AppWrapper>
@@ -45,15 +56,15 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map position={latlng} protests={protests}></Map>
+        <Map position={currentLatLng} protests={[...closeProtests, ...farProtests]}></Map>
         <ProtestList>
-          {protests.map((protest) => (
-            <ProtestCard
-              key={protest.id}
-              displayName={protest.displayName}
-              streetAddress={protest.streetAddress}
-              distance={getDistance(latlng, protest.latlng)}
-            />
+          <ProtestListHeader>1 קילומטר ממך</ProtestListHeader>
+          {closeProtests.map((protest) => (
+            <ProtestCard key={protest.id} protestInfo={protest} />
+          ))}
+          <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
+          {farProtests.map((protest) => (
+            <ProtestCard key={protest.id} protestInfo={protest} />
           ))}
         </ProtestList>
       </HomepageWrapper>
@@ -83,6 +94,8 @@ const Header = styled.header`
   align-items: center;
   padding: 0 25px;
   grid-row: 1;
+  background-color: #fff;
+  box-shadow: inset 0 -1px 0 #e1e4e8;
 `;
 
 const SiteLogo = styled.h1`
@@ -121,6 +134,9 @@ const ProtestList = styled.div`
   }
 `;
 
+const ProtestListHeader = styled.h2`
+  margin-bottom: 0;
+`;
 const Footer = styled.footer`
   display: flex;
   align-items: center;

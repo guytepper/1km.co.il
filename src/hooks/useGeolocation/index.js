@@ -9,7 +9,6 @@ const useGeolocation = ([latitude, longitude]) => {
   });
 
   const onEvent = (event) => {
-    console.log(event);
     setState({
       accuracy: event.coords.accuracy,
       latitude: event.coords.latitude,
