@@ -32,9 +32,13 @@ function ProtestCard({ protestInfo }) {
           {formatDistance(distance)}
         </ProtestCardDetail>
       </ProtestCardInfo>
-      {(whatsAppLink || telegramLink) && (
+      {whatsAppLink || telegramLink ? (
         <ProtestCardGroupButton type={whatsAppLink ? 'whatsapp' : 'telegram'} href={whatsAppLink || telegramLink} target="_blank">
           קבוצת {whatsAppLink ? 'וואטסאפ' : 'טלגרם'}
+        </ProtestCardGroupButton>
+      ) : (
+        <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
+          הוספת קבוצת טלגרם/וואטסאפ
         </ProtestCardGroupButton>
       )}
     </ProtestCardWrapper>
@@ -75,7 +79,7 @@ const ProtestCardIcon = styled.img`
 const ProtestCardGroupButton = styled.a`
   display: block;
   max-width: 100%;
-  background: ${(props) => (props.type.whatsapp ? '#1ED96E' : '#6AB2E4')};
+  background: ${(props) => (props.type ? (props.type.whatsapp ? '#1ED96E' : '#6AB2E4') : 'blue')};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;
