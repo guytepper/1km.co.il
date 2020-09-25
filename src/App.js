@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import useGeolocation from './hooks/useGeolocation';
 import Map from './components/Map';
 import ProtestCard from './components/ProtestCard';
 import getDistance from 'geolib/es/getDistance';
@@ -12,14 +11,13 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 const defaultPosition = [31.775028, 35.217614];
 
 function App() {
+  const [coordinates, setCoordinates] = useState(defaultPosition);
   const [loading, setLoading] = useState(true);
-  const coordinates = useGeolocation(defaultPosition);
   const [protests, setProtests] = useState([]);
-  const currentLatLng = [coordinates.latitude, coordinates.longitude];
 
   useEffect(() => {
     const geocollection = GeoFirestore.collection('protests');
-    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(31.775028, 35.217614), radius: 20 });
+    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(coordinates[0], coordinates[1]), radius: 20 });
     async function fetchProtests() {
       try {
         const snapshot = await query.limit(10).get();
@@ -28,7 +26,7 @@ function App() {
           return {
             id: doc.id,
             latlng: protestLatlng,
-            distance: getDistance(currentLatLng, protestLatlng),
+            distance: getDistance(coordinates, protestLatlng),
             ...doc.data(),
           };
         });
@@ -40,7 +38,7 @@ function App() {
       }
     }
     fetchProtests();
-  }, [currentLatLng]);
+  }, [coordinates]);
 
   let closeProtests = [],
     farProtests = [];
@@ -48,6 +46,12 @@ function App() {
     closeProtests = protests.filter((p) => p.distance <= 1000);
     farProtests = protests.filter((p) => p.distance > 1000);
   }
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((event) => {
+      setCoordinates([event.coords.latitude, event.coords.longitude]);
+    });
+  }, []);
 
   return (
     <AppWrapper>
@@ -58,7 +62,7 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map position={currentLatLng} protests={[...closeProtests, ...farProtests]}></Map>
+        <Map position={coordinates} protests={[...closeProtests, ...farProtests]}></Map>
         <ProtestListWrapper>
           <ProtestListItems>
             {loading ? (
@@ -189,7 +193,9 @@ const ProtestListItems = styled.div`
 
 const ProtestListHeader = styled.h2`
   margin-bottom: 0;
+  font-weight: 600;
 `;
+
 const Footer = styled.footer`
   display: flex;
   align-items: center;
