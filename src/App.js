@@ -117,6 +117,14 @@ const HomepageWrapper = styled.div`
     grid-template-columns: 280px 1fr;
     grid-template-rows: 1fr;
   }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 300px 1fr;
+  }
+
+  @media (min-width: 1700px) {
+    grid-template-columns: 350px 1fr;
+  }
 `;
 
 const ProtestList = styled.div`

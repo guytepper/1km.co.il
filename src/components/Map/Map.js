@@ -54,7 +54,7 @@ const MapWrapper = styled(Map)`
   width: 100%;
   height: 350px;
 
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     height: 100%;
   }
 `;
