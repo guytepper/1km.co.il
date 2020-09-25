@@ -57,7 +57,6 @@ const MapWrapper = styled(Map)`
   grid-column: 2 / -1;
 
   @media (min-width: 768px) {
-    grid-row: 1;
     height: 100%;
   }
 `;

@@ -53,8 +53,9 @@ const ProtestCardWrapper = styled.div`
 
 const ProtestCardTitle = styled.h2`
   margin: 0;
-  font-size: 22px;
   margin-bottom: 7.5px;
+  font-size: 22px;
+  font-weight: 600;
 `;
 
 const ProtestCardInfo = styled.div`
