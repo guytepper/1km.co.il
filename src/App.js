@@ -57,7 +57,16 @@ function App() {
           ))}
         </ProtestList>
       </HomepageWrapper>
-      <Footer>hi</Footer>
+      <Footer>
+        <FooterLink href="https://github.com/guytepper/1km" target="_blank">
+          <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
+          גיטהאב
+        </FooterLink>
+        <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
+          <FooterLinkIcon src="/icons/email.svg" alt="Github Repo" />
+          פידבק
+        </FooterLink>
+      </Footer>
     </AppWrapper>
   );
 }
@@ -113,7 +122,23 @@ const ProtestList = styled.div`
 `;
 
 const Footer = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   grid-row: 3;
+  padding: 0 10px;
+`;
+
+const FooterLink = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+  font-size: 14px;
+`;
+
+const FooterLinkIcon = styled.img`
+  width: 17.5px;
+  margin-inline-end: 5px;
 `;
 
 export default App;
