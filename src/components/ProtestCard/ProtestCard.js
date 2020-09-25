@@ -9,15 +9,15 @@ function formatDistance(distance) {
   }
 }
 
-function ProtestCard({ displayName, location, distance }) {
+function ProtestCard({ displayName, streetAddress, distance }) {
   return (
     <ProtestCardWrapper>
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
-        {location.streetAddress && (
+        {streetAddress && (
           <ProtestCardDetail>
             <ProtestCardIcon src="/icons/location.svg" />
-            {location.streetAddress}
+            {streetAddress}
           </ProtestCardDetail>
         )}
         <ProtestCardDetail>
@@ -56,6 +56,7 @@ const ProtestCardDetail = styled.h3`
 const ProtestCardIcon = styled.img`
   width: 17.5px;
   margin-inline-end: 5px;
+  user-select: none;
 `;
 
 const ProtestCardGroupButton = styled.button`

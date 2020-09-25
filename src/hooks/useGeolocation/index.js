@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const useGeolocation = ({ lat: latitude, lng: longitude }) => {
+const useGeolocation = ([latitude, longitude]) => {
   const [state, setState] = useState({
     latitude,
     longitude,

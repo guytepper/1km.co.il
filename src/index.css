@@ -34,3 +34,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #f4f6fa;
 }
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+  transition: color 0.15s;
+}

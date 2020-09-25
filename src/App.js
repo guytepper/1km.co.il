@@ -1,57 +1,119 @@
-import React from 'react';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 import useGeolocation from './hooks/useGeolocation';
 import Map from './components/Map';
 import ProtestCard from './components/ProtestCard';
 import getDistance from 'geolib/es/getDistance';
 import styled from 'styled-components';
-import protests from './data';
+import firebase, { firestore } from './firebase';
+import * as geofirestore from 'geofirestore';
+
+const GeoFirestore = geofirestore.initializeApp(firestore);
+
+const defaultPosition = [31.775028, 35.217614];
+
+function App() {
+  const state = useGeolocation(defaultPosition);
+  const [protests, setProtests] = useState([]);
+  const latlng = [state.latitude, state.longitude];
+
+  useEffect(() => {
+    const geocollection = GeoFirestore.collection('protests');
+    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(31.775028, 35.217614), radius: 15 });
+    async function fetchProtests() {
+      try {
+        const snapshot = await query.limit(10).get();
+        const protests = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          latlng: [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude],
+          ...doc.data(),
+        }));
+        console.log(latlng, protests[0].latlng);
+        setProtests(protests);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchProtests();
+  }, []);
+
+  return (
+    <AppWrapper>
+      <Header>
+        <SiteLogo>קילומטר אחד</SiteLogo>
+        <NavItem href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
+          + הוספת הפגנה
+        </NavItem>
+      </Header>
+      <HomepageWrapper>
+        <Map position={latlng} protests={protests}></Map>
+        <ProtestList>
+          {protests.map((protest) => (
+            <ProtestCard
+              key={protest.id}
+              displayName={protest.displayName}
+              streetAddress={protest.streetAddress}
+              distance={getDistance(latlng, protest.latlng)}
+            />
+          ))}
+        </ProtestList>
+      </HomepageWrapper>
+      <Footer>hi</Footer>
+    </AppWrapper>
+  );
+}
+
+const AppWrapper = styled.div`
+  display: grid;
+  grid-template-rows: 60px 1fr 30px;
+  min-height: 100vh;
+`;
+
+const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 25px;
+  grid-row: 1;
+`;
+
+const SiteLogo = styled.h1`
+  font-size: 26px;
+`;
+
+const NavItem = styled.a`
+  &:hover {
+    color: #3498db;
+  }
+`;
+
+const HomepageWrapper = styled.div`
+  height: 100%;
+  display: grid;
+  grid-row: 2;
+
+  @media (min-width: 768px) {
+    grid-template-columns: 280px 1fr;
+    grid-template-rows: 1fr;
+  }
+`;
 
 const ProtestList = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 15px;
   padding: 15px;
+  grid-column: 1/2;
+  grid-auto-rows: min-content;
+  grid-row: 2;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (min-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px 25px;
-  }
-
-  @media (min-width: 1280px) {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
-    padding: 25px 30px;
+    padding: 0 15px;
+    grid-row: 1;
   }
 `;
 
-const defaultPosition = { lat: 31.775028, lng: 35.217614 };
-
-function App() {
-  const state = useGeolocation(defaultPosition);
-  const latlng = { lat: state.latitude, lng: state.longitude };
-
-  return (
-    <div className="App">
-      <header className="App-header">קול אחד</header>
-      <Map position={latlng.lat ? latlng : defaultPosition}></Map>
-      <ProtestList>
-        {protests.map((protest) => (
-          <ProtestCard
-            key={protest.id}
-            displayName={protest.displayName}
-            location={protest.location}
-            distance={getDistance(latlng, protest.location.latlng)}
-          />
-        ))}
-      </ProtestList>
-    </div>
-  );
-}
+const Footer = styled.footer`
+  grid-row: 3;
+`;
 
 export default App;
