@@ -18,8 +18,7 @@ const useGeolocation = ([latitude, longitude]) => {
   };
 
   const onError = (error) => {
-    error.error = true;
-    setState(error);
+    // TODO: Handle rejections / errors.
   };
 
   useEffect(() => {

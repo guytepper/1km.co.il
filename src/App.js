@@ -12,9 +12,10 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 const defaultPosition = [31.775028, 35.217614];
 
 function App() {
-  const state = useGeolocation(defaultPosition);
+  const [loading, setLoading] = useState(true);
+  const coordinates = useGeolocation(defaultPosition);
   const [protests, setProtests] = useState([]);
-  const currentLatLng = [state.latitude, state.longitude];
+  const currentLatLng = [coordinates.latitude, coordinates.longitude];
 
   useEffect(() => {
     const geocollection = GeoFirestore.collection('protests');
@@ -33,6 +34,7 @@ function App() {
         });
 
         setProtests(protests);
+        setLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -58,14 +60,45 @@ function App() {
       <HomepageWrapper>
         <Map position={currentLatLng} protests={[...closeProtests, ...farProtests]}></Map>
         <ProtestList>
-          <ProtestListHeader>1 קילומטר ממך</ProtestListHeader>
-          {closeProtests.map((protest) => (
-            <ProtestCard key={protest.id} protestInfo={protest} />
-          ))}
-          <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
-          {farProtests.map((protest) => (
-            <ProtestCard key={protest.id} protestInfo={protest} />
-          ))}
+          {loading ? (
+            <p>טוען...</p>
+          ) : (
+            <>
+              {protests.length === 0 ? (
+                <ProtestListHeader>
+                  לא נמצאו הפגנות ברדיוס של קילומטר.
+                  <br />
+                  <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
+                    הוסיפו את ההפגנה הראשונה!
+                  </a>
+                </ProtestListHeader>
+              ) : (
+                <>
+                  {closeProtests.length > 0 ? (
+                    <>
+                      <ProtestListHeader>1 קילומטר ממך</ProtestListHeader>
+                      {closeProtests.map((protest) => (
+                        <ProtestCard key={protest.id} protestInfo={protest} />
+                      ))}
+                    </>
+                  ) : (
+                    <ProtestListHeader>
+                      לא נמצאו הפגנות ברדיוס של קילומטר.
+                      <br />
+                      <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
+                        הוסיפו את ההפגנה הראשונה!
+                      </a>
+                    </ProtestListHeader>
+                  )}
+
+                  <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
+                  {farProtests.map((protest) => (
+                    <ProtestCard key={protest.id} protestInfo={protest} />
+                  ))}
+                </>
+              )}
+            </>
+          )}
         </ProtestList>
       </HomepageWrapper>
       <Footer>
