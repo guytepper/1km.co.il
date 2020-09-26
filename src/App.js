@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import ProtestList from './components/ProtestList';
+import Modal from './components/Modal';
 import getDistance from 'geolib/es/getDistance';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
@@ -11,6 +12,7 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 const defaultPosition = [31.775028, 35.217614];
 
 function App() {
+  const [modalIsOpen, setIsOpen] = useState(true);
   const [coordinates, setCoordinates] = useState(defaultPosition);
   const [loading, setLoading] = useState(true);
   const [protests, setProtests] = useState([]);
@@ -78,6 +80,7 @@ function App() {
           </Footer>
         </ProtestListWrapper>
       </HomepageWrapper>
+      <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} />
     </AppWrapper>
   );
 }

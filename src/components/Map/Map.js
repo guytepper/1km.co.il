@@ -55,6 +55,7 @@ const MapWrapper = styled(Map)`
   height: 350px;
   grid-row: 1;
   grid-column: 2 / -1;
+  z-index: 0;
 
   @media (min-width: 768px) {
     height: 100%;
