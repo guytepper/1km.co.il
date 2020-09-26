@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
-import ProtestCard from './components/ProtestCard';
+import ProtestList from './components/ProtestList';
 import getDistance from 'geolib/es/getDistance';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
@@ -40,18 +40,19 @@ function App() {
     fetchProtests();
   }, [coordinates]);
 
-  let closeProtests = [],
-    farProtests = [];
-  if (protests.length > 0) {
-    closeProtests = protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance);
-    farProtests = protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance);
-  }
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((event) => {
       setCoordinates([event.coords.latitude, event.coords.longitude]);
     });
   }, []);
+
+  let closeProtests = [],
+    farProtests = [];
+
+  if (protests.length > 0) {
+    closeProtests = protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance);
+    farProtests = protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance);
+  }
 
   return (
     <AppWrapper>
@@ -64,50 +65,7 @@ function App() {
       <HomepageWrapper>
         <Map position={coordinates} protests={[...closeProtests, ...farProtests]}></Map>
         <ProtestListWrapper>
-          <ProtestListItems>
-            {loading ? (
-              <p>טוען...</p>
-            ) : (
-              <>
-                {protests.length === 0 ? (
-                  <ProtestListHeader>
-                    לא נמצאו הפגנות ברדיוס של קילומטר ממך.
-                    <br />
-                    <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-                      הוסיפו את ההפגנה הראשונה!
-                    </a>
-                  </ProtestListHeader>
-                ) : (
-                  <>
-                    {closeProtests.length > 0 ? (
-                      <>
-                        <ProtestListHeader>עד קילומטר אחד ממך</ProtestListHeader>
-                        {closeProtests.map((protest) => (
-                          <ProtestCard key={protest.id} protestInfo={protest} />
-                        ))}
-                      </>
-                    ) : (
-                      <ProtestListHeader>
-                        לא נמצאו הפגנות ברדיוס של קילומטר ממך.
-                        <br />
-                        <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-                          הוסיפו את ההפגנה הראשונה!
-                        </a>
-                      </ProtestListHeader>
-                    )}
-                    {farProtests.length > 0 && (
-                      <>
-                        <ProtestListHeader>קצת יותר רחוק</ProtestListHeader>
-                        {farProtests.map((protest) => (
-                          <ProtestCard key={protest.id} protestInfo={protest} />
-                        ))}
-                      </>
-                    )}
-                  </>
-                )}
-              </>
-            )}
-          </ProtestListItems>
+          <ProtestList closeProtests={closeProtests} farProtests={farProtests} loading={loading} />
           <Footer>
             <FooterLink href="https://github.com/guytepper/1km" target="_blank">
               <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
@@ -184,19 +142,6 @@ const ProtestListWrapper = styled.div`
     grid-row: 1;
     padding: 0 15px;
   }
-`;
-
-const ProtestListItems = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-auto-rows: min-content;
-  gap: 15px;
-  padding: 15px;
-`;
-
-const ProtestListHeader = styled.h2`
-  margin-bottom: 0;
-  font-weight: 600;
 `;
 
 const Footer = styled.footer`
