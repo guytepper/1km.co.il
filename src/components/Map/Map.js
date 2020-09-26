@@ -36,17 +36,21 @@ const MarkersList = ({ markers }) => {
   return <>{items}</>;
 };
 
-function AppMap({ position, protests }) {
+function AppMap({ protests, coordinates }) {
   return (
-    <MapWrapper center={position} zoom={16}>
-      <TileLayer
-        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={position} icon={positionPoint}></Marker>
-      <MarkersList markers={protests} />
-      <Circle radius={1000} center={position} />
-    </MapWrapper>
+    <>
+      {coordinates.length === 2 && (
+        <MapWrapper center={coordinates} zoom={16}>
+          <TileLayer
+            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={coordinates} icon={positionPoint}></Marker>
+          <MarkersList markers={protests} />
+          <Circle radius={1000} center={coordinates} />
+        </MapWrapper>
+      )}
+    </>
   );
 }
 
