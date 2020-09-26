@@ -43,8 +43,8 @@ function App() {
   let closeProtests = [],
     farProtests = [];
   if (protests.length > 0) {
-    closeProtests = protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1 - p2);
-    farProtests = protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1 - p2);
+    closeProtests = protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance);
+    farProtests = protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance);
   }
 
   useEffect(() => {
