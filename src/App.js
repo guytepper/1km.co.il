@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import ProtestList from './components/ProtestList';
+import Modal from './components/Modal';
 import getDistance from 'geolib/es/getDistance';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
@@ -8,43 +9,38 @@ import * as geofirestore from 'geofirestore';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-const defaultPosition = [31.775028, 35.217614];
-
 function App() {
-  const [coordinates, setCoordinates] = useState(defaultPosition);
+  const [modalIsOpen, setIsOpen] = useState(true);
+  const [coordinates, setCoordinates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [protests, setProtests] = useState([]);
 
   useEffect(() => {
-    const geocollection = GeoFirestore.collection('protests');
-    const query = geocollection.near({ center: new firebase.firestore.GeoPoint(coordinates[0], coordinates[1]), radius: 20 });
-    async function fetchProtests() {
-      try {
-        const snapshot = await query.limit(10).get();
-        const protests = snapshot.docs.map((doc) => {
-          const protestLatlng = [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude];
-          return {
-            id: doc.id,
-            latlng: protestLatlng,
-            distance: getDistance(coordinates, protestLatlng),
-            ...doc.data(),
-          };
-        });
+    if (coordinates.length === 2) {
+      const geocollection = GeoFirestore.collection('protests');
+      const query = geocollection.near({ center: new firebase.firestore.GeoPoint(coordinates[0], coordinates[1]), radius: 20 });
+      async function fetchProtests() {
+        try {
+          const snapshot = await query.limit(10).get();
+          const protests = snapshot.docs.map((doc) => {
+            const protestLatlng = [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude];
+            return {
+              id: doc.id,
+              latlng: protestLatlng,
+              distance: getDistance(coordinates, protestLatlng),
+              ...doc.data(),
+            };
+          });
 
-        setProtests(protests);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
+          setProtests(protests);
+          setLoading(false);
+        } catch (err) {
+          console.log(err);
+        }
       }
+      fetchProtests();
     }
-    fetchProtests();
   }, [coordinates]);
-
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((event) => {
-      setCoordinates([event.coords.latitude, event.coords.longitude]);
-    });
-  }, []);
 
   let closeProtests = [],
     farProtests = [];
@@ -63,7 +59,7 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map position={coordinates} protests={[...closeProtests, ...farProtests]}></Map>
+        <Map coordinates={coordinates} protests={[...closeProtests, ...farProtests]}></Map>
         <ProtestListWrapper>
           <ProtestList closeProtests={closeProtests} farProtests={farProtests} loading={loading} />
           <Footer>
@@ -78,6 +74,7 @@ function App() {
           </Footer>
         </ProtestListWrapper>
       </HomepageWrapper>
+      <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} coordinates={coordinates} setCoordinates={setCoordinates} />
     </AppWrapper>
   );
 }
