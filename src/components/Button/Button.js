@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 export default function Button(props) {
   return (
-    <ButtonWrapper onClick={props.onClick} style={{ width: 300 }}>
-      <ButtonIcon src={props.icon} alt="" aria-hidden="true" />
+    <ButtonWrapper color={props.color} type={props.type} onClick={props.onClick} style={props.style}>
+      {props.icon && <ButtonIcon src={props.icon} alt="" aria-hidden="true" />}
       <span style={{ paddingBottom: 3 }}>{props.children}</span>
     </ButtonWrapper>
   );
