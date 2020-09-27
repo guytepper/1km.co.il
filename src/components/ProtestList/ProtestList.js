@@ -48,10 +48,19 @@ const ProtestListWrapper = styled.div`
   grid-auto-rows: min-content;
   gap: 15px;
   padding: 15px;
+
+  @media (min-width: 768px) {
+    padding: 15px 0;
+  }
+
+  @media (min-width: 1700px) {
+    padding: 15px 5px;
+  }
 `;
 
 const ProtestListHeader = styled.h2`
   margin-bottom: 0;
+  text-align: center;
   font-weight: 600;
 `;
 
