@@ -9,9 +9,6 @@ export const protestPoint = new L.Icon({
   iconAnchor: [20, 38],
   popupAnchor: [0, -35],
   iconSize: [40, 38],
-  // shadowUrl: '../assets/marker-shadow.png',
-  // shadowSize: [29, 40],
-  // shadowAnchor: [7, 40],
 });
 
 export const positionPoint = new L.Icon({
@@ -20,9 +17,6 @@ export const positionPoint = new L.Icon({
   iconAnchor: [17.5, 40],
   popupAnchor: [0, -35],
   iconSize: [35, 40],
-  // shadowUrl: '../assets/marker-shadow.png',
-  // shadowSize: [29, 40],
-  // shadowAnchor: [7, 40],
 });
 
 const PopupMarker = ({ latlng, displayName }) => (
@@ -36,19 +30,25 @@ const MarkersList = ({ markers }) => {
   return <>{items}</>;
 };
 
+// Initial map value, before the user provide their coordinates.
+const balfur = [31.7749837, 35.219797];
+
 function AppMap({ protests, coordinates }) {
   return (
     <>
-      {coordinates.length === 2 && (
-        <MapWrapper center={coordinates} zoom={16}>
-          <TileLayer
-            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={protests} />
-          <Circle radius={1000} center={coordinates} />
-        </MapWrapper>
+      <MapWrapper center={coordinates.length > 0 ? coordinates : balfur} zoom={16}>
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {coordinates.length === 2 && (
+          <>
+            <Marker position={coordinates} icon={positionPoint}></Marker>
+            <MarkersList markers={protests} />
+            <Circle radius={1000} center={coordinates} />
+          </>
+        )}
+      </MapWrapper>
       )}
     </>
   );
