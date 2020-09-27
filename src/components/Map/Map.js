@@ -36,7 +36,7 @@ const balfur = [31.7749837, 35.219797];
 function AppMap({ protests, coordinates }) {
   return (
     <>
-      <MapWrapper center={coordinates.length > 0 ? coordinates : balfur} zoom={16}>
+      <MapWrapper center={coordinates.length > 0 ? coordinates : balfur} zoom={15}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -49,7 +49,6 @@ function AppMap({ protests, coordinates }) {
           </>
         )}
       </MapWrapper>
-      )}
     </>
   );
 }

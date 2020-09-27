@@ -50,7 +50,9 @@ const ProtestListWrapper = styled.div`
   padding: 15px;
 
   @media (min-width: 768px) {
+    max-height: 100vh;
     padding: 15px 0;
+    overflow: scroll;
   }
 
   @media (min-width: 1700px) {
