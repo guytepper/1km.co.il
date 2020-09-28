@@ -3,7 +3,7 @@ import Map from './components/Map';
 import ProtestList from './components/ProtestList';
 import Modal from './components/Modal';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius } from './utils';
+import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -20,7 +20,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (mapPosition.length === 2) {
+    if (validateLatLng(mapPosition)) {
       let requested = false;
 
       // Check if the protests for the current position have been fetched already
