@@ -2,22 +2,10 @@ import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../Button';
+import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 
 ReactModal.setAppElement('#root');
-
-const getCurrentPosition = () => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (event) => {
-        resolve([event.coords.latitude, event.coords.longitude]);
-      },
-      (error) => {
-        reject(error);
-      }
-    );
-  });
-};
 
 function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   const [addressInputDisplay, setAdressInputDisplay] = useState(false);
@@ -28,9 +16,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
       const position = await getCurrentPosition();
       setCoordinates(position);
     } catch (err) {
-      alert('לא הצלחנו לאתר את המיקום.\nבמקרה כזה, כדאי להזין את המיקום ידנית.');
-      console.log(err);
-      // TODO: Handle error
+      alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
     }
   };
 
@@ -41,12 +27,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   }, [coordinates, setIsOpen]);
 
   return (
-    <ModalWrapper
-      isOpen={isOpen}
-      // onAfterOpen={afterOpenModal}
-      // onRequestClose={closeModal}
-      // style={customStyles}
-    >
+    <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
         <h3 style={{ fontWeight: 400 }}>
