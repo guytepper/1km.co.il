@@ -11,28 +11,47 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 
 function App() {
   const [modalIsOpen, setIsOpen] = useState(true);
-  const [coordinates, setCoordinates] = useState([]);
+  const [userCoordinates, setCoordinates] = useState([]);
+  const [mapPosition, setMapPosition] = useState([]);
+  const [protests, setProtests] = useState({ all: [], close: [], far: [] });
+  const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [protests, setProtests] = useState([]);
 
   useEffect(() => {
-    if (coordinates.length === 2) {
+    if (mapPosition.length === 2) {
       const geocollection = GeoFirestore.collection('protests');
-      const query = geocollection.near({ center: new firebase.firestore.GeoPoint(coordinates[0], coordinates[1]), radius: 20 });
+      const query = geocollection.near({ center: new firebase.firestore.GeoPoint(mapPosition[0], mapPosition[1]), radius: 20 });
       async function fetchProtests() {
         try {
           const snapshot = await query.limit(10).get();
           const protests = snapshot.docs.map((doc) => {
-            const protestLatlng = [doc.data().g.geopoint.latitude, doc.data().g.geopoint.longitude];
+            const { latitude, longitude } = doc.data().g.geopoint;
+            const protestLatlng = [latitude, longitude];
             return {
               id: doc.id,
               latlng: protestLatlng,
-              distance: getDistance(coordinates, protestLatlng),
+              distance: getDistance(userCoordinates, protestLatlng),
               ...doc.data(),
             };
           });
 
-          setProtests(protests);
+          // Set protests only on initial load
+          // These protests will be shown on ProtestList
+          if (loading) {
+            setProtests({
+              all: protests,
+              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+            });
+          }
+
+          setMarkers((prevState) => {
+            // Filter duplicate markers
+            const filtered = protests.filter((a) => !prevState.find((b) => b.id === a.id));
+            const newMarkers = [...prevState, ...filtered];
+            return newMarkers;
+          });
+
           setLoading(false);
         } catch (err) {
           console.log(err);
@@ -40,15 +59,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [coordinates]);
-
-  let closeProtests = [],
-    farProtests = [];
-
-  if (protests.length > 0) {
-    closeProtests = protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance);
-    farProtests = protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance);
-  }
+  }, [userCoordinates, mapPosition]);
 
   return (
     <AppWrapper>
@@ -59,9 +70,9 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map coordinates={coordinates} protests={[...closeProtests, ...farProtests]}></Map>
+        <Map coordinates={userCoordinates} setMapPosition={setMapPosition} markers={markers}></Map>
         <ProtestListWrapper>
-          <ProtestList closeProtests={closeProtests} farProtests={farProtests} loading={loading} />
+          <ProtestList closeProtests={protests.close} farProtests={protests.far} loading={loading} />
           <Footer>
             <FooterLink href="https://github.com/guytepper/1km" target="_blank">
               <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
@@ -74,7 +85,7 @@ function App() {
           </Footer>
         </ProtestListWrapper>
       </HomepageWrapper>
-      <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} coordinates={coordinates} setCoordinates={setCoordinates} />
+      <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} coordinates={userCoordinates} setCoordinates={setCoordinates} />
     </AppWrapper>
   );
 }

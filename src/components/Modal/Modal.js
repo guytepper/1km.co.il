@@ -28,6 +28,8 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
       const position = await getCurrentPosition();
       setCoordinates(position);
     } catch (err) {
+      alert('לא הצלחנו לאתר את המיקום.\nבמקרה כזה, כדאי להזין את המיקום ידנית.');
+      console.log(err);
       // TODO: Handle error
     }
   };

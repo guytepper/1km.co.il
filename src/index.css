@@ -60,3 +60,16 @@ input {
   height: 100%;
   padding: 0px 15px;
 }
+
+.leaflet-marker-icon {
+  animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -33,10 +33,14 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ protests, coordinates }) {
+function AppMap({ markers, coordinates, setMapPosition }) {
   return (
     <>
-      <MapWrapper center={coordinates.length > 0 ? coordinates : balfur} zoom={15}>
+      <MapWrapper
+        center={coordinates.length > 0 ? coordinates : balfur}
+        onMoveEnd={(t) => setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng])}
+        zoom={14}
+      >
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -44,7 +48,7 @@ function AppMap({ protests, coordinates }) {
         {coordinates.length === 2 && (
           <>
             <Marker position={coordinates} icon={positionPoint}></Marker>
-            <MarkersList markers={protests} />
+            <MarkersList markers={markers} />
             <Circle radius={1000} center={coordinates} />
           </>
         )}
