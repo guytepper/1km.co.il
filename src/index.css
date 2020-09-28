@@ -54,3 +54,9 @@ a {
 input {
   font-family: inherit;
 }
+
+.android-device .ReactModal__Content {
+  position: unset;
+  height: 100%;
+  padding: 0px 15px;
+}

@@ -9,3 +9,9 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+// Detect android devies for device-specificissues
+const html = document.querySelector('body');
+if (navigator.userAgent.match(/android/i)) {
+  html.classList.add('android-device');
+}
