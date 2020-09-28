@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import L from 'leaflet';
 
 export const protestPoint = new L.Icon({
-  iconUrl: '/icons/megaphone.svg',
-  iconRetinaUrl: '/icons/megaphone.svg',
-  iconAnchor: [20, 38],
+  iconUrl: '/icons/black-flag.svg',
+  iconRetinaUrl: '/icons/black-flag.svg',
+  iconAnchor: [25, 48],
   popupAnchor: [0, -35],
-  iconSize: [40, 38],
+  iconSize: [50, 48],
 });
 
 export const positionPoint = new L.Icon({
