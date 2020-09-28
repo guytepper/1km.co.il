@@ -3,6 +3,7 @@ import Map from './components/Map';
 import ProtestList from './components/ProtestList';
 import Modal from './components/Modal';
 import getDistance from 'geolib/es/getDistance';
+import { pointWithinRadius } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -13,12 +14,25 @@ function App() {
   const [modalIsOpen, setIsOpen] = useState(true);
   const [userCoordinates, setCoordinates] = useState([]);
   const [mapPosition, setMapPosition] = useState([]);
+  const [mapPositionHistory, setMapPositionHistory] = useState([]);
   const [protests, setProtests] = useState({ all: [], close: [], far: [] });
   const [markers, setMarkers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (mapPosition.length === 2) {
+      let requested = false;
+
+      // Check if the protests for the current position have been fetched already
+      mapPositionHistory.forEach((pos) => {
+        if (pointWithinRadius(pos, mapPosition, 20000)) {
+          requested = true;
+          return;
+        }
+      });
+
+      if (requested) return;
+
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({ center: new firebase.firestore.GeoPoint(mapPosition[0], mapPosition[1]), radius: 20 });
       async function fetchProtests() {
@@ -52,6 +66,8 @@ function App() {
             return newMarkers;
           });
 
+          setMapPositionHistory((prevState) => [...prevState, mapPosition]);
+
           setLoading(false);
         } catch (err) {
           console.log(err);
@@ -70,7 +86,12 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map coordinates={userCoordinates} setMapPosition={setMapPosition} markers={markers}></Map>
+        <Map
+          coordinates={userCoordinates}
+          setMapPosition={setMapPosition}
+          setMapPositionHistory={setMapPositionHistory}
+          markers={markers}
+        ></Map>
         <ProtestListWrapper>
           <ProtestList closeProtests={protests.close} farProtests={protests.far} loading={loading} />
           <Footer>

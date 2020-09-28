@@ -33,12 +33,14 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition }) {
+function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
   return (
     <>
       <MapWrapper
         center={coordinates.length > 0 ? coordinates : balfur}
-        onMoveEnd={(t) => setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng])}
+        onMoveEnd={(t) => {
+          setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+        }}
         zoom={14}
       >
         <TileLayer
