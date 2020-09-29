@@ -9,11 +9,31 @@ function formatDistance(distance) {
   }
 }
 
+function shareProtest(protestTitle) {
+  const shareData = {
+    title: 'אחד קילומטר',
+    text: `אני אפגין ב${protestTitle}, הצטרפו אליי!`,
+    url: 'https://1km.co.il',
+  };
+
+  navigator.share(shareData);
+}
+
+let canShare = false;
+if (navigator.share) {
+  canShare = true;
+}
+
 function ProtestCard({ protestInfo }) {
   const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime } = protestInfo;
   return (
     <ProtestCardWrapper>
-      <ProtestCardTitle>{displayName}</ProtestCardTitle>
+      <ProtestCardTitleWrapper>
+        <ProtestCardTitle>{displayName}</ProtestCardTitle>
+        {canShare && (
+          <ProtestCardShareIcon src="/icons/share.svg" alt="" title="שיתוף ההפגנה" onClick={() => shareProtest(displayName)} />
+        )}
+      </ProtestCardTitleWrapper>
       <ProtestCardInfo>
         {streetAddress && (
           <ProtestCardDetail>
@@ -49,6 +69,18 @@ const ProtestCardWrapper = styled.div`
   padding: 16px;
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
+`;
+
+const ProtestCardTitleWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const ProtestCardShareIcon = styled.img`
+  width: 25px;
+  cursor: pointer;
+  user-select: none;
 `;
 
 const ProtestCardTitle = styled.h2`
