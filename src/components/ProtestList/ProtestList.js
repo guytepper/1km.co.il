@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import ProtestCard from '../ProtestCard';
 
@@ -18,8 +18,14 @@ function ProtestListItems({ protests, listTitle }) {
 }
 
 function ProtestList({ loading, closeProtests, farProtests }) {
+  const wrapper = useRef(null);
+
+  useEffect(() => {
+    wrapper.current.scrollTop = 0;
+  }, [closeProtests]);
+
   return (
-    <ProtestListWrapper>
+    <ProtestListWrapper ref={wrapper}>
       {loading ? (
         <p>טוען...</p>
       ) : (

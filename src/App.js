@@ -158,6 +158,7 @@ const ProtestListWrapper = styled.div`
   @media (min-width: 768px) {
     grid-row: 1;
     padding: 0 15px;
+    max-height: calc(100vh - 60px);
   }
 `;
 
