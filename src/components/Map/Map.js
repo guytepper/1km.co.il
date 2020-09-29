@@ -35,27 +35,25 @@ const balfur = [31.7749837, 35.219797];
 
 function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
   return (
-    <>
-      <MapWrapper
-        center={coordinates.length > 0 ? coordinates : balfur}
-        onMoveEnd={(t) => {
-          setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-        }}
-        zoom={14}
-      >
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {coordinates.length === 2 && (
-          <>
-            <Marker position={coordinates} icon={positionPoint}></Marker>
-            <MarkersList markers={markers} />
-            <Circle radius={1000} center={coordinates} />
-          </>
-        )}
-      </MapWrapper>
-    </>
+    <MapWrapper
+      center={coordinates.length > 0 ? coordinates : balfur}
+      onMoveEnd={(t) => {
+        setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+      }}
+      zoom={14}
+    >
+      <TileLayer
+        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      {coordinates.length === 2 && (
+        <>
+          <Marker position={coordinates} icon={positionPoint}></Marker>
+          <MarkersList markers={markers} />
+          <Circle radius={1000} center={coordinates} />
+        </>
+      )}
+    </MapWrapper>
   );
 }
 
