@@ -24,7 +24,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
-  }, [coordinates, setIsOpen]);
+  }, [coordinates]);
 
   return (
     <ModalWrapper isOpen={isOpen}>

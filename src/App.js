@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import Map from './components/Map';
 import ProtestList from './components/ProtestList';
 import Footer from './components/Footer';
@@ -11,22 +11,51 @@ import * as geofirestore from 'geofirestore';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
+const initialState = {
+  userCoordinates: [],
+  protests: {
+    close: [],
+    far: [],
+  },
+  markers: [],
+  mapPosition: [],
+  mapPositionHistory: [],
+  isModalOpen: true,
+  loading: true,
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'setProtests':
+      return { ...state, protests: { close: action.payload.close, far: action.payload.far } };
+    case 'setMarkers':
+      return { ...state, markers: [...state.markers, ...action.payload] };
+    case 'setMapPosition':
+      return { ...state, mapPosition: action.payload };
+    case 'setMapPositionHistory':
+      return { ...state, mapPositionHistory: action.payload };
+    case 'setModalState':
+      return { ...state, isModalOpen: action.payload };
+    case 'setUserCoordinates':
+      return { ...state, userCoordinates: action.payload };
+    case 'setLoading':
+      return { ...state, loading: action.payload };
+
+    default:
+      throw new Error('Unexpected action');
+  }
+}
+
 function App() {
-  const [modalIsOpen, setIsOpen] = useState(true);
-  const [userCoordinates, setCoordinates] = useState([]);
-  const [mapPosition, setMapPosition] = useState([]);
-  const [mapPositionHistory, setMapPositionHistory] = useState([]);
-  const [protests, setProtests] = useState({ all: [], close: [], far: [] });
-  const [markers, setMarkers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (validateLatLng(mapPosition)) {
+    if (validateLatLng(state.mapPosition)) {
       let requested = false;
 
       // Check if the protests for the current position have been fetched already
-      mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, mapPosition, 15000)) {
+      state.mapPositionHistory.forEach((pos) => {
+        if (pointWithinRadius(pos, state.mapPosition, 15000)) {
           requested = true;
           return;
         }
@@ -35,7 +64,10 @@ function App() {
       if (requested) return;
 
       const geocollection = GeoFirestore.collection('protests');
-      const query = geocollection.near({ center: new firebase.firestore.GeoPoint(mapPosition[0], mapPosition[1]), radius: 15 });
+      const query = geocollection.near({
+        center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
+        radius: 15,
+      });
       async function fetchProtests() {
         try {
           const snapshot = await query.limit(15).get();
@@ -45,38 +77,35 @@ function App() {
             return {
               id: doc.id,
               latlng: protestLatlng,
-              distance: getDistance(userCoordinates, protestLatlng),
+              distance: getDistance(state.userCoordinates, protestLatlng),
               ...doc.data(),
             };
           });
 
           // Set protests only on initial load
           // These protests will be shown on ProtestList
-          if (loading) {
-            setProtests({
-              all: protests,
-              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+          if (state.loading) {
+            dispatch({
+              type: 'setProtests',
+              payload: {
+                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+              },
             });
           }
 
-          setMarkers((prevState) => {
-            // Filter duplicate markers
-            const filtered = protests.filter((a) => !prevState.find((b) => b.id === a.id));
-            const newMarkers = [...prevState, ...filtered];
-            return newMarkers;
-          });
-
-          setMapPositionHistory((prevState) => [...prevState, mapPosition]);
-
-          setLoading(false);
+          // Filter duplicate markers
+          const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
+          dispatch({ type: 'setMarkers', payload: filteredMarkers });
+          dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
+          dispatch({ type: 'setLoading', payload: false });
         } catch (err) {
           console.log(err);
         }
       }
       fetchProtests();
     }
-  }, [userCoordinates, mapPosition]);
+  }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <AppWrapper>
@@ -87,13 +116,24 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map coordinates={userCoordinates} setMapPosition={setMapPosition} markers={markers}></Map>
+        <Map
+          coordinates={state.userCoordinates}
+          setMapPosition={(position) => {
+            dispatch({ type: 'setMapPosition', payload: position });
+          }}
+          markers={state.markers}
+        ></Map>
         <ProtestListWrapper>
-          <ProtestList closeProtests={protests.close} farProtests={protests.far} loading={loading} />
+          <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
           <Footer />
         </ProtestListWrapper>
       </HomepageWrapper>
-      <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} coordinates={userCoordinates} setCoordinates={setCoordinates} />
+      <Modal
+        isOpen={state.isModalOpen}
+        setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
+        coordinates={state.userCoordinates}
+        setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+      />
     </AppWrapper>
   );
 }
