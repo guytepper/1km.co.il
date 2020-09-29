@@ -6,7 +6,7 @@ import L from 'leaflet';
 export const protestPoint = new L.Icon({
   iconUrl: '/icons/black-flag.svg',
   iconRetinaUrl: '/icons/black-flag.svg',
-  iconAnchor: [25, 48],
+  iconAnchor: [25, 24],
   popupAnchor: [0, -35],
   iconSize: [50, 48],
 });

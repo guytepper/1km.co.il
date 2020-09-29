@@ -26,8 +26,8 @@ const FooterWrapper = styled.footer`
   justify-content: flex-end;
 
   @media (min-width: 768px) {
+    position: sticky;
     padding: 10px 0;
-    justify-content: flex-start;
   }
 `;
 
