@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import ProtestList from './components/ProtestList';
+import Footer from './components/Footer';
 import Modal from './components/Modal';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -86,24 +87,10 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map
-          coordinates={userCoordinates}
-          setMapPosition={setMapPosition}
-          setMapPositionHistory={setMapPositionHistory}
-          markers={markers}
-        ></Map>
+        <Map coordinates={userCoordinates} setMapPosition={setMapPosition} markers={markers}></Map>
         <ProtestListWrapper>
           <ProtestList closeProtests={protests.close} farProtests={protests.far} loading={loading} />
-          <Footer>
-            <FooterLink href="https://github.com/guytepper/1km" target="_blank">
-              <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
-              גיטהאב
-            </FooterLink>
-            <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
-              <FooterLinkIcon src="/icons/email.svg" alt="Github Repo" />
-              פידבק
-            </FooterLink>
-          </Footer>
+          <Footer />
         </ProtestListWrapper>
       </HomepageWrapper>
       <Modal isOpen={modalIsOpen} setIsOpen={setIsOpen} coordinates={userCoordinates} setCoordinates={setCoordinates} />
@@ -141,6 +128,7 @@ const HomepageWrapper = styled.div`
   height: 100%;
   display: grid;
   grid-row: 2;
+  z-index: 0;
 
   @media (min-width: 768px) {
     grid-template-columns: 280px 1fr;
@@ -171,31 +159,6 @@ const ProtestListWrapper = styled.div`
     grid-row: 1;
     padding: 0 15px;
   }
-`;
-
-const Footer = styled.footer`
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  opacity: 0.6;
-  justify-content: flex-end;
-
-  @media (min-width: 768px) {
-    padding: 10px 0;
-    justify-content: flex-start;
-  }
-`;
-
-const FooterLink = styled.a`
-  display: flex;
-  align-items: center;
-  padding: 0 5px;
-  font-size: 14px;
-`;
-
-const FooterLinkIcon = styled.img`
-  width: 17.5px;
-  margin-inline-end: 5px;
 `;
 
 export default App;
