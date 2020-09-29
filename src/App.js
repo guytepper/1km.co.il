@@ -1,8 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import Map from './components/Map';
-import ProtestList from './components/ProtestList';
-import Footer from './components/Footer';
-import Modal from './components/Modal';
+import { Map, ProtestList, Footer, Modal } from './components';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -63,11 +60,13 @@ function App() {
 
       if (requested) return;
 
+      // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
         center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
         radius: 15,
       });
+
       async function fetchProtests() {
         try {
           const snapshot = await query.limit(15).get();
