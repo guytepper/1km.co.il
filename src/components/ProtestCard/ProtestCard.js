@@ -1,5 +1,4 @@
 import React from 'react';
-import Button from '../Button';
 import styled from 'styled-components';
 
 function formatDistance(distance) {
@@ -26,7 +25,7 @@ if (navigator.share) {
 }
 
 function ProtestCard({ protestInfo }) {
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime } = protestInfo;
+  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes } = protestInfo;
   return (
     <ProtestCardWrapper>
       <ProtestCardTitleWrapper>
@@ -53,13 +52,14 @@ function ProtestCard({ protestInfo }) {
           {formatDistance(distance)}
         </ProtestCardDetail>
       </ProtestCardInfo>
+      {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
       {whatsAppLink || telegramLink ? (
         <ProtestCardGroupButton type={whatsAppLink ? 'whatsapp' : 'telegram'} href={whatsAppLink || telegramLink} target="_blank">
           קבוצת {whatsAppLink ? 'וואטסאפ' : 'טלגרם'}
         </ProtestCardGroupButton>
       ) : (
         <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-          הוספת קבוצת טלגרם/וואטסאפ
+          הוספת קבוצת וואטסאפ
         </ProtestCardGroupButton>
       )}
     </ProtestCardWrapper>
