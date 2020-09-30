@@ -3,15 +3,16 @@ import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
 
-export const protestPoint = new L.Icon({
-  iconUrl: '/icons/black-flag.svg',
-  iconRetinaUrl: '/icons/black-flag.svg',
-  iconAnchor: [25, 24],
-  popupAnchor: [0, -35],
-  iconSize: [50, 48],
-});
+const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
+  new L.Icon({
+    iconUrl,
+    iconRetinaUrl,
+    iconAnchor,
+    iconSize,
+    popupAnchor: [0, -35],
+  });
 
-export const positionPoint = new L.Icon({
+const positionPoint = new L.Icon({
   iconUrl: '/icons/marker.svg',
   iconRetinaUrl: '/icons/marker.svg',
   iconAnchor: [17.5, 40],
@@ -19,11 +20,21 @@ export const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName }) => (
-  <Marker position={latlng} icon={protestPoint}>
-    <Popup>{displayName}</Popup>
-  </Marker>
-);
+const PopupMarker = ({ latlng, displayName, marker }) => {
+  // Use a speical marker / the default black flag.
+  let markerInfo = marker || {
+    iconUrl: '/icons/black-flag.svg',
+    iconRetinaUrl: '/icons/black-flag.svg',
+    iconSize: [50, 48],
+    iconAnchor: [25, 24],
+  };
+
+  return (
+    <Marker position={latlng} icon={protestPoint(markerInfo)}>
+      <Popup>{displayName}</Popup>
+    </Marker>
+  );
+};
 
 const MarkersList = ({ markers }) => {
   const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} />);
