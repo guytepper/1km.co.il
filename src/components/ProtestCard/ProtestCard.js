@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '../Button';
 import styled from 'styled-components';
 
 function formatDistance(distance) {
@@ -112,7 +113,7 @@ const ProtestCardIcon = styled.img`
 const ProtestCardGroupButton = styled.a`
   display: block;
   max-width: 100%;
-  background: ${(props) => (props.type ? (props.type.whatsapp ? '#1ED96E' : '#6AB2E4') : 'blue')};
+  background: ${(props) => (props.type ? (props.type.whatsapp ? '#6AB2E4' : '#1ED96E') : 'blue')};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;
