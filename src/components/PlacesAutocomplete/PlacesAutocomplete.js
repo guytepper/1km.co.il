@@ -61,4 +61,6 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   padding: 6px 20px;
   margin-bottom: 10px;
   font-size: 16px;
+  border: 1px solid #d2d2d2;
+  -webkit-appearance: none;
 `;

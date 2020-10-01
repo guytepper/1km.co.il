@@ -13,7 +13,18 @@ async function verifyRecaptcha(token) {
 }
 
 export async function createProtest(params) {
-  const { recaptchaToken, displayName, streetAddress, telegramLink, whatsAppLink, meeting_time, notes, coords } = params;
+  const {
+    recaptchaToken,
+    displayName,
+    streetAddress,
+    telegramLink,
+    whatsAppLink,
+    meeting_time,
+    phoneNumber,
+    notes,
+    coords,
+    approveContact,
+  } = params;
 
   try {
     const verification = await verifyRecaptcha(recaptchaToken);
@@ -27,10 +38,12 @@ export async function createProtest(params) {
         streetAddress,
         telegramLink,
         whatsAppLink,
+        phoneNumber,
         notes,
         meeting_time,
         created_at: new Date(),
         coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+        approveContact,
       });
 
       return request;

@@ -67,7 +67,13 @@ function ProtestForm({ initialCoords }) {
         <>
           <ProtestFormLabel>
             שם המקום
-            <ProtestFormInput type="text" name="displayName" ref={register} placeholder="איפה ההפגנה?"></ProtestFormInput>
+            <ProtestFormInput
+              type="text"
+              name="displayName"
+              ref={register}
+              placeholder="איפה ההפגנה?"
+              autoFocus
+            ></ProtestFormInput>
             <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
           </ProtestFormLabel>
           <ProtestFormLabel>
@@ -105,14 +111,31 @@ function ProtestForm({ initialCoords }) {
             <ProtestFormInput placeholder="הערות להפגנה" name="notes" ref={register}></ProtestFormInput>
             <ProtestFormInputDetails>כל דבר שחשוב שיופיע בפרטי ההפגנה.</ProtestFormInputDetails>
           </ProtestFormLabel>
+          <hr />
+          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
+          <ProtestFormInputDetails margin="10px 0">
+            לא חובה.
+            <br /> הפרטים לא יפורסמו באתר. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
+          </ProtestFormInputDetails>
+
           <ProtestFormLabel>
             כתובת מייל
             <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
-            <ProtestFormInputDetails>
-              אם פרטי ההפגנה לא יהיו ברורים ונצטרך ליצור קשר. <br />
-              לא יפורסם באתר ולא יועבר לשום גורם .
-            </ProtestFormInputDetails>
           </ProtestFormLabel>
+          <ProtestFormLabel>
+            מספר טלפון
+            <ProtestFormInput type="tel" placeholder="הטלפון שלך" name="phoneNumber" ref={register}></ProtestFormInput>
+          </ProtestFormLabel>
+          <ProtestFormInputDetails margin="10px 0" textAlign="center">
+            אם תרצו להתחבר למחאה הארצית, הם ישמחו ליצור קשר ולספק עזרה בכל מה שקשור בארגון ההפגנה.
+          </ProtestFormInputDetails>
+
+          <ProtestFormCheckboxWrapper>
+            <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
+            <label htmlFor="contact-approve">
+              אני מאשר.ת לבעלתים ליצור איתי קשר באמצעות הפרטים שמסרתי רק בנוגע להתארגנות המקומית הזאת.
+            </label>
+          </ProtestFormCheckboxWrapper>
           <ReCaptcha
             ref={recaptcha}
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
@@ -120,7 +143,6 @@ function ProtestForm({ initialCoords }) {
             verifyCallback={verifyCallback}
           />
           <Button type="submit" color="#1ED96E">
-            {' '}
             הוספת הפגנה
           </Button>
         </>
@@ -152,17 +174,41 @@ const ProtestFormInput = styled.input`
   padding: 6px 12px;
   margin-bottom: 0;
   font-size: 16px;
+  border: 1px solid #d2d2d2;
+  -webkit-appearance: none;
 `;
 
-const ProtestFormInputDetails = styled.span`
+const ProtestFormInputDetails = styled.span.attrs((props) => ({
+  textAlign: props.textAlign || 'initial',
+  margin: props.margin || '0',
+}))`
+  display: block;
   font-size: 14px;
   font-weight: 300;
+  margin: ${(props) => props.margin};
+  text-align: ${(props) => props.textAlign};
 `;
+
+const ProtestFormCheckbox = styled.input``;
 
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 250px;
+  margin-bottom: 10px;
   z-index: 0;
+`;
+
+const ProtestFormSectionTitle = styled.h3`
+  margin: 3px 0;
+`;
+
+const ProtestFormCheckboxWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  align-items: start;
+  margin: 7.5px 0;
+  font-size: 14px;
+  font-weight: 100;
 `;
 
 const SuccessMessage = styled.h2`
