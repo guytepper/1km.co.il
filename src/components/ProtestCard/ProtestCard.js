@@ -9,31 +9,11 @@ function formatDistance(distance) {
   }
 }
 
-function shareProtest(protestTitle) {
-  const shareData = {
-    title: 'אחד קילומטר',
-    text: `אני אפגין ב${protestTitle}, הצטרפו אליי!`,
-    url: 'https://1km.co.il',
-  };
-
-  navigator.share(shareData);
-}
-
-let canShare = false;
-if (navigator.share) {
-  canShare = true;
-}
-
 function ProtestCard({ protestInfo }) {
   const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes } = protestInfo;
   return (
     <ProtestCardWrapper>
-      <ProtestCardTitleWrapper>
-        <ProtestCardTitle>{displayName}</ProtestCardTitle>
-        {canShare && (
-          <ProtestCardShareIcon src="/icons/share.svg" alt="" title="שיתוף ההפגנה" onClick={() => shareProtest(displayName)} />
-        )}
-      </ProtestCardTitleWrapper>
+      <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
         {streetAddress && (
           <ProtestCardDetail>
@@ -53,10 +33,19 @@ function ProtestCard({ protestInfo }) {
         </ProtestCardDetail>
       </ProtestCardInfo>
       {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
-      {whatsAppLink || telegramLink ? (
-        <ProtestCardGroupButton type={whatsAppLink ? 'whatsapp' : 'telegram'} href={whatsAppLink || telegramLink} target="_blank">
-          קבוצת {whatsAppLink ? 'וואטסאפ' : 'טלגרם'}
-        </ProtestCardGroupButton>
+      {telegramLink || whatsAppLink ? (
+        <>
+          {whatsAppLink && (
+            <ProtestCardGroupButton type="whatsapp" href={whatsAppLink} target="_blank">
+              קבוצת וואטסאפ
+            </ProtestCardGroupButton>
+          )}
+          {telegramLink && (
+            <ProtestCardGroupButton type="telegram" href={telegramLink} target="_blank">
+              קבוצת טלגרם
+            </ProtestCardGroupButton>
+          )}
+        </>
       ) : (
         <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
           הוספת קבוצת וואטסאפ
@@ -70,18 +59,6 @@ const ProtestCardWrapper = styled.div`
   padding: 16px;
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
-`;
-
-const ProtestCardTitleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const ProtestCardShareIcon = styled.img`
-  width: 25px;
-  cursor: pointer;
-  user-select: none;
 `;
 
 const ProtestCardTitle = styled.h2`
@@ -113,13 +90,14 @@ const ProtestCardIcon = styled.img`
 const ProtestCardGroupButton = styled.a`
   display: block;
   max-width: 100%;
-  background: ${(props) => (props.type ? (props.type.whatsapp ? '#6AB2E4' : '#1ED96E') : 'blue')};
+  margin-top: 10px;
+  padding: 4px 16px;
+  background: ${(props) => (props.type ? (props.type === 'whatsapp' ? '#00c647' : '#6AB2E4') : 'blue')};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;
   font-weight: 600;
   text-align: center;
-  padding: 4px 16px;
   border: none;
   border-radius: 3px;
 `;
