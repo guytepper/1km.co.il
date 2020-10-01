@@ -129,6 +129,12 @@ function App() {
                 markers={state.markers}
               ></Map>
               <ProtestListWrapper>
+                <SiteMessage>
+                  עקב עומס פניות חל עיכוב בהוספת ההפגנות.
+                  <br />
+                  ביממה הקרובה כל ההפגנות שנשלחו יתווספו למפה.
+                  <br />
+                </SiteMessage>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
               </ProtestListWrapper>
@@ -196,6 +202,16 @@ const HomepageWrapper = styled.div`
 
   @media (min-width: 1700px) {
     grid-template-columns: 375px 1fr;
+  }
+`;
+
+const SiteMessage = styled.div`
+  background-color: #ff6b6b;
+  padding: 5px 10px;
+  text-align: center;
+
+  @media (min-width: 768px) {
+    margin: 0 -15px;
   }
 `;
 
