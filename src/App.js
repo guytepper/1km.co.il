@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { Map, ProtestList, Footer, Modal } from './components';
+import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -44,67 +44,67 @@ function reducer(state, action) {
 }
 
 function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  // const [state, dispatch] = useReducer(reducer, initialState);
 
-  useEffect(() => {
-    if (validateLatLng(state.mapPosition)) {
-      let requested = false;
+  // useEffect(() => {
+  //   if (validateLatLng(state.mapPosition)) {
+  //     let requested = false;
 
-      // Check if the protests for the current position have been fetched already
-      state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 15000)) {
-          requested = true;
-          return;
-        }
-      });
+  //     // Check if the protests for the current position have been fetched already
+  //     state.mapPositionHistory.forEach((pos) => {
+  //       if (pointWithinRadius(pos, state.mapPosition, 15000)) {
+  //         requested = true;
+  //         return;
+  //       }
+  //     });
 
-      if (requested) return;
+  //     if (requested) return;
 
-      // TODO: Move API call outside from here
-      const geocollection = GeoFirestore.collection('protests');
-      const query = geocollection.near({
-        center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
-        radius: 15,
-      });
+  //     // TODO: Move API call outside from here
+  //     const geocollection = GeoFirestore.collection('protests');
+  //     const query = geocollection.near({
+  //       center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
+  //       radius: 15,
+  //     });
 
-      async function fetchProtests() {
-        try {
-          const snapshot = await query.limit(15).get();
-          const protests = snapshot.docs.map((doc) => {
-            const { latitude, longitude } = doc.data().g.geopoint;
-            const protestLatlng = [latitude, longitude];
-            return {
-              id: doc.id,
-              latlng: protestLatlng,
-              distance: getDistance(state.userCoordinates, protestLatlng),
-              ...doc.data(),
-            };
-          });
+  //     async function fetchProtests() {
+  //       try {
+  //         const snapshot = await query.limit(15).get();
+  //         const protests = snapshot.docs.map((doc) => {
+  //           const { latitude, longitude } = doc.data().g.geopoint;
+  //           const protestLatlng = [latitude, longitude];
+  //           return {
+  //             id: doc.id,
+  //             latlng: protestLatlng,
+  //             distance: getDistance(state.userCoordinates, protestLatlng),
+  //             ...doc.data(),
+  //           };
+  //         });
 
-          // Set protests only on initial load
-          // These protests will be shown on ProtestList
-          if (state.loading) {
-            dispatch({
-              type: 'setProtests',
-              payload: {
-                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-              },
-            });
-          }
+  //         // Set protests only on initial load
+  //         // These protests will be shown on ProtestList
+  //         if (state.loading) {
+  //           dispatch({
+  //             type: 'setProtests',
+  //             payload: {
+  //               close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+  //               far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+  //             },
+  //           });
+  //         }
 
-          // Filter duplicate markers
-          const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-          dispatch({ type: 'setMarkers', payload: filteredMarkers });
-          dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
-          dispatch({ type: 'setLoading', payload: false });
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      fetchProtests();
-    }
-  }, [state.userCoordinates, state.mapPosition]);
+  //         // Filter duplicate markers
+  //         const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
+  //         dispatch({ type: 'setMarkers', payload: filteredMarkers });
+  //         dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
+  //         dispatch({ type: 'setLoading', payload: false });
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //     fetchProtests();
+  //   }
+  // }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <AppWrapper>
@@ -115,7 +115,10 @@ function App() {
         </NavItem>
       </Header>
       <HomepageWrapper>
-        <Map
+        <ProtestForm />
+      </HomepageWrapper>{' '}
+      {/*  put back down there*/}
+      {/* <Map
           coordinates={state.userCoordinates}
           setMapPosition={(position) => {
             dispatch({ type: 'setMapPosition', payload: position });
@@ -126,13 +129,13 @@ function App() {
           <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
           <Footer />
         </ProtestListWrapper>
-      </HomepageWrapper>
+      
       <Modal
         isOpen={state.isModalOpen}
         setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
         coordinates={state.userCoordinates}
         setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
-      />
+      /> */}
     </AppWrapper>
   );
 }
