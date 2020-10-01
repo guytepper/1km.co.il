@@ -5,3 +5,4 @@ export { default as Modal } from './Modal';
 export { default as PlacesAutocomplete } from './PlacesAutocomplete';
 export { default as ProtestCard } from './ProtestCard';
 export { default as ProtestList } from './ProtestList';
+export { default as ProtestForm } from './ProtestForm';

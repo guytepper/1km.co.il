@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
-import { Map, ProtestList, Footer, Modal } from './components';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -108,31 +109,42 @@ function App() {
 
   return (
     <AppWrapper>
-      <Header>
-        <SiteLogo>קילומטר אחד</SiteLogo>
-        <NavItem href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-          + הוספת הפגנה
-        </NavItem>
-      </Header>
-      <HomepageWrapper>
-        <Map
-          coordinates={state.userCoordinates}
-          setMapPosition={(position) => {
-            dispatch({ type: 'setMapPosition', payload: position });
-          }}
-          markers={state.markers}
-        ></Map>
-        <ProtestListWrapper>
-          <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
-          <Footer />
-        </ProtestListWrapper>
-      </HomepageWrapper>
-      <Modal
-        isOpen={state.isModalOpen}
-        setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-        coordinates={state.userCoordinates}
-        setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
-      />
+      <Router>
+        <Header>
+          <SiteLogo>
+            <Link to="/" style={{ color: 'black' }}>
+              קילומטר אחד
+            </Link>
+          </SiteLogo>
+          <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+        </Header>
+        <React.Fragment>
+          <Route exact path="/">
+            <HomepageWrapper>
+              <Map
+                coordinates={state.userCoordinates}
+                setMapPosition={(position) => {
+                  dispatch({ type: 'setMapPosition', payload: position });
+                }}
+                markers={state.markers}
+              ></Map>
+              <ProtestListWrapper>
+                <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
+                <Footer />
+              </ProtestListWrapper>
+            </HomepageWrapper>
+            <Modal
+              isOpen={state.isModalOpen}
+              setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
+              coordinates={state.userCoordinates}
+              setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+            />
+          </Route>
+          <Route exact path="/add-protest/">
+            <ProtestForm initialCoords={state.userCoordinates} />
+          </Route>
+        </React.Fragment>
+      </Router>
     </AppWrapper>
   );
 }
@@ -157,7 +169,7 @@ const SiteLogo = styled.h1`
   font-size: 26px;
 `;
 
-const NavItem = styled.a`
+const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
   }
