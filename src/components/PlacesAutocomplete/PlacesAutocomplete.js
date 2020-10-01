@@ -5,7 +5,7 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAdress }) {
+export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
   const {
     ready,
     value,
@@ -15,6 +15,7 @@ export default function PlacesAutocomplete({ setManualAdress }) {
 
   const handleInput = (e) => {
     setValue(e.target.value);
+    if (setStreetName) setStreetName(e.target.value);
   };
 
   const handleSelect = (address) => {
@@ -25,6 +26,7 @@ export default function PlacesAutocomplete({ setManualAdress }) {
       .then((latLng) => {
         const { lat, lng } = latLng;
         setManualAdress([lat, lng]);
+        if (setStreetName) setStreetName(address);
       })
       .catch((error) => {
         console.log('Error: ', error);
