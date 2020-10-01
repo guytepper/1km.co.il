@@ -5,11 +5,15 @@ function Footer() {
   return (
     <FooterWrapper>
       <FooterLink href="https://github.com/guytepper/1km" target="_blank">
-        <FooterLinkIcon src="/icons/github.svg" alt="Github Repo" />
+        <FooterLinkIcon src="/icons/github.svg" alt="" />
         גיטהאב
       </FooterLink>
+      <FooterLink href="https://twitter.com/guytepper" target="_blank">
+        <FooterLinkIcon src="/icons/twitter.svg" alt="" />
+        טוויטר
+      </FooterLink>
       <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
-        <FooterLinkIcon src="/icons/email.svg" alt="Github Repo" />
+        <FooterLinkIcon src="/icons/email.svg" alt="" />
         פידבק
       </FooterLink>
     </FooterWrapper>
