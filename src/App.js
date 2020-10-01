@@ -108,8 +108,8 @@ function App() {
   }, [state.userCoordinates, state.mapPosition]);
 
   return (
-    <Router>
-      <AppWrapper>
+    <AppWrapper>
+      <Router>
         <Header>
           <SiteLogo>
             <Link to="/" style={{ color: 'black' }}>
@@ -144,8 +144,8 @@ function App() {
             <ProtestForm initialCoords={state.userCoordinates} />
           </Route>
         </React.Fragment>
-      </AppWrapper>
-    </Router>
+      </Router>
+    </AppWrapper>
   );
 }
 

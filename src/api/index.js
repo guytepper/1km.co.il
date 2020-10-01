@@ -2,21 +2,43 @@ import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
+async function verifyRecaptcha(token) {
+  try {
+    const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
+    const response = await request.json();
+    return response;
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function createProtest(params) {
-  const { streetAddress, telegramLink, whatsAppLink, meeting_time, notes, coords } = params;
+  const { recaptchaToken, displayName, streetAddress, telegramLink, whatsAppLink, meeting_time, notes, coords } = params;
 
-  const [lat, lng] = coords;
-  const geocollection = GeoFirestore.collection('pending_protests');
+  try {
+    const verification = await verifyRecaptcha(recaptchaToken);
 
-  const request = geocollection.add({
-    streetAddress,
-    telegramLink,
-    whatsAppLink,
-    notes,
-    meeting_time,
-    created_at: new Date(),
-    coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-  });
+    if (verification.success) {
+      const [lat, lng] = coords;
+      const geocollection = GeoFirestore.collection('pending_protests');
 
-  return request;
+      const request = geocollection.add({
+        displayName,
+        streetAddress,
+        telegramLink,
+        whatsAppLink,
+        notes,
+        meeting_time,
+        created_at: new Date(),
+        coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+      });
+
+      return request;
+    } else {
+      throw new Error('Recaptcha error');
+    }
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
 }

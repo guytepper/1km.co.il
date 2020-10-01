@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
@@ -9,15 +10,17 @@ import { validateLatLng } from '../../utils';
 import { createProtest } from '../../api';
 
 function ProtestForm({ initialCoords }) {
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const [coordinates, setCoordinates] = useState(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
   });
   const [streetName, setStreetName] = useState('');
+  const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
+  const { recaptcha } = useRef(null);
 
   const onSubmit = async (params) => {
     if (!streetName) {
@@ -27,14 +30,28 @@ function ProtestForm({ initialCoords }) {
       try {
         params.coords = coordinates;
         params.streetAddress = streetName;
+        params.recaptchaToken = recaptchaToken;
 
-        await createProtest(params);
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+        let protest = await createProtest(params);
+        if (protest._document) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+        } else {
+          throw protest;
+        }
       } catch (err) {
+        setSubmitSuccess(true);
         setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: guytepper@gmail.com');
       }
     }
+  };
+
+  useEffect(() => {
+    loadReCaptcha(process.env.REACT_APP_RECAPTCHA_KEY);
+  }, []);
+
+  const verifyCallback = (recaptchaToken) => {
+    setRecaptchaToken(recaptchaToken);
   };
 
   return (
@@ -49,11 +66,15 @@ function ProtestForm({ initialCoords }) {
       ) : (
         <>
           <ProtestFormLabel>
-            מיקום ההפגנה
+            שם המקום
+            <ProtestFormInput type="text" name="displayName" ref={register} placeholder="איפה ההפגנה?"></ProtestFormInput>
+            <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
+          </ProtestFormLabel>
+          <ProtestFormLabel>
+            כתובת
             <PlacesAutocomplete setManualAdress={setCoordinates} setStreetName={setStreetName} />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
-
           <MapWrapper
             center={coordinates}
             zoom={14}
@@ -67,12 +88,10 @@ function ProtestForm({ initialCoords }) {
             />
             <Marker position={coordinates}></Marker>
           </MapWrapper>
-
           <ProtestFormLabel>
             שעת מפגש
             <ProtestFormInput type="time" defaultValue="17:30" name="meeting_time" ref={register}></ProtestFormInput>
           </ProtestFormLabel>
-
           <ProtestFormLabel>
             קבוצת וואטסאפ
             <ProtestFormInput placeholder="לינק לקבוצה" name="whatsAppLink" ref={register}></ProtestFormInput>
@@ -94,6 +113,12 @@ function ProtestForm({ initialCoords }) {
               לא יפורסם באתר ולא יועבר לשום גורם .
             </ProtestFormInputDetails>
           </ProtestFormLabel>
+          <ReCaptcha
+            ref={recaptcha}
+            sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+            action="action_name"
+            verifyCallback={verifyCallback}
+          />
           <Button type="submit" color="#1ED96E">
             {' '}
             הוספת הפגנה

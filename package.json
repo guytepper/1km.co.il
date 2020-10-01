@@ -15,6 +15,7 @@
     "react-leaflet": "^2.7.0",
     "react-modal": "^3.11.2",
     "react-recaptcha": "^2.3.10",
+    "react-recaptcha-v3": "^2.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "styled-components": "^5.2.0",
