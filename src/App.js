@@ -117,7 +117,10 @@ function App() {
               קילומטר אחד
             </Link>
           </SiteLogo>
-          <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+          <NavItemsWrapper>
+            <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+            <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+          </NavItemsWrapper>
         </Header>
         <React.Fragment>
           <Route exact path="/">
@@ -179,9 +182,32 @@ const SiteLogo = styled.h1`
   font-size: 26px;
 `;
 
+const NavItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 550px) {
+    flex-direction: row-reverse;
+  }
+`;
+
 const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
+  }
+
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
   }
 `;
 
