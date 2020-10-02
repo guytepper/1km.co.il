@@ -149,6 +149,9 @@ function App() {
           <Route exact path="/add-protest/">
             <ProtestForm initialCoords={state.userCoordinates} />
           </Route>
+          <Route exact path="/admin/">
+            <Admin />
+          </Route>
         </React.Fragment>
       </Router>
     </AppWrapper>
