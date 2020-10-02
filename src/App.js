@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
+import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -116,7 +117,10 @@ function App() {
               קילומטר אחד
             </Link>
           </SiteLogo>
-          <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+          <NavItemsWrapper>
+            <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+            <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+          </NavItemsWrapper>
         </Header>
         <React.Fragment>
           <Route exact path="/">
@@ -129,12 +133,18 @@ function App() {
                 markers={state.markers}
               ></Map>
               <ProtestListWrapper>
-                <SiteMessage>
-                  עקב עומס פניות חל עיכוב בהוספת ההפגנות.
-                  <br />
-                  ביממה הקרובה כל ההפגנות שנשלחו יתווספו למפה.
-                  <br />
-                </SiteMessage>
+                <div>
+                  <SiteMessage
+                    style={{ background: '#30d074', height: 70, fontSize: 20, fontWeight: 'bold', letterSpacing: 1.3 }}
+                  >
+                    ההפגנה הקרובה:
+                    <br /> יום שבת o3.10
+                  </SiteMessage>
+                  <SiteMessage>
+                    רשימת ההפגנות ממשיכה להתעדכן.
+                    <br /> אם לא מצאתן הפגנה קרובה, בדקו שוב במועד מאוחר יותר!
+                  </SiteMessage>
+                </div>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
               </ProtestListWrapper>
@@ -148,6 +158,9 @@ function App() {
           </Route>
           <Route exact path="/add-protest/">
             <ProtestForm initialCoords={state.userCoordinates} />
+          </Route>
+          <Route exact path="/support-the-project/">
+            <ProjectSupportPage />
           </Route>
         </React.Fragment>
       </Router>
@@ -175,9 +188,32 @@ const SiteLogo = styled.h1`
   font-size: 26px;
 `;
 
+const NavItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 550px) {
+    flex-direction: row-reverse;
+  }
+`;
+
 const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
+  }
+
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
   }
 `;
 
@@ -206,7 +242,10 @@ const HomepageWrapper = styled.div`
 `;
 
 const SiteMessage = styled.div`
-  background-color: #ff6b6b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ff7675;
   padding: 5px 10px;
   text-align: center;
 
