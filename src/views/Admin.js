@@ -5,7 +5,7 @@ import firebase, { firestore, signInWithGoogle } from '../firebase';
 import styled from 'styled-components';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import * as geofirestore from 'geofirestore';
-import { createProtest, archivePendingProtest } from '../api';
+import { useForm } from 'react-hook-form';
 import API from '../api';
 
 const archiveProtest = async (protestId) => {
@@ -30,7 +30,9 @@ const archiveProtest = async (protestId) => {
 const createProtest = async (params, protestId) => {
   try {
     const a = await API.createProtest(params);
+    console.log(a);
     const b = await API.archivePendingProtest(protestId);
+    console.log(b);
   } catch (err) {
     alert('An error occured; check the console');
     console.error(err);
@@ -41,20 +43,37 @@ function Admin() {
   const authUser = useAuth();
   const [pendingProtests, setPendingProtests] = useState([]);
   const [currentProtest, setCurrentProtest] = useState({});
+  const [currentPosition, setCurrentPosition] = useState([31.7749837, 35.219797]);
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
     async function fetchProtests() {
       const snapshot = await firestore
         .collection('pending_protests')
-        // .where('archived', '!=', true)
+        .where('archived', '!=', true)
         .orderBy('archived')
-        .limit(3)
+        .orderBy('created_at')
+        .limit(5)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setPendingProtests(protests);
     }
     fetchProtests();
   }, []);
+
+  // Update map coordinates on protest select
+  useEffect(() => {
+    if (currentProtest.coordinates) {
+      setCurrentPosition([currentProtest.coordinates.latitude, currentProtest.coordinates.longitude]);
+    }
+  }, [currentProtest]);
+
+  const submitProtest = (params) => {
+    params.coords = currentPosition;
+    console.log(params);
+  };
+
+  console.log(currentPosition);
 
   return (
     <AdminWrapper>
@@ -67,7 +86,7 @@ function Admin() {
               </PendingCard>
             ))}
           </PendingProtestsList>
-          <DetailsWrapper>
+          <DetailsWrapper onSubmit={handleSubmit(submitProtest)}>
             {' '}
             <ProtestDetail>
               <ProtestDetailLabel>ID</ProtestDetailLabel>
@@ -75,35 +94,42 @@ function Admin() {
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>שם המקום</ProtestDetailLabel>
-              <ProtestDetailInput defaultValue={currentProtest.displayName} />
+              <ProtestDetailInput name="displayName" defaultValue={currentProtest.displayName} ref={register} />
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>רחוב</ProtestDetailLabel>
-              <ProtestDetailInput defaultValue={currentProtest.streetAddress} />
+              <ProtestDetailInput name="streetAddress" defaultValue={currentProtest.streetAddress} ref={register} />
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>קבוצת וואטסאפ</ProtestDetailLabel>
-              <ProtestDetailInput defaultValue={currentProtest.whatsAppLink} />
+              <ProtestDetailInput name="whatsAppLink" defaultValue={currentProtest.whatsAppLink} ref={register} />
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>קבוצת טלגרם</ProtestDetailLabel>
-              <ProtestDetailInput defaultValue={currentProtest.telegramLink} />
+              <ProtestDetailInput name="telegramLink" defaultValue={currentProtest.telegramLink} ref={register} />
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>הערות</ProtestDetailLabel>
-              <ProtestDetailInput defaultValue={currentProtest.notes} />
+              <ProtestDetailInput name="notes" defaultValue={currentProtest.notes} ref={register} />
             </ProtestDetail>
             <ProtestDetail>
               <ProtestDetailLabel>שעה</ProtestDetailLabel>
-              <ProtestDetailInput type="time" defaultValue={currentProtest.meeting_time} />
+              <ProtestDetailInput name="meeting_time" type="time" defaultValue={currentProtest.meeting_time} ref={register} />
             </ProtestDetail>
-            <Button color="#1ED96E" style={{ marginBottom: 7.5 }}>
+            <Button type="submit" color="#1ED96E" style={{ marginBottom: 7.5 }}>
               יצירת הפגנה
             </Button>
             <Button color="tomato" onClick={() => archiveProtest(currentProtest.id)}>
               מחיקת הפגנה
             </Button>
           </DetailsWrapper>
+          <MapWrapper
+            center={currentPosition}
+            zoom={14}
+            onMove={(t) => {
+              setCurrentPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+            }}
+          />
         </>
       ) : (
         <Button onClick={signInWithGoogle}>התחבר למערכת</Button>
@@ -130,7 +156,7 @@ const PendingCard = styled.div`
   background-color: #fff;
 `;
 
-const DetailsWrapper = styled.div`
+const DetailsWrapper = styled.form`
   justify-self: center;
 `;
 
@@ -151,4 +177,11 @@ const ProtestDetailInput = styled.input`
   font-size: 16px;
   border: 1px solid #d2d2d2;
   -webkit-appearance: none;
+`;
+
+const MapWrapper = styled(Map)`
+  width: 100%;
+  height: 250px;
+  margin-bottom: 10px;
+  z-index: 0;
 `;
