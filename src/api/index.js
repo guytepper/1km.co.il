@@ -75,7 +75,6 @@ export function createProtest(params) {
 }
 
 export async function archivePendingProtest(protestId) {
-  console.log(protestId);
   try {
     const request = await firestore.collection('pending_protests').doc(protestId).update({
       archived: true,
@@ -88,3 +87,9 @@ export async function archivePendingProtest(protestId) {
     return err;
   }
 }
+
+export default {
+  createProtest,
+  createPendingProtest,
+  archivePendingProtest,
+};

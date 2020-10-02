@@ -6,15 +6,31 @@ import styled from 'styled-components';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import * as geofirestore from 'geofirestore';
 import { createProtest, archivePendingProtest } from '../api';
+import API from '../api';
 
 const archiveProtest = async (protestId) => {
   try {
-    const archived = await archivePendingProtest(protestId);
+    const archived = await API.archivePendingProtest(protestId);
     if (archived) {
       alert('success!');
     } else {
       alert(archived);
     }
+  } catch (err) {
+    alert('An error occured; check the console');
+    console.error(err);
+  }
+};
+
+/**
+ * Add a new protest to the map and archive the pending one.
+ * @param {*} params - The new protest parameters.
+ * @param {*} pendingProtestId - The pending protest id.
+ */
+const createProtest = async (params, protestId) => {
+  try {
+    const a = await API.createProtest(params);
+    const b = await API.archivePendingProtest(protestId);
   } catch (err) {
     alert('An error occured; check the console');
     console.error(err);
