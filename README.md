@@ -7,8 +7,7 @@ Fighting for democracy during lockdown.<br>
 
 ## Welcome to 1km
 
-The times.. they are a-changin'.  
-Something bad is happening in Israel, and we can't allow ourselves to stand still. We've got to react.
+Something bad is happening in Israel, and we cannot afford to stand still. We've got to React.
 
 ## Introduction
 
