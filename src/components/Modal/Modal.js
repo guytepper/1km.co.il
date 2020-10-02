@@ -40,7 +40,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
             מציאת הפגנות באיזורי
           </Button>
 
-          {/* {!addressInputDisplay && (
+          {!addressInputDisplay && (
             <Button onClick={() => setAdressInputDisplay(true)} color="#0096c7">
               הזנת מיקום ידנית
             </Button>
@@ -52,7 +52,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
                 הצגת הפגנות
               </Button>
             </>
-          )} */}
+          )}
         </div>
       </ModalContentWrapper>
     </ModalWrapper>
