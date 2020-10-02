@@ -12,7 +12,7 @@ function Footer() {
         <FooterLinkIcon src="/icons/twitter.svg" alt="" />
         טוויטר
       </FooterLink>
-      <FooterLink href="mailto:guytepper@gmail.com" target="_blank">
+      <FooterLink href="mailto:1kilometer@protonmail.com" target="_blank">
         <FooterLinkIcon src="/icons/email.svg" alt="" />
         פידבק
       </FooterLink>

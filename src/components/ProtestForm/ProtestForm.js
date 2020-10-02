@@ -41,7 +41,7 @@ function ProtestForm({ initialCoords }) {
         }
       } catch (err) {
         setSubmitSuccess(true);
-        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: guytepper@gmail.com');
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: 1kilometer@protonmail.com');
       }
     }
   };
