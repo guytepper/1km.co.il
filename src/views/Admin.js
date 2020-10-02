@@ -239,7 +239,7 @@ const ProtestDetailInput = styled.input`
 
 const MapWrapper = styled(Map)`
   width: 100%;
-  height: 80%;
+  height: 500px;
   margin-bottom: 10px;
   z-index: 0;
 `;
