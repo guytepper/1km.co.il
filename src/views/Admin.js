@@ -18,20 +18,6 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-const archiveProtest = async (protestId) => {
-  try {
-    const archived = await API.archivePendingProtest(protestId);
-    if (archived) {
-      alert('success!');
-    } else {
-      alert(archived);
-    }
-  } catch (err) {
-    alert('An error occured; check the console');
-    console.error(err);
-  }
-};
-
 /**
  * Add a new protest to the map and archive the pending one.
  * @param {*} params - The new protest parameters.
@@ -105,6 +91,26 @@ function Admin() {
     }
   }, [currentProtest]);
 
+  const archiveProtest = async (protestId) => {
+    try {
+      const archived = await API.archivePendingProtest(protestId);
+      if (archived) {
+        setPendingProtests((prevState) => {
+          const index = prevState.indexOf(currentProtest);
+          const newPendingProtests = [...prevState.slice(0, index), ...prevState.slice(index + 1)];
+          setCurrentProtest(prevState[index + 1]);
+          reset(prevState[index + 1]);
+          return newPendingProtests;
+        });
+      } else {
+        alert(archived);
+      }
+    } catch (err) {
+      alert('An error occured; check the console');
+      console.error(err);
+    }
+  };
+
   const submitProtest = async (params) => {
     params.coords = currentPosition;
     const result = await createProtest(params, currentProtest.id);
@@ -168,7 +174,7 @@ function Admin() {
             <Button type="submit" color="#1ED96E" style={{ marginBottom: 7.5 }}>
               יצירת הפגנה
             </Button>
-            <Button color="tomato" onClick={() => archiveProtest(currentProtest.id)}>
+            <Button type="button" color="tomato" onClick={() => archiveProtest(currentProtest.id)}>
               מחיקת הפגנה
             </Button>
           </DetailsWrapper>
