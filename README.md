@@ -1,21 +1,19 @@
 <h3 align="center"><a href="https://1km.co.il">One Kilometer</a></h3>
 <p align="center">
 Fighting for democracy during lockdown.<br>
-<a href="https://discord.gg/P8uSsrR">join our discord server</a>
 </p>
 
 <hr/>
 
 ## Welcome to 1km
 
-The times.. they are a-changin'.  
-Something bad is happening in Israel, and we can't allow ourselves to stand still.  We've got to react.
+Something bad is happening in Israel, and we cannot afford to stand still. We've got to React.
 
 ## Introduction
 
 - A solid knowledge of (and a desire to) React is recommended before dwelling into the code.
-- [Firebase](https://firebase.google.com/) is here to keep our the data and host our assets.  
-- We color our protest signs with [`styled-components`](https://styled-components.com/).  
+- [Firebase](https://firebase.google.com/) is here to keep our the data and host our assets.
+- We color our protest signs with [`styled-components`](https://styled-components.com/).
 - Map is generated with Leaflet using [`react-leaflet`](https://react-leaflet.js.org/).
 
 ## Installation
