@@ -23,7 +23,6 @@ export async function createProtest(params) {
     phoneNumber,
     notes,
     coords,
-    approveContact,
   } = params;
 
   try {
@@ -43,7 +42,6 @@ export async function createProtest(params) {
         meeting_time,
         created_at: new Date(),
         coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-        approveContact,
         archived: false,
       });
 
