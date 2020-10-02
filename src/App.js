@@ -70,7 +70,7 @@ function App() {
 
       async function fetchProtests() {
         try {
-          const snapshot = await query.limit(15).get();
+          const snapshot = await query.limit(20).get();
           const protests = snapshot.docs.map((doc) => {
             const { latitude, longitude } = doc.data().g.geopoint;
             const protestLatlng = [latitude, longitude];
