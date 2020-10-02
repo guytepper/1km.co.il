@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 
 function ProjectSupportPage() {
+  useEffect(() => {
+    document.title = `תמכו בפרוייקט - קילומטר אחד`;
+  }, []);
+
   return (
     <SupportPageWrapper>
-      <SupportPageTitle>תמכו בפרוייקט</SupportPageTitle>
+      <SupportPageTitle>תמיכה בפרוייקט</SupportPageTitle>
       <SupportPageParagraph>היי! קוראים לי גיא טפר, אני בן 25 וגר בירושלים. </SupportPageParagraph>
       <SupportPageParagraph>בחמישי שעבר פתחתי את העיתון וראיתי שהגבלות התנועה צפויות לחול על הפגנות.</SupportPageParagraph>
       <SupportPageParagraph>
@@ -43,7 +47,7 @@ export default ProjectSupportPage;
 
 const SupportPageWrapper = styled.div`
   max-width: 1000px;
-  margin: 0 auto;
+  margin: 0 auto 15px;
   padding: 0 7.5%;
   font-size: 18px;
   line-height: 1.3;
