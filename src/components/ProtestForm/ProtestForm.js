@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
 import { validateLatLng } from '../../utils';
-import { createProtest } from '../../api';
+import { createPendingProtest } from '../../api';
 
 function ProtestForm({ initialCoords }) {
   const { register, handleSubmit } = useForm();
@@ -32,7 +32,7 @@ function ProtestForm({ initialCoords }) {
         params.streetAddress = streetName;
         params.recaptchaToken = recaptchaToken;
 
-        let protest = await createProtest(params);
+        let protest = await createPendingProtest(params);
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');

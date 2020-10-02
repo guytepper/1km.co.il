@@ -12,7 +12,7 @@ async function verifyRecaptcha(token) {
   }
 }
 
-export async function createProtest(params) {
+export async function createPendingProtest(params) {
   const {
     recaptchaToken,
     displayName,
