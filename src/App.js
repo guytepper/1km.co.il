@@ -1,6 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
+import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -148,6 +149,9 @@ function App() {
           </Route>
           <Route exact path="/add-protest/">
             <ProtestForm initialCoords={state.userCoordinates} />
+          </Route>
+          <Route exact path="/support-the-project/">
+            <ProjectSupportPage />
           </Route>
         </React.Fragment>
       </Router>
