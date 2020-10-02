@@ -7,6 +7,16 @@ import { Map, TileLayer, Marker } from 'react-leaflet';
 import * as geofirestore from 'geofirestore';
 import { useForm } from 'react-hook-form';
 import API from '../api';
+import L from 'leaflet';
+
+const GeoFirestore = geofirestore.initializeApp(firestore);
+
+const protestMarker = new L.Icon({
+  iconUrl: '/icons/black-flag.svg',
+  iconRetinaUrl: '/icons/black-flag.svg',
+  iconSize: [50, 48],
+  iconAnchor: [25, 48],
+});
 
 const archiveProtest = async (protestId) => {
   try {
@@ -30,13 +40,34 @@ const archiveProtest = async (protestId) => {
 const createProtest = async (params, protestId) => {
   try {
     const a = await API.createProtest(params);
-    console.log(a);
     const b = await API.archivePendingProtest(protestId);
-    console.log(b);
+    if (a === undefined && b === true) {
+      return true;
+    }
+    return a;
   } catch (err) {
     alert('An error occured; check the console');
     console.error(err);
   }
+};
+
+const geocollection = GeoFirestore.collection('protests');
+const getNearProtests = async (position) => {
+  const query = geocollection.near({
+    center: new firebase.firestore.GeoPoint(position[0], position[1]),
+    radius: 2,
+  });
+  const snapshot = await query.limit(10).get();
+  const protests = snapshot.docs.map((doc) => {
+    const { latitude, longitude } = doc.data().g.geopoint;
+    const protestLatlng = [latitude, longitude];
+    return {
+      id: doc.id,
+      latlng: protestLatlng,
+      ...doc.data(),
+    };
+  });
+  return protests;
 };
 
 function Admin() {
@@ -44,7 +75,8 @@ function Admin() {
   const [pendingProtests, setPendingProtests] = useState([]);
   const [currentProtest, setCurrentProtest] = useState({});
   const [currentPosition, setCurrentPosition] = useState([31.7749837, 35.219797]);
-  const { register, handleSubmit } = useForm();
+  const [nearbyProtests, setNearbyProtests] = useState([]);
+  const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
     async function fetchProtests() {
@@ -52,8 +84,7 @@ function Admin() {
         .collection('pending_protests')
         .where('archived', '!=', true)
         .orderBy('archived')
-        .orderBy('created_at')
-        .limit(5)
+        .limit(25)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setPendingProtests(protests);
@@ -64,16 +95,29 @@ function Admin() {
   // Update map coordinates on protest select
   useEffect(() => {
     if (currentProtest.coordinates) {
-      setCurrentPosition([currentProtest.coordinates.latitude, currentProtest.coordinates.longitude]);
+      const currentPosition = [currentProtest.coordinates.latitude, currentProtest.coordinates.longitude];
+      setCurrentPosition(currentPosition);
+      getNearProtests(currentPosition)
+        .then((protests) => {
+          setNearbyProtests(protests);
+        })
+        .catch((err) => console.error(err));
     }
   }, [currentProtest]);
 
-  const submitProtest = (params) => {
+  const submitProtest = async (params) => {
     params.coords = currentPosition;
-    console.log(params);
+    const result = await createProtest(params, currentProtest.id);
+    if (result) {
+      setPendingProtests((prevState) => {
+        const index = prevState.indexOf(currentProtest);
+        const newPendingProtests = [...prevState.slice(0, index), ...prevState.slice(index + 1)];
+        setCurrentProtest(prevState[index + 1]);
+        reset(prevState[index + 1]);
+        return newPendingProtests;
+      });
+    }
   };
-
-  console.log(currentPosition);
 
   return (
     <AdminWrapper>
@@ -81,13 +125,18 @@ function Admin() {
         <>
           <PendingProtestsList>
             {pendingProtests.map((protest) => (
-              <PendingCard onClick={() => setCurrentProtest(protest)} key={protest.id}>
+              <PendingCard
+                onClick={() => {
+                  setCurrentProtest(protest);
+                  reset(protest);
+                }}
+                key={protest.id}
+              >
                 {protest.displayName || protest.streetAddress}
               </PendingCard>
             ))}
           </PendingProtestsList>
           <DetailsWrapper onSubmit={handleSubmit(submitProtest)}>
-            {' '}
             <ProtestDetail>
               <ProtestDetailLabel>ID</ProtestDetailLabel>
               <ProtestDetailInput defaultValue={currentProtest.id} disabled />
@@ -125,11 +174,20 @@ function Admin() {
           </DetailsWrapper>
           <MapWrapper
             center={currentPosition}
-            zoom={14}
+            zoom={17}
             onMove={(t) => {
               setCurrentPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
             }}
-          />
+          >
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={currentPosition}></Marker>
+            {nearbyProtests.map((protest) => (
+              <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
+            ))}
+          </MapWrapper>
         </>
       ) : (
         <Button onClick={signInWithGoogle}>התחבר למערכת</Button>
@@ -181,7 +239,7 @@ const ProtestDetailInput = styled.input`
 
 const MapWrapper = styled(Map)`
   width: 100%;
-  height: 250px;
+  height: 80%;
   margin-bottom: 10px;
   z-index: 0;
 `;
