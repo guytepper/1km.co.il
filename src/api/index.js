@@ -55,3 +55,36 @@ export async function createPendingProtest(params) {
     return err;
   }
 }
+
+export function createProtest(params) {
+  const { displayName, streetAddress, telegramLink, whatsAppLink, meeting_time, notes, coords } = params;
+  const [lat, lng] = coords;
+  const geocollection = GeoFirestore.collection('protests');
+  const request = geocollection.add({
+    displayName,
+    streetAddress,
+    telegramLink,
+    whatsAppLink,
+    notes,
+    meeting_time,
+    created_at: new Date(),
+    coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+  });
+
+  return request;
+}
+
+export async function archivePendingProtest(protestId) {
+  console.log(protestId);
+  try {
+    const request = await firestore.collection('pending_protests').doc(protestId).update({
+      archived: true,
+    });
+    console.log(request); // <-- Why is this undefined yet the operation successful?
+    if (request === undefined) return true;
+    return request;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
