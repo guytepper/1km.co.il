@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProtestCard from '../ProtestCard';
 
@@ -34,9 +35,7 @@ function ProtestList({ loading, closeProtests, farProtests }) {
             <ProtestListHeader>
               לא נמצאו הפגנות ברדיוס של קילומטר ממך.
               <br />
-              <a href="https://forms.gle/oFXS1qQtY2FyYbLA6" target="blank">
-                הוסיפו את ההפגנה הראשונה!
-              </a>
+              <Link to="/add-protest/">הוסיפו את ההפגנה הראשונה!</Link>
             </ProtestListHeader>
           ) : (
             <ProtestListItems protests={closeProtests} listTitle={'עד קילומטר אחד ממך'} />
