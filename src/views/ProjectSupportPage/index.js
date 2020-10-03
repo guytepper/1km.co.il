@@ -32,7 +32,7 @@ function ProjectSupportPage() {
       </SupportPageParagraph>
       <SupportPageParagraph>
         אפשר להעביר אליי{' '}
-        <a href="https://paypal.me/guytepper" target="_blank">
+        <a href="https://paypal.me/guytepper" rel="noopener noreferrer" target="_blank">
           תשלום בפייפאל
         </a>
         , או דרך bit - <a href="mailto:guytepper@protonmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט

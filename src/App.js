@@ -135,9 +135,7 @@ function App() {
 
               <ProtestListWrapper>
                 <div>
-                  <SiteMessage
-                    style={{ background: '#30d074', height: 70, fontSize: 20, fontWeight: 'bold', letterSpacing: 1.3 }}
-                  >
+                  <SiteMessage>
                     ההפגנה הקרובה:
                     <br /> יום שבת o3.10
                   </SiteMessage>
@@ -243,8 +241,12 @@ const SiteMessage = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ff7675;
+  height: 70px;
   padding: 5px 10px;
+  background-color: #fdcb6e;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1.3;
   text-align: center;
 
   @media (min-width: 768px) {

@@ -35,6 +35,7 @@ export async function createPendingProtest(params) {
     const request = geocollection.add({
       displayName,
       streetAddress,
+      whatsAppLink,
       telegramLink,
       notes,
       meeting_time,
