@@ -5,6 +5,7 @@ import firebase, { firestore, signInWithGoogle } from '../firebase';
 import styled from 'styled-components';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import * as geofirestore from 'geofirestore';
+import { PlacesAutocomplete } from '../components';
 import { useForm } from 'react-hook-form';
 import API from '../api';
 import L from 'leaflet';
@@ -188,25 +189,29 @@ function Admin() {
               מחיקת הפגנה
             </Button>
           </DetailsWrapper>
-          <MapWrapper
-            center={currentPosition}
-            zoom={mapZoom}
-            onZoom={(t) => setMapZoom(t.target.getZoom())}
-            onDragEnd={(t) => {
-              console.log(t.target.getZoom());
-              setCurrentPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-              setMapZoom(t.target.getZoom());
-            }}
-          >
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={currentPosition}></Marker>
-            {nearbyProtests.map((protest) => (
-              <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
-            ))}
-          </MapWrapper>
+          <div>
+            שינוי תצוגת מפה לכתובת:
+            <PlacesAutocomplete setManualAdress={setCurrentPosition} />
+            <MapWrapper
+              center={currentPosition}
+              zoom={mapZoom}
+              onZoom={(t) => setMapZoom(t.target.getZoom())}
+              onDragEnd={(t) => {
+                console.log(t.target.getZoom());
+                setCurrentPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+                setMapZoom(t.target.getZoom());
+              }}
+            >
+              <TileLayer
+                attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={currentPosition}></Marker>
+              {nearbyProtests.map((protest) => (
+                <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
+              ))}
+            </MapWrapper>
+          </div>
         </>
       ) : (
         <Button onClick={signInWithGoogle}>התחבר למערכת</Button>
