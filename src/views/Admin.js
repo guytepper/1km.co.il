@@ -70,6 +70,7 @@ function Admin() {
         .collection('pending_protests')
         .where('archived', '!=', true)
         .orderBy('archived')
+        .orderBy('created_at', 'desc')
         .limit(25)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
@@ -171,6 +172,14 @@ function Admin() {
               <ProtestDetailLabel>שעה</ProtestDetailLabel>
               <ProtestDetailInput name="meeting_time" type="time" defaultValue={currentProtest.meeting_time} ref={register} />
             </ProtestDetail>
+            <ProtestDetail>
+              <ProtestDetailLabel>מייל</ProtestDetailLabel>
+              <ProtestDetailInput disabled defaultValue={currentProtest.email} ref={register} />
+            </ProtestDetail>
+            <ProtestDetail>
+              <ProtestDetailLabel>טלפון</ProtestDetailLabel>
+              <ProtestDetailInput disabled defaultValue={currentProtest.phoneNumber} ref={register} />
+            </ProtestDetail>
             <Button type="submit" color="#1ED96E" style={{ marginBottom: 7.5 }}>
               יצירת הפגנה
             </Button>
@@ -245,7 +254,7 @@ const ProtestDetailInput = styled.input`
 
 const MapWrapper = styled(Map)`
   width: 100%;
-  height: 500px;
+  height: 550px;
   margin-bottom: 10px;
   z-index: 0;
 `;
