@@ -8,7 +8,7 @@ function ProtestListItems({ protests, listTitle }) {
     return (
       <>
         <ProtestListHeader>{listTitle}</ProtestListHeader>
-        {protests.map((protest) => (
+        {protests.slice(0, 10).map((protest) => (
           <ProtestCard key={protest.id} protestInfo={protest} />
         ))}
       </>

@@ -20,9 +20,9 @@ export async function createProtest(params) {
     telegramLink,
     whatsAppLink,
     meeting_time,
-    phoneNumber,
     notes,
     coords,
+    approveContact,
   } = params;
 
   try {
@@ -37,11 +37,11 @@ export async function createProtest(params) {
         streetAddress,
         telegramLink,
         whatsAppLink,
-        phoneNumber,
         notes,
         meeting_time,
         created_at: new Date(),
         coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+        approveContact,
         archived: false,
       });
 
