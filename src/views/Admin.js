@@ -71,7 +71,7 @@ function Admin() {
         .collection('pending_protests')
         .where('archived', '!=', true)
         .orderBy('archived')
-        .orderBy('created_at', 'desc')
+        .orderBy('created_at')
         .limit(25)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
