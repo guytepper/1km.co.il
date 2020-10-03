@@ -61,6 +61,7 @@ function Admin() {
   const [pendingProtests, setPendingProtests] = useState([]);
   const [currentProtest, setCurrentProtest] = useState({});
   const [currentPosition, setCurrentPosition] = useState([31.7749837, 35.219797]);
+  const [mapZoom, setMapZoom] = useState(17);
   const [nearbyProtests, setNearbyProtests] = useState([]);
   const { register, handleSubmit, reset } = useForm();
 
@@ -189,9 +190,12 @@ function Admin() {
           </DetailsWrapper>
           <MapWrapper
             center={currentPosition}
-            zoom={17}
-            onMove={(t) => {
+            zoom={mapZoom}
+            onZoom={(t) => setMapZoom(t.target.getZoom())}
+            onDragEnd={(t) => {
+              console.log(t.target.getZoom());
               setCurrentPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+              setMapZoom(t.target.getZoom());
             }}
           >
             <TileLayer
