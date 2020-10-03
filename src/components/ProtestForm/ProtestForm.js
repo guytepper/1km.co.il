@@ -1,13 +1,44 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
+// import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
 import { validateLatLng } from '../../utils';
-import { createProtest } from '../../api';
+import { createPendingProtest } from '../../api';
+import firebase, { firestore } from '../../firebase';
+import * as geofirestore from 'geofirestore';
+import L from 'leaflet';
+
+const GeoFirestore = geofirestore.initializeApp(firestore);
+
+const protestMarker = new L.Icon({
+  iconUrl: '/icons/black-flag.svg',
+  iconRetinaUrl: '/icons/black-flag.svg',
+  iconSize: [50, 48],
+  iconAnchor: [25, 48],
+});
+
+const geocollection = GeoFirestore.collection('protests');
+const getNearProtests = async (position) => {
+  const query = geocollection.near({
+    center: new firebase.firestore.GeoPoint(position[0], position[1]),
+    radius: 2,
+  });
+  const snapshot = await query.limit(10).get();
+  const protests = snapshot.docs.map((doc) => {
+    const { latitude, longitude } = doc.data().g.geopoint;
+    const protestLatlng = [latitude, longitude];
+    return {
+      id: doc.id,
+      latlng: protestLatlng,
+      ...doc.data(),
+    };
+  });
+  return protests;
+};
 
 function ProtestForm({ initialCoords }) {
   const { register, handleSubmit } = useForm();
@@ -17,10 +48,19 @@ function ProtestForm({ initialCoords }) {
     return initialState;
   });
   const [streetName, setStreetName] = useState('');
-  const [recaptchaToken, setRecaptchaToken] = useState('');
+  // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
-  const { recaptcha } = useRef(null);
+  const [nearbyProtests, setNearbyProtests] = useState([]);
+  // const { recaptcha } = useRef(null);
+
+  useEffect(() => {
+    async function nearbyProtests() {
+      const protests = await getNearProtests(coordinates);
+      setNearbyProtests(protests);
+    }
+    nearbyProtests();
+  }, [streetName]);
 
   const onSubmit = async (params) => {
     if (!streetName) {
@@ -30,9 +70,9 @@ function ProtestForm({ initialCoords }) {
       try {
         params.coords = coordinates;
         params.streetAddress = streetName;
-        params.recaptchaToken = recaptchaToken;
+        // params.recaptchaToken = recaptchaToken;
 
-        let protest = await createProtest(params);
+        let protest = await createPendingProtest(params);
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
@@ -46,13 +86,13 @@ function ProtestForm({ initialCoords }) {
     }
   };
 
-  useEffect(() => {
-    loadReCaptcha(process.env.REACT_APP_RECAPTCHA_KEY);
-  }, []);
+  // useEffect(() => {
+  //   loadReCaptcha(process.env.REACT_APP_RECAPTCHA_KEY);
+  // }, []);
 
-  const verifyCallback = (recaptchaToken) => {
-    setRecaptchaToken(recaptchaToken);
-  };
+  // const verifyCallback = (recaptchaToken) => {
+  //   setRecaptchaToken(recaptchaToken);
+  // };
 
   return (
     <ProtestFormWrapper onSubmit={handleSubmit(onSubmit)}>
@@ -93,6 +133,9 @@ function ProtestForm({ initialCoords }) {
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             <Marker position={coordinates}></Marker>
+            {nearbyProtests.map((protest) => (
+              <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
+            ))}
           </MapWrapper>
           <ProtestFormLabel>
             שעת מפגש
@@ -124,14 +167,15 @@ function ProtestForm({ initialCoords }) {
 
           <ProtestFormCheckboxWrapper>
             <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
-            <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצרי האתר</label>
+            <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
           </ProtestFormCheckboxWrapper>
-          <ReCaptcha
+
+          {/* <ReCaptcha
             ref={recaptcha}
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
             action="action_name"
             verifyCallback={verifyCallback}
-          />
+          /> */}
           <Button type="submit" color="#1ED96E">
             הוספת הפגנה
           </Button>

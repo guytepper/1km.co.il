@@ -12,9 +12,9 @@ async function verifyRecaptcha(token) {
   }
 }
 
-export async function createProtest(params) {
+export async function createPendingProtest(params) {
   const {
-    recaptchaToken,
+    // recaptchaToken,
     displayName,
     streetAddress,
     telegramLink,
@@ -26,29 +26,27 @@ export async function createProtest(params) {
   } = params;
 
   try {
-    const verification = await verifyRecaptcha(recaptchaToken);
+    // const verification = await verifyRecaptcha(recaptchaToken);
 
-    if (verification.success) {
-      const [lat, lng] = coords;
-      const geocollection = GeoFirestore.collection('pending_protests');
+    // if (verification.success) {
+    const [lat, lng] = coords;
+    const geocollection = GeoFirestore.collection('pending_protests');
 
-      const request = geocollection.add({
-        displayName,
-        streetAddress,
-        telegramLink,
-        whatsAppLink,
-        notes,
-        meeting_time,
-        created_at: new Date(),
-        coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-        approveContact,
-        archived: false,
-      });
+    const request = geocollection.add({
+      displayName,
+      streetAddress,
+      telegramLink,
+      notes,
+      meeting_time,
+      created_at: new Date(),
+      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+      approveContact,
+    });
 
-      return request;
-    } else {
-      throw new Error('Recaptcha error');
-    }
+    return request;
+    // } else {
+    //   throw new Error('Recaptcha error');
+    // }
   } catch (err) {
     console.log(err);
     return err;

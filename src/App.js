@@ -131,7 +131,8 @@ function App() {
                   dispatch({ type: 'setMapPosition', payload: position });
                 }}
                 markers={state.markers}
-              ></Map>
+              />
+
               <ProtestListWrapper>
                 <div>
                   <SiteMessage
@@ -191,6 +192,7 @@ const SiteLogo = styled.h1`
 const NavItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 
   @media (min-width: 550px) {
     flex-direction: row-reverse;
