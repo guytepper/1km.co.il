@@ -186,10 +186,10 @@ const SiteLogo = styled.h1`
 const NavItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
 
   @media (min-width: 550px) {
     flex-direction: row-reverse;
+    align-items: center;
   }
 `;
 
