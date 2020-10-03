@@ -139,6 +139,10 @@ function App() {
                     ההפגנה הקרובה:
                     <br /> יום שבת 03.10
                   </SiteMessage>
+                  <SiteMessage style={{ height: 90, backgroundColor: '#EC7070', color: '#fff', fontSize: 15, fontWeight: 400 }}>
+                    יש עשרות הפגנות שעוברות בדיקה ברגעים אלו. אם ההפגנה לא מופיעה או קבוצת הוואטסאפ טרם עודכנה, אנא בדקו שנית בעוד
+                    חצי שעה.
+                  </SiteMessage>
                 </div>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
@@ -173,7 +177,7 @@ const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
+  padding: 5px 25px;
   grid-row: 1;
   background-color: #fff;
   box-shadow: inset 0 -1px 0 #e1e4e8;
