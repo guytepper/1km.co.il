@@ -21,13 +21,13 @@ function ProjectSupportPage() {
       </SupportPageParagraph>
       <SupportPageParagraph>מאוד משמח אותי לקבל את התגובות החמות, אבל הכי ישמח אותי ידיים עוזרות. </SupportPageParagraph>
       <SupportPageParagraph>
-        אם תרצו לקחת חלק בפרוייקט, <a href="mailto:guytepper@gmail.com">שלחו לי מייל</a>. גם אם כל מה שיש לכן להציע זה זמן פנוי זה
-        בהחלט יהיה מועיל.
+        אם תרצו לקחת חלק בפרוייקט, <a href="mailto:guytepper@protonmail.com">שלחו לי מייל</a>. גם אם כל מה שיש לכן להציע זה זמן
+        פנוי זה בהחלט יהיה מועיל.
       </SupportPageParagraph>
       אם אתן מתכנתות, <a href="https://github.com/guytepper/1km.co.il">האתר נכתב בקוד פתוח וזמין בגיטהאב</a>, יש פיצ’רים חדשים
       ובאגים חביבים ואשמח לכל עזר.
       <SupportPageParagraph>
-        עלויות התחזוקה עולות ככל שהאתר נפוץ, והעבודה עליו בימים אלה לוקחת את כל זמני - מ- 6 בבוקר ועד 22 בלילה.
+        עלויות התחזוקה עולות ככל שהאתר מופץ, והעבודה עליו בימים אלה לוקחת את כל זמני - מ- 6 בבוקר ועד 22 בלילה.
         <br /> אהיה אסיר תודה על כל סכום לצורך כיסוי עלויות האתר ותפעולו.
       </SupportPageParagraph>
       <SupportPageParagraph>
@@ -35,7 +35,8 @@ function ProjectSupportPage() {
         <a href="https://paypal.me/guytepper" target="_blank">
           תשלום בפייפאל
         </a>
-        , או דרך bit - <a href="mailto:guytepper@gmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט שלי.
+        , או דרך bit - <a href="mailto:guytepper@protonmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט
+        שלי.
         <br />
       </SupportPageParagraph>
       <SupportPageParagraph>נפגש ברחובות!</SupportPageParagraph>
