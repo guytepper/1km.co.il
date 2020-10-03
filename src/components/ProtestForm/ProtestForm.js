@@ -114,18 +114,18 @@ function ProtestForm({ initialCoords }) {
           <hr />
           <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
           <ProtestFormInputDetails margin="10px 0">
-            לא חובה. הפרטים לא יפורסמו באתר ולא יועברו לשום גורם. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
+            האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
           </ProtestFormInputDetails>
 
           <ProtestFormLabel>
             כתובת מייל
             <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
           </ProtestFormLabel>
-          <ProtestFormLabel>
-            מספר טלפון
-            <ProtestFormInput type="tel" placeholder="הטלפון שלך" name="phoneNumber" ref={register}></ProtestFormInput>
-          </ProtestFormLabel>
 
+          <ProtestFormCheckboxWrapper>
+            <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
+            <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצרי האתר</label>
+          </ProtestFormCheckboxWrapper>
           <ReCaptcha
             ref={recaptcha}
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}

@@ -54,7 +54,7 @@ function App() {
 
       // Check if the protests for the current position have been fetched already
       state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 8000)) {
+        if (pointWithinRadius(pos, state.mapPosition, 5000)) {
           requested = true;
           return;
         }
@@ -66,12 +66,12 @@ function App() {
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
         center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
-        radius: 11,
+        radius: 15,
       });
 
       async function fetchProtests() {
         try {
-          const snapshot = await query.limit(20).get();
+          const snapshot = await query.limit(30).get();
           const protests = snapshot.docs.map((doc) => {
             const { latitude, longitude } = doc.data().g.geopoint;
             const protestLatlng = [latitude, longitude];
