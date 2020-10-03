@@ -14,42 +14,41 @@ async function verifyRecaptcha(token) {
 
 export async function createPendingProtest(params) {
   const {
-    recaptchaToken,
+    // recaptchaToken,
     displayName,
     streetAddress,
     telegramLink,
     whatsAppLink,
     meeting_time,
-    phoneNumber,
     notes,
     coords,
     approveContact,
   } = params;
 
   try {
-    const verification = await verifyRecaptcha(recaptchaToken);
+    // const verification = await verifyRecaptcha(recaptchaToken);
 
-    if (verification.success) {
-      const [lat, lng] = coords;
-      const geocollection = GeoFirestore.collection('pending_protests');
+    // if (verification.success) {
+    const [lat, lng] = coords;
+    const geocollection = GeoFirestore.collection('pending_protests');
 
-      const request = geocollection.add({
-        displayName,
-        streetAddress,
-        telegramLink,
-        whatsAppLink,
-        phoneNumber,
-        notes,
-        meeting_time,
-        created_at: new Date(),
-        coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-        approveContact,
-      });
+    const request = geocollection.add({
+      displayName,
+      streetAddress,
+      whatsAppLink,
+      telegramLink,
+      notes,
+      meeting_time,
+      created_at: new Date(),
+      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+      approveContact,
+      archived: false,
+    });
 
-      return request;
-    } else {
-      throw new Error('Recaptcha error');
-    }
+    return request;
+    // } else {
+    //   throw new Error('Recaptcha error');
+    // }
   } catch (err) {
     console.log(err);
     return err;

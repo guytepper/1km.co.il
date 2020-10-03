@@ -8,7 +8,7 @@ function ProtestListItems({ protests, listTitle }) {
     return (
       <>
         <ProtestListHeader>{listTitle}</ProtestListHeader>
-        {protests.map((protest) => (
+        {protests.slice(0, 10).map((protest) => (
           <ProtestCard key={protest.id} protestInfo={protest} />
         ))}
       </>
@@ -52,11 +52,10 @@ const ProtestListWrapper = styled.div`
   grid-template-columns: 1fr;
   grid-auto-rows: min-content;
   gap: 15px;
-  padding: 15px;
+  padding: 0 0 15px;
 
   @media (min-width: 768px) {
     max-height: 100vh;
-    padding: 15px 0;
     overflow: scroll;
   }
 
@@ -66,7 +65,7 @@ const ProtestListWrapper = styled.div`
 `;
 
 const ProtestListHeader = styled.h2`
-  margin-bottom: 0;
+  margin: 15px 0 0;
   text-align: center;
   font-weight: 600;
 `;

@@ -2,6 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
 import { Admin } from './views';
+import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
@@ -54,7 +55,7 @@ function App() {
 
       // Check if the protests for the current position have been fetched already
       state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 10000)) {
+        if (pointWithinRadius(pos, state.mapPosition, 5000)) {
           requested = true;
           return;
         }
@@ -66,12 +67,12 @@ function App() {
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
         center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
-        radius: 10,
+        radius: 15,
       });
 
       async function fetchProtests() {
         try {
-          const snapshot = await query.limit(15).get();
+          const snapshot = await query.limit(30).get();
           const protests = snapshot.docs.map((doc) => {
             const { latitude, longitude } = doc.data().g.geopoint;
             const protestLatlng = [latitude, longitude];
@@ -117,7 +118,10 @@ function App() {
               קילומטר אחד
             </Link>
           </SiteLogo>
-          <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+          <NavItemsWrapper>
+            <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+            <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+          </NavItemsWrapper>
         </Header>
         <React.Fragment>
           <Route exact path="/">
@@ -128,14 +132,15 @@ function App() {
                   dispatch({ type: 'setMapPosition', payload: position });
                 }}
                 markers={state.markers}
-              ></Map>
+              />
+
               <ProtestListWrapper>
-                <SiteMessage>
-                  עקב עומס פניות חל עיכוב בהוספת ההפגנות.
-                  <br />
-                  ביממה הקרובה כל ההפגנות שנשלחו יתווספו למפה.
-                  <br />
-                </SiteMessage>
+                <div>
+                  <SiteMessage>
+                    ההפגנה הקרובה:
+                    <br /> יום שבת 03.10
+                  </SiteMessage>
+                </div>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
               </ProtestListWrapper>
@@ -152,6 +157,9 @@ function App() {
           </Route>
           <Route exact path="/admin/">
             <Admin />
+          </Route>
+          <Route exact path="/support-the-project/">
+            <ProjectSupportPage />
           </Route>
         </React.Fragment>
       </Router>
@@ -179,9 +187,33 @@ const SiteLogo = styled.h1`
   font-size: 26px;
 `;
 
+const NavItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 550px) {
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+`;
+
 const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
+  }
+
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
   }
 `;
 
@@ -210,8 +242,15 @@ const HomepageWrapper = styled.div`
 `;
 
 const SiteMessage = styled.div`
-  background-color: #ff6b6b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
   padding: 5px 10px;
+  background-color: #fdcb6e;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1.3;
   text-align: center;
 
   @media (min-width: 768px) {
