@@ -129,8 +129,8 @@ function ProtestForm({ initialCoords }) {
               setCoordinates([t.target.getCenter().lat, t.target.getCenter().lng]);
               setZoomLevel(t.target._zoom);
             }}
-            onZoomEnd={(event)=>{
-              setZoomLevel(event.sourceTarget._zoom);
+            onZoom={(event)=>{
+              setZoomLevel(event.target._zoom);
             }}
           >
             <TileLayer
