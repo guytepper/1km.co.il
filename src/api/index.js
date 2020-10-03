@@ -42,6 +42,7 @@ export async function createPendingProtest(params) {
       created_at: new Date(),
       coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
       approveContact,
+      archived: false,
     });
 
     return request;
