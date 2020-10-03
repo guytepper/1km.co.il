@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
-import { Admin } from './views';
+import { Admin, GroupUpdate } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -161,6 +161,9 @@ function App() {
           </Route>
           <Route exact path="/admin/">
             <Admin />
+          </Route>
+          <Route exact path="/admin/group">
+            <GroupUpdate />
           </Route>
           <Route exact path="/support-the-project/">
             <ProjectSupportPage />
