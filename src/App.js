@@ -141,10 +141,6 @@ function App() {
                     ההפגנה הקרובה:
                     <br /> יום שבת o3.10
                   </SiteMessage>
-                  <SiteMessage>
-                    רשימת ההפגנות ממשיכה להתעדכן.
-                    <br /> אם לא מצאתן הפגנה קרובה, בדקו שוב במועד מאוחר יותר!
-                  </SiteMessage>
                 </div>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
