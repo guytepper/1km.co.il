@@ -73,7 +73,7 @@ function Admin() {
         .where('archived', '!=', true)
         .orderBy('archived')
         .orderBy('created_at')
-        .limit(25)
+        .limit(50)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setPendingProtests(protests);
@@ -232,6 +232,9 @@ const PendingProtestsList = styled.div`
   display: grid;
   grid-auto-rows: 80px;
   gap: 15px;
+  padding: 20px;
+  height: 90vh;
+  overflow: scroll;
 `;
 
 const PendingCard = styled.div`
