@@ -137,7 +137,7 @@ function App() {
                 <div>
                   <SiteMessage>
                     ההפגנה הקרובה:
-                    <br /> יום שבת o3.10
+                    <br /> יום שבת 03.10
                   </SiteMessage>
                 </div>
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
