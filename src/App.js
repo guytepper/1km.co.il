@@ -136,17 +136,12 @@ function App() {
 
               <ProtestListWrapper>
                 <div>
-                  <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                    המחאה ממשיכה!
-                    <br />
-                    המשיכו לעדכן מוקדי הפגנות לקראת סבב המחאה הבא.
-                  </SiteMessage>
-                  <SiteMessage style={{ background: '#ff6d46' }}>
-                    <p>
-                      גם פיתוח האתר נמשך.
-                      <br /> חידושים והפתעות צפויים להגיע בימים הקרובים.
-                    </p>
-                  </SiteMessage>
+                  <Link to="/project-updates/1">
+                    <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
+                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                    </SiteMessage>
+                  </Link>
+
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 </div>
                 <Footer />
