@@ -48,4 +48,4 @@ Adding protests for development is be a bit cumbersome currently. We'll improve 
 
 <hr/>
 
-Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/P8uSsrR).
+Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/CdT7d9p).
