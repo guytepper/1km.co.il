@@ -73,15 +73,17 @@ function ProjectUpdates() {
         עלויות תחזוקת האתר משתנות ככל שהטראפיק עולה וקשה לצפות מה יהיו העלויות בסוף החודש. <br />
         אני עובד על הפרוייקט מרגע פתיחת העיניים ועד שעות הלילה המאוחרות, ואודה על תמיכה שתעזור לי להשאר בראש שקט גם מבחינה כלכלית.
       </SupportPageParagraph>
-      <SupportPageParagraph></SupportPageParagraph>
       <SupportPageParagraph>
         פרטי הוצאות האתר וההכנסות מהתרומות יהיו שקופים ויפורסמו בהמשך. במידה והתרומות יכסו את ההוצאות כשהפרוייקט יגיע לסיום, אפנה
         לכל התורמים והשימוש בכסף ייעשה על פי משאלת ליבם.
       </SupportPageParagraph>
       <SupportPageParagraph>
-        אפשר להעביר אליי תשלום בביט למספר 052-8656710 או דרך <a href="https://paypal.me/guytepper">פייפאל</a>.
-        <br />
-        אם בחרתן להעביר כסף בביט, אודה אם <a href="mailto:guytepper@protonmail.com">תשלחו לי מייל</a>, שאוכל להודות ולשמור על קשר.
+        אפשר להעביר אליי{' '}
+        <a href="https://paypal.me/guytepper" rel="noopener noreferrer" target="_blank">
+          תשלום בפייפאל
+        </a>
+        , או דרך bit - <a href="mailto:guytepper@protonmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט
+        שלי.
       </SupportPageParagraph>
       <h3>שמרו על קשר</h3>
       <SupportPageParagraph>
@@ -90,7 +92,7 @@ function ProjectUpdates() {
         <a href="https://www.facebook.com/1km.co.il/" rel="noopener noreferrer" target="_blank">
           עמוד פייסבוק
         </a>
-        , ואני מדי פעם <a href="https://twitter.com/guytepper">אצייץ עדכונים בטוויטר</a>.
+        , ומדי פעם <a href="https://twitter.com/guytepper">אצייץ עדכונים בטוויטר</a>.
       </SupportPageParagraph>
       <SupportPageParagraph>
         אם תרצו ליצור איתי קשר ישירות, <a href="mailto:guytepper@protonmail.com">שלחו מייל</a>. עקב עומס פניות אענה בעיכוב (עד
