@@ -125,6 +125,7 @@ function ProtestForm({ initialCoords }) {
           <MapWrapper
             center={coordinates}
             zoom={zoomLevel}
+            scrollWheelZoom={'center'}
             onMove={(t) => {
               setCoordinates([t.target.getCenter().lat, t.target.getCenter().lng]);
               setZoomLevel(t.target._zoom);
