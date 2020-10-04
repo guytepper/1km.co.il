@@ -73,3 +73,7 @@ input {
     opacity: 1;
   }
 }
+
+li {
+  margin-bottom: 5px;
+}

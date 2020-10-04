@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
-import { Admin, GroupUpdate } from './views';
+import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -136,16 +136,19 @@ function App() {
 
               <ProtestListWrapper>
                 <div>
-                  <SiteMessage>
-                    ההפגנה הקרובה:
-                    <br /> יום שבת 03.10
+                  <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
+                    המחאה ממשיכה!
+                    <br />
+                    המשיכו לעדכן מוקדי הפגנות לקראת סבב המחאה הבא.
                   </SiteMessage>
-                  <SiteMessage style={{ height: 90, backgroundColor: '#EC7070', color: '#fff', fontSize: 15, fontWeight: 400 }}>
-                    יש עשרות הפגנות שעוברות בדיקה ברגעים אלו. אם ההפגנה לא מופיעה או קבוצת הוואטסאפ טרם עודכנה, אנא בדקו שנית בעוד
-                    חצי שעה.
+                  <SiteMessage style={{ background: '#ff6d46' }}>
+                    <p>
+                      גם פיתוח האתר נמשך.
+                      <br /> חידושים והפתעות צפויים להגיע בימים הקרובים.
+                    </p>
                   </SiteMessage>
+                  <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 </div>
-                <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
               </ProtestListWrapper>
             </HomepageWrapper>
@@ -167,6 +170,9 @@ function App() {
           </Route>
           <Route exact path="/support-the-project/">
             <ProjectSupportPage />
+          </Route>
+          <Route exact path="/project-updates/1">
+            <ProjectUpdates />
           </Route>
         </React.Fragment>
       </Router>
@@ -255,10 +261,11 @@ const SiteMessage = styled.div`
   height: 70px;
   padding: 5px 10px;
   background-color: #fdcb6e;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 600;
   letter-spacing: 1.3;
   text-align: center;
+  color: #fff;
 
   @media (min-width: 768px) {
     margin: 0 -15px;
