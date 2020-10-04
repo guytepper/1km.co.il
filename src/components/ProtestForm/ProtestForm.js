@@ -52,6 +52,7 @@ function ProtestForm({ initialCoords }) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [nearbyProtests, setNearbyProtests] = useState([]);
+  const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
   useEffect(() => {
@@ -123,9 +124,14 @@ function ProtestForm({ initialCoords }) {
           </ProtestFormLabel>
           <MapWrapper
             center={coordinates}
-            zoom={14}
+            zoom={zoomLevel}
+            scrollWheelZoom={'center'}
             onMove={(t) => {
               setCoordinates([t.target.getCenter().lat, t.target.getCenter().lng]);
+              setZoomLevel(t.target._zoom);
+            }}
+            onZoom={(event)=>{
+              setZoomLevel(event.target._zoom);
             }}
           >
             <TileLayer
