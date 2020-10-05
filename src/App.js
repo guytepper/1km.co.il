@@ -142,9 +142,14 @@ function App() {
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
                     </SiteMessage>
                   </Link>
+                  <Button
+                    color="#3C4F76"
+                    style={{ width: '100%', margin: '0' }}
+                    onClick={() => dispatch({ type: 'setModalState', payload: true })}
+                  >
+                    שינוי כתובת
+                  </Button>
 
-                  <Button color="#3C4F76" onClick={() => dispatch({ type: 'setModalState', payload: true })}>שינוי כתובת</Button>
-                  
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
                 </ProtestListWrapper>
@@ -266,7 +271,7 @@ const SiteMessage = styled.div`
   color: #fff;
 
   @media (min-width: 768px) {
-    margin: 0 -15px;
+    margin: 0 -15px 10px;
   }
 `;
 
