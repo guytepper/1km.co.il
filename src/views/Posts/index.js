@@ -4,12 +4,12 @@ import LegalNotice from './legal-notice.js';
 
 export const posts = [
   {
-    permalink: '404',
+    slug: '404',
     title: '404',
     text: <FourOhFour />,
   },
   {
-    permalink: 'legal-notice',
+    slug: 'legal-notice',
     title: 'הבהרה משפטית',
     text: <LegalNotice />,
   },

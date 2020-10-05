@@ -6,7 +6,7 @@ import PostWrapper from './PostWrapper';
 const Post = () => {
   const { slug = '404' } = useParams();
 
-  const postData = posts.find((post) => post.permalink === slug);
+  const postData = posts.find((post) => post.slug === slug);
 
   useEffect(() => {
     const currentTitle = document.title;
