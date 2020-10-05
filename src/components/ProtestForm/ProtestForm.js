@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 // import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -60,7 +60,7 @@ function ProtestForm({ initialCoords }) {
       setNearbyProtests(protests);
     }
     nearbyProtests();
-  }, [streetName]);
+  }, [coordinates, streetName]);
 
   const onSubmit = async (params) => {
     if (!streetName) {

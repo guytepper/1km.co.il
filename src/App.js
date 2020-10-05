@@ -5,7 +5,7 @@ import { Admin, GroupUpdate } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 
@@ -107,7 +107,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition]);
+  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
 
   return (
     <AppWrapper>

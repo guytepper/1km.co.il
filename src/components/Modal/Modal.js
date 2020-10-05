@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -24,7 +24,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
-  }, [coordinates]);
+  }, [coordinates, setIsOpen]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
