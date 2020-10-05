@@ -121,7 +121,6 @@ function App() {
           <NavItemsWrapper>
             <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
             <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-            <NavItem to="/protest/fsPeqvmc09V9KtxhCc4s">הפגנה לדוגמא</NavItem>
           </NavItemsWrapper>
         </Header>
         <React.Fragment>
