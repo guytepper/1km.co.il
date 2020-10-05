@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 function formatDistance(distance) {
@@ -10,9 +11,10 @@ function formatDistance(distance) {
 }
 
 function ProtestCard({ protestInfo }) {
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes } = protestInfo;
+  const history = useHistory();
+  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
   return (
-    <ProtestCardWrapper>
+    <ProtestCardWrapper onClick={() => history.push(`/protest/${id}`)}>
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
         {streetAddress && (

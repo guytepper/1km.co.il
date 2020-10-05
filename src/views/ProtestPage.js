@@ -37,6 +37,9 @@ export default function ProtestPage() {
   return (
     <Container>
       <h2>{protest.displayName}</h2>
+      <p>
+        {protest.streetAddress} - יום שבת, {protest.meeting_time}
+      </p>
       {whatsAppLink && (
         <a href={whatsAppLink} target="_blank" rel="noopener noreferrer">
           <Icon src="/icons/whatsapp.svg" alt="whatsapp link" />
