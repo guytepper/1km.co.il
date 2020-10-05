@@ -46,7 +46,6 @@ export async function createPendingProtest(params) {
     });
 
 
-    console.log('rrequest', request)
     return request;
     
     // } else {
@@ -73,8 +72,6 @@ export function createProtest(params) {
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
   });
 
-  console.log('request', request)
-
   return request;
 }
 
@@ -96,10 +93,9 @@ export async function fetchProtest(protestId) {
   const protest = await firestore.collection('protests').doc(protestId).get();
 
   if (protest.exists) {
-    console.log('data', protest.data())
     return protest.data();
   } else {
-    console.log('no such protest');
+    return false;
   }
 }
 
