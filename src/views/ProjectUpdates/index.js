@@ -92,7 +92,7 @@ function ProjectUpdates() {
         <a href="https://www.facebook.com/1km.co.il/" rel="noopener noreferrer" target="_blank">
           עמוד פייסבוק
         </a>
-        , ומדי פעם <a href="https://twitter.com/guytepper">אצייץ עדכונים בטוויטר</a>.
+        , ומדי פעם <a href="https://twitter.com/1kmcoil">אצייץ עדכונים בטוויטר</a>.
       </SupportPageParagraph>
       <SupportPageParagraph>
         אם תרצו ליצור איתי קשר ישירות, <a href="mailto:guytepper@protonmail.com">שלחו מייל</a>. עקב עומס פניות אענה בעיכוב (עד
