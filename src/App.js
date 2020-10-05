@@ -137,20 +137,20 @@ function App() {
                 />
 
                 <ProtestListWrapper>
-                <ProtestListHead>
-                  <Link to="/project-updates/1">
-                    <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                    </SiteMessage>
-                  </Link>
-                  <Button
-                    color="#3C4F76"
-                    style={{ width: '100%', margin: '0' }}
-                    onClick={() => dispatch({ type: 'setModalState', payload: true })}
-                  >
-                    שינוי כתובת
-                  </Button>
-                </ProtestListHead>
+                  <ProtestListHead>
+                    <Link to="/project-updates/1">
+                      <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
+                        <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                      </SiteMessage>
+                    </Link>
+                    <Button
+                      color="#3C4F76"
+                      style={{ width: '100%', margin: '0' }}
+                      onClick={() => dispatch({ type: 'setModalState', payload: true })}
+                    >
+                      שינוי כתובת
+                    </Button>
+                  </ProtestListHead>
 
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
@@ -291,6 +291,8 @@ const ProtestListWrapper = styled.div`
   }
 `;
 
-const ProtestListHead = styled.div``
+const ProtestListHead = styled.div`
+  margin-bottom: 0.5rem;
+`;
 
 export default App;
