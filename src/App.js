@@ -137,6 +137,7 @@ function App() {
                 />
 
                 <ProtestListWrapper>
+                <ProtestListHead>
                   <Link to="/project-updates/1">
                     <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
@@ -149,6 +150,7 @@ function App() {
                   >
                     שינוי כתובת
                   </Button>
+                </ProtestListHead>
 
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
@@ -288,5 +290,7 @@ const ProtestListWrapper = styled.div`
     max-height: calc(100vh - 60px);
   }
 `;
+
+const ProtestListHead = styled.div``
 
 export default App;
