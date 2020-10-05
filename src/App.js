@@ -135,7 +135,6 @@ function App() {
               />
 
               <ProtestListWrapper>
-                <div>
                   <Link to="/project-updates/1">
                     <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
@@ -143,7 +142,6 @@ function App() {
                   </Link>
 
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
-                </div>
                 <Footer />
               </ProtestListWrapper>
             </HomepageWrapper>
