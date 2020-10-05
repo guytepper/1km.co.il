@@ -8,9 +8,9 @@ function Footer() {
         <FooterLinkIcon src="/icons/github.svg" alt="" />
         גיטהאב
       </FooterLink>
-      <FooterLink href="https://twitter.com/guytepper" target="_blank">
-        <FooterLinkIcon src="/icons/twitter.svg" alt="" />
-        טוויטר
+      <FooterLink href="https://facebook.com/1km.co.il" target="_blank">
+        <FooterLinkIcon src="/icons/facebook.svg" alt="" />
+        פייסבוק
       </FooterLink>
       <FooterLink href="mailto:support@1km.co.il" target="_blank">
         <FooterLinkIcon src="/icons/email.svg" alt="" />
@@ -23,6 +23,7 @@ function Footer() {
 export default memo(Footer);
 
 const FooterWrapper = styled.footer`
+  position: sticky;
   display: flex;
   align-items: center;
   padding: 15px;
