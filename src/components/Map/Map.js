@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
+import { DispatchContext } from '../../context';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
   new L.Icon({
@@ -45,6 +46,8 @@ const MarkersList = ({ markers }) => {
 const balfur = [31.7749837, 35.219797];
 
 function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
+  const dispatch = useContext(DispatchContext);
+
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
@@ -59,7 +62,9 @@ function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory })
       />
       {coordinates.length === 2 && (
         <>
-          <Marker position={coordinates} icon={positionPoint}></Marker>
+          <Marker position={coordinates} icon={positionPoint} draggable={true}
+            onMoveEnd={() => dispatch({ type: 'setUserCoordinates', payload: marker.getLatLng()})}>
+          </Marker>
           <MarkersList markers={markers} />
           <Circle radius={1000} center={coordinates} />
         </>
