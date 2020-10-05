@@ -30,7 +30,7 @@ export async function createPendingProtest(params) {
 
     // if (verification.success) {
     const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection('protests');
+    const geocollection = GeoFirestore.collection('pending_protests');
 
     const request = geocollection.add({
       displayName,
@@ -45,9 +45,8 @@ export async function createPendingProtest(params) {
       archived: false,
     });
 
-
     return request;
-    
+
     // } else {
     //   throw new Error('Recaptcha error');
     // }
@@ -103,5 +102,5 @@ export default {
   createProtest,
   createPendingProtest,
   archivePendingProtest,
-  fetchProtest
+  fetchProtest,
 };
