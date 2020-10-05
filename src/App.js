@@ -107,7 +107,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
+  }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <AppWrapper>
