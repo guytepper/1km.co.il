@@ -30,7 +30,7 @@ export async function createPendingProtest(params) {
 
     // if (verification.success) {
     const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection('pending_protests');
+    const geocollection = GeoFirestore.collection('protests');
 
     const request = geocollection.add({
       displayName,
@@ -45,7 +45,10 @@ export async function createPendingProtest(params) {
       archived: false,
     });
 
+
+    console.log('rrequest', request)
     return request;
+    
     // } else {
     //   throw new Error('Recaptcha error');
     // }
@@ -70,6 +73,8 @@ export function createProtest(params) {
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
   });
 
+  console.log('request', request)
+
   return request;
 }
 
@@ -87,8 +92,20 @@ export async function archivePendingProtest(protestId) {
   }
 }
 
+export async function fetchProtest(protestId) {
+  const protest = await firestore.collection('protests').doc(protestId).get();
+
+  if (protest.exists) {
+    console.log('data', protest.data())
+    return protest.data();
+  } else {
+    console.log('no such protest');
+  }
+}
+
 export default {
   createProtest,
   createPendingProtest,
   archivePendingProtest,
+  fetchProtest
 };

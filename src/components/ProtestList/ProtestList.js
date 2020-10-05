@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import ProtestCard from '../ProtestCard';
 
 function ProtestListItems({ protests, listTitle }) {

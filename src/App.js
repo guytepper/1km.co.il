@@ -1,11 +1,11 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
-import { Admin, GroupUpdate } from './views';
+import { Admin, GroupUpdate, ProtestPage } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 
@@ -107,7 +107,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition]);
+  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
 
   return (
     <AppWrapper>
@@ -121,6 +121,7 @@ function App() {
           <NavItemsWrapper>
             <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
             <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+            <NavItem to="/protest/fsPeqvmc09V9KtxhCc4s">הפגנה לדוגמא</NavItem>
           </NavItemsWrapper>
         </Header>
         <React.Fragment>
@@ -167,6 +168,9 @@ function App() {
           </Route>
           <Route exact path="/support-the-project/">
             <ProjectSupportPage />
+          </Route>
+          <Route path="/protest/:id">
+            <ProtestPage />
           </Route>
         </React.Fragment>
       </Router>

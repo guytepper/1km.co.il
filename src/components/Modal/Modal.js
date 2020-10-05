@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
