@@ -32,8 +32,8 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
       <ModalContentWrapper>
         <h2 style={{ marginBottom: 0 }}>{i18n.t('modal.title')}</h2>
         <h3 style={{ fontWeight: 400 }}>
-          <br />
           {i18n.t('modal.subTitle1')}
+          <br />
           <br />
           {i18n.t('modal.subTitle2')}
         </h3>
