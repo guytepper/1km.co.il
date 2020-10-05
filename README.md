@@ -3,8 +3,6 @@
 Fighting for democracy during lockdown.<br>
 </p>
 
-<hr/>
-
 <p align="center" >
 <b>  We're looking for maintainers to help lead the project, <br/>see <a href="https://github.com/guytepper/1km.co.il/issues/22">#22</a> for details.</b>
 </p>
