@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, ProtestForm, Button, Post } from './components';
-import { Admin, GroupUpdate, ProjectUpdates } from './views';
+import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
+import { Admin, GroupUpdate, ProjectUpdates, Post } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
+import FourOhFour from './views/FourOhFour';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -173,14 +174,16 @@ function App() {
             <Route exact path="/support-the-project/">
               <ProjectSupportPage />
             </Route>
-            <Route exact path="/project-updates/1">
-              <ProjectUpdates />
+            <Route exact path="/legal-notice">
+              <Post overrideSlug="legal-notice" />
             </Route>
-            <Route exact path="/posts/:slug">
+            <Route exact path="/project-updates/:slug">
               <Post />
             </Route>
+
+            {/* 404 */}
             <Route>
-              <Post />
+              <FourOhFour />
             </Route>
           </Switch>
         </Router>
