@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { PostWrapper } from '../../components';
 
 function ProjectUpdates() {
   useEffect(() => {
@@ -7,7 +8,7 @@ function ProjectUpdates() {
   }, []);
 
   return (
-    <SupportPageWrapper>
+    <PostWrapper>
       <SupportPageTitle>עדכון #1</SupportPageTitle>
       <SupportPageParagraph>
         גם בחלומות הכי פרועים שלי לא חלמתי שיקרה מה שקרה בסופ"ש האחרון. לא אכביר במילים ואתן למספרים לדבר:
@@ -119,36 +120,11 @@ function ProjectUpdates() {
       <SupportPageParagraph>
         <strong>גיא קופמן</strong>, שהאיץ בי להוציא את הרעיון לפועל באותו בוקר חמישי שהיה ברור שמשהו מסריח הולך לעבור כאן.
       </SupportPageParagraph>
-    </SupportPageWrapper>
+    </PostWrapper>
   );
 }
 
 export default ProjectUpdates;
-
-const SupportPageWrapper = styled.div`
-  max-width: 1000px;
-  margin: 0 auto 15px;
-  padding: 0 7.5%;
-  font-size: 18px;
-  line-height: 1.45;
-
-  @media (min-width: 768px) {
-    max-width: 600px;
-    font-size: 20px;
-    margin: 30px auto;
-    border-radius: 20px;
-    background-color: #fff;
-  }
-
-  @media (min-width: 1024px) {
-    max-width: 800px;
-    /* font-size: 21px; */
-  }
-
-  & a {
-    font-weight: 600;
-  }
-`;
 
 const SupportPageTitle = styled.h2`
   text-align: center;

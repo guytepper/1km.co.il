@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { Map, ProtestList, Footer, Modal, ProtestForm, Button, Post } from './components';
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
@@ -125,7 +125,7 @@ function App() {
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
           </Header>
-          <React.Fragment>
+          <Switch>
             <Route exact path="/">
               <HomepageWrapper>
                 <Map
@@ -176,7 +176,13 @@ function App() {
             <Route exact path="/project-updates/1">
               <ProjectUpdates />
             </Route>
-          </React.Fragment>
+            <Route exact path="/posts/:slug">
+              <Post />
+            </Route>
+            <Route>
+              <Post />
+            </Route>
+          </Switch>
         </Router>
       </AppWrapper>
     </DispatchContext.Provider>
