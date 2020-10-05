@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
+import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
@@ -143,6 +143,8 @@ function App() {
                     </SiteMessage>
                   </Link>
 
+                  <Button color="#3C4F76" onClick={() => dispatch({ type: 'setModalState', payload: true })}>שינוי כתובת</Button>
+                  
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
                 </ProtestListWrapper>
