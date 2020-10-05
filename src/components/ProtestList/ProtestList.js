@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { DispatchContext } from '../../context';
+import Button from '../Button';
 import ProtestCard from '../ProtestCard';
 
 function ProtestListItems({ protests, listTitle }) {
@@ -42,7 +43,7 @@ function ProtestList({ loading, closeProtests, farProtests }) {
           ) : (
             <ProtestListItems protests={closeProtests} listTitle={'עד קילומטר אחד ממך'} />
           )}
-          <button onClick={() => dispatch({ type: 'setModalState', payload: true })}>שינוי כתובת</button>
+          <Button color="#3C4F76" onClick={() => dispatch({ type: 'setModalState', payload: true })}>שינוי כתובת</Button>
           <ProtestListItems protests={farProtests} listTitle={'קצת יותר רחוק'} />
         </>
       )}
