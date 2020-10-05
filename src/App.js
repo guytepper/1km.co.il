@@ -8,6 +8,8 @@ import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
+import './locale/locale';
+import i18n from 'i18n-js';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -115,12 +117,12 @@ function App() {
         <Header>
           <SiteLogo>
             <Link to="/" style={{ color: 'black' }}>
-              קילומטר אחד
+              {i18n.t('app.appTitle')}
             </Link>
           </SiteLogo>
           <NavItemsWrapper>
-            <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-            <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+            <NavItem to="/add-protest/">{i18n.t('app.addProtest')}</NavItem>
+            <NavItem to="/support-the-project/">{i18n.t('app.supportProject')}</NavItem>
           </NavItemsWrapper>
         </Header>
         <React.Fragment>
@@ -137,7 +139,7 @@ function App() {
               <ProtestListWrapper>
                   <Link to="/project-updates/1">
                     <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>{i18n.t('app.updates')}</span>
                     </SiteMessage>
                   </Link>
 

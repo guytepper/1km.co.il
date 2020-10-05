@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
+import i18n from 'i18n-js';
 
 ReactModal.setAppElement('#root');
 
@@ -29,20 +30,21 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
-        <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
+        <h2 style={{ marginBottom: 0 }}>{i18n.t('modal.title')}</h2>
         <h3 style={{ fontWeight: 400 }}>
-          חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
           <br />
-          לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
+          {i18n.t('modal.subTitle1')}
+          <br />
+          {i18n.t('modal.subTitle2')}
         </h3>
         <div style={{ maxWidth: 300 }}>
           <Button onClick={() => getUserPosition()} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
-            מציאת הפגנות באיזורי
+            {i18n.t('modal.findProtestsInMyArea')}
           </Button>
 
           {!addressInputDisplay && (
             <Button onClick={() => setAdressInputDisplay(true)} color="#0096c7">
-              הזנת מיקום ידנית
+              {i18n.t("modal.manuallyEnterLocation")}
             </Button>
           )}
           {addressInputDisplay && (
