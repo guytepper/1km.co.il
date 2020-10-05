@@ -60,7 +60,7 @@ function ProtestForm({ initialCoords }) {
       setNearbyProtests(protests);
     }
     nearbyProtests();
-  }, [coordinates, streetName]);
+  }, [streetName]);
 
   const onSubmit = async (params) => {
     if (!streetName) {
