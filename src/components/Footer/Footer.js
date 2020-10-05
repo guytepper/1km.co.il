@@ -4,13 +4,13 @@ import styled from 'styled-components/macro';
 function Footer() {
   return (
     <FooterWrapper>
-      <FooterLink href="https://github.com/guytepper/1km" target="_blank">
-        <FooterLinkIcon src="/icons/github.svg" alt="" />
-        גיטהאב
-      </FooterLink>
-      <FooterLink href="https://twitter.com/guytepper" target="_blank">
+      <FooterLink href="https://twitter.com/1kmcoil" target="_blank">
         <FooterLinkIcon src="/icons/twitter.svg" alt="" />
         טוויטר
+      </FooterLink>
+      <FooterLink href="https://facebook.com/1km.co.il" target="_blank">
+        <FooterLinkIcon src="/icons/facebook.svg" alt="" />
+        פייסבוק
       </FooterLink>
       <FooterLink href="mailto:support@1km.co.il" target="_blank">
         <FooterLinkIcon src="/icons/email.svg" alt="" />
@@ -23,6 +23,7 @@ function Footer() {
 export default memo(Footer);
 
 const FooterWrapper = styled.footer`
+  position: sticky;
   display: flex;
   align-items: center;
   padding: 15px;

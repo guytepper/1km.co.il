@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
-import { Admin, GroupUpdate, ProtestPage } from './views';
+import { Admin, GroupUpdate, ProjectUpdates, ProtestPage } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -135,16 +135,12 @@ function App() {
               />
 
               <ProtestListWrapper>
-                <div>
-                  <SiteMessage>
-                    ההפגנה הקרובה:
-                    <br /> יום שבת 03.10
+                <Link to="/project-updates/1">
+                  <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
+                    <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
                   </SiteMessage>
-                  <SiteMessage style={{ height: 90, backgroundColor: '#EC7070', color: '#fff', fontSize: 15, fontWeight: 400 }}>
-                    יש עשרות הפגנות שעוברות בדיקה ברגעים אלו. אם ההפגנה לא מופיעה או קבוצת הוואטסאפ טרם עודכנה, אנא בדקו שנית בעוד
-                    חצי שעה.
-                  </SiteMessage>
-                </div>
+                </Link>
+
                 <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                 <Footer />
               </ProtestListWrapper>
@@ -167,6 +163,9 @@ function App() {
           </Route>
           <Route exact path="/support-the-project/">
             <ProjectSupportPage />
+          </Route>
+          <Route exact path="/project-updates/1">
+            <ProjectUpdates />
           </Route>
           <Route path="/protest/:id">
             <ProtestPage />
@@ -258,10 +257,11 @@ const SiteMessage = styled.div`
   height: 70px;
   padding: 5px 10px;
   background-color: #fdcb6e;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 16px;
+  font-weight: 600;
   letter-spacing: 1.3;
   text-align: center;
+  color: #fff;
 
   @media (min-width: 768px) {
     margin: 0 -15px;
