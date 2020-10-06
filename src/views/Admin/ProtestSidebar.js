@@ -6,6 +6,7 @@ import {
   ProtestsListHeadTitle,
   ProtestsListHeadFilters,
   ProtestsListHeadFilter,
+  ProtestSidebarWrapper,
 } from './components';
 import { PlacesAutocomplete } from '../../components';
 import { useAdminContext } from './Context';
@@ -20,11 +21,10 @@ const ProtestSidebar = () => {
   const [protests, setProtests] = useState([]);
 
   useEffect(() => {
-    console.log({ coordinates });
-    if (protestFilter === 'approved' && !coordinates) {
-      setProtests([]);
-      return;
-    }
+    // if (protestFilter === 'approved' && !coordinates) {
+    //   setProtests([]);
+    //   return;
+    // }
 
     let filteredProtests = protestFilter === 'pending' ? pendingProtests : approvedProtests;
 
@@ -37,7 +37,7 @@ const ProtestSidebar = () => {
   }, [protestFilter, pendingProtests, approvedProtests, coordinates]);
 
   return (
-    <div>
+    <ProtestSidebarWrapper>
       <ProtestsListHead>
         <ProtestsListHeadTitle>הפגנות</ProtestsListHeadTitle>
         <PlacesAutocomplete setManualAddress={setCoordinates} />
@@ -86,7 +86,7 @@ const ProtestSidebar = () => {
           </Card>
         ))}
       </ProtestsList>
-    </div>
+    </ProtestSidebarWrapper>
   );
 };
 
