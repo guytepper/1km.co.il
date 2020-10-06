@@ -108,7 +108,9 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
+    //TODO: remove this line and make sure deps are correct
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
