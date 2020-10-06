@@ -15,7 +15,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
 
   const handleInput = (e) => {
     if (e.target.value === '') {
-      setManualAdress(null);
+      setManualAddress(null);
     }
     setValue(e.target.value);
     if (setStreetName) setStreetName(e.target.value);
