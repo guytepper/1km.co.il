@@ -6,11 +6,16 @@ export const AdminWrapper = styled.div`
   padding: 20px;
 `;
 
-export const ProtestsList = styled.div`
+export const ProtestSidebarWrapper = styled.div`
+  height: 75vh;
+`;
+
+export const ProtestsList = styled.ul`
   display: grid;
   grid-auto-rows: min-content;
   gap: 15px;
   padding: 20px;
+  list-style-type: none;
   height: 100%;
   overflow: auto;
 `;
@@ -31,7 +36,7 @@ export const ProtestsListHeadFilter = styled.div`
   align-items: center;
 `;
 
-export const Card = styled.div`
+export const Card = styled.li`
   background-color: #fff;
   padding: 15px;
 `;
