@@ -33,13 +33,6 @@ If you want to tinker with the database, view the UI & set up security rules, yo
   Inside the project directory, `cp .env .env.local` and fill the `REACT_APP_FIREBASE_*` variables with the firebase configuration being shown.
 - Go back to firebase dashboard and select **Cloud Firestore** from the sidebar. Click **Create Database**, start in test mode, and press enable.
 
-## Add protests
-
-Adding protests for development is be a bit cumbersome currently. We'll improve the flow as we go.
-
-- Change `pending_protests` collection to `protests` [in the createPendingProtest API mehtod](https://github.com/guytepper/1km.co.il/blob/master/src/api/index.js#L33).
-- Add a protest from `/add-protest` 🤗
-
 <hr/>
 
 Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/CdT7d9p).
