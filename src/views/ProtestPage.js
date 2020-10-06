@@ -159,7 +159,6 @@ function ProtestPageContent({ protest }) {
 
 export default function ProtestPage() {
   const history = useHistory();
-  const location = useLocation();
   const protest = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
