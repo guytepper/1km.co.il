@@ -292,7 +292,7 @@ const ProtestListWrapper = styled.div`
 `;
 
 const ProtestListHead = styled.div`
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
 `;
 
 export default App;
