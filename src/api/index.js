@@ -26,11 +26,13 @@ export async function createPendingProtest(params) {
   } = params;
 
   try {
+    // Skip protest approval during development
+    const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
     // const verification = await verifyRecaptcha(recaptchaToken);
 
     // if (verification.success) {
     const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection('pending_protests');
+    const geocollection = GeoFirestore.collection(tableName);
 
     const request = geocollection.add({
       displayName,
