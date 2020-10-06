@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { fetchProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-import { useForm } from 'react-hook-form';
-import { Button } from '../components';
+import { ProtestForm } from '../components';
+import { Switch, Route } from 'react-router-dom';
 
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
@@ -27,9 +27,8 @@ function useFetchProtest() {
 }
 
 export default function ProtestPage() {
-  const editMode = false;
-  const { register, handleSubmit } = useForm();
-
+  const history = useHistory();
+  const location = useLocation();
   const protest = useFetchProtest();
   // const { onFileUpload } = useFileUpload(false);
 
@@ -40,53 +39,46 @@ export default function ProtestPage() {
 
   const { coordinates, whatsAppLink, telegramLink } = protest;
 
+  console.log(protest);
+
   return (
-    <Container
-      onSubmit={handleSubmit((params) => {
-        console.log('submit', params);
-      })}
-    >
-      {editMode ? <input name="displayName" ref={register} /> : <h2>{protest.displayName}</h2>}
-      <p>
-        {protest.streetAddress} - יום שבת, {protest.meeting_time}
-      </p>
-      {whatsAppLink && (
-        <a href={whatsAppLink} target="_blank" rel="noopener noreferrer">
-          <Icon src="/icons/whatsapp.svg" alt="whatsapp link" />
-        </a>
-      )}
-
-      {telegramLink && (
-        <a href={telegramLink} target="_blank" rel="noopener noreferrer">
-          <Icon src="/icons/telegram.svg" alt="telegram link" />
-        </a>
-      )}
-
-      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
-      </MapWrapper>
-
-      {/* <form>
-        <label>
-          <input type="file" onChange={(e) => onFileUpload(e, protest.displayName)} />
-          <span>Upload Image</span>
-        </label>
-      </form> */}
-
-      <Button type="submit" color="#1ED96E">
-        הוספת הפגנה
-      </Button>
+    <Container>
+      <Switch>
+        <Route path="/protest/:id/edit">
+          <ProtestForm initialCoords={coordinates} submitCallback={(params) => console.log(params)} defaultValues={protest} />
+        </Route>
+        <Route>
+          <Icon src="/icons/pencil.svg" alt="Edit protest" onClick={() => history.push(`${location.pathname}/edit`)} />
+          <h2>{protest.displayName}</h2>
+          <p>
+            {protest.streetAddress} - יום שבת, {protest.meeting_time}
+          </p>
+          {whatsAppLink && (
+            <a href={whatsAppLink} target="_blank" rel="noopener noreferrer">
+              <Icon src="/icons/whatsapp.svg" alt="whatsapp link" />
+            </a>
+          )}
+          {telegramLink && (
+            <a href={telegramLink} target="_blank" rel="noopener noreferrer">
+              <Icon src="/icons/telegram.svg" alt="telegram link" />
+            </a>
+          )}
+          <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
+          </MapWrapper>
+        </Route>
+      </Switch>
     </Container>
   );
 }
 
 //----------------- Styles -------------------------//
 
-const Container = styled.form`
+const Container = styled.div`
   width: 80%;
   max-width: 1000px;
   padding: 24px 0;
@@ -101,4 +93,5 @@ const MapWrapper = styled(Map)`
 const Icon = styled.img`
   width: 20px;
   height: 20px;
+  cursor: pointer;
 `;
