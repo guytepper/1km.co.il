@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../Button';
@@ -8,8 +8,9 @@ import PlacesAutocomplete from '../PlacesAutocomplete';
 ReactModal.setAppElement('#root');
 
 function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
-  const [addressInputDisplay, setAdressInputDisplay] = useState(false);
-  const [manualAdress, setManualAdress] = useState(null);
+  const [addressInputDisplay, setAddressInputDisplay] = useState(false);
+  const [manualAddress, setManualAddress] = useState(null);
+  const addressInputRef = useRef();
 
   const getUserPosition = async () => {
     try {
@@ -26,6 +27,15 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     }
   }, [coordinates]);
 
+  useEffect(() => {
+    // Timeout needed to allow the rendering finish before setting the focus
+    setTimeout(() => {
+      if (addressInputDisplay && addressInputRef.current) {
+        addressInputRef.current.focus();
+      }
+    }, 0);
+  }, [addressInputDisplay])
+
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
@@ -41,14 +51,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           </Button>
 
           {!addressInputDisplay && (
-            <Button onClick={() => setAdressInputDisplay(true)} color="#0096c7">
+            <Button onClick={() => setAddressInputDisplay(true)} color="#0096c7">
               הזנת מיקום ידנית
             </Button>
           )}
           {addressInputDisplay && (
             <>
-              <PlacesAutocomplete setManualAdress={setManualAdress} />{' '}
-              <Button disabled={!manualAdress} onClick={() => setCoordinates(manualAdress)} color="#0096c7">
+              <PlacesAutocomplete setManualAddress={setManualAddress} inputRef={addressInputRef} />{' '}
+              <Button disabled={!manualAddress} onClick={() => setCoordinates(manualAddress)} color="#0096c7">
                 הצגת הפגנות
               </Button>
             </>
