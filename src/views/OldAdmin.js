@@ -82,6 +82,7 @@ function Admin() {
         .limit(50)
         .get();
       const protests = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      console.log(protests);
       setPendingProtests(protests);
     }
     fetchProtests();
