@@ -4,11 +4,12 @@ import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './componen
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng } from './utils';
+import { pointWithinRadius, validateLatLng, isSameCoordinates } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
+import { setUserCoordinatesToLocalStorage, getUserCoordinatesFromLocalStorage } from './localStorage';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -51,6 +52,14 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    if (!state.userCoordinates) {
+      const cachedCoordinates = getUserCoordinatesFromLocalStorage();
+
+      if (cachedCoordinates) {
+        dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates })
+      }
+    }
+
     if (validateLatLng(state.mapPosition)) {
       let requested = false;
 
@@ -158,7 +167,11 @@ function App() {
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
-                setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+                setCoordinates={(coords) => {
+                  // Save the user coordinates in order to reuse them on the next user session
+                  setUserCoordinatesToLocalStorage(coords);
+                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                }}
               />
             </Route>
             <Route exact path="/add-protest/">
