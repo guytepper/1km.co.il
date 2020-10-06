@@ -20,6 +20,7 @@ const ProtestSidebar = () => {
   const [protests, setProtests] = useState([]);
 
   useEffect(() => {
+    console.log({ coordinates });
     if (protestFilter === 'approved' && !coordinates) {
       setProtests([]);
       return;
@@ -39,7 +40,7 @@ const ProtestSidebar = () => {
     <div>
       <ProtestsListHead>
         <ProtestsListHeadTitle>הפגנות</ProtestsListHeadTitle>
-        <PlacesAutocomplete setManualAdress={setCoordinates} />
+        <PlacesAutocomplete setManualAddress={setCoordinates} />
         <ProtestsListHeadFilters>
           <ProtestsListHeadFilter>
             <input
