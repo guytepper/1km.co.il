@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 function Footer() {
   return (
@@ -12,7 +12,7 @@ function Footer() {
         <FooterLinkIcon src="/icons/facebook.svg" alt="" />
         פייסבוק
       </FooterLink>
-      <FooterLink href="mailto:support@1km.co.il" target="_blank">
+      <FooterLink href="mailto:support@1km.zendesk.com" target="_blank">
         <FooterLinkIcon src="/icons/email.svg" alt="" />
         פידבק
       </FooterLink>

@@ -1,13 +1,14 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, ProtestForm } from './components';
+import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates, ProtestPage } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
+import { DispatchContext } from './context';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -110,69 +111,78 @@ function App() {
   }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
 
   return (
-    <AppWrapper>
-      <Router>
-        <Header>
-          <SiteLogo>
-            <Link to="/" style={{ color: 'black' }}>
-              קילומטר אחד
-            </Link>
-          </SiteLogo>
-          <NavItemsWrapper>
-            <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-            <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-          </NavItemsWrapper>
-        </Header>
-        <React.Fragment>
-          <Route exact path="/">
-            <HomepageWrapper>
-              <Map
+    <DispatchContext.Provider value={dispatch}>
+      <AppWrapper>
+        <Router>
+          <Header>
+            <SiteLogo>
+              <Link to="/" style={{ color: 'black' }}>
+                קילומטר אחד
+              </Link>
+            </SiteLogo>
+            <NavItemsWrapper>
+              <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+              <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+            </NavItemsWrapper>
+          </Header>
+          <React.Fragment>
+            <Route exact path="/">
+              <HomepageWrapper>
+                <Map
+                  coordinates={state.userCoordinates}
+                  setMapPosition={(position) => {
+                    dispatch({ type: 'setMapPosition', payload: position });
+                  }}
+                  markers={state.markers}
+                />
+
+                <ProtestListWrapper>
+                  <Link to="/project-updates/1">
+                    <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
+                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                    </SiteMessage>
+                  </Link>
+                  <Button
+                    color="#3C4F76"
+                    style={{ width: '100%', margin: '0' }}
+                    onClick={() => dispatch({ type: 'setModalState', payload: true })}
+                  >
+                    שינוי כתובת
+                  </Button>
+
+                  <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
+                  <Footer />
+                </ProtestListWrapper>
+              </HomepageWrapper>
+              <Modal
+                isOpen={state.isModalOpen}
+                setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
-                setMapPosition={(position) => {
-                  dispatch({ type: 'setMapPosition', payload: position });
-                }}
-                markers={state.markers}
+                setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
               />
-
-              <ProtestListWrapper>
-                <Link to="/project-updates/1">
-                  <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                    <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                  </SiteMessage>
-                </Link>
-
-                <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
-                <Footer />
-              </ProtestListWrapper>
-            </HomepageWrapper>
-            <Modal
-              isOpen={state.isModalOpen}
-              setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-              coordinates={state.userCoordinates}
-              setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
-            />
-          </Route>
-          <Route exact path="/add-protest/">
-            <ProtestForm initialCoords={state.userCoordinates} />
-          </Route>
-          <Route exact path="/admin/">
-            <Admin />
-          </Route>
-          <Route exact path="/admin/group">
-            <GroupUpdate />
-          </Route>
-          <Route exact path="/support-the-project/">
-            <ProjectSupportPage />
-          </Route>
-          <Route exact path="/project-updates/1">
-            <ProjectUpdates />
-          </Route>
-          <Route path="/protest/:id">
-            <ProtestPage />
-          </Route>
-        </React.Fragment>
-      </Router>
-    </AppWrapper>
+            </Route>
+            <Route exact path="/add-protest/">
+              <ProtestForm initialCoords={state.userCoordinates} />
+            </Route>
+            <Route exact path="/admin/">
+              <Admin />
+            </Route>
+            <Route exact path="/admin/group">
+              <GroupUpdate />
+            </Route>
+            <Route exact path="/support-the-project/">
+              <ProjectSupportPage />
+            </Route>
+            <Route exact path="/project-updates/1">
+              <ProjectUpdates />
+            </Route>
+            <Route path="/protest/:id">
+              <ProtestPage />
+            </Route>
+          </React.Fragment>
+        </Router>
+      </AppWrapper>
+    </DispatchContext.Provider>
   );
 }
 
@@ -264,7 +274,7 @@ const SiteMessage = styled.div`
   color: #fff;
 
   @media (min-width: 768px) {
-    margin: 0 -15px;
+    margin: 0 -15px 10px;
   }
 `;
 

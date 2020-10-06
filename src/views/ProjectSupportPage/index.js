@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 
 function ProjectSupportPage() {
   useEffect(() => {
@@ -21,7 +21,7 @@ function ProjectSupportPage() {
       </SupportPageParagraph>
       <SupportPageParagraph>מאוד משמח אותי לקבל את התגובות החמות, אבל הכי ישמח אותי ידיים עוזרות. </SupportPageParagraph>
       <SupportPageParagraph>
-        אם תרצו לקחת חלק בפרוייקט, <a href="mailto:guytepper@protonmail.com">שלחו לי מייל</a>. גם אם כל מה שיש לכן להציע זה זמן
+        אם תרצו לקחת חלק בפרוייקט, <a href="mailto:support@1km.zendesk.com">שלחו לנו מייל</a>. גם אם כל מה שיש לכן להציע זה זמן
         פנוי זה בהחלט יהיה מועיל.
       </SupportPageParagraph>
       אם אתן מתכנתות, <a href="https://github.com/guytepper/1km.co.il">האתר נכתב בקוד פתוח וזמין בגיטהאב</a>, יש פיצ’רים חדשים

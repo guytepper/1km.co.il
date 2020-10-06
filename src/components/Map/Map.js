@@ -1,6 +1,6 @@
 import React from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
-import styled from 'styled-components/macro';
+import styled from 'styled-components';
 import L from 'leaflet';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
