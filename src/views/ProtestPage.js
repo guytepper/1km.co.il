@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useParams } from 'react-router-dom';
-import { fetchProtest, uploadFile } from '../api';
+import { fetchProtest /*uploadFile*/ } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-import S3 from 'react-aws-s3';
+//import S3 from 'react-aws-s3';
 
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
@@ -25,42 +25,42 @@ function useFetchProtest() {
   return protest;
 }
 
-function useFileUpload(directly = true) {
-  const onFileUpload = (e, folderName) => {
-    const selectedFile = e.target.files[0];
+// function useFileUpload(directly = true) {
+//   const onFileUpload = (e, folderName) => {
+//     const selectedFile = e.target.files[0];
 
-    if (directly) {
-      // Upload directly from browser
-      const config = {
-        bucketName: '1km',
-        dirName: `images/${folderName}`,
-        region: 'eu-west-1',
-        accessKeyId: '',
-        secretAccessKey: '',
-      };
+//     if (directly) {
+//       // Upload directly from browser
+//       const config = {
+//         bucketName: '1km',
+//         dirName: `images/${folderName}`,
+//         region: 'eu-west-1',
+//         accessKeyId: '',
+//         secretAccessKey: '',
+//       };
 
-      const ReactS3Client = new S3(config);
+//       const ReactS3Client = new S3(config);
 
-      ReactS3Client.uploadFile(selectedFile, selectedFile.name.split('.')[0])
-        .then((data) => {
-          // TODO: update s3 url in firebase
-          console.log(data);
-        })
-        .catch((err) => console.error(err));
-    } else {
-      const formData = new FormData();
-      formData.append('image', selectedFile);
+//       ReactS3Client.uploadFile(selectedFile, selectedFile.name.split('.')[0])
+//         .then((data) => {
+//           // TODO: update s3 url in firebase
+//           console.log(data);
+//         })
+//         .catch((err) => console.error(err));
+//     } else {
+//       const formData = new FormData();
+//       formData.append('image', selectedFile);
 
-      uploadFile(formData);
-    }
-  };
+//       uploadFile(formData);
+//     }
+//   };
 
-  return { onFileUpload };
-}
+//   return { onFileUpload };
+// }
 
 export default function ProtestPage() {
   const protest = useFetchProtest();
-  const { onFileUpload } = useFileUpload(false);
+  // const { onFileUpload } = useFileUpload(false);
 
   if (!protest) {
     // TODO: loading state
@@ -95,12 +95,12 @@ export default function ProtestPage() {
         <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
       </MapWrapper>
 
-      <form>
+      {/* <form>
         <label>
           <input type="file" onChange={(e) => onFileUpload(e, protest.displayName)} />
           <span>Upload Image</span>
         </label>
-      </form>
+      </form> */}
     </Container>
   );
 }
