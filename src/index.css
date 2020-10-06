@@ -1,0 +1,79 @@
+@font-face {
+  font-family: 'Simpler';
+  font-weight: 200;
+  font-display: fallback;
+  src: local('Simpler Light'), url('/fonts/Simpler-Light.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Simpler';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: local('Simpler Regular'), url('/fonts/Simpler-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Simpler';
+  font-weight: 600;
+  font-display: fallback;
+  src: local('Simpler Bold'), url('/fonts/Simpler-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Simpler';
+  font-weight: 800;
+  src: local('Simpler Black'), url('/fonts/Simpler-Black.woff') format('woff');
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+  font-family: Simpler, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f4f6fa;
+}
+
+a {
+  color: #2980b9;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+input {
+  font-family: inherit;
+}
+
+.android-device .ReactModal__Content {
+  position: unset;
+  height: 100%;
+  padding: 0px 15px;
+}
+
+.leaflet-marker-icon {
+  animation: fadein 0.5s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+li {
+  margin-bottom: 5px;
+}
