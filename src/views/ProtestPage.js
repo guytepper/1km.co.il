@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest } from '../api';
+import { fetchProtest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -36,13 +36,13 @@ export default function ProtestPage() {
     return <div>Loading...</div>;
   }
 
-  const { coordinates, whatsAppLink, telegramLink } = protest;
+  const { coordinates, whatsAppLink, telegramLink, id,  } = protest;
 
   return (
     <Container>
       <Switch>
         <Route path="/protest/:id/edit">
-          <ProtestForm initialCoords={coordinates} submitCallback={(params) => console.log(params)} defaultValues={protest} />
+          <ProtestForm initialCoords={coordinates} submitCallback={(params) => updateProtest(id, params, )} defaultValues={protest} />
         </Route>
         <Route>
           <Icon src="/icons/pencil.svg" alt="Edit protest" onClick={() => history.push(`edit`)} />

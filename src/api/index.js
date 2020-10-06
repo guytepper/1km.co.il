@@ -75,7 +75,21 @@ export function createProtest(params) {
   return request;
 }
 
-export async function updateProtest(protestId, params) {}
+export async function updateProtest(protestId, params, approved) {
+  try {
+    const request = await firestore
+      .collection(approved ? 'protests' : 'pending_protests')
+      .doc(protestId)
+      .update(params);
+
+    console.log(request); // <-- Why is this undefined yet the operation successful?
+    if (request === undefined) return true;
+    return request;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
 
 export async function archivePendingProtest(protestId) {
   try {
