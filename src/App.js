@@ -4,7 +4,7 @@ import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './componen
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng } from './utils';
+import { getCurrentPosition, pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -21,7 +21,7 @@ const initialState = {
   markers: [],
   mapPosition: [],
   mapPositionHistory: [],
-  isModalOpen: true,
+  isModalOpen: false,
   loading: true,
 };
 
@@ -109,6 +109,20 @@ function App() {
       fetchProtests();
     }
   }, [state.userCoordinates, state.mapPosition]);
+
+  useEffect(() => {
+    // On page load, try to focus the map according to the device's location.
+    async function setInitialPosition() {
+      try {
+        const position = await getCurrentPosition();
+        dispatch({ type: 'setUserCoordinates', payload: position })
+      } catch (err) {
+        // Could happen, for example, if the user didn't grant the location permission. 
+        console.log('Failed to get initial position, ignoring.', err);
+      }
+    }
+    setInitialPosition();
+  }, []);
 
   return (
     <DispatchContext.Provider value={dispatch}>
