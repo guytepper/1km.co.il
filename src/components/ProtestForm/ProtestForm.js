@@ -54,6 +54,7 @@ function ProtestForm({ initialCoords }) {
   const [nearbyProtests, setNearbyProtests] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
+  const [protestDate, setProtestDate] = useState('');
 
   useEffect(() => {
     async function nearbyProtests() {
@@ -143,6 +144,10 @@ function ProtestForm({ initialCoords }) {
               <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
             ))}
           </MapWrapper>
+          <ProtestFormLabel>
+              date of event
+            <ProtestFormInput type="date" value={protestDate} name="meeting_date" onChange={event=>setProtestDate(event.target.value)} ref={register}></ProtestFormInput>
+          </ProtestFormLabel>
           <ProtestFormLabel>
             שעת מפגש
             <ProtestFormInput type="time" defaultValue="17:30" name="meeting_time" ref={register}></ProtestFormInput>

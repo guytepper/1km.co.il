@@ -10,7 +10,7 @@ function formatDistance(distance) {
 }
 
 function ProtestCard({ protestInfo }) {
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes } = protestInfo;
+  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, meeting_date, notes } = protestInfo;
   return (
     <ProtestCardWrapper>
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
@@ -21,6 +21,12 @@ function ProtestCard({ protestInfo }) {
             {streetAddress}
           </ProtestCardDetail>
         )}
+        {meeting_date && (
+            <ProtestCardDetail>
+              <ProtestCardIcon src="/icons/time.svg" alt="meeting date" aria-hidden="true" title="meeting date" />
+              {meeting_date}
+            </ProtestCardDetail>
+          )}
         {meetingTime && (
           <ProtestCardDetail>
             <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
