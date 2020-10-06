@@ -158,6 +158,9 @@ function ProtestPageContent({ protest }) {
 }
 
 export default function ProtestPage() {
+  const editMode = false;
+  const { register, handleSubmit } = useForm();
+
   const protest = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
