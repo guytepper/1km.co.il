@@ -27,7 +27,7 @@ function ProtestForm({ initialCoords }) {
   const { register, handleSubmit } = useForm();
   // These two are separate so that onMoveEnd isn't called on every map move
   // map center
-  const [coordinates, setCoordinates] = useState(coordinatesUpdater);
+  const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
@@ -55,7 +55,7 @@ function ProtestForm({ initialCoords }) {
       return;
     } else {
       try {
-        params.coords = coordinates;
+        params.coords = mapCenter;
         params.streetAddress = streetName;
         // params.recaptchaToken = recaptchaToken;
 
@@ -105,11 +105,11 @@ function ProtestForm({ initialCoords }) {
           </ProtestFormLabel>
           <ProtestFormLabel>
             כתובת
-            <PlacesAutocomplete setManualAdress={setCoordinates} setStreetName={setStreetName} />
+            <PlacesAutocomplete setManualAdress={setMapCenter} setStreetName={setStreetName} />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
           <MapWrapper
-            center={coordinates}
+            center={mapCenter}
             zoom={zoomLevel}
             scrollWheelZoom={'center'}
             onMove={(t) => {
@@ -118,11 +118,11 @@ function ProtestForm({ initialCoords }) {
             }}
             onMoveEnd={async (t) => {
               const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
-              setCoordinates(newPosition);
+              setMapCenter(newPosition);
               setMarkerPosition(newPosition);
               setZoomLevel(t.target._zoom);
               // fetch protests on move end
-              const protests = await fetchNearbyProtests(coordinates);
+              const protests = await fetchNearbyProtests(mapCenter);
               setNearbyProtests(protests);
             }}
             onZoom={(event) => {
