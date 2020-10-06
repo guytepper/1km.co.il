@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
+import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates, ProtestPage } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
@@ -9,6 +9,7 @@ import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
+import AddProtest from './views/AddProtest';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -166,7 +167,7 @@ function App() {
               />
             </Route>
             <Route exact path="/add-protest/">
-              <ProtestForm initialCoords={state.userCoordinates} />
+              <AddProtest initialCoords={state.userCoordinates} />
             </Route>
             <Route exact path="/admin/">
               <Admin />
