@@ -198,7 +198,7 @@ function Admin() {
           </DetailsWrapper>
           <div>
             שינוי תצוגת מפה לכתובת:
-            <PlacesAutocomplete setManualAdress={setCurrentPosition} />
+            <PlacesAutocomplete setManualAddress={setCurrentPosition} />
             <MapWrapper
               center={currentPosition}
               zoom={mapZoom}
