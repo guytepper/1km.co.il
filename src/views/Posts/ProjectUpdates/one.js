@@ -1,12 +1,5 @@
 import React from 'react';
 import { mdx } from 'mdx.macro';
-import { Link } from 'react-router-dom';
-
-const A = ({ href, children }) => (
-  <a href={href} rel="noopener noreferrer" target="_blank">
-    {children}
-  </a>
-);
 
 const Content = mdx`
 ## עדכון #1

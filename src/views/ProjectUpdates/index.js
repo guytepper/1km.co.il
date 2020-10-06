@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { PostWrapper } from '../Post';
+import { PostWrapper } from '../../components/Post';
 
 function ProjectUpdates() {
   useEffect(() => {
