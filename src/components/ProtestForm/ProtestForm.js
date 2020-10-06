@@ -119,7 +119,7 @@ function ProtestForm({ initialCoords }) {
           </ProtestFormLabel>
           <ProtestFormLabel>
             כתובת
-            <PlacesAutocomplete setManualAdress={setCoordinates} setStreetName={setStreetName} />
+            <PlacesAutocomplete setManualAddress={setCoordinates} setStreetName={setStreetName} />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
           <MapWrapper
