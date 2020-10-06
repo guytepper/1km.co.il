@@ -24,7 +24,8 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
-  }, [coordinates, setIsOpen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [coordinates]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
