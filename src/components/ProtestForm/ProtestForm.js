@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
 import { validateLatLng } from '../../utils';
-import { createPendingProtest, fetchNearbyProtests } from '../../api';
+import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
 
 const protestMarker = new L.Icon({
@@ -17,27 +17,27 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords }) {
+function ProtestForm({ initialCoords, submitCallback }) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
   }, [initialCoords]);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, setValue } = useForm();
   // These two are separate so that onMoveEnd isn't called on every map move
   // map center
   const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
-
-  const [streetName, setStreetName] = useState('');
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [nearbyProtests, setNearbyProtests] = useState([]);
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
+
+  const setStreetName = (value) => setValue('streetName', value);
 
   // Load nearby protests on mount
   useEffect(() => {
@@ -50,16 +50,16 @@ function ProtestForm({ initialCoords }) {
   }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    if (!streetName) {
+    if (!params.streetName) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
     } else {
       try {
         params.coords = mapCenter;
-        params.streetAddress = streetName;
+        params.streetAddress = params.streetName;
         // params.recaptchaToken = recaptchaToken;
 
-        let protest = await createPendingProtest(params);
+        let protest = await submitCallback(params);
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
@@ -105,7 +105,7 @@ function ProtestForm({ initialCoords }) {
           </ProtestFormLabel>
           <ProtestFormLabel>
             כתובת
-            <PlacesAutocomplete setManualAdress={setMapCenter} setStreetName={setStreetName} />
+            <PlacesAutocomplete setManualAdress={setMapCenter} setStreetName={setStreetName} register={register} />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
           <MapWrapper
