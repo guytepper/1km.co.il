@@ -20,7 +20,6 @@ export function useFileUpload(directly = true) {
       ReactS3Client.uploadFile(selectedFile, selectedFile.name.split('.')[0])
         .then((data) => {
           // TODO: update s3 url in firebase
-          console.log(data);
         })
         .catch((err) => console.error(err));
     } else {

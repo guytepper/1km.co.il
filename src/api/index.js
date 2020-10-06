@@ -75,6 +75,8 @@ export function createProtest(params) {
   return request;
 }
 
+export async function updateProtest(protestId, params) {}
+
 export async function archivePendingProtest(protestId) {
   try {
     const request = await firestore.collection('pending_protests').doc(protestId).update({
@@ -93,7 +95,7 @@ export async function fetchProtest(protestId) {
   const protest = await firestore.collection('protests').doc(protestId).get();
 
   if (protest.exists) {
-    return protest.data();
+    return { id: protest.id, ...protest.data() };
   } else {
     return false;
   }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { fetchProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
@@ -28,7 +28,6 @@ function useFetchProtest() {
 
 export default function ProtestPage() {
   const history = useHistory();
-  const location = useLocation();
   const protest = useFetchProtest();
   // const { onFileUpload } = useFileUpload(false);
 
@@ -39,8 +38,6 @@ export default function ProtestPage() {
 
   const { coordinates, whatsAppLink, telegramLink } = protest;
 
-  console.log(protest);
-
   return (
     <Container>
       <Switch>
@@ -48,7 +45,7 @@ export default function ProtestPage() {
           <ProtestForm initialCoords={coordinates} submitCallback={(params) => console.log(params)} defaultValues={protest} />
         </Route>
         <Route>
-          <Icon src="/icons/pencil.svg" alt="Edit protest" onClick={() => history.push(`${location.pathname}/edit`)} />
+          <Icon src="/icons/pencil.svg" alt="Edit protest" onClick={() => history.push(`edit`)} />
           <h2>{protest.displayName}</h2>
           <p>
             {protest.streetAddress} - יום שבת, {protest.meeting_time}

@@ -18,7 +18,6 @@ const protestMarker = new L.Icon({
 });
 
 function ProtestForm({ initialCoords, submitCallback, defaultValues = {} }) {
-  console.log({ defaultValues });
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
