@@ -24,7 +24,7 @@ Something bad is happening in Israel, and we cannot afford to stand still. We've
 
 ## Advanced Installation
 
-In order to have access to the database, you need to get your own firebase project.
+If you want to tinker with the database, view the UI & set up security rules, you need to get your own firebase project.
 
 - Go to the [firebase console](https://console.firebase.google.com) and create a new project. Call it whatever you want.
 - Add a new web app from the dashboard, by clicking the </> icon.
