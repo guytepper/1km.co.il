@@ -96,7 +96,7 @@ const ProtestCardGroupButton = styled.a`
   margin-top: 10px;
   padding: 4px 16px;
   background: ${(props) => (props.type ? (props.type === 'whatsapp' ? '#00c647' : '#6AB2E4') : 'blue')};
-  color: #fff;
+  color: #fff !important;
   font-family: Simpler, sans-serif;
   font-size: 18px;
   font-weight: 600;

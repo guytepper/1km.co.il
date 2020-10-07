@@ -2,6 +2,7 @@ import React from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
+import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
   new L.Icon({
@@ -20,7 +21,7 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName, marker }) => {
+const PopupMarker = ({ latlng, marker, ...props }) => {
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
     iconUrl: '/icons/black-flag.svg',
@@ -31,7 +32,7 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
 
   return (
     <Marker position={latlng} icon={protestPoint(markerInfo)}>
-      <Popup>{displayName}</Popup>
+      <Popup><ProtestCard protestInfo={props} /></Popup>
     </Marker>
   );
 };
