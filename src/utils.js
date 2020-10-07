@@ -26,7 +26,7 @@ export function validateLatLng(coords) {
 }
 
 export function doUserCoordinatesEqualMapPosition(userCoordinates, mapPosition) {
-  return userCoordinates.reduce((a, d) => a + d, 0) === mapPosition.reduce((a, d) => a + d, 0);
+  return userCoordinates[0] === mapPosition[0] && userCoordinates[1] === mapPosition[1];
 }
 
 export function pointWithinRadius(point1, point2, radius) {
