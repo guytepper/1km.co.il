@@ -48,7 +48,14 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
 
   return (
     <Combobox onSelect={handleSelect} aria-labelledby="demo">
-      <ComboboxInputWrapper value={value} onChange={handleInput} disabled={!ready} ref={inputRef} placeholder="מה הכתובת?" />
+      <ComboboxInputWrapper
+        value={value}
+        name="streetName"
+        onChange={handleInput}
+        disabled={!ready}
+        placeholder="מה הכתובת?"
+        ref={inputRef}
+      />
       <ComboboxPopover>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>
