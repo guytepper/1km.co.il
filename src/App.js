@@ -51,15 +51,16 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
-    if (!state.userCoordinates) {
-      const cachedCoordinates = getUserCoordinatesFromLocalStorage();
-
-      if (cachedCoordinates) {
-        dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates })
-      }
+    const cachedCoordinates = getUserCoordinatesFromLocalStorage();
+    if (cachedCoordinates) {
+      dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates });
+      dispatch({ type: 'setModalState', payload: false });
     }
+  }, []);
 
+  useEffect(() => {
     if (validateLatLng(state.mapPosition)) {
       let requested = false;
 
@@ -117,6 +118,7 @@ function App() {
       }
       fetchProtests();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
   return (

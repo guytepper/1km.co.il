@@ -1,7 +1,7 @@
 export const getUserCoordinatesFromLocalStorage = () => {
-    return JSON.parse(localStorage.getItem('user_coordinates'));
-}
+  return JSON.parse(localStorage.getItem('ONE_KM_user_coordinates'));
+};
 
 export const setUserCoordinatesToLocalStorage = (coords) => {
-    localStorage.setItem('user_coordinates', JSON.stringify(coords));
-}
+  localStorage.setItem('ONE_KM_user_coordinates', JSON.stringify(coords));
+};
