@@ -107,7 +107,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {} }) {
           <ProtestFormLabel>
             כתובת
             <PlacesAutocomplete
-              setManualAdress={setMapCenter}
+              setManualAddress={setMapCenter}
               setStreetName={setStreetName}
               register={register}
               defaultValue={defaultValues.streetAddress}
