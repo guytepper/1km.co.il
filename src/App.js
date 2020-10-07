@@ -83,16 +83,16 @@ function App() {
               ...doc.data(),
             };
           });
-        // set protests on load
-        if (state.loading) {
-          dispatch({
-            type: 'setProtests',
-            payload: {
-              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-            },
-          });
-        } 
+          // set protests on load
+          if (state.loading) {
+            dispatch({
+              type: 'setProtests',
+              payload: {
+                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+              },
+            });
+          }
 
           // Filter duplicate markers
           const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));

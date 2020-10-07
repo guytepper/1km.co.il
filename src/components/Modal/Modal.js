@@ -9,8 +9,9 @@ import { DispatchContext } from '../../context';
 ReactModal.setAppElement('#root');
 
 function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
-  const [addressInputDisplay, setAdressInputDisplay] = useState(false);
-  const [manualAdress, setManualAdress] = useState(null);
+  const [addressInputDisplay, setAddressInputDisplay] = useState(false);
+  const [manualAddress, setManualAddress] = useState(null);
+  const addressInputRef = useRef(null);
   const dispatch = React.useContext(DispatchContext);
 
   const getUserPosition = async () => {
@@ -35,7 +36,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
         addressInputRef.current.focus();
       }
     }, 0);
-  }, [addressInputDisplay])
+  }, [addressInputDisplay]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
@@ -47,10 +48,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
         <div style={{ maxWidth: 300 }}>
-          <Button onClick={() => {
+          <Button
+            onClick={() => {
               getUserPosition();
               dispatch({ type: 'setLoading', payload: true });
-            }} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
+            }}
+            icon="/icons/gps.svg"
+            style={{ marginBottom: 10 }}
+          >
             מציאת הפגנות באיזורי
           </Button>
 
@@ -61,11 +66,15 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           )}
           {addressInputDisplay && (
             <>
-              <PlacesAutocomplete setManualAdress={setManualAdress} />{' '}
-              <Button disabled={!manualAdress} onClick={() => {
-                  setCoordinates(manualAdress);
+              <PlacesAutocomplete setManualAdress={setManualAddress} />{' '}
+              <Button
+                disabled={!manualAddress}
+                onClick={() => {
+                  setCoordinates(manualAddress);
                   dispatch({ type: 'setLoading', payload: true });
-                }} color="#0096c7">
+                }}
+                color="#0096c7"
+              >
                 הצגת הפגנות
               </Button>
             </>
