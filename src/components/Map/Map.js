@@ -26,7 +26,7 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
     iconUrl: '/icons/black-flag.svg',
     iconRetinaUrl: '/icons/black-flag.svg',
     iconSize: [50, 48],
-    iconAnchor: [25, 48],
+    iconAnchor: [12, 43],
   };
 
   return (
