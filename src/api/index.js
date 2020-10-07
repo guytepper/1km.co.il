@@ -89,6 +89,25 @@ export async function archivePendingProtest(protestId) {
   }
 }
 
+export async function fetchNearbyProtests(position) {
+  const geocollection = GeoFirestore.collection('protests');
+  const query = geocollection.near({
+    center: new firebase.firestore.GeoPoint(position[0], position[1]),
+    radius: 2,
+  });
+  const snapshot = await query.limit(10).get();
+  const protests = snapshot.docs.map((doc) => {
+    const { latitude, longitude } = doc.data().g.geopoint;
+    const protestLatlng = [latitude, longitude];
+    return {
+      id: doc.id,
+      latlng: protestLatlng,
+      ...doc.data(),
+    };
+  });
+  return protests;
+}
+
 export default {
   createProtest,
   createPendingProtest,
