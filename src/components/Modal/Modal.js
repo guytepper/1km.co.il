@@ -4,12 +4,14 @@ import styled from 'styled-components';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
+import { DispatchContext } from '../../context';
 
 ReactModal.setAppElement('#root');
 
 function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   const [addressInputDisplay, setAdressInputDisplay] = useState(false);
   const [manualAdress, setManualAdress] = useState(null);
+  const dispatch = React.useContext(DispatchContext);
 
   const getUserPosition = async () => {
     try {
@@ -36,7 +38,10 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
         <div style={{ maxWidth: 300 }}>
-          <Button onClick={() => getUserPosition()} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
+          <Button onClick={() => {
+              getUserPosition();
+              dispatch({ type: 'setLoading', payload: true });
+            }} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
             מציאת הפגנות באיזורי
           </Button>
 
@@ -48,7 +53,10 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           {addressInputDisplay && (
             <>
               <PlacesAutocomplete setManualAdress={setManualAdress} />{' '}
-              <Button disabled={!manualAdress} onClick={() => setCoordinates(manualAdress)} color="#0096c7">
+              <Button disabled={!manualAdress} onClick={() => {
+                  setCoordinates(manualAdress);
+                  dispatch({ type: 'setLoading', payload: true });
+                }} color="#0096c7">
                 הצגת הפגנות
               </Button>
             </>
