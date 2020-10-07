@@ -22,6 +22,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
+  loading: true,
 };
 
 function reducer(state, action) {
@@ -38,7 +39,8 @@ function reducer(state, action) {
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
       return { ...state, userCoordinates: action.payload };
-
+    case 'setLoading':
+      return { ...state, loading: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -81,7 +83,8 @@ function App() {
               ...doc.data(),
             };
           });
-
+        // set protests on load
+        if (state.loading) {
           dispatch({
             type: 'setProtests',
             payload: {
@@ -89,18 +92,20 @@ function App() {
               far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
             },
           });
+        } 
 
           // Filter duplicate markers
           const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
           dispatch({ type: 'setMarkers', payload: filteredMarkers });
           dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
+          dispatch({ type: 'setLoading', payload: false });
         } catch (err) {
           console.log(err);
         }
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.markers]);
+  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.markers, state.loading]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
