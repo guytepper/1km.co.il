@@ -83,7 +83,8 @@ function App() {
               ...doc.data(),
             };
           });
-          // set protests on load
+
+          // Set protests on load
           if (state.loading) {
             dispatch({
               type: 'setProtests',
