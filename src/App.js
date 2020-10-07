@@ -4,7 +4,7 @@ import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { validateLatLng, doUserCoordinatesEqualMapPosition } from './utils';
+import { pointWithinRadius, validateLatLng, doUserCoordinatesEqualMapPosition } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -21,6 +21,7 @@ const initialState = {
   },
   markers: [],
   mapPosition: [],
+  mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
 };
@@ -33,6 +34,8 @@ function reducer(state, action) {
       return { ...state, markers: [...state.markers, ...action.payload] };
     case 'setMapPosition':
       return { ...state, mapPosition: action.payload };
+    case 'setMapPositionHistory':
+      return { ...state, mapPositionHistory: action.payload };
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
@@ -44,6 +47,7 @@ function reducer(state, action) {
         ...state,
         protests: { close: action.payload.close, far: action.payload.far },
         markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, ...action.payload.mapPositionHistory],
         loading: false,
       };
     default:
@@ -78,6 +82,7 @@ function App() {
 
         // Filter duplicate markers
         const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
+
         // Set data
         dispatch({
           type: 'setLoadData',
@@ -85,19 +90,24 @@ function App() {
             close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
             far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
             markers: filteredMarkers,
+            mapPositionHistory: [...state.mapPositionHistory, state.mapPosition],
           },
         });
       } catch (err) {
         console.log(err);
       }
     }
-    if (
-      state.loading &&
-      // needs a better name
-      doUserCoordinatesEqualMapPosition(state.userCoordinates, state.mapPosition) &&
-      validateLatLng(state.mapPosition)
-    )
-      fetchProtests();
+
+    if (validateLatLng(state.mapPosition)) {
+      if (state.loading) {
+        fetchProtests();
+      } else {
+        const requested = state.mapPositionHistory.some((pos) => pointWithinRadius(pos, state.mapPosition, 5000));
+        if (!requested) {
+          fetchProtests();
+        }
+      }
+    }
   }, [state.userCoordinates, state.mapPosition]);
 
   return (
