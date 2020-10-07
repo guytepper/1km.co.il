@@ -39,4 +39,4 @@ If you want to tinker with the database, view the UI & set up security rules, yo
 
 <hr/>
 
-Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/CdT7d9p).
+Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/VuzxwKN).
