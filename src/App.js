@@ -41,7 +41,6 @@ function reducer(state, action) {
       return { ...state, userCoordinates: action.payload };
     case 'setLoading':
       return { ...state, loading: action.payload };
-
     default:
       throw new Error('Unexpected action');
   }
@@ -84,9 +83,7 @@ function App() {
               ...doc.data(),
             };
           });
-
-          // Set protests only on initial load
-          // These protests will be shown on ProtestList
+          // set protests on load
           if (state.loading) {
             dispatch({
               type: 'setProtests',
@@ -108,7 +105,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition]);
+  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.markers, state.loading]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
