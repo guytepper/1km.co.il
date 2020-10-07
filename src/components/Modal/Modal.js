@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
+import { DispatchContext } from '../../context';
 
 ReactModal.setAppElement('#root');
 
@@ -11,6 +12,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   const [addressInputDisplay, setAddressInputDisplay] = useState(false);
   const [manualAddress, setManualAddress] = useState(null);
   const addressInputRef = useRef();
+  const dispatch = useContext(DispatchContext);
 
   const getUserPosition = async () => {
     try {
@@ -34,7 +36,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
         addressInputRef.current.focus();
       }
     }, 0);
-  }, [addressInputDisplay])
+  }, [addressInputDisplay]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
@@ -46,7 +48,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
         <div style={{ maxWidth: 300 }}>
-          <Button onClick={() => getUserPosition()} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
+          <Button
+            onClick={() => {
+              getUserPosition();
+              dispatch({ type: 'setLoading', payload: true });
+            }}
+            icon="/icons/gps.svg"
+            style={{ marginBottom: 10 }}
+          >
             מציאת הפגנות באיזורי
           </Button>
 
@@ -58,7 +67,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           {addressInputDisplay && (
             <>
               <PlacesAutocomplete setManualAddress={setManualAddress} inputRef={addressInputRef} />{' '}
-              <Button disabled={!manualAddress} onClick={() => setCoordinates(manualAddress)} color="#0096c7">
+              <Button
+                disabled={!manualAddress}
+                onClick={() => {
+                  setCoordinates(manualAddress);
+                  dispatch({ type: 'setLoading', payload: true });
+                }}
+                color="#0096c7"
+              >
                 הצגת הפגנות
               </Button>
             </>
