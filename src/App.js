@@ -20,7 +20,6 @@ const initialState = {
   },
   markers: [],
   mapPosition: [],
-  mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
 };
@@ -33,8 +32,6 @@ function reducer(state, action) {
       return { ...state, markers: [...state.markers, ...action.payload] };
     case 'setMapPosition':
       return { ...state, mapPosition: action.payload };
-    case 'setMapPositionHistory':
-      return { ...state, mapPositionHistory: action.payload };
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
@@ -100,7 +97,7 @@ function App() {
       validateLatLng(state.mapPosition)
     )
       fetchProtests();
-  }, [state.userCoordinates, state.mapPosition, state.markers]);
+  }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
