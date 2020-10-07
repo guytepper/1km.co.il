@@ -81,9 +81,8 @@ function ProjectUpdates() {
         אפשר להעביר אליי{' '}
         <a href="https://paypal.me/guytepper" rel="noopener noreferrer" target="_blank">
           תשלום בפייפאל
-        </a>
-        , או דרך bit - <a href="mailto:guytepper@protonmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט
-        שלי (אני אענה באיחור רב לבקשות תרומה במייל, עמכם הסליחה).
+        </a>{' '}
+        או דרך bit - <a href="https://forms.gle/5YSPZ2Rjo5hgT8C59">מלאו את הטופס</a> עם פרטיכם ומספר הביט יופיע.
       </SupportPageParagraph>
       <h3>שמרו על קשר</h3>
       <SupportPageParagraph>
