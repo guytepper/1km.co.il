@@ -5,18 +5,23 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
+export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef }) {
   const {
     ready,
     value,
     suggestions: { status, data },
     setValue,
-  } = usePlacesAutocomplete({ debounce: 650 });
+  } = usePlacesAutocomplete({ debounce: 900 });
 
   const handleInput = (e) => {
-    setValue(e.target.value);
-    if (setStreetName) setStreetName(e.target.value);
+    const charactersThreshold = 3;
+    const term = e.target.value;
+    const shouldFetch = term.length >= charactersThreshold;
+    setValue(term, shouldFetch);
+    updateStreetName(term);
   };
+
+  const updateStreetName = (address) => setStreetName && setStreetName(address);
 
   const handleSelect = (address) => {
     setValue(address, false);
@@ -25,8 +30,8 @@ export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         const { lat, lng } = latLng;
-        setManualAdress([lat, lng]);
-        if (setStreetName) setStreetName(address);
+        setManualAddress([lat, lng]);
+        updateStreetName(address);
       })
       .catch((error) => {
         console.log('Error: ', error);
@@ -48,7 +53,14 @@ export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
 
   return (
     <Combobox onSelect={handleSelect} aria-labelledby="demo">
-      <ComboboxInputWrapper value={value} onChange={handleInput} disabled={!ready} placeholder="מה הכתובת?" />
+      <ComboboxInputWrapper
+        value={value}
+        name="streetName"
+        onChange={handleInput}
+        disabled={!ready}
+        placeholder="מה הכתובת?"
+        ref={inputRef}
+      />
       <ComboboxPopover>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>

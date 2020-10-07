@@ -82,9 +82,8 @@ function ProjectUpdates() {
         אפשר להעביר אליי{' '}
         <a href="https://paypal.me/guytepper" rel="noopener noreferrer" target="_blank">
           תשלום בפייפאל
-        </a>
-        , או דרך bit - <a href="mailto:guytepper@protonmail.com?subject=העברת תשלום בביט">שלחו לי מייל</a> ואחזיר לכן את מספר הביט
-        שלי.
+        </a>{' '}
+        או דרך bit - <a href="https://forms.gle/5YSPZ2Rjo5hgT8C59">מלאו את הטופס</a> עם פרטיכם ומספר הביט יופיע.
       </SupportPageParagraph>
       <h3>שמרו על קשר</h3>
       <SupportPageParagraph>
@@ -93,13 +92,11 @@ function ProjectUpdates() {
         <a href="https://www.facebook.com/1km.co.il/" rel="noopener noreferrer" target="_blank">
           עמוד פייסבוק
         </a>
-        , ומדי פעם <a href="https://twitter.com/1kmcoil">אצייץ עדכונים בטוויטר</a>.
+        , ונצייץ עדכונים <a href="https://twitter.com/1kmcoil"> בטוויטר</a>.
       </SupportPageParagraph>
       <SupportPageParagraph>
-        אם תרצו ליצור איתי קשר ישירות, <a href="mailto:guytepper@protonmail.com">שלחו מייל</a>. עקב עומס פניות אענה בעיכוב (עד
-        יום-יומיים), מתנצל מראש.
-        <br />
-        פניות דחופות אפשר לשלוח ל<a href="https://t.me/sexysoy">טלגרם שלי</a>.{' '}
+        אם תרצו ליצור קשר בכל נושא שהוא, אנא <a href="mailto:support@1km.zendesk.com">פנו במייל</a> לצוות התמיכה שכרגע מנהלות גיא
+        ומיכאלה, השותפות המופלאות שלי.{' '}
       </SupportPageParagraph>
       <h3>תודות</h3>
       <SupportPageParagraph>הפרוייקט לא היה יוצא לפועל בלי עזרה של כמה אנשים שקרובים לליבי:</SupportPageParagraph>

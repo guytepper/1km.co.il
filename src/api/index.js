@@ -26,11 +26,13 @@ export async function createPendingProtest(params) {
   } = params;
 
   try {
+    // Skip protest approval during development
+    const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
     // const verification = await verifyRecaptcha(recaptchaToken);
 
     // if (verification.success) {
     const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection('pending_protests');
+    const geocollection = GeoFirestore.collection(tableName);
 
     const request = geocollection.add({
       displayName,
@@ -85,6 +87,25 @@ export async function archivePendingProtest(protestId) {
     console.log(err);
     return err;
   }
+}
+
+export async function fetchNearbyProtests(position) {
+  const geocollection = GeoFirestore.collection('protests');
+  const query = geocollection.near({
+    center: new firebase.firestore.GeoPoint(position[0], position[1]),
+    radius: 2,
+  });
+  const snapshot = await query.limit(10).get();
+  const protests = snapshot.docs.map((doc) => {
+    const { latitude, longitude } = doc.data().g.geopoint;
+    const protestLatlng = [latitude, longitude];
+    return {
+      id: doc.id,
+      latlng: protestLatlng,
+      ...doc.data(),
+    };
+  });
+  return protests;
 }
 
 export default {
