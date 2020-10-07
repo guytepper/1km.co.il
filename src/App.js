@@ -4,7 +4,7 @@ import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng, doUserCoordinatesEqualMapPosition } from './utils';
+import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
