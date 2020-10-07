@@ -25,6 +25,10 @@ export function validateLatLng(coords) {
   return true;
 }
 
+export function doUserCoordinatesEqualMapPosition(userCoordinates, mapPosition) {
+  return userCoordinates.reduce((a, d) => a + d, 0) === mapPosition.reduce((a, d) => a + d, 0);
+}
+
 export function pointWithinRadius(point1, point2, radius) {
   return isPointWithinRadius(
     { latitude: point1[0], longitude: point1[1] },

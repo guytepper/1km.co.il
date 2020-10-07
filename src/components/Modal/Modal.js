@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
-import { DispatchContext } from '../../context';
 
 ReactModal.setAppElement('#root');
 
@@ -12,7 +11,6 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   const [addressInputDisplay, setAddressInputDisplay] = useState(false);
   const [manualAddress, setManualAddress] = useState(null);
   const addressInputRef = useRef();
-  const dispatch = useContext(DispatchContext);
 
   const getUserPosition = async () => {
     try {
@@ -23,6 +21,11 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     }
   };
 
+  const resetModal = () => {
+    setAddressInputDisplay(false);
+    setManualAddress(null);
+  };
+
   useEffect(() => {
     if (coordinates.length === 2) {
       setIsOpen(false);
@@ -31,11 +34,12 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 
   useEffect(() => {
     // Timeout needed to allow the rendering finish before setting the focus
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (addressInputDisplay && addressInputRef.current) {
         addressInputRef.current.focus();
       }
     }, 0);
+    return () => clearTimeout(timeout);
   }, [addressInputDisplay]);
 
   return (
@@ -51,7 +55,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           <Button
             onClick={() => {
               getUserPosition();
-              dispatch({ type: 'setLoading', payload: true });
+              resetModal();
             }}
             icon="/icons/gps.svg"
             style={{ marginBottom: 10 }}
@@ -71,7 +75,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
                 disabled={!manualAddress}
                 onClick={() => {
                   setCoordinates(manualAddress);
-                  dispatch({ type: 'setLoading', payload: true });
+                  resetModal();
                 }}
                 color="#0096c7"
               >

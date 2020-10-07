@@ -4,7 +4,7 @@ import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './componen
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng } from './utils';
+import { validateLatLng, doUserCoordinatesEqualMapPosition } from './utils';
 import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -22,7 +22,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
-  loading: true,
+  loading: false,
 };
 
 function reducer(state, action) {
@@ -38,9 +38,16 @@ function reducer(state, action) {
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
-      return { ...state, userCoordinates: action.payload };
+      return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
+    case 'setLoadData':
+      return {
+        ...state,
+        protests: { close: action.payload.close, far: action.payload.far },
+        markers: [...state.markers, ...action.payload.markers],
+        loading: false,
+      };
     default:
       throw new Error('Unexpected action');
   }
@@ -50,19 +57,7 @@ function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (validateLatLng(state.mapPosition)) {
-      let requested = false;
-
-      // Check if the protests for the current position have been fetched already
-      state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 5000)) {
-          requested = true;
-          return;
-        }
-      });
-
-      if (requested) return;
-
+    async function fetchProtests() {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -70,43 +65,42 @@ function App() {
         radius: 15,
       });
 
-      async function fetchProtests() {
-        try {
-          const snapshot = await query.limit(30).get();
-          const protests = snapshot.docs.map((doc) => {
-            const { latitude, longitude } = doc.data().g.geopoint;
-            const protestLatlng = [latitude, longitude];
-            return {
-              id: doc.id,
-              latlng: protestLatlng,
-              distance: getDistance(state.userCoordinates, protestLatlng),
-              ...doc.data(),
-            };
-          });
+      try {
+        const snapshot = await query.limit(30).get();
+        const protests = snapshot.docs.map((doc) => {
+          const { latitude, longitude } = doc.data().g.geopoint;
+          const protestLatlng = [latitude, longitude];
+          return {
+            id: doc.id,
+            latlng: protestLatlng,
+            distance: getDistance(state.userCoordinates, protestLatlng),
+            ...doc.data(),
+          };
+        });
 
-          // Set protests on load
-          if (state.loading) {
-            dispatch({
-              type: 'setProtests',
-              payload: {
-                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-              },
-            });
-          }
-
-          // Filter duplicate markers
-          const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-          dispatch({ type: 'setMarkers', payload: filteredMarkers });
-          dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
-          dispatch({ type: 'setLoading', payload: false });
-        } catch (err) {
-          console.log(err);
-        }
+        // Filter duplicate markers
+        const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
+        // Set data
+        dispatch({
+          type: 'setLoadData',
+          payload: {
+            close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+            far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+            markers: filteredMarkers,
+          },
+        });
+      } catch (err) {
+        console.log(err);
       }
-      fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.markers, state.loading]);
+    if (
+      state.loading &&
+      // needs a better name
+      doUserCoordinatesEqualMapPosition(state.userCoordinates, state.mapPosition) &&
+      validateLatLng(state.mapPosition)
+    )
+      fetchProtests();
+  }, [state.userCoordinates, state.mapPosition, state.markers]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
