@@ -39,6 +39,8 @@ function reducer(state, action) {
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
+      // Save the user coordinates in order to reuse them on the next user session
+      setUserCoordinatesToLocalStorage(action.payload);
       return { ...state, userCoordinates: action.payload };
     case 'setLoading':
       return { ...state, loading: action.payload };
@@ -170,8 +172,6 @@ function App() {
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
                 setCoordinates={(coords) => {
-                  // Save the user coordinates in order to reuse them on the next user session
-                  setUserCoordinatesToLocalStorage(coords);
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
               />
