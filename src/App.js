@@ -138,11 +138,9 @@ function App() {
 
                 <ProtestListWrapper>
                   <ProtestListHead>
-                    <Link to="/project-updates/1">
-                      <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                        <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                      </SiteMessage>
-                    </Link>
+                    <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
+                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                    </SiteMessage>
                     <Button
                       color="#3C4F76"
                       style={{ width: '100%', margin: '0' }}
@@ -259,7 +257,7 @@ const HomepageWrapper = styled.div`
   }
 `;
 
-const SiteMessage = styled.div`
+const SiteMessage = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
