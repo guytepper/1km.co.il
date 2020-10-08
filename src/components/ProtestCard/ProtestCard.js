@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+//import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 function formatDistance(distance) {
@@ -11,7 +11,7 @@ function formatDistance(distance) {
 }
 
 function ProtestCard({ protestInfo }) {
-  const history = useHistory();
+  //const history = useHistory();
   const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
   return (
     <ProtestCardWrapper
@@ -68,7 +68,7 @@ const ProtestCardWrapper = styled.div`
   padding: 16px;
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
-  cursor: pointer;
+  /* cursor: pointer; */
 `;
 
 const ProtestCardTitle = styled.h2`
