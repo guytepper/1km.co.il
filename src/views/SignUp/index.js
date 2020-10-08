@@ -11,7 +11,7 @@ import {
 function SignUpBeforeRedirect() {
   return (
     <>
-    <Button onClick={() => handleSignIn()}>Sign Up</Button>
+    <Button onClick={() => handleSignIn()}>Sign Up Using Facebook</Button>
     </>
   )
 }

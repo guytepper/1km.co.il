@@ -34,7 +34,7 @@ export default function Profile(props) {
       setMyProtests(protests);
     })
     .catch(function(error) {
-        console.log("Error getting documents: ", error);
+        console.log('Error getting documents: ', error);
     });
 
   }, [props.user]);
