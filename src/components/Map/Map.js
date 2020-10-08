@@ -26,7 +26,7 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
     iconUrl: '/icons/black-flag.svg',
     iconRetinaUrl: '/icons/black-flag.svg',
     iconSize: [50, 48],
-    iconAnchor: [25, 48],
+    iconAnchor: [12, 43],
   };
 
   return (
@@ -44,7 +44,7 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
+function AppMap({ markers, coordinates, setMapPosition }) {
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
