@@ -39,7 +39,7 @@ export default function Profile(props) {
 
   }, [props.user]);
 
-  if(!props.user) {
+  if (!props.user) {
     return null;
   }
 

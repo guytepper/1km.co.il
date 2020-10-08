@@ -38,13 +38,17 @@ export async function getUserFromRedirect() {
   return result;
 }
 
-export  async function sendProtestLeaderRequest(userData, protestId) {
+export async function sendProtestLeaderRequest(userData, phoneNumber, protestId) {
   const requestId = createLeaderRequestId(userData.uid, protestId);
 
-  await firestore.collection('leader-pending-requests').doc(requestId).set({
-    user: userData,
+  await firestore.collection('leader_requests').doc(requestId).set({
+    status: 'pending',
+    user: {
+      ...userData,
+      phoneNumber,
+    },
     protestId,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    created_at: firebase.firestore.FieldValue.serverTimestamp()
   });
 }
 
@@ -76,9 +80,10 @@ export function handleSignIn() {
 // in order to show data and complete the process of 
 // assigning the leader role on protests
 export async function listPendingRequests(uid, phoneNumber) {
-  return firestore.collection('leader-pending-requests')
-  .orderBy('timestamp', 'desc')
-  .limit(10)
+  return firestore.collection('leader_requests')
+  .where('status', 'pending')
+  .orderBy('created_at', 'desc')
+  .limit(20)
   .get();
 }
 
@@ -89,7 +94,7 @@ export async function assignRoleOnProtest(userId, protestId, requestId) {
   });
   
   // Delete request
-  await firestore.collection('leader-pending-requests').doc(requestId).delete();
+  await firestore.collection('leader_requests').doc(requestId).update({ status: 'done' })
 }
 
 export async function getProtestById(protestId) {

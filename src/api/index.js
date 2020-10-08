@@ -41,7 +41,7 @@ export async function createPendingProtest(params) {
       telegramLink,
       notes,
       meeting_time,
-      created_at: new Date(),
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
       coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
       approveContact,
       archived: false,
@@ -68,7 +68,7 @@ export function createProtest(params) {
     whatsAppLink,
     notes,
     meeting_time,
-    created_at: new Date(),
+    created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
   });
 

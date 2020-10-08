@@ -1,7 +1,18 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, ProjectUpdates, SignUp, SignUpCompleted,ProtestPage, AddProtest, Profile } from './views';
+import {
+  Admin,
+  GroupUpdate, 
+  ProjectUpdates, 
+  SignUp, 
+  SignUpCompleted,
+  ProtestPage, 
+  AddProtest, 
+  Profile, 
+  LeaderRequest, 
+  LeaderRequestSubmitted
+} from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -96,7 +107,7 @@ function App() {
   useEffect(() =>{
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
-        // Includes phone number and roles
+        // Includes admin data and more
         getFullUserData(user.uid).then(fullUserData => {
           dispatch({ type: 'setUser', payload: fullUserData.data() });
         });
@@ -248,8 +259,11 @@ function App() {
             <Route exact path="/sign-up">
               <SignUp />
             </Route>
-            <Route exact path="/sign-up-completed">
-              <SignUpCompleted user={state.user}/>
+            <Route exact path="/leader-request">
+              <LeaderRequest user={state.user}/>
+            </Route>
+            <Route exact path="/leader-request-submitted">
+              <LeaderRequestSubmitted user={state.user}/>
             </Route>
             <Route exact path="/profile">
               <Profile user={state.user}/>
