@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, ProtestForm, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates } from './views';
@@ -43,7 +43,7 @@ function reducer(state, action) {
     case 'setLoading':
       return { ...state, loading: action.payload };
     case 'setHoveredProtest':
-      return { ...state, hoveredProtest: action.payload };
+      return { ...state, hoveredProtestId: action.payload };
 
     default:
       throw new Error('Unexpected action');
@@ -52,6 +52,14 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const hoveredProtest = useMemo(() => {
+    if (!state.hoveredProtestId) {
+      return null;
+    }
+
+    return [...state.protests.close, ...state.protests.far].find((protest) => protest.id === state.hoveredProtestId);
+  }, [state.hoveredProtestId, state.protests.close, state.protests.far]);
 
   useEffect(() => {
     if (validateLatLng(state.mapPosition)) {
@@ -137,6 +145,7 @@ function App() {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
                   markers={state.markers}
+                  hoveredProtest={hoveredProtest}
                 />
 
                 <ProtestListWrapper>
@@ -155,11 +164,7 @@ function App() {
                     </Button>
                   </ProtestListHead>
 
-                  <ProtestList
-                    closeProtests={state.protests.close}
-                    farProtests={state.protests.far}
-                    loading={state.loading}
-                  />
+                  <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
                 </ProtestListWrapper>
               </HomepageWrapper>

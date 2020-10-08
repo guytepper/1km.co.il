@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components';
 import L from 'leaflet';
@@ -20,11 +20,12 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName, marker }) => {
+const PopupMarker = ({ latlng, displayName, marker, hovered }) => {
+  const iconUrl = hovered ? '/icons/blue-flag.svg' : '/icons/black-flag.svg';
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
-    iconUrl: '/icons/black-flag.svg',
-    iconRetinaUrl: '/icons/black-flag.svg',
+    iconUrl,
+    iconRetinaUrl: iconUrl,
     iconSize: [50, 48],
     iconAnchor: [25, 48],
   };
@@ -36,15 +37,15 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
   );
 };
 
-const MarkersList = ({ markers }) => {
-  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} />);
+const MarkersList = ({ markers, hoveredProtest }) => {
+  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} hovered={hoveredProtest?.id === id} />);
   return <>{items}</>;
 };
 
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
+function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory, hoveredProtest }) {
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
@@ -60,7 +61,7 @@ function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory })
       {coordinates.length === 2 && (
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={markers} />
+          <MarkersList markers={markers} hoveredProtest={hoveredProtest} />
           <Circle radius={1000} center={coordinates} />
         </>
       )}
