@@ -159,6 +159,88 @@ function ProtestPageContent({ protest }) {
 
 export default function ProtestPage() {
   const history = useHistory();
+
+  const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+
+  return (
+    <ProtestPageContainer>
+      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
+      </MapWrapper>
+
+      <ProtestContainer>
+        <Info>
+          <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" />
+          <Details>
+            <Left>
+              <Title>{displayName}</Title>
+              <Location>
+                <FlagIcon src="/icons/blue-flag.svg" alt="flag icon" />
+                {streetAddress}
+              </Location>
+              <Notes>{notes}</Notes>
+            </Left>
+            <EditButton onClick={() => history.push('edit')}>עריכה</EditButton>
+          </Details>
+        </Info>
+
+        <DatesAndSocial>
+          {/* Dates */}
+          <SectionContainer>
+            <SectionTitle>
+              <img src="/icons/clock.svg" alt="clock icon" />
+              מועדי הפגנה קרובים
+            </SectionTitle>
+
+            <Dates>
+              <Date>
+                <BoldDateText>9.10.2020</BoldDateText>
+                <DateText>יום שישי, בשעה</DateText>
+                <BoldDateText>18:30</BoldDateText>
+              </Date>
+            </Dates>
+          </SectionContainer>
+
+          {/* Social */}
+          <SocialContainer>
+            <SectionTitle>
+              <img src="/icons/social.svg" alt="share icon" />
+              מידע ועדכונים:
+            </SectionTitle>
+
+            <SocialButtons>
+              {whatsAppLink && (
+                <SocialButton type="whatsapp" link={whatsAppLink}>
+                  הצטרפות לקבוצת הוואצאפ
+                </SocialButton>
+              )}
+
+              {telegramLink && (
+                <SocialButton type="telegram" link={telegramLink}>
+                  הצטרפות לקבוצה בטלגרם
+                </SocialButton>
+              )}
+
+              <SocialButton type="facebook" link="www.twitter.com">
+                הצטרפות לקבוצה בפייסבוק
+              </SocialButton>
+
+              <SocialButton type="twitter" link="www.twitter.com">
+                עקוב בטוויטר
+              </SocialButton>
+            </SocialButtons>
+          </SocialContainer>
+        </DatesAndSocial>
+      </ProtestContainer>
+    </ProtestPageContainer>
+  );
+}
+
+export default function ProtestPage() {
   const protest = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
