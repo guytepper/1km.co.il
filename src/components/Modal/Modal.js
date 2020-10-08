@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -30,6 +30,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinates]);
 
   useEffect(() => {

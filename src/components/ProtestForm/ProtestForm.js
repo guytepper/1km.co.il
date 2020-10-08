@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 // import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -17,14 +17,16 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords, submitCallback }) {
+function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {} }) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
   }, [initialCoords]);
 
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues,
+  });
   // These two are separate so that onMoveEnd isn't called on every map move
   // map center
   const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
@@ -37,7 +39,7 @@ function ProtestForm({ initialCoords, submitCallback }) {
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
-  const setStreetName = (value) => setValue('streetName', value);
+  const setStreetName = (value) => setValue('streetAddress', value);
 
   // Load nearby protests on mount
   useEffect(() => {
@@ -50,23 +52,24 @@ function ProtestForm({ initialCoords, submitCallback }) {
   }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    if (!params.streetName) {
+    if (!params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
     } else {
       try {
         params.coords = mapCenter;
-        params.streetAddress = params.streetName;
         // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
         } else {
           throw protest;
         }
       } catch (err) {
+        console.log('error!!', err);
         setSubmitSuccess(true);
         setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
@@ -105,7 +108,12 @@ function ProtestForm({ initialCoords, submitCallback }) {
           </ProtestFormLabel>
           <ProtestFormLabel>
             כתובת
-            <PlacesAutocomplete setManualAddress={setMapCenter} setStreetName={setStreetName} inputRef={register} />
+            <PlacesAutocomplete
+              setManualAddress={setMapCenter}
+              setStreetName={setStreetName}
+              inputRef={register}
+              defaultValue={defaultValues.streetAddress}
+            />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
           <MapWrapper
