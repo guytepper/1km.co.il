@@ -71,7 +71,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       } catch (err) {
         console.log('error!!', err);
         setSubmitSuccess(true);
-        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.co.il');
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
     }
   };

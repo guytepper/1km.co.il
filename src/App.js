@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, ProjectUpdates, ProtestPage } from './views';
+import { Admin, GroupUpdate, ProjectUpdates, ProtestPage, AddProtest } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -9,7 +9,7 @@ import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
-import AddProtest from './views/AddProtest';
+import { setLocalStorage, getLocalStorage } from './localStorage';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -23,7 +23,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
-  loading: true,
+  loading: false,
 };
 
 function reducer(state, action) {
@@ -39,10 +39,19 @@ function reducer(state, action) {
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
-      return { ...state, userCoordinates: action.payload };
+      // Save the user coordinates in order to reuse them on the next user session
+      setLocalStorage('1km_user_coordinates', action.payload);
+      return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
-
+    case 'setLoadData':
+      return {
+        ...state,
+        protests: { close: action.payload.close, far: action.payload.far },
+        markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, ...action.payload.mapPositionHistory],
+        loading: false,
+      };
     default:
       throw new Error('Unexpected action');
   }
@@ -51,20 +60,17 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
-    if (validateLatLng(state.mapPosition)) {
-      let requested = false;
+    const cachedCoordinates = getLocalStorage('1km_user_coordinates');
+    if (cachedCoordinates) {
+      dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates });
+      dispatch({ type: 'setModalState', payload: false });
+    }
+  }, []);
 
-      // Check if the protests for the current position have been fetched already
-      state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 5000)) {
-          requested = true;
-          return;
-        }
-      });
-
-      if (requested) return;
-
+  useEffect(() => {
+    async function fetchProtests() {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -72,42 +78,46 @@ function App() {
         radius: 15,
       });
 
-      async function fetchProtests() {
-        try {
-          const snapshot = await query.limit(30).get();
-          const protests = snapshot.docs.map((doc) => {
-            const { latitude, longitude } = doc.data().g.geopoint;
-            const protestLatlng = [latitude, longitude];
-            return {
-              id: doc.id,
-              latlng: protestLatlng,
-              distance: getDistance(state.userCoordinates, protestLatlng),
-              ...doc.data(),
-            };
-          });
+      try {
+        const snapshot = await query.limit(30).get();
+        const protests = snapshot.docs.map((doc) => {
+          const { latitude, longitude } = doc.data().g.geopoint;
+          const protestLatlng = [latitude, longitude];
+          return {
+            id: doc.id,
+            latlng: protestLatlng,
+            distance: getDistance(state.userCoordinates, protestLatlng),
+            ...doc.data(),
+          };
+        });
 
-          // Set protests only on initial load
-          // These protests will be shown on ProtestList
-          if (state.loading) {
-            dispatch({
-              type: 'setProtests',
-              payload: {
-                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-              },
-            });
-          }
+        // Filter duplicate markers
+        const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
 
-          // Filter duplicate markers
-          const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-          dispatch({ type: 'setMarkers', payload: filteredMarkers });
-          dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
-          dispatch({ type: 'setLoading', payload: false });
-        } catch (err) {
-          console.log(err);
+        // Set data
+        dispatch({
+          type: 'setLoadData',
+          payload: {
+            close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+            far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+            markers: filteredMarkers,
+            mapPositionHistory: [...state.mapPositionHistory, state.mapPosition],
+          },
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    if (validateLatLng(state.mapPosition)) {
+      if (state.loading) {
+        fetchProtests();
+      } else {
+        const requested = state.mapPositionHistory.some((pos) => pointWithinRadius(pos, state.mapPosition, 5000));
+        if (!requested) {
+          fetchProtests();
         }
       }
-      fetchProtests();
     }
     //TODO: remove this line and make sure deps are correct
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -141,11 +151,9 @@ function App() {
 
                 <ProtestListWrapper>
                   <ProtestListHead>
-                    <Link to="/project-updates/1">
-                      <SiteMessage style={{ backgroundColor: '#6ab04c' }}>
-                        <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                      </SiteMessage>
-                    </Link>
+                    <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
+                      <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
+                    </SiteMessage>
                     <Button
                       color="#3C4F76"
                       style={{ width: '100%', margin: '0' }}
@@ -163,7 +171,9 @@ function App() {
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
-                setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+                setCoordinates={(coords) => {
+                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                }}
               />
             </Route>
             <Route exact path="/add-protest/">
@@ -265,7 +275,7 @@ const HomepageWrapper = styled.div`
   }
 `;
 
-const SiteMessage = styled.div`
+const SiteMessage = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
