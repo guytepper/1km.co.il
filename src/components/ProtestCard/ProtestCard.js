@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import { DispatchContext } from '../../context';
 
 function formatDistance(distance) {
   if (distance > 1000) {
@@ -10,9 +11,13 @@ function formatDistance(distance) {
 }
 
 function ProtestCard({ protestInfo }) {
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes } = protestInfo;
+  const dispatch = useContext(DispatchContext);
+  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
   return (
-    <ProtestCardWrapper>
+    <ProtestCardWrapper
+      onMouseOver={() => dispatch({ type: 'setHoveredProtest', payload: id })}
+      onMouseOut={() => dispatch({ type: 'setHoveredProtest', payload: null })}
+    >
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
         {streetAddress && (

@@ -23,6 +23,7 @@ const initialState = {
   mapPositionHistory: [],
   isModalOpen: true,
   loading: true,
+  hoveredProtest: null,
 };
 
 function reducer(state, action) {
@@ -41,6 +42,8 @@ function reducer(state, action) {
       return { ...state, userCoordinates: action.payload };
     case 'setLoading':
       return { ...state, loading: action.payload };
+    case 'setHoveredProtest':
+      return { ...state, hoveredProtest: action.payload };
 
     default:
       throw new Error('Unexpected action');
@@ -108,7 +111,7 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition]);
+  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -152,7 +155,11 @@ function App() {
                     </Button>
                   </ProtestListHead>
 
-                  <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
+                  <ProtestList
+                    closeProtests={state.protests.close}
+                    farProtests={state.protests.far}
+                    loading={state.loading}
+                  />
                   <Footer />
                 </ProtestListWrapper>
               </HomepageWrapper>
