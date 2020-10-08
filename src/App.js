@@ -81,6 +81,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    // if onlyMarkers is true then don't update the protests, only the markers and history.
     async function fetchProtests({ onlyMarkers = false } = {}) {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
