@@ -119,7 +119,8 @@ function App() {
       }
       fetchProtests();
     }
-  }, [state.userCoordinates, state.mapPosition, state.mapPositionHistory, state.loading, state.markers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.userCoordinates, state.mapPosition]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
