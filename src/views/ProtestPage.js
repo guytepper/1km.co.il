@@ -5,7 +5,18 @@ import { fetchProtest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappIcon,
+  WhatsappShareButton,
+  TelegramShareButton,
+  TelegramIcon,
+} from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
+import * as texts from './ProtestPageTexts.json';
 
 const mobile = `@media (max-width: 500px)`;
 
@@ -33,6 +44,8 @@ function ProtestPageContent({ protest }) {
   const history = useHistory();
 
   const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+  const shareUrl = window.location.href;
+  const shareTitle = `${texts.shareMassage}${displayName}`;
 
   return (
     <ProtestPageContainer>
@@ -80,10 +93,33 @@ function ProtestPageContent({ protest }) {
           {/* Social */}
           <SocialContainer>
             <SectionTitle>
-              <img src="/icons/social.svg" alt="share icon" />
-              מידע ועדכונים:
+              <img src="/icons/social.svg" alt="social icon" />
+              שיתוף העמוד:
             </SectionTitle>
-
+            <SocialButtonWrapper>
+              <FacebookShareButton url={shareUrl} quote={shareTitle}>
+                <FacebookIcon size={30} round={true} />
+              </FacebookShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <TwitterShareButton url={shareUrl} title={shareTitle}>
+                <TwitterIcon size={30} round={true} />
+              </TwitterShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <WhatsappShareButton url={shareUrl} title={shareTitle} separator=" - ">
+                <WhatsappIcon size={30} round={true} />
+              </WhatsappShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <TelegramShareButton url={shareUrl} title={shareTitle}>
+                <TelegramIcon size={30} round={true} />
+              </TelegramShareButton>
+            </SocialButtonWrapper>
+            <SectionTitle>
+              <img src="/icons/share.svg" alt="share icon" />
+              קישורים:
+            </SectionTitle>
             <SocialButtons>
               {whatsAppLink && (
                 <SocialButton type="whatsapp" link={whatsAppLink}>
@@ -329,4 +365,8 @@ const SocialContainer = styled(SectionContainer)`
   ${mobile} {
     margin-top: 20px;
   }
+`;
+
+const SocialButtonWrapper = styled.span`
+  margin: 0px 10px 10px 10px;
 `;
