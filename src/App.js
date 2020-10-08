@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
+import { setLocalStorage, getLocalStorage } from './localStorage';
 import AddProtest from './views/AddProtest';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
@@ -39,6 +40,8 @@ function reducer(state, action) {
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
+      // Save the user coordinates in order to reuse them on the next user session
+      setLocalStorage('1km_user_coordinates', action.payload);
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
@@ -57,6 +60,15 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
+  useEffect(() => {
+    const cachedCoordinates = getLocalStorage('1km_user_coordinates');
+    if (cachedCoordinates) {
+      dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates });
+      dispatch({ type: 'setModalState', payload: false });
+    }
+  }, []);
 
   useEffect(() => {
     async function fetchProtests() {
@@ -158,7 +170,9 @@ function App() {
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
-                setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+                setCoordinates={(coords) => {
+                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                }}
               />
             </Route>
             <Route exact path="/add-protest/">

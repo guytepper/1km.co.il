@@ -14,9 +14,14 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
   } = usePlacesAutocomplete({ debounce: 900 });
 
   const handleInput = (e) => {
-    setValue(e.target.value);
-    if (setStreetName) setStreetName(e.target.value);
+    const charactersThreshold = 3;
+    const term = e.target.value;
+    const shouldFetch = term.length >= charactersThreshold;
+    setValue(term, shouldFetch);
+    updateStreetName(term);
   };
+
+  const updateStreetName = (address) => setStreetName && setStreetName(address);
 
   const handleSelect = (address) => {
     setValue(address, false);
@@ -26,7 +31,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
       .then((latLng) => {
         const { lat, lng } = latLng;
         setManualAddress([lat, lng]);
-        if (setStreetName) setStreetName(address);
+        updateStreetName(address);
       })
       .catch((error) => {
         console.log('Error: ', error);
