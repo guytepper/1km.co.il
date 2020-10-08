@@ -78,13 +78,14 @@ export function createProtest(params) {
 export async function updateProtest(protestId, params, approved) {
   try {
     const request = await firestore
-      .collection(approved ? 'protests' : 'pending_protests')
+      .collection('protests')
+      //.collection(approved ? 'protests' : 'pending_protests')
       .doc(protestId)
       .update(params);
 
-    console.log(request); // <-- Why is this undefined yet the operation successful?
-    if (request === undefined) return true;
-    return request;
+    if (request === undefined) return { _document: true };
+    // Remain compatible with createProtest
+    return { ...request, _document: true };
   } catch (err) {
     console.log(err);
     return err;

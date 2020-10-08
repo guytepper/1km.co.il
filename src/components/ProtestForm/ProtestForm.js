@@ -17,7 +17,7 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords, submitCallback, defaultValues = {} }) {
+function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {} }) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
@@ -64,10 +64,12 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {} }) {
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
         } else {
           throw protest;
         }
       } catch (err) {
+        console.log('error!!', err);
         setSubmitSuccess(true);
         setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.co.il');
       }
@@ -109,7 +111,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {} }) {
             <PlacesAutocomplete
               setManualAddress={setMapCenter}
               setStreetName={setStreetName}
-              register={register}
+              inputRef={register}
               defaultValue={defaultValues.streetAddress}
             />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>

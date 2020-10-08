@@ -30,7 +30,6 @@ function useFetchProtest() {
 }
 
 function ProtestPageContent({ protest }) {
-  console.log(protest);
   const history = useHistory();
 
   const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
@@ -115,6 +114,7 @@ function ProtestPageContent({ protest }) {
 
 export default function ProtestPage() {
   const protest = useFetchProtest();
+  const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
 
   if (!protest) {
@@ -130,7 +130,11 @@ export default function ProtestPage() {
         <EditViewContainer>
           <ProtestForm
             initialCoords={coordinates}
-            submitCallback={(params) => updateProtest(id, params)}
+            submitCallback={async (params) => {
+              const response = await updateProtest(id, params);
+              return response;
+            }}
+            afterSubmitCallback={() => history.goBack()}
             defaultValues={protest}
           />
         </EditViewContainer>
