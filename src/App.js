@@ -32,7 +32,7 @@ async function signOut() {
 }
 
 async function getFullUserData(uid) {
-  return firestore.collection('users').doc(uid).get();
+  return (await firestore.collection('users').doc(uid).get()).data();
 }
 
 const initialState = {
@@ -109,7 +109,7 @@ function App() {
       if (user) {
         // Includes admin data and more
         getFullUserData(user.uid).then(fullUserData => {
-          dispatch({ type: 'setUser', payload: fullUserData.data() });
+          dispatch({ type: 'setUser', payload: fullUserData });
         });
       } else {
         dispatch({ type: 'setUser', payload: null });

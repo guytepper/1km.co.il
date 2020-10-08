@@ -43,7 +43,6 @@ export default function Profile(props) {
     return null;
   }
 
-  console.log(props.user);
   return <>
     <h2>Hey {props.user.displayName}!</h2>
     {myProtests ? <MyProtests protests={myProtests} /> : null}
