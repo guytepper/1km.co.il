@@ -1,16 +1,15 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, OldAdmin, ProjectUpdates } from './views';
+import { Admin, OldAdmin, GroupUpdate, ProjectUpdates, ProtestPage, AddProtest } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
-import AddProtest from './views/AddProtest';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -120,6 +119,7 @@ function App() {
         }
       }
     }
+    //TODO: remove this line and make sure deps are correct
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
@@ -193,6 +193,9 @@ function App() {
             </Route>
             <Route exact path="/project-updates/1">
               <ProjectUpdates />
+            </Route>
+            <Route path="/protest/:id">
+              <ProtestPage />
             </Route>
           </React.Fragment>
         </Router>

@@ -25,3 +25,7 @@ yarn-error.log*
 .firebase
 firebase-debug.log
 ui-debug.log
+.firebaserc
+
+#npm files
+package-lock.json

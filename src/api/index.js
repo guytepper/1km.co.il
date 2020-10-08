@@ -75,6 +75,23 @@ export function createProtest(params) {
   return request;
 }
 
+export async function updateProtest(protestId, params, approved) {
+  try {
+    const request = await firestore
+      .collection('protests')
+      //.collection(approved ? 'protests' : 'pending_protests')
+      .doc(protestId)
+      .update(params);
+
+    if (request === undefined) return { _document: true };
+    // Remain compatible with createProtest
+    return { ...request, _document: true };
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
 export async function archivePendingProtest(protestId) {
   try {
     const request = await firestore.collection('pending_protests').doc(protestId).update({
@@ -87,6 +104,27 @@ export async function archivePendingProtest(protestId) {
     console.log(err);
     return err;
   }
+}
+
+export async function fetchProtest(protestId) {
+  const protest = await firestore.collection('protests').doc(protestId).get();
+
+  if (protest.exists) {
+    return { id: protest.id, ...protest.data() };
+  } else {
+    return false;
+  }
+}
+
+export async function uploadFile(params) {
+  const request = await fetch('http://localhost:5001/onekm-50c7f/us-central1/uploadImage', {
+    method: 'post',
+    body: params,
+  });
+  const response = await request.json();
+
+  console.log(response);
+  // TODO: assign s3 url to protest
 }
 
 export async function fetchNearbyProtests(position) {
@@ -112,4 +150,6 @@ export default {
   createProtest,
   createPendingProtest,
   archivePendingProtest,
+  fetchProtest,
+  uploadFile,
 };
