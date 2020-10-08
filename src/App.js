@@ -31,7 +31,11 @@ function reducer(state, action) {
     case 'setProtests':
       return { ...state, protests: { close: action.payload.close, far: action.payload.far } };
     case 'setMarkers':
-      return { ...state, markers: [...state.markers, ...action.payload] };
+      return {
+        ...state,
+        markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
+      };
     case 'setMapPosition':
       return { ...state, mapPosition: action.payload };
     case 'setMapPositionHistory':
@@ -49,8 +53,15 @@ function reducer(state, action) {
         ...state,
         protests: { close: action.payload.close, far: action.payload.far },
         markers: [...state.markers, ...action.payload.markers],
-        mapPositionHistory: [...state.mapPositionHistory, ...action.payload.mapPositionHistory],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
         loading: false,
+      };
+    case 'setInitialData':
+      return {
+        ...state,
+        userCoordinates: action.payload,
+        isModalOpen: false,
+        loading: true,
       };
     default:
       throw new Error('Unexpected action');
@@ -64,13 +75,13 @@ function App() {
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
     if (cachedCoordinates) {
-      dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates });
-      dispatch({ type: 'setModalState', payload: false });
+      dispatch({ type: 'setInitialData', payload: cachedCoordinates });
     }
   }, []);
 
   useEffect(() => {
-    async function fetchProtests() {
+    // if onlyMarkers is true then don't update the protests, only the markers and history.
+    async function fetchProtests({ onlyMarkers = false } = {}) {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -93,17 +104,27 @@ function App() {
 
         // Filter duplicate markers
         const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-
-        // Set data
-        dispatch({
-          type: 'setLoadData',
-          payload: {
-            close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-            far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-            markers: filteredMarkers,
-            mapPositionHistory: [...state.mapPositionHistory, state.mapPosition],
-          },
-        });
+        if (onlyMarkers) {
+          // Set data
+          dispatch({
+            type: 'setMarkers',
+            payload: {
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
+          });
+        } else {
+          // Set data
+          dispatch({
+            type: 'setLoadData',
+            payload: {
+              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -115,7 +136,7 @@ function App() {
       } else {
         const requested = state.mapPositionHistory.some((pos) => pointWithinRadius(pos, state.mapPosition, 5000));
         if (!requested) {
-          fetchProtests();
+          fetchProtests({ onlyMarkers: true });
         }
       }
     }
