@@ -1,8 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, ProjectUpdates, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest } from './views';
-import ProjectSupportPage from './views/ProjectSupportPage';
+import { Admin, GroupUpdate, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
 import styled from 'styled-components/macro';
@@ -189,7 +188,7 @@ function App() {
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
           </Header>
-          <React.Fragment>
+          <Switch>
             <Route exact path="/">
               <HomepageWrapper>
                 <Map
@@ -236,12 +235,6 @@ function App() {
             <Route exact path="/admin/group">
               <GroupUpdate />
             </Route>
-            <Route exact path="/support-the-project/">
-              <ProjectSupportPage />
-            </Route>
-            <Route exact path="/project-updates/1">
-              <ProjectUpdates />
-            </Route>
             <Route path="/protest/:id">
               <ProtestPage />
             </Route>
@@ -254,7 +247,22 @@ function App() {
             <Route exact path="/profile">
               <Profile user={state.user} />
             </Route>
-          </React.Fragment>
+
+            <Route exact path="/support-the-project/">
+              <PostView overrideSlug="support-the-project" />
+            </Route>
+            <Route exact path="/legal-notice">
+              <PostView overrideSlug="legal-notice" />
+            </Route>
+            <Route exact path="/project-updates/:slug">
+              <PostView />
+            </Route>
+
+            {/* 404 */}
+            <Route>
+              <FourOhFour />
+            </Route>
+          </Switch>
         </Router>
       </AppWrapper>
     </DispatchContext.Provider>
@@ -269,6 +277,8 @@ const AppWrapper = styled.div`
 
 const Header = styled.header`
   display: flex;
+  position: sticky;
+  top: 0;
   justify-content: space-between;
   align-items: center;
   padding: 5px 25px;
