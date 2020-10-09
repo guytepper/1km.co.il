@@ -9,7 +9,7 @@ import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
-import { getFullUserData, signOut } from './api';
+import { getFullUserData } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -165,27 +165,23 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            <SiteLogo>
-              <Link to="/" style={{ color: 'black' }}>
-                קילומטר אחד
-              </Link>
-            </SiteLogo>
+            <Link to="/">
+              <img src="/logo.svg" alt="קילומטר אחד" />
+            </Link>
             <NavItemsWrapper>
-              {state.user ? (
-                <>
-                  <img alt="" src={state.user.picture_url}></img>
-                  <NavItem to="/profile">{state.user.displayName}</NavItem>
-                  <NavButton
-                    onClick={() => {
-                      signOut();
-                    }}
-                  >
-                    log out
-                  </NavButton>
-                </>
-              ) : null}
-              <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-              <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+              <NavProfileWrapper>
+                {state.user ? (
+                  <>
+                    <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                  </>
+                ) : (
+                  <GuestNavItems>
+                    <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                    <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  </GuestNavItems>
+                )}
+              </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
           <Switch>
@@ -196,17 +192,18 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
+                  h
                   markers={state.markers}
                 />
 
                 <ProtestListWrapper>
                   <ProtestListHead>
-                    <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
+                    {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                    </SiteMessage>
+                    </SiteMessage> */}
                     <Button
                       color="#3C4F76"
-                      style={{ width: '100%', margin: '0' }}
+                      style={{ width: '100%' }}
                       onClick={() => dispatch({ type: 'setModalState', payload: true })}
                     >
                       שינוי כתובת
@@ -287,11 +284,21 @@ const Header = styled.header`
   box-shadow: inset 0 -1px 0 #e1e4e8;
 `;
 
-const SiteLogo = styled.h1`
-  font-size: 26px;
+const NavItemsWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 550px) {
+    flex-direction: row-reverse;
+    align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
-const NavItemsWrapper = styled.div`
+const GuestNavItems = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -341,6 +348,18 @@ const NavButton = styled.button`
       margin-left: 15px;
     }
   }
+`;
+
+const NavProfileWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NavProfilePicture = styled.img`
+  width: 20px;
+  border-radius: 50px;
+  margin-left: 5px;
 `;
 
 const HomepageWrapper = styled.div`
@@ -394,7 +413,7 @@ const ProtestListWrapper = styled.div`
 
   @media (min-width: 768px) {
     grid-row: 1;
-    padding: 0 15px;
+    padding: 10px 15px 0;
     max-height: calc(100vh - 60px);
   }
 `;
