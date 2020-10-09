@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { dateToDayOfWeek, formatDate } from '../../utils';
+import { dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
 function formatDistance(distance) {
   if (distance > 1000) {
@@ -9,13 +9,6 @@ function formatDistance(distance) {
   } else {
     return `${distance} מטר ממיקומך`;
   }
-}
-
-function getUpcomingDate(dateTimeList) {
-  if (!dateTimeList) {
-    return null;
-  }
-  return dateTimeList.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
 }
 
 function getFormattedDate(date) {

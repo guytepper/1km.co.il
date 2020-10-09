@@ -17,7 +17,7 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate } from '../utils';
+import { dateToDayOfWeek, formatDate, sortDateTimeList } from '../utils';
 
 const mobile = `@media (max-width: 500px)`;
 
@@ -56,7 +56,15 @@ function useFetchProtest() {
     _fetchProtest(id, setProtest);
   }, [id]);
 
-  return { protest, setProtest };
+  return {
+    protest: protest
+      ? {
+          ...protest,
+          dateTimeList: sortDateTimeList(protest.dateTimeList),
+        }
+      : null,
+    setProtest,
+  };
 }
 
 function ProtestPageContent({ protest }) {

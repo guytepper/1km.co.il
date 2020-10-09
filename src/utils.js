@@ -44,3 +44,17 @@ export function dateToDayOfWeek(dateStr) {
 
   return daysOfWeek[date.getDay()];
 }
+
+export function sortDateTimeList(dateTimeList) {
+  if (!dateTimeList) {
+    return null;
+  }
+  return dateTimeList.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+export function getUpcomingDate(dateTimeList) {
+  if (!dateTimeList) {
+    return null;
+  }
+  return sortDateTimeList(dateTimeList)[0];
+}
