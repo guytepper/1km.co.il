@@ -10,6 +10,13 @@ function formatDistance(distance) {
   }
 }
 
+function getUpcomingDate(dateTimeList) {
+  if (!dateTimeList) {
+    return null;
+  }
+  return dateTimeList.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+}
+
 function ProtestCard({ protestInfo }) {
   const history = useHistory();
 
@@ -24,6 +31,9 @@ function ProtestCard({ protestInfo }) {
     notes,
     id,
   } = protestInfo;
+
+  const upcomingDate = getUpcomingDate(dateTimeList);
+
   return (
     <ProtestCardWrapper
       onClick={() => {
@@ -38,21 +48,22 @@ function ProtestCard({ protestInfo }) {
             {streetAddress}
           </ProtestCardDetail>
         )}
-        {dateTimeList &&
-          dateTimeList.map((dateTimeElement) => (
-            <ProtestCardDetail key={dateTimeElement.id}>
-              <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
-              {dateTimeElement.date} - {dateTimeElement.time}
-            </ProtestCardDetail>
-          ))}
-        {meetingTime && (
+
+        {upcomingDate && (
+          <ProtestCardDetail key={upcomingDate.id}>
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
+            {upcomingDate.date} - {upcomingDate.time}
+          </ProtestCardDetail>
+        )}
+        {!upcomingDate && meetingTime && (
           <ProtestCardDetail>
-            <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
             {meetingTime}
           </ProtestCardDetail>
         )}
+
         <ProtestCardDetail>
-          <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
+          <ProtestCardIcon src="/icons/ruler.svg" alt="distance" aria-hidden="true" title="מרחק" />
           {formatDistance(distance)}
         </ProtestCardDetail>
       </ProtestCardInfo>
