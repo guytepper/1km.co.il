@@ -20,6 +20,24 @@ import * as texts from './ProtestPageTexts.json';
 
 const mobile = `@media (max-width: 500px)`;
 
+function getSocialLinks(protest) {
+  const items = [];
+  const { whatsAppLink, telegramLink, facebookLink, twitterLink } = protest;
+  if (whatsAppLink) {
+    items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
+  }
+  if (telegramLink) {
+    items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
+  }
+  if (facebookLink) {
+    items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
+  }
+  if (twitterLink) {
+    items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
+  }
+  return items;
+}
+
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
   const { id } = useParams();
@@ -46,6 +64,7 @@ function ProtestPageContent({ protest }) {
   const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
+  const socialLinks = getSocialLinks(protest);
 
   return (
     <ProtestPageContainer>
@@ -116,28 +135,21 @@ function ProtestPageContent({ protest }) {
                 <TelegramIcon size={30} round={true} />
               </TelegramShareButton>
             </SocialButtonWrapper>
-            <SectionTitle>
-              <img src="/icons/share.svg" alt="share icon" />
-              קישורים:
-            </SectionTitle>
-            <SocialButtons>
-              {whatsAppLink && (
-                <SocialButton type="whatsapp" link={whatsAppLink}>
-                  הצטרפות לקבוצת הוואצאפ
-                </SocialButton>
-              )}
-              {telegramLink && (
-                <SocialButton type="telegram" link={telegramLink}>
-                  הצטרפות לקבוצה בטלגרם
-                </SocialButton>
-              )}
-              {/* <SocialButton type="facebook" link="www.twitter.com">
-                הצטרפות לקבוצה בפייסבוק
-              </SocialButton>
-              <SocialButton type="twitter" link="www.twitter.com">
-                עקוב בטוויטר
-              </SocialButton> */}
-            </SocialButtons>
+            {socialLinks.length > 0 && (
+              <>
+                <SectionTitle>
+                  <img src="/icons/share.svg" alt="share icon" />
+                  קישורים:
+                </SectionTitle>
+                <SocialButtons>
+                  {socialLinks.map(({ url, type, text }) => (
+                    <SocialButton key={type} type={type} link={url}>
+                      {text}
+                    </SocialButton>
+                  ))}
+                </SocialButtons>
+              </>
+            )}
           </SocialContainer>
         </DatesAndSocial>
       </ProtestContainer>
