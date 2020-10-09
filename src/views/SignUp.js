@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, PageWrapper, PageContentWrapper } from '../components';
+import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../api';
 
 import queryString from 'query-string';
@@ -44,6 +44,11 @@ export default function SignUp(props) {
 
           if (returnUrl) {
             history.push(returnUrl);
+          } else {
+            // Redirect to homepage.
+            setTimeout(() => {
+              history.push('/');
+            }, 2020);
           }
         });
       })
@@ -70,6 +75,12 @@ export default function SignUp(props) {
   }
 
   if (stage === stages.AFTER_FACEBOOK_AUTH) {
-    return <PageWrapper>Thank you {userData.displayName} for sigining up!</PageWrapper>;
+    return (
+      <PageWrapper>
+        <PageContentWrapper>
+          <PageParagraph>התחברת בהצלחה.</PageParagraph>
+        </PageContentWrapper>
+      </PageWrapper>
+    );
   }
 }
