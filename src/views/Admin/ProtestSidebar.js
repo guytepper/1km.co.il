@@ -7,40 +7,37 @@ import {
   SidebarListHeadFilters,
   SidebarListHeadFilter,
   SidebarWrapper,
-  CardField,
+  Field,
 } from './components';
 import { PlacesAutocomplete, Button } from '../../components';
 import { useAdminContext } from './Context';
-import { fetchPendingProtests, getNearProtests } from './utils';
+import { fetchPendingProtests } from './utils';
 import { fetchNearbyProtests } from '../../api';
 
 const ProtestSidebar = () => {
   const { state, dispatch } = useAdminContext();
-  // const [protestFilter, setProtestFilter] = useState('pending');
   const [coordinates, setCoordinates] = useState(null);
-  const [pendingProtests, setPendingProtests] = useState([]);
-  const [approvedProtests, setApprovedProtests] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       if (state.protestFilter === 'pending') {
-        if (pendingProtests.length === 0) {
-          setPendingProtests(await fetchPendingProtests());
+        if (state.pendingProtests.length === 0) {
+          dispatch({ type: 'setProtests', payload: { pendingProtests: await fetchPendingProtests() } });
         }
       } else if (!coordinates) {
-        if (approvedProtests.length > 0) {
-          setApprovedProtests([]);
+        if (state.approvedProtests.length > 0) {
+          dispatch({ type: 'setProtests', payload: { approvedProtests: [] } });
         }
       } else {
-        if (approvedProtests.length === 0) {
-          setApprovedProtests(await fetchNearbyProtests(coordinates));
+        if (state.approvedProtests.length === 0) {
+          dispatch({ type: 'setProtests', payload: { approvedProtests: await fetchNearbyProtests(coordinates) } });
         }
       }
     }
     fetchData();
-  }, [state.protestFilter, pendingProtests, approvedProtests, coordinates]);
+  }, [state.protestFilter, state.pendingProtests, state.approvedProtests, coordinates, dispatch]);
 
-  const protests = state.protestFilter === 'pending' ? pendingProtests : approvedProtests;
+  const protests = state.protestFilter === 'pending' ? state.pendingProtests : state.approvedProtests;
 
   return (
     <SidebarWrapper>
@@ -69,14 +66,15 @@ const ProtestSidebar = () => {
       <SidebarList>
         {protests.map((protest) => (
           <Card
+            active={protest.id === state.currentProtest?.id}
             onClick={() => {
               dispatch({ type: 'setCurrentProtest', payload: { currentProtest: protest } });
             }}
             key={protest.id}
           >
-            <CardField name="שם המקום" value={protest.displayName} />
-            <CardField name="כתובת" value={protest.streetAddress} />
-            <CardField name="שעת מפגש" value={protest.meeting_time} />
+            <Field name="שם המקום" value={protest.displayName} />
+            <Field name="כתובת" value={protest.streetAddress} />
+            <Field name="שעת מפגש" value={protest.meeting_time} />
           </Card>
         ))}
       </SidebarList>
