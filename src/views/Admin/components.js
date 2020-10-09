@@ -1,9 +1,11 @@
+import React from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 
 export const AdminWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 2fr 3fr;
+  grid-template-columns: 1.2fr 4fr;
+  position: relative;
   padding: 20px;
 `;
 
@@ -12,11 +14,11 @@ export const SidebarWrapper = styled.div`
   grid-column: 1 / 1;
 `;
 
-export const ProtestFormWrapper = styled.div`
+export const FormWrapper = styled.div`
   /* height: 85vh; */
   /* overflow-y: auto; */
   overflow: hidden;
-  grid-column: 2 / 4;
+  grid-column: 2 / 3;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,8 +35,38 @@ export const SidebarList = styled.ul`
   overflow: auto;
 `;
 
+export const LeaderCard = styled.li`
+  background-color: #fff;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  @media (max-width: 1340px) {
+    flex-direction: column;
+    /* align-items: flex-start; */
+  }
+`;
+
+export const CardField = ({ name, value }) => (
+  <div style={{ textAlign: 'right' }}>
+    <strong>{name}</strong>: {value ?? 'אין'}
+  </div>
+);
+
+export const LeaderPhoto = styled.img`
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  margin-left: 7px;
+  border-radius: 50%;
+`;
+
 export const AdminNavigation = styled(Link)`
-  grid-column: 4/4;
+  grid-column: 2/2;
+  position: absolute;
+  left: 0;
+  top: 15px;
   grid-row: 1/1;
 `;
 

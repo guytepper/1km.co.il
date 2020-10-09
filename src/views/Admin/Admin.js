@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, ProtestForm } from '../../components';
 import { signInWithGoogle } from '../../firebase';
-import { AdminWrapper, ProtestFormWrapper, AdminNavigation } from './components';
+import { AdminWrapper, FormWrapper, AdminNavigation, LeaderPhoto, CardField } from './components';
 import { useAdminContext } from './Context';
-import { archiveProtest } from './utils';
+import { archivePendingProtest, submitProtest, updateProtest } from './utils';
 import ProtestSidebar from './ProtestSidebar';
 import LeaderSidebar from './LeaderSidebar';
 
@@ -24,24 +24,46 @@ const Admin = () => {
           <Switch>
             <Route path="/admin/protest-requests">
               <ProtestSidebar />
-              <ProtestFormWrapper>
+              <FormWrapper>
                 <ProtestForm
                   initialCoords={state.currentProtest?.coordinates ?? {}}
-                  submitCallback={() => {}}
+                  submitCallback={(params) => {
+                    if (state.protestFilter === 'pending') {
+                      return submitProtest({
+                        params,
+                        protestId: state.currentProtest.id,
+                        submitCallback: () => history.go(0),
+                      });
+                    } else {
+                      return updateProtest({
+                        params,
+                        protestId: state.currentProtest.id,
+                        updateCallback: () => history.go(0),
+                      });
+                    }
+                  }}
                   defaultValues={state.currentProtest}
                   editMode={state.protestFilter}
                 />
                 <Button
-                  onClick={() => archiveProtest(state.currentProtest.id, () => history.go(0))}
+                  onClick={() => archivePendingProtest(state.currentProtest.id, () => history.go(0))}
                   color="tomato"
                   disabled={!state.currentProtest}
                 >
                   מחיקת הפגנה
                 </Button>
-              </ProtestFormWrapper>
+              </FormWrapper>
             </Route>
             <Route path="/admin/leader-requests">
               <LeaderSidebar />
+              {state.currentLeaderRequest ? (
+                <FormWrapper>
+                  <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
+                  <CardField name="שם" value={state.currentLeaderRequest.user.displayName} />
+                  <CardField name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />
+                  <CardField name="אימייל" value={state.currentLeaderRequest.user.email} />
+                </FormWrapper>
+              ) : null}
             </Route>
           </Switch>
           {['/admin/leader-requests/', '/admin/leader-requests'].includes(location.pathname) ? (
