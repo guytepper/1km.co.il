@@ -6,7 +6,7 @@ function Footer() {
   return (
     <FooterWrapper>
       <FooterRouterLink to="/legal-notice" target="_blank">
-        הבהרה משפטית
+        הצהרה משפטית
       </FooterRouterLink>
       <FooterLink href="https://twitter.com/1kmcoil" target="_blank">
         <FooterLinkIcon src="/icons/twitter.svg" alt="" />
