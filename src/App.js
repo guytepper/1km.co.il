@@ -9,8 +9,7 @@ import {
   ProtestPage, 
   AddProtest, 
   Profile, 
-  LeaderRequest, 
-  LeaderRequestSubmitted
+  LeaderRequest,
 } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
@@ -249,11 +248,8 @@ function App() {
             <Route exact path="/sign-up">
               <SignUp />
             </Route>
-            <Route exact path="/leader-request">
+            <Route path="/leader-request">
               <LeaderRequest user={state.user}/>
-            </Route>
-            <Route exact path="/leader-request-submitted">
-              <LeaderRequestSubmitted user={state.user}/>
             </Route>
             <Route exact path="/profile">
               <Profile user={state.user}/>

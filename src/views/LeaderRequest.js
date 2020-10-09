@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import queryString from 'query-string';
 import { Button } from '../components';
@@ -7,6 +7,7 @@ import {
   sendProtestLeaderRequest,
   isProtestValid
 } from '../api';
+import { LeaderRequestSubmitted } from '.';
 
 const ProtestFormLabel = styled.label`
   display: flex;
@@ -43,7 +44,7 @@ export default function LeaderRequest(props) {
       
       await sendProtestLeaderRequest(props.user, phoneNumber, protestId);
       
-      history.push('/leader-request-submitted');
+      history.push('/leader-request/submitted');
     });
   }
 
@@ -53,11 +54,18 @@ export default function LeaderRequest(props) {
 
   return (
     <>
-      <ProtestFormLabel>
-        Phone Number: 
-        <ProtestFormInput name="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-      </ProtestFormLabel>
-      <Button onClick={() => submitLeaderRequest(phoneNumber)}>Submit request</Button>
+      <Switch>
+        <Route exact path="/leader-request/submitted">
+          <LeaderRequestSubmitted user={props.user}/>
+        </Route>
+        <Route>
+          <ProtestFormLabel>
+            Phone Number: 
+            <ProtestFormInput name="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+          </ProtestFormLabel>
+          <Button onClick={() => submitLeaderRequest(phoneNumber)}>Submit request</Button>
+        </Route>
+      </Switch>
     </>
   )
 }
