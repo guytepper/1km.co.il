@@ -1,9 +1,22 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
 
 export default function LeaderRequestSubmitted(props) {
+  const history = useHistory();
+
   return (
-    <>
-      <h1>Thank you for submitting the request to lead a protest in your area</h1>
-    </>
-  )
+    <PageWrapper>
+      <PageContentWrapper>
+        <PageParagraph>
+          תודה שהגשת בקשה לעריכה של עמוד ההפגנה.
+          <br />
+          צוות האתר יצור איתך קשר בהקדם האפשרי.
+          <br />
+          יחד ננצח!
+        </PageParagraph>
+        <Button onClick={() => history.push('/')}>חזרה לעמוד הראשי</Button>
+      </PageContentWrapper>
+    </PageWrapper>
+  );
 }

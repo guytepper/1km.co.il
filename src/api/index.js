@@ -2,15 +2,15 @@ import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-async function verifyRecaptcha(token) {
-  try {
-    const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
-    const response = await request.json();
-    return response;
-  } catch (err) {
-    throw err;
-  }
-}
+// async function verifyRecaptcha(token) {
+//   try {
+//     const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
+//     const response = await request.json();
+//     return response;
+//   } catch (err) {
+//     throw err;
+//   }
+// }
 
 export async function createPendingProtest(params) {
   const {
