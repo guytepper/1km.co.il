@@ -1,16 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import {
-  Admin,
-  GroupUpdate, 
-  ProjectUpdates, 
-  SignUp, 
-  ProtestPage, 
-  AddProtest, 
-  Profile, 
-  LeaderRequest,
-} from './views';
+import { Admin, GroupUpdate, ProjectUpdates, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -75,7 +66,7 @@ function reducer(state, action) {
         loading: true,
       };
     case 'setUser':
-      return { ...state, user: action.payload }
+      return { ...state, user: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -92,18 +83,18 @@ function App() {
     }
   }, []);
 
-  useEffect(() =>{
-    firebase.auth().onAuthStateChanged(function(user) {
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         // Includes admin data and more
-        getFullUserData(user.uid).then(fullUserData => {
+        getFullUserData(user.uid).then((fullUserData) => {
           dispatch({ type: 'setUser', payload: fullUserData });
         });
       } else {
         dispatch({ type: 'setUser', payload: null });
       }
     });
-  }, [])
+  }, []);
 
   useEffect(() => {
     // if onlyMarkers is true then don't update the protests, only the markers and history.
@@ -181,11 +172,19 @@ function App() {
               </Link>
             </SiteLogo>
             <NavItemsWrapper>
-              {state.user ? <>
-                <img alt='' src={state.user.picture_url}></img>
-                <NavItem to="/profile">{state.user.displayName}</NavItem>
-                <NavButton onClick={() => {signOut()}}>log out</NavButton>
-                </> : null}
+              {state.user ? (
+                <>
+                  {/* <img alt='' src={state.user.picture_url}></img> */}
+                  {/* <NavItem to="/profile">{state.user.displayName}</NavItem> */}
+                  {/* <NavButton
+                    onClick={() => {
+                      signOut();
+                    }}
+                  >
+                    log out
+                  </NavButton> */}
+                </>
+              ) : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
@@ -250,10 +249,10 @@ function App() {
               <SignUp />
             </Route>
             <Route path="/leader-request">
-              <LeaderRequest user={state.user}/>
+              <LeaderRequest user={state.user} />
             </Route>
             <Route exact path="/profile">
-              <Profile user={state.user}/>
+              <Profile user={state.user} />
             </Route>
           </React.Fragment>
         </Router>
@@ -313,26 +312,26 @@ const NavItem = styled(Link)`
 `;
 
 const NavButton = styled.button`
-cursor: pointer;
+  cursor: pointer;
 
-&:hover {
-  color: #3498db;
-}
-
-&:nth-child(1) {
-  margin-bottom: 3px;
-
-  @media (min-width: 550px) {
-    margin-bottom: 0;
+  &:hover {
+    color: #3498db;
   }
-}
 
-&:nth-child(2) {
-  @media (min-width: 550px) {
-    margin-left: 15px;
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
   }
-}
-`
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
+  }
+`;
 
 const HomepageWrapper = styled.div`
   height: 100%;
