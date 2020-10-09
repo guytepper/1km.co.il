@@ -229,7 +229,7 @@ function App() {
             <Route exact path="/old-admin/">
               <OldAdmin />
             </Route>
-            <Route exact path="/admin/">
+            <Route path="/admin/">
               <Admin />
             </Route>
             <Route exact path="/admin/group">

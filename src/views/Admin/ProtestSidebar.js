@@ -1,72 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import {
   Card,
-  ProtestsList,
-  ProtestsListHead,
-  ProtestsListHeadTitle,
-  ProtestsListHeadFilters,
-  ProtestsListHeadFilter,
-  ProtestSidebarWrapper,
+  SidebarList,
+  SidebarListHead,
+  SidebarListHeadTitle,
+  SidebarListHeadFilters,
+  SidebarListHeadFilter,
+  SidebarWrapper,
 } from './components';
-import { PlacesAutocomplete } from '../../components';
+import { PlacesAutocomplete, Button } from '../../components';
 import { useAdminContext } from './Context';
-import useProtests from './useProtests';
-import getDistance from 'geolib/es/getDistance';
+import { fetchPendingProtests, getNearProtests } from './utils';
+import { fetchNearbyProtests } from '../../api';
 
 const ProtestSidebar = () => {
-  const { dispatch } = useAdminContext();
-  const [protestFilter, setProtestFilter] = useState('pending');
-  const { pendingProtests, approvedProtests } = useProtests();
+  const { state, dispatch } = useAdminContext();
+  // const [protestFilter, setProtestFilter] = useState('pending');
   const [coordinates, setCoordinates] = useState(null);
-  const [protests, setProtests] = useState([]);
+  const [pendingProtests, setPendingProtests] = useState([]);
+  const [approvedProtests, setApprovedProtests] = useState([]);
 
   useEffect(() => {
-    // if (protestFilter === 'approved' && !coordinates) {
-    //   setProtests([]);
-    //   return;
-    // }
-
-    let filteredProtests = protestFilter === 'pending' ? pendingProtests : approvedProtests;
-
-    if (coordinates?.length === 2) {
-      filteredProtests = filteredProtests
-        .filter((p) => getDistance(coordinates, p.latlng) <= 2000)
-        .sort((p1, p2) => getDistance(coordinates, p1.latlng) - getDistance(coordinates, p2.latlng));
+    async function fetchData() {
+      if (state.protestFilter === 'pending') {
+        if (pendingProtests.length === 0) {
+          setPendingProtests(await fetchPendingProtests());
+        }
+      } else if (!coordinates) {
+        if (approvedProtests.length > 0) {
+          setApprovedProtests([]);
+        }
+      } else {
+        if (approvedProtests.length === 0) {
+          setApprovedProtests(await fetchNearbyProtests(coordinates));
+        }
+      }
     }
-    setProtests(filteredProtests);
-  }, [protestFilter, pendingProtests, approvedProtests, coordinates]);
+    fetchData();
+  }, [state.protestFilter, pendingProtests, approvedProtests, coordinates]);
+
+  const protests = state.protestFilter === 'pending' ? pendingProtests : approvedProtests;
 
   return (
-    <ProtestSidebarWrapper>
-      <ProtestsListHead>
-        <ProtestsListHeadTitle>הפגנות</ProtestsListHeadTitle>
+    <SidebarWrapper>
+      <SidebarListHead>
+        <SidebarListHeadTitle>הפגנות</SidebarListHeadTitle>
         <PlacesAutocomplete setManualAddress={setCoordinates} />
-        <ProtestsListHeadFilters>
-          <ProtestsListHeadFilter>
-            <input
-              type="radio"
-              id="protest-filter-pending"
-              name="protest-filter"
-              value="pending"
-              checked={protestFilter === 'pending'}
-              onChange={() => setProtestFilter('pending')}
-            />
-            <label htmlFor="protest-filter-pending">מחכה לאישור</label>
-          </ProtestsListHeadFilter>
-          <ProtestsListHeadFilter>
-            <input
-              type="radio"
-              id="protest-filter-approved"
-              name="protest-filter"
-              value="approved"
-              checked={protestFilter === 'approved'}
-              onChange={() => setProtestFilter('approved')}
-            />
-            <label htmlFor="protest-filter-approved">מאושר</label>
-          </ProtestsListHeadFilter>
-        </ProtestsListHeadFilters>
-      </ProtestsListHead>
-      <ProtestsList>
+        <SidebarListHeadFilters>
+          <SidebarListHeadFilter>
+            <Button
+              style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'pending' ? 0.5 : 1 }}
+              onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'pending' } })}
+            >
+              מחכה לאישור
+            </Button>
+          </SidebarListHeadFilter>
+          <SidebarListHeadFilter>
+            <Button
+              style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'approved' ? 0.5 : 1 }}
+              onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'approved' } })}
+            >
+              מאושר
+            </Button>
+          </SidebarListHeadFilter>
+        </SidebarListHeadFilters>
+      </SidebarListHead>
+      <SidebarList>
         {protests.map((protest) => (
           <Card
             onClick={() => {
@@ -85,8 +84,8 @@ const ProtestSidebar = () => {
             </div>
           </Card>
         ))}
-      </ProtestsList>
-    </ProtestSidebarWrapper>
+      </SidebarList>
+    </SidebarWrapper>
   );
 };
 
