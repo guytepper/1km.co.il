@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 // import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -7,12 +7,8 @@ import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
 import { validateLatLng } from '../../utils';
-import { createPendingProtest } from '../../api';
-import firebase, { firestore } from '../../firebase';
-import * as geofirestore from 'geofirestore';
+import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
-
-const GeoFirestore = geofirestore.initializeApp(firestore);
 
 const protestMarker = new L.Icon({
   iconUrl: '/icons/black-flag.svg',
@@ -21,33 +17,21 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-const geocollection = GeoFirestore.collection('protests');
-const getNearProtests = async (position) => {
-  const query = geocollection.near({
-    center: new firebase.firestore.GeoPoint(position[0], position[1]),
-    radius: 2,
-  });
-  const snapshot = await query.limit(10).get();
-  const protests = snapshot.docs.map((doc) => {
-    const { latitude, longitude } = doc.data().g.geopoint;
-    const protestLatlng = [latitude, longitude];
-    return {
-      id: doc.id,
-      latlng: protestLatlng,
-      ...doc.data(),
-    };
-  });
-  return protests;
-};
-
-function ProtestForm({ initialCoords }) {
-  const { register, handleSubmit } = useForm();
-  const [coordinates, setCoordinates] = useState(() => {
+function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {} }) {
+  const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
+  }, [initialCoords]);
+
+  const { register, handleSubmit, setValue } = useForm({
+    defaultValues,
   });
-  const [streetName, setStreetName] = useState('');
+  // These two are separate so that onMoveEnd isn't called on every map move
+  // map center
+  const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
+  // position of marker
+  const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -55,34 +39,39 @@ function ProtestForm({ initialCoords }) {
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
+  const setStreetName = (value) => setValue('streetAddress', value);
+
+  // Load nearby protests on mount
   useEffect(() => {
+    const coords = coordinatesUpdater();
     async function nearbyProtests() {
-      const protests = await getNearProtests(coordinates);
+      const protests = await fetchNearbyProtests(coords);
       setNearbyProtests(protests);
     }
     nearbyProtests();
-  }, [streetName]);
+  }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    if (!streetName) {
+    if (!params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
     } else {
       try {
-        params.coords = coordinates;
-        params.streetAddress = streetName;
+        params.coords = mapCenter;
         // params.recaptchaToken = recaptchaToken;
 
-        let protest = await createPendingProtest(params);
+        let protest = await submitCallback(params);
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
         } else {
           throw protest;
         }
       } catch (err) {
+        console.log('error!!', err);
         setSubmitSuccess(true);
-        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.co.il');
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
     }
   };
@@ -119,18 +108,32 @@ function ProtestForm({ initialCoords }) {
           </ProtestFormLabel>
           <ProtestFormLabel>
             כתובת
-            <PlacesAutocomplete setManualAdress={setCoordinates} setStreetName={setStreetName} />
+            <PlacesAutocomplete
+              setManualAddress={setMapCenter}
+              setStreetName={setStreetName}
+              inputRef={register}
+              defaultValue={defaultValues.streetAddress}
+            />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
           <MapWrapper
-            center={coordinates}
+            center={mapCenter}
             zoom={zoomLevel}
             scrollWheelZoom={'center'}
             onMove={(t) => {
-              setCoordinates([t.target.getCenter().lat, t.target.getCenter().lng]);
+              setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
               setZoomLevel(t.target._zoom);
             }}
-            onZoom={(event)=>{
+            onMoveEnd={async (t) => {
+              const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
+              setMapCenter(newPosition);
+              setMarkerPosition(newPosition);
+              setZoomLevel(t.target._zoom);
+              // fetch protests on move end
+              const protests = await fetchNearbyProtests(mapCenter);
+              setNearbyProtests(protests);
+            }}
+            onZoom={(event) => {
               setZoomLevel(event.target._zoom);
             }}
           >
@@ -138,7 +141,7 @@ function ProtestForm({ initialCoords }) {
               attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={coordinates}></Marker>
+            <Marker position={markerPostion}></Marker>
             {nearbyProtests.map((protest) => (
               <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
             ))}

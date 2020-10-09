@@ -1,22 +1,27 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
+export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef, defaultValue }) {
   const {
     ready,
     value,
     suggestions: { status, data },
     setValue,
-  } = usePlacesAutocomplete({ debounce: 650 });
+  } = usePlacesAutocomplete({ debounce: 900, defaultValue });
 
   const handleInput = (e) => {
-    setValue(e.target.value);
-    if (setStreetName) setStreetName(e.target.value);
+    const charactersThreshold = 3;
+    const term = e.target.value;
+    const shouldFetch = term.length >= charactersThreshold;
+    setValue(term, shouldFetch);
+    updateStreetName(term);
   };
+
+  const updateStreetName = (address) => setStreetName && setStreetName(address);
 
   const handleSelect = (address) => {
     setValue(address, false);
@@ -25,8 +30,8 @@ export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         const { lat, lng } = latLng;
-        setManualAdress([lat, lng]);
-        if (setStreetName) setStreetName(address);
+        setManualAddress([lat, lng]);
+        updateStreetName(address);
       })
       .catch((error) => {
         console.log('Error: ', error);
@@ -48,7 +53,14 @@ export default function PlacesAutocomplete({ setManualAdress, setStreetName }) {
 
   return (
     <Combobox onSelect={handleSelect} aria-labelledby="demo">
-      <ComboboxInputWrapper value={value} onChange={handleInput} disabled={!ready} placeholder="מה הכתובת?" />
+      <ComboboxInputWrapper
+        value={value}
+        name="streetAddress"
+        onChange={handleInput}
+        disabled={!ready}
+        ref={inputRef}
+        placeholder="מה הכתובת?"
+      />
       <ComboboxPopover>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>

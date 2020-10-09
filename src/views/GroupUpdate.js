@@ -7,9 +7,8 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from '../components';
 import { useAuth } from '../hooks';
-import firebase, { firestore, signInWithGoogle } from '../firebase';
-import styled from 'styled-components';
-import API from '../api';
+import { firestore } from '../firebase';
+import styled from 'styled-components/macro';
 
 async function getProtestByDisplayName(displayName) {
   try {
