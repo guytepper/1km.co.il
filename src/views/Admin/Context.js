@@ -5,6 +5,7 @@ const initialState = {
   currentUser: undefined,
   currentProtest: undefined,
   protestFilter: 'pending',
+  currentLeaderRequest: undefined,
 };
 
 export const Store = createContext(initialState);
@@ -15,6 +16,8 @@ const reducer = (state, action) => {
       return { ...state, currentUser: action.payload.currentUser };
     case 'setCurrentProtest':
       return { ...state, currentProtest: action.payload.currentProtest };
+    case 'setCurrentLeaderRequest':
+      return { ...state, currentLeaderRequest: action.payload.currentLeaderRequest };
     case 'setProtestFilter': {
       return { ...state, protestFilter: action.payload.protestFilter, currentProtest: undefined };
     }

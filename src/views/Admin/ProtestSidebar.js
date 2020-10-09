@@ -7,6 +7,7 @@ import {
   SidebarListHeadFilters,
   SidebarListHeadFilter,
   SidebarWrapper,
+  CardField,
 } from './components';
 import { PlacesAutocomplete, Button } from '../../components';
 import { useAdminContext } from './Context';
@@ -73,15 +74,9 @@ const ProtestSidebar = () => {
             }}
             key={protest.id}
           >
-            <div>
-              <strong>שם המקום</strong>: {protest.displayName ?? 'אין'}
-            </div>
-            <div>
-              <strong>כתובת</strong>: {protest.streetAddress ?? 'אין'}
-            </div>
-            <div>
-              <strong>שעת מפגש</strong>: {protest.meeting_time ?? 'אין'}
-            </div>
+            <CardField name="שם המקום" value={protest.displayName} />
+            <CardField name="כתובת" value={protest.streetAddress} />
+            <CardField name="שעת מפגש" value={protest.meeting_time} />
           </Card>
         ))}
       </SidebarList>

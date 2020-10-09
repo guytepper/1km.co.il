@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import firebase, { firestore } from '../../firebase';
 import * as geofirestore from 'geofirestore';
-import API from '../../api';
+import * as API from '../../api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -44,18 +44,24 @@ export async function fetchPendingProtests() {
   return protests;
 }
 
-export async function archiveProtest(protestId, archiveCallback) {
+export async function updateProtest({ protestId, params, updateCallback }) {
+  try {
+    const updated = await API.updateProtest(protestId, params);
+    if (updated) {
+      updateCallback(updated);
+    }
+    return updated;
+  } catch (err) {
+    alert('An error occured; check the console');
+    console.error(err);
+  }
+}
+
+export async function archivePendingProtest(protestId, archiveCallback) {
   try {
     const archived = await API.archivePendingProtest(protestId);
     if (archived) {
-      archiveCallback();
-      // setPendingProtests((prevState) => {
-      //   const index = prevState.indexOf(currentProtest);
-      //   const newPendingProtests = [...prevState.slice(0, index), ...prevState.slice(index + 1)];
-      //   setCurrentProtest(prevState[index + 1]);
-      //   reset(prevState[index + 1]);
-      //   return newPendingProtests;
-      // });
+      archiveCallback(archived);
     } else {
       alert(archived);
     }
@@ -65,17 +71,9 @@ export async function archiveProtest(protestId, archiveCallback) {
   }
 }
 
-export async function submitProtest(params, protest, currentPosition, submitCallback) {
-  params.coords = currentPosition;
-  const result = await createProtest(params, protest.id);
+export async function submitProtest({ params, protestId, submitCallback }) {
+  const result = await createProtest(params, protestId);
   if (result) {
-    submitCallback();
-    // setPendingProtests((prevState) => {
-    //   const index = prevState.indexOf(currentProtest);
-    //   const newPendingProtests = [...prevState.slice(0, index), ...prevState.slice(index + 1)];
-    //   setCurrentProtest(prevState[index + 1]);
-    //   reset(prevState[index + 1]);
-    //   return newPendingProtests;
-    // });
+    submitCallback(result);
   }
 }

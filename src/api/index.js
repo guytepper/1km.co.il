@@ -232,6 +232,7 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 }
 
 export function extractUserData(result) {
+  console.log(result);
   const { uid, displayName, email } = result.user;
   const { first_name, last_name, picture } = result.additionalUserInfo.profile;
   const picture_url = picture.data.url;
@@ -258,8 +259,18 @@ export function handleSignIn() {
 // functions to be used by the admin page
 // in order to show data and complete the process of
 // assigning the leader role on protests
-export async function listPendingRequests(uid, phoneNumber) {
-  return firestore.collection('leader_requests').where('status', 'pending').orderBy('created_at', 'desc').limit(20).get();
+export async function listPendingRequests() {
+  const pendingRequests = [];
+  const snapshot = await firestore
+    .collection('leader_requests')
+    .where('status', '==', 'pending')
+    .orderBy('created_at', 'desc')
+    .limit(20)
+    .get();
+  snapshot.forEach((doc) => {
+    pendingRequests.push({ id: doc.id, ...doc.data() });
+  });
+  return pendingRequests;
 }
 
 // When super-admin approves a protest-user request
