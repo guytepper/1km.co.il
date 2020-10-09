@@ -29,7 +29,7 @@ const reducer = (state, action) => {
     case 'setCurrentLeaderRequest':
       return { ...state, currentLeaderRequest: action.payload.currentLeaderRequest };
     case 'setLeaderRequests':
-      return { ...state, leaderRequests: action.payload.LeaderRequests };
+      return { ...state, leaderRequests: action.payload.leaderRequests };
     case 'setProtestFilter': {
       return { ...state, protestFilter: action.payload.protestFilter, currentProtest: undefined };
     }
