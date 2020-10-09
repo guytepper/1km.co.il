@@ -41,6 +41,7 @@ export async function fetchPendingProtests() {
 }
 
 export async function updateProtest({ protestId, params, updateCallback }) {
+  console.log('hi');
   try {
     const updated = await API.updateProtest(protestId, params);
     if (updated) {
