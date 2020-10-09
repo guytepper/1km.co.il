@@ -1,16 +1,27 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, ProjectUpdates, PostView } from './views';
+import {
+  Admin,
+  GroupUpdate,
+  ProjectUpdates,
+  SignUp,
+  ProtestPage,
+  AddProtest,
+  Profile,
+  LeaderRequest,
+  PostView,
+  FourOhFour,
+} from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
-import FourOhFour from './views/FourOhFour';
-import AddProtest from './views/AddProtest';
+import { setLocalStorage, getLocalStorage } from './localStorage';
+import { getFullUserData, signOut } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -24,7 +35,8 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
-  loading: true,
+  loading: false,
+  user: null,
 };
 
 function reducer(state, action) {
@@ -32,7 +44,11 @@ function reducer(state, action) {
     case 'setProtests':
       return { ...state, protests: { close: action.payload.close, far: action.payload.far } };
     case 'setMarkers':
-      return { ...state, markers: [...state.markers, ...action.payload] };
+      return {
+        ...state,
+        markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
+      };
     case 'setMapPosition':
       return { ...state, mapPosition: action.payload };
     case 'setMapPositionHistory':
@@ -40,10 +56,28 @@ function reducer(state, action) {
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
-      return { ...state, userCoordinates: action.payload };
+      // Save the user coordinates in order to reuse them on the next user session
+      setLocalStorage('1km_user_coordinates', action.payload);
+      return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
-
+    case 'setLoadData':
+      return {
+        ...state,
+        protests: { close: action.payload.close, far: action.payload.far },
+        markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
+        loading: false,
+      };
+    case 'setInitialData':
+      return {
+        ...state,
+        userCoordinates: action.payload,
+        isModalOpen: false,
+        loading: true,
+      };
+    case 'setUser':
+      return { ...state, user: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -52,20 +86,30 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
-    if (validateLatLng(state.mapPosition)) {
-      let requested = false;
+    const cachedCoordinates = getLocalStorage('1km_user_coordinates');
+    if (cachedCoordinates) {
+      dispatch({ type: 'setInitialData', payload: cachedCoordinates });
+    }
+  }, []);
 
-      // Check if the protests for the current position have been fetched already
-      state.mapPositionHistory.forEach((pos) => {
-        if (pointWithinRadius(pos, state.mapPosition, 5000)) {
-          requested = true;
-          return;
-        }
-      });
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // Includes admin data and more
+        getFullUserData(user.uid).then((fullUserData) => {
+          dispatch({ type: 'setUser', payload: fullUserData });
+        });
+      } else {
+        dispatch({ type: 'setUser', payload: null });
+      }
+    });
+  }, []);
 
-      if (requested) return;
-
+  useEffect(() => {
+    // if onlyMarkers is true then don't update the protests, only the markers and history.
+    async function fetchProtests({ onlyMarkers = false } = {}) {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -73,43 +117,58 @@ function App() {
         radius: 15,
       });
 
-      async function fetchProtests() {
-        try {
-          const snapshot = await query.limit(30).get();
-          const protests = snapshot.docs.map((doc) => {
-            const { latitude, longitude } = doc.data().g.geopoint;
-            const protestLatlng = [latitude, longitude];
-            return {
-              id: doc.id,
-              latlng: protestLatlng,
-              distance: getDistance(state.userCoordinates, protestLatlng),
-              ...doc.data(),
-            };
+      try {
+        const snapshot = await query.limit(30).get();
+        const protests = snapshot.docs.map((doc) => {
+          const { latitude, longitude } = doc.data().g.geopoint;
+          const protestLatlng = [latitude, longitude];
+          return {
+            id: doc.id,
+            latlng: protestLatlng,
+            distance: getDistance(state.userCoordinates, protestLatlng),
+            ...doc.data(),
+          };
+        });
+
+        // Filter duplicate markers
+        const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
+        if (onlyMarkers) {
+          // Set data
+          dispatch({
+            type: 'setMarkers',
+            payload: {
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
           });
+        } else {
+          // Set data
+          dispatch({
+            type: 'setLoadData',
+            payload: {
+              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
 
-          // Set protests only on initial load
-          // These protests will be shown on ProtestList
-          if (state.loading) {
-            dispatch({
-              type: 'setProtests',
-              payload: {
-                close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-                far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-              },
-            });
-          }
-
-          // Filter duplicate markers
-          const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-          dispatch({ type: 'setMarkers', payload: filteredMarkers });
-          dispatch({ type: 'setMapPositionHistory', payload: [...state.mapPositionHistory, state.mapPosition] });
-          dispatch({ type: 'setLoading', payload: false });
-        } catch (err) {
-          console.log(err);
+    if (validateLatLng(state.mapPosition)) {
+      if (state.loading) {
+        fetchProtests();
+      } else {
+        const requested = state.mapPositionHistory.some((pos) => pointWithinRadius(pos, state.mapPosition, 5000));
+        if (!requested) {
+          fetchProtests({ onlyMarkers: true });
         }
       }
-      fetchProtests();
     }
+    //TODO: remove this line and make sure deps are correct
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
@@ -124,6 +183,19 @@ function App() {
               </Link>
             </SiteLogo>
             <NavItemsWrapper>
+              {state.user ? (
+                <>
+                  <img alt="" src={state.user.picture_url}></img>
+                  <NavItem to="/profile">{state.user.displayName}</NavItem>
+                  <NavButton
+                    onClick={() => {
+                      signOut();
+                    }}
+                  >
+                    log out
+                  </NavButton>
+                </>
+              ) : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
@@ -161,7 +233,9 @@ function App() {
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
-                setCoordinates={(coords) => dispatch({ type: 'setUserCoordinates', payload: coords })}
+                setCoordinates={(coords) => {
+                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                }}
               />
             </Route>
             <Route exact path="/add-protest/">
@@ -181,6 +255,19 @@ function App() {
             </Route>
             <Route exact path="/project-updates/:slug">
               <PostView />
+            </Route>
+
+            <Route path="/protest/:id">
+              <ProtestPage />
+            </Route>
+            <Route exact path="/sign-up">
+              <SignUp />
+            </Route>
+            <Route path="/leader-request">
+              <LeaderRequest user={state.user} />
+            </Route>
+            <Route exact path="/profile">
+              <Profile user={state.user} />
             </Route>
 
             {/* 404 */}
@@ -225,6 +312,28 @@ const NavItemsWrapper = styled.div`
 `;
 
 const NavItem = styled(Link)`
+  &:hover {
+    color: #3498db;
+  }
+
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
+  }
+`;
+
+const NavButton = styled.button`
+  cursor: pointer;
+
   &:hover {
     color: #3498db;
   }

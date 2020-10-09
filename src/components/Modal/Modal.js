@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -21,20 +21,27 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     }
   };
 
+  const resetModal = () => {
+    setAddressInputDisplay(false);
+    setManualAddress(null);
+  };
+
   useEffect(() => {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinates]);
 
   useEffect(() => {
     // Timeout needed to allow the rendering finish before setting the focus
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (addressInputDisplay && addressInputRef.current) {
         addressInputRef.current.focus();
       }
     }, 0);
-  }, [addressInputDisplay])
+    return () => clearTimeout(timeout);
+  }, [addressInputDisplay]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
@@ -46,7 +53,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
         <div style={{ maxWidth: 300 }}>
-          <Button onClick={() => getUserPosition()} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
+          <Button
+            onClick={() => {
+              getUserPosition();
+              resetModal();
+            }}
+            icon="/icons/gps.svg"
+            style={{ marginBottom: 10 }}
+          >
             מציאת הפגנות באיזורי
           </Button>
 
@@ -58,7 +72,14 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           {addressInputDisplay && (
             <>
               <PlacesAutocomplete setManualAddress={setManualAddress} inputRef={addressInputRef} />{' '}
-              <Button disabled={!manualAddress} onClick={() => setCoordinates(manualAddress)} color="#0096c7">
+              <Button
+                disabled={!manualAddress}
+                onClick={() => {
+                  setCoordinates(manualAddress);
+                  resetModal();
+                }}
+                color="#0096c7"
+              >
                 הצגת הפגנות
               </Button>
             </>

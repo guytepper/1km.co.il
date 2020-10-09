@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export default function Button(props) {
   const { color, type, onClick, disabled, style, icon, children } = props;

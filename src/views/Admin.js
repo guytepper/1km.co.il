@@ -8,12 +8,12 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '../components';
 import { useAuth } from '../hooks';
 import firebase, { firestore, signInWithGoogle } from '../firebase';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import * as geofirestore from 'geofirestore';
 import { PlacesAutocomplete } from '../components';
 import { useForm } from 'react-hook-form';
-import API from '../api';
+import * as API from '../api';
 import L from 'leaflet';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);

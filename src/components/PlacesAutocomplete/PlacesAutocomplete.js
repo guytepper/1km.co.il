@@ -1,17 +1,17 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef }) {
+export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef, defaultValue }) {
   const {
     ready,
     value,
     suggestions: { status, data },
     setValue,
-  } = usePlacesAutocomplete({ debounce: 900 });
+  } = usePlacesAutocomplete({ debounce: 900, defaultValue });
 
   const handleInput = (e) => {
     const charactersThreshold = 3;
@@ -55,11 +55,11 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
     <Combobox onSelect={handleSelect} aria-labelledby="demo">
       <ComboboxInputWrapper
         value={value}
-        name="streetName"
+        name="streetAddress"
         onChange={handleInput}
         disabled={!ready}
-        placeholder="מה הכתובת?"
         ref={inputRef}
+        placeholder="מה הכתובת?"
       />
       <ComboboxPopover>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
