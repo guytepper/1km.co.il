@@ -1,7 +1,16 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, ProjectUpdates, ProtestPage, AddProtest } from './views';
+import {
+  Admin,
+  GroupUpdate, 
+  ProjectUpdates, 
+  SignUp, 
+  ProtestPage, 
+  AddProtest, 
+  Profile, 
+  LeaderRequest,
+} from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -10,6 +19,7 @@ import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
+import { getFullUserData, signOut } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -24,6 +34,7 @@ const initialState = {
   mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
+  user: null,
 };
 
 function reducer(state, action) {
@@ -63,6 +74,8 @@ function reducer(state, action) {
         isModalOpen: false,
         loading: true,
       };
+    case 'setUser':
+      return { ...state, user: action.payload }
     default:
       throw new Error('Unexpected action');
   }
@@ -78,6 +91,19 @@ function App() {
       dispatch({ type: 'setInitialData', payload: cachedCoordinates });
     }
   }, []);
+
+  useEffect(() =>{
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // Includes admin data and more
+        getFullUserData(user.uid).then(fullUserData => {
+          dispatch({ type: 'setUser', payload: fullUserData });
+        });
+      } else {
+        dispatch({ type: 'setUser', payload: null });
+      }
+    });
+  }, [])
 
   useEffect(() => {
     // if onlyMarkers is true then don't update the protests, only the markers and history.
@@ -155,6 +181,11 @@ function App() {
               </Link>
             </SiteLogo>
             <NavItemsWrapper>
+              {state.user ? <>
+                <img alt='' src={state.user.picture_url}></img>
+                <NavItem to="/profile">{state.user.displayName}</NavItem>
+                <NavButton onClick={() => {signOut()}}>log out</NavButton>
+                </> : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
@@ -215,6 +246,15 @@ function App() {
             <Route path="/protest/:id">
               <ProtestPage />
             </Route>
+            <Route exact path="/sign-up">
+              <SignUp />
+            </Route>
+            <Route path="/leader-request">
+              <LeaderRequest user={state.user}/>
+            </Route>
+            <Route exact path="/profile">
+              <Profile user={state.user}/>
+            </Route>
           </React.Fragment>
         </Router>
       </AppWrapper>
@@ -271,6 +311,28 @@ const NavItem = styled(Link)`
     }
   }
 `;
+
+const NavButton = styled.button`
+cursor: pointer;
+
+&:hover {
+  color: #3498db;
+}
+
+&:nth-child(1) {
+  margin-bottom: 3px;
+
+  @media (min-width: 550px) {
+    margin-bottom: 0;
+  }
+}
+
+&:nth-child(2) {
+  @media (min-width: 550px) {
+    margin-left: 15px;
+  }
+}
+`
 
 const HomepageWrapper = styled.div`
   height: 100%;
