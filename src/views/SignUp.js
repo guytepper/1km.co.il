@@ -36,7 +36,6 @@ export default function SignUp(props) {
         }
 
         const userData = extractUserData(result);
-        console.log(result, userData);
         setUserData(userData);
         setStage(stages.AFTER_FACEBOOK_AUTH);
 

@@ -35,7 +35,6 @@ function LeaderRequestForm({ user }) {
     }
 
     getProtestById(protestId).then((protestData) => {
-      console.log(protestData);
       setProtestData(protestData);
     });
   }, []);
