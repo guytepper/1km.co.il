@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
-import { LeaderCard, SidebarList, SidebarListHead, SidebarListHeadTitle, SidebarWrapper, LeaderPhoto, Field } from './components';
+import {
+  LeaderSidebarCard,
+  SidebarList,
+  SidebarListHead,
+  SidebarListHeadTitle,
+  SidebarWrapper,
+  LeaderPhoto,
+  Field,
+} from './components';
 import { listLeaderRequests } from '../../api';
 import { useHistory } from 'react-router-dom';
 
@@ -20,7 +28,7 @@ const LeaderSidebar = ({ state, dispatch }) => {
       </SidebarListHead>
       <SidebarList>
         {state.leaderRequests.map((request) => (
-          <LeaderCard
+          <LeaderSidebarCard
             active={request.id === state.currentLeaderRequest?.id}
             onClick={() => history.push(`/admin/leader-requests/${request.id}`)}
             key={request.id}
@@ -35,7 +43,7 @@ const LeaderSidebar = ({ state, dispatch }) => {
               <Field name="מספר טלפון" value={request.user.phoneNumber} />
               <Field name="אימייל" value={request.user.email} />
             </div>
-          </LeaderCard>
+          </LeaderSidebarCard>
         ))}
       </SidebarList>
     </SidebarWrapper>

@@ -1,7 +1,7 @@
 import React, { useReducer } from 'react';
 import { Button, ProtestForm } from '../../components';
 import { FormWrapper } from './components';
-import { archiveProtest, submitProtest, updateProtest } from './utils';
+import { archiveProtest, submitProtest, updateProtest } from './AdminService';
 import ProtestSidebar from './ProtestSidebar';
 
 const initialState = {

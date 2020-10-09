@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import { Link } from 'react-router-dom';
+import { Button } from '../../components';
 
 export const AdminWrapper = styled.div`
   display: grid;
@@ -24,6 +25,23 @@ export const FormWrapper = styled.div`
   align-items: center;
 `;
 
+export const LeaderCard = styled.div`
+  height: 60vh;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+`;
+
+export const AdminNavButton = styled(Button)`
+  width: 140px;
+  height: 35px;
+  font-size: 14px;
+`;
+
 export const SidebarList = styled.ul`
   display: grid;
   grid-auto-rows: min-content;
@@ -35,7 +53,7 @@ export const SidebarList = styled.ul`
   overflow: auto;
 `;
 
-export const LeaderCard = styled.li`
+export const LeaderSidebarCard = styled.li`
   background-color: #fff;
   padding: 15px;
   display: flex;

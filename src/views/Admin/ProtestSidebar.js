@@ -10,7 +10,7 @@ import {
   Field,
 } from './components';
 import { PlacesAutocomplete, Button } from '../../components';
-import { fetchPendingProtests } from './utils';
+import { fetchPendingProtests } from './AdminService';
 import { fetchNearbyProtests } from '../../api';
 
 const ProtestSidebar = ({ state, dispatch }) => {
