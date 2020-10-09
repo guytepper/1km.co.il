@@ -61,7 +61,7 @@ function useFetchProtest() {
 function ProtestPageContent({ protest }) {
   const history = useHistory();
 
-  const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+  const { coordinates, displayName, streetAddress, notes } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);

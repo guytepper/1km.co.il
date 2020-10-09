@@ -2,15 +2,15 @@ import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-async function verifyRecaptcha(token) {
-  try {
-    const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
-    const response = await request.json();
-    return response;
-  } catch (err) {
-    throw err;
-  }
-}
+// async function verifyRecaptcha(token) {
+//   try {
+//     const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
+//     const response = await request.json();
+//     return response;
+//   } catch (err) {
+//     throw err;
+//   }
+// }
 
 export async function createPendingProtest(params) {
   const {
@@ -146,11 +146,16 @@ export async function fetchNearbyProtests(position) {
   return protests;
 }
 
-export async function signOut() { 
-  firebase.auth().signOut().then(function() {
-  }, function(error) {
-    console.error(error);
-  });
+export async function signOut() {
+  firebase
+    .auth()
+    .signOut()
+    .then(
+      function () {},
+      function (error) {
+        console.error(error);
+      }
+    );
 }
 
 export async function getFullUserData(uid) {
@@ -161,12 +166,12 @@ export async function getProtestsForLeader(uid) {
   var protestsRef = firestore.collection('protests');
   var query = protestsRef.where('roles.leader', 'array-contains', uid);
 
-  const querySnapshot = await query.get()
+  const querySnapshot = await query.get();
   const protests = [];
 
-  querySnapshot.forEach(function(doc) {
+  querySnapshot.forEach(function (doc) {
     protests.push({ id: doc.id, ...doc.data() });
-  });        
+  });
 
   return protests;
 }
@@ -179,8 +184,8 @@ export async function saveUserInFirestore(userData) {
   await firestore.collection('users').doc(userData.uid).set(userData);
 }
 
-export  async function setPhoneNumberForUser(uid, phoneNumber) {
-  await firestore.collection('users').doc(uid).update({ phoneNumber })
+export async function setPhoneNumberForUser(uid, phoneNumber) {
+  await firestore.collection('users').doc(uid).update({ phoneNumber });
 }
 
 // return true is the protest exist in the database
@@ -192,7 +197,7 @@ export async function isProtestValid(protestId) {
     } else {
       return false;
     }
-  } catch(error) {
+  } catch (error) {
     console.error(error);
     return false;
   }
@@ -212,22 +217,25 @@ export async function getUserFromRedirect() {
 export async function sendProtestLeaderRequest(userData, phoneNumber, protestId) {
   const requestId = createLeaderRequestId(userData.uid, protestId);
 
-  await firestore.collection('leader_requests').doc(requestId).set({
-    status: 'pending',
-    user: {
-      ...userData,
-      phoneNumber,
-    },
-    protestId,
-    created_at: firebase.firestore.FieldValue.serverTimestamp()
-  });
+  await firestore
+    .collection('leader_requests')
+    .doc(requestId)
+    .set({
+      status: 'pending',
+      user: {
+        ...userData,
+        phoneNumber,
+      },
+      protestId,
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    });
 }
 
 export function extractUserData(result) {
   const { uid, displayName, email } = result.user;
-  const  { first_name, last_name, picture} = result.additionalUserInfo.profile;
+  const { first_name, last_name, picture } = result.additionalUserInfo.profile;
   const picture_url = picture.data.url;
-  
+
   const userData = {
     uid,
     email,
@@ -235,8 +243,8 @@ export function extractUserData(result) {
     last_name,
     displayName,
     picture_url,
-  }
-  
+  };
+
   return userData;
 }
 
@@ -248,24 +256,23 @@ export function handleSignIn() {
 
 ///////////////////////////////////////////////////////
 // functions to be used by the admin page
-// in order to show data and complete the process of 
+// in order to show data and complete the process of
 // assigning the leader role on protests
 export async function listPendingRequests(uid, phoneNumber) {
-  return firestore.collection('leader_requests')
-  .where('status', 'pending')
-  .orderBy('created_at', 'desc')
-  .limit(20)
-  .get();
+  return firestore.collection('leader_requests').where('status', 'pending').orderBy('created_at', 'desc').limit(20).get();
 }
 
 // When super-admin approves a protest-user request
 export async function assignRoleOnProtest(userId, protestId, requestId) {
-  await firestore.collection('protests').doc(protestId).update({
-    'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId)
-  });
-  
+  await firestore
+    .collection('protests')
+    .doc(protestId)
+    .update({
+      'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId),
+    });
+
   // Delete request
-  await firestore.collection('leader_requests').doc(requestId).update({ status: 'done' })
+  await firestore.collection('leader_requests').doc(requestId).update({ status: 'done' });
 }
 
 export async function getProtestById(protestId) {
