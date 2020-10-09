@@ -23,7 +23,7 @@ const Post = ({ overrideSlug = '404' }) => {
     return () => {
       document.title = currentTitle;
     };
-  }, []);
+  }, [postData.title]);
 
   return <PostWrapper>{postData.text}</PostWrapper>;
 };
