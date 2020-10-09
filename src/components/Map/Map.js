@@ -1,6 +1,7 @@
 import React from 'react';
-import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Map, Circle, TileLayer, Marker } from 'react-leaflet';
 import styled from 'styled-components/macro';
+import { useHistory } from 'react-router-dom';
 import L from 'leaflet';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -20,7 +21,7 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName, marker }) => {
+const PopupMarker = ({ latlng, displayName, marker, onMarkerSelected }) => {
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
     iconUrl: '/icons/black-flag.svg',
@@ -29,15 +30,16 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
     iconAnchor: [12, 43],
   };
 
-  return (
-    <Marker position={latlng} icon={protestPoint(markerInfo)}>
-      <Popup>{displayName}</Popup>
-    </Marker>
-  );
+  return <Marker title={displayName} position={latlng} icon={protestPoint(markerInfo)} onClick={onMarkerSelected}></Marker>;
 };
 
 const MarkersList = ({ markers }) => {
-  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} />);
+  const history = useHistory();
+  const handleMarkerSelected = (id) => () => history.push(`/protest/${id}`);
+
+  const items = markers.map(({ id, ...props }) => (
+    <PopupMarker onMarkerSelected={handleMarkerSelected(id)} key={id} {...props} />
+  ));
   return <>{items}</>;
 };
 
