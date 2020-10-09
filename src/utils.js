@@ -58,3 +58,7 @@ export function getUpcomingDate(dateTimeList) {
   }
   return sortDateTimeList(dateTimeList)[0];
 }
+
+export function isAdmin(user) {
+  return user?.roles?.includes('admin');
+}

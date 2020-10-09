@@ -17,7 +17,8 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, sortDateTimeList } from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList } from '../utils';
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 500px)`;
 
@@ -67,10 +68,10 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest }) {
+function ProtestPageContent({ protest, user }) {
   const history = useHistory();
 
-  const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
@@ -97,7 +98,7 @@ function ProtestPageContent({ protest }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>
+            {isAdmin(user) && <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>}
           </Details>
         </Info>
 
@@ -110,13 +111,19 @@ function ProtestPageContent({ protest }) {
             </SectionTitle>
 
             <Dates>
-              {dateTimeList.map((dateTime) => (
-                <Date key={dateTime.id}>
-                  <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
-                  <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
-                  <BoldDateText>{dateTime.time}</BoldDateText>
+              {dateTimeList ? (
+                dateTimeList.map((dateTime) => (
+                  <Date key={dateTime.id}>
+                    <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
+                    <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
+                    <BoldDateText>{dateTime.time}</BoldDateText>
+                  </Date>
+                ))
+              ) : (
+                <Date>
+                  <BoldDateText>{meeting_time}</BoldDateText>
                 </Date>
-              ))}
+              )}
             </Dates>
           </SectionContainer>
 
@@ -168,7 +175,7 @@ function ProtestPageContent({ protest }) {
   );
 }
 
-export default function ProtestPage() {
+export default function ProtestPage({ user }) {
   const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
@@ -182,7 +189,7 @@ export default function ProtestPage() {
 
   return (
     <Switch>
-      <Route path="/protest/:id/edit">
+      <ProtectedRoute path="/protest/:id/edit" user={user}>
         <EditViewContainer>
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
@@ -196,9 +203,9 @@ export default function ProtestPage() {
             defaultValues={protest}
           />
         </EditViewContainer>
-      </Route>
+      </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} />
+        <ProtestPageContent protest={protest} user={user} />
       </Route>
     </Switch>
   );

@@ -236,7 +236,7 @@ function App() {
               <GroupUpdate />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage />
+              <ProtestPage user={state.user} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
