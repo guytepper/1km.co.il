@@ -5,7 +5,8 @@ import queryString from 'query-string';
 import { Button } from '../components';
 import {
   sendProtestLeaderRequest,
-  isProtestValid
+  isProtestValid,
+  setPhoneNumberForUser
 } from '../api';
 import { LeaderRequestSubmitted } from '.';
 
@@ -43,6 +44,8 @@ export default function LeaderRequest(props) {
       }
       
       await sendProtestLeaderRequest(props.user, phoneNumber, protestId);
+      // Sync our user phone number
+      await setPhoneNumberForUser(props.user.uid, phoneNumber);
       
       history.push('/leader-request/submitted');
     });
