@@ -294,4 +294,5 @@ export async function setUserFollow({ protestId, fcmToken }) {
     fcmToken,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
   });
+  console.log('FCM registered', fcmToken);
 }
