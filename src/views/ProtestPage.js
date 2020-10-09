@@ -68,7 +68,7 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest, user }) {
+function ProtestPageContent({ protest, canEdit }) {
   const history = useHistory();
 
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
@@ -98,7 +98,7 @@ function ProtestPageContent({ protest, user }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            {isAdmin(user) && <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>}
+            {canEdit && <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>}
           </Details>
         </Info>
 
@@ -185,11 +185,13 @@ export default function ProtestPage({ user }) {
     return <div>Loading...</div>;
   }
 
-  const { coordinates, id } = protest;
+  const { coordinates, id, roles } = protest;
+
+  const canEdit = isAdmin(user) || roles?.leader?.includes(user?.uid);
 
   return (
     <Switch>
-      <ProtectedRoute path="/protest/:id/edit" user={user}>
+      <ProtectedRoute path="/protest/:id/edit" authorized={canEdit}>
         <EditViewContainer>
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
@@ -205,7 +207,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} user={user} />
+        <ProtestPageContent protest={protest} canEdit={canEdit} />
       </Route>
     </Switch>
   );
