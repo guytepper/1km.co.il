@@ -172,21 +172,19 @@ function App() {
               </Link>
             </SiteLogo>
             <NavItemsWrapper>
-              {state.user ? (
-                <>
-                  <img alt="" src={state.user.picture_url}></img>
-                  <NavItem to="/profile">{state.user.displayName}</NavItem>
-                  <NavButton
-                    onClick={() => {
-                      signOut();
-                    }}
-                  >
-                    log out
-                  </NavButton>
-                </>
-              ) : null}
-              <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-              <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+              <NavProfileWrapper>
+                {state.user ? (
+                  <>
+                    <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                  </>
+                ) : (
+                  <>
+                    <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                    <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  </>
+                )}
+              </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
           <React.Fragment>
@@ -197,6 +195,7 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
+                  h
                   markers={state.markers}
                 />
 
@@ -289,6 +288,10 @@ const NavItemsWrapper = styled.div`
     flex-direction: row-reverse;
     align-items: center;
   }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
 `;
 
 const NavItem = styled(Link)`
@@ -331,6 +334,18 @@ const NavButton = styled.button`
       margin-left: 15px;
     }
   }
+`;
+
+const NavProfileWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const NavProfilePicture = styled.img`
+  width: 20px;
+  border-radius: 50px;
+  margin-left: 5px;
 `;
 
 const HomepageWrapper = styled.div`
