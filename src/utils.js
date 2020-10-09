@@ -32,3 +32,15 @@ export function pointWithinRadius(point1, point2, radius) {
     radius
   );
 }
+
+export function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return `${date.getDate()}.${date.getMonth()}.${date.getFullYear()}`;
+}
+
+export function dateToDayOfWeek(dateStr) {
+  const daysOfWeek = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+  const date = new Date(dateStr);
+
+  return daysOfWeek[date.getDay()];
+}

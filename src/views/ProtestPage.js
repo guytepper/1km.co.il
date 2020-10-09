@@ -17,6 +17,7 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
+import { dateToDayOfWeek, formatDate } from '../utils';
 
 const mobile = `@media (max-width: 500px)`;
 
@@ -38,30 +39,30 @@ function getSocialLinks(protest) {
   return items;
 }
 
+async function _fetchProtest(id, setProtest) {
+  const result = await fetchProtest(id);
+  if (result) {
+    setProtest(result);
+  } else {
+    // TODO: handle 404
+  }
+}
+
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    async function _fetchProtest(id) {
-      const result = await fetchProtest(id);
-      if (result) {
-        setProtest(result);
-      } else {
-        // TODO: handle 404
-      }
-    }
-
-    _fetchProtest(id);
+    _fetchProtest(id, setProtest);
   }, [id]);
 
-  return protest;
+  return { protest, setProtest };
 }
 
 function ProtestPageContent({ protest }) {
   const history = useHistory();
 
-  const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
@@ -88,7 +89,7 @@ function ProtestPageContent({ protest }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            <EditButton onClick={() => history.push('edit')}>עריכה</EditButton>
+            <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>
           </Details>
         </Info>
 
@@ -101,11 +102,13 @@ function ProtestPageContent({ protest }) {
             </SectionTitle>
 
             <Dates>
-              <Date>
-                <BoldDateText>9.10.2020</BoldDateText>
-                <DateText>יום שישי, בשעה</DateText>
-                <BoldDateText>18:30</BoldDateText>
-              </Date>
+              {dateTimeList.map((dateTime) => (
+                <Date key={dateTime.id}>
+                  <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
+                  <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
+                  <BoldDateText>{dateTime.time}</BoldDateText>
+                </Date>
+              ))}
             </Dates>
           </SectionContainer>
 
@@ -158,7 +161,7 @@ function ProtestPageContent({ protest }) {
 }
 
 export default function ProtestPage() {
-  const protest = useFetchProtest();
+  const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
 
@@ -174,9 +177,11 @@ export default function ProtestPage() {
       <Route path="/protest/:id/edit">
         <EditViewContainer>
           <ProtestForm
-            initialCoords={coordinates}
+            initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
               const response = await updateProtest(id, params);
+              // refetch the protest once update is complete
+              _fetchProtest(id, setProtest);
               return response;
             }}
             afterSubmitCallback={() => history.goBack()}

@@ -6,10 +6,10 @@ import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
-import DateTimeList from '../DateTimeList';
 import { validateLatLng } from '../../utils';
 import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
+import DateTimeList from '../DateTimeList';
 
 const protestMarker = new L.Icon({
   iconUrl: '/icons/black-flag.svg',
@@ -34,7 +34,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
-  const [dateTimeList, setDateTimeList] = useState([{ id: 0, time: '17:30' }]);
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
 
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -62,8 +62,8 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
     } else {
       try {
         params.coords = mapCenter;
-        // params.recaptchaToken = recaptchaToken;
         params.dateTimeList = dateTimeList;
+        // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
         if (protest._document) {
@@ -152,10 +152,12 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             ))}
           </MapWrapper>
 
-          <ProtestFormLabel>
-            <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
-          </ProtestFormLabel>
+          <hr />
+          <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>
+          <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
 
+          <hr />
+          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
           <ProtestFormLabel>
             קבוצת וואטסאפ
             <ProtestFormInput placeholder="לינק לקבוצה" name="whatsAppLink" ref={register}></ProtestFormInput>
@@ -169,8 +171,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             <ProtestFormInput placeholder="הערות להפגנה" name="notes" ref={register}></ProtestFormInput>
             <ProtestFormInputDetails>כל דבר שחשוב שיופיע בפרטי ההפגנה.</ProtestFormInputDetails>
           </ProtestFormLabel>
-          <hr />
-          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
+
           <ProtestFormInputDetails margin="10px 0">
             האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
           </ProtestFormInputDetails>
@@ -210,7 +211,7 @@ const ProtestFormWrapper = styled.form`
   }
 `;
 
-const ProtestFormLabel = styled.label`
+export const ProtestFormLabel = styled.label`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -218,7 +219,7 @@ const ProtestFormLabel = styled.label`
   font-weight: 600;
 `;
 
-const ProtestFormInput = styled.input`
+export const ProtestFormInput = styled.input`
   width: 100%;
   padding: 6px 12px;
   margin-bottom: 0;
