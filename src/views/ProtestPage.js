@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, updateProtest } from '../api';
+import { fetchProtest, updateProtest, setUserFollow } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -16,6 +16,7 @@ import {
   TelegramIcon,
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
+import { getFirebaseMessagingToken } from '../firebase';
 import * as texts from './ProtestPageTexts.json';
 
 const mobile = `@media (max-width: 500px)`;
@@ -61,10 +62,19 @@ function useFetchProtest() {
 function ProtestPageContent({ protest }) {
   const history = useHistory();
 
-  const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+  const { id, coordinates, displayName, streetAddress, notes } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
+
+  const handleFollow = async () => {
+    try {
+      const fcmToken = await getFirebaseMessagingToken();
+      await setUserFollow({ protestId: id, fcmToken });
+    } catch {
+      alert('Notifications permission must be enabled');
+    }
+  };
 
   return (
     <ProtestPageContainer>
@@ -89,6 +99,7 @@ function ProtestPageContent({ protest }) {
               <Notes>{notes}</Notes>
             </Left>
             <EditButton onClick={() => history.push('edit')}>עריכה</EditButton>
+            <FollowButton onClick={handleFollow}>מעקב</FollowButton>
           </Details>
         </Info>
 
@@ -378,4 +389,18 @@ const SocialContainer = styled(SectionContainer)`
 
 const SocialButtonWrapper = styled.span`
   margin: 0px 10px 10px 10px;
+`;
+
+const FollowButton = styled.button`
+  height: 32px;
+  color: #1251f3;
+  border: 1px solid #1251f3;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 18.96px;
+  padding-top: 6px;
+  padding-bottom: 7px;
+  padding-left: 24px;
+  padding-right: 24px;
+  background: white;
 `;

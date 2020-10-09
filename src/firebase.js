@@ -21,28 +21,19 @@ export const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export const signOut = () => auth.signOut();
 
-console.log('setting up messaging')
 const messaging = firebase.messaging();
-// messaging.usePublicVapidKey("BLRSg5cI02K8XMW3mKfVOHnKXqRcMk3HBgq8DyQLjfEH-R0Wyi8kGZOvRS-rmyGdGxaYWi7igICLyo0vTlKqsUE");
-messaging.getToken().then((currentToken) => {
-  if (currentToken) {
-    console.log(currentToken)
-    // sendTokenToServer(currentToken);
-    // updateUIForPushEnabled(currentToken);
-  } else {
-    // Show permission request.
-    console.log('No Instance ID token available. Request permission to generate one.');
-    // Show permission UI.
-    // updateUIForPushPermissionRequired();
-    // setTokenSentToServer(false);
+
+export async function getFirebaseMessagingToken() {
+  try {
+    const token = await messaging.getToken();
+    return token;
+  } catch (error) {
+    console.error('cannot get firebase messaging token', error);
+    throw error;
   }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  // showToken('Error retrieving Instance ID token. ', err);
-  // setTokenSentToServer(false);
+}
+messaging.onMessage((msg) => {
+  console.log({ msg });
 });
 
-messaging.onMessage(msg => {
-  console.log({ msg })
-})
 export default firebase;
