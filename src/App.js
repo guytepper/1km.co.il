@@ -6,7 +6,6 @@ import {
   GroupUpdate, 
   ProjectUpdates, 
   SignUp, 
-  SignUpCompleted,
   ProtestPage, 
   AddProtest, 
   Profile, 
@@ -21,19 +20,9 @@ import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
+import { getFullUserData, signOut } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
-
-async function signOut() { 
-  firebase.auth().signOut().then(function() {
-  }, function(error) {
-    console.error(error);
-  });
-}
-
-async function getFullUserData(uid) {
-  return (await firestore.collection('users').doc(uid).get()).data();
-}
 
 const initialState = {
   userCoordinates: [],
@@ -256,6 +245,7 @@ function App() {
             </Route>
             <Route path="/protest/:id">
               <ProtestPage />
+            </Route>
             <Route exact path="/sign-up">
               <SignUp />
             </Route>

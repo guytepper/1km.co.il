@@ -146,10 +146,13 @@ export async function fetchNearbyProtests(position) {
   return protests;
 }
 
-export default {
-  createProtest,
-  createPendingProtest,
-  archivePendingProtest,
-  fetchProtest,
-  uploadFile,
-};
+export async function signOut() { 
+  firebase.auth().signOut().then(function() {
+  }, function(error) {
+    console.error(error);
+  });
+}
+
+export async function getFullUserData(uid) {
+  return (await firestore.collection('users').doc(uid).get()).data();
+}
