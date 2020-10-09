@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng, isAdmin } from './utils';
 import styled from 'styled-components/macro';
@@ -229,9 +229,6 @@ function App() {
             </Route>
             <Route path="/admin">
               <Admin user={state.user} />
-            </Route>
-            <Route exact path="/admin/group">
-              <GroupUpdate />
             </Route>
             <Route path="/protest/:id">
               <ProtestPage />

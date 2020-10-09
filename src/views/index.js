@@ -1,5 +1,4 @@
 export { default as Admin } from './Admin';
-export { default as GroupUpdate } from './GroupUpdate';
 export { default as ProtestPage } from './ProtestPage';
 export { default as PostView } from './PostView';
 export { default as AddProtest } from './AddProtest';
