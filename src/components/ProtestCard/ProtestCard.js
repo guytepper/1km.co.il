@@ -1,5 +1,5 @@
 import React from 'react';
-//import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 
 function formatDistance(distance) {

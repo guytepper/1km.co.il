@@ -1,9 +1,5 @@
-import { useEffect, useState } from 'react';
-import firebase, { firestore } from '../../firebase';
-import * as geofirestore from 'geofirestore';
+import { firestore } from '../../firebase';
 import * as API from '../../api';
-
-const GeoFirestore = geofirestore.initializeApp(firestore);
 
 /**
  * Add a new protest to the map and archive the pending one.

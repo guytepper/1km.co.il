@@ -1,7 +1,6 @@
 import React from 'react';
-import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import { Button } from '../../components';
-import { signInWithGoogle } from '../../firebase';
 import { AdminWrapper, AdminNavigation } from './components';
 import LeaderAdmin from './LeaderAdmin';
 import ProtestAdmin from './ProtestAdmin';
@@ -9,7 +8,6 @@ import { handleSignIn } from '../../api';
 import { isAdmin } from '../../utils';
 
 const Admin = ({ user }) => {
-  const history = useHistory();
   const location = useLocation();
 
   return (

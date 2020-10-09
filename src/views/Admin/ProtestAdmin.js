@@ -1,12 +1,8 @@
 import React, { useReducer } from 'react';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, ProtestForm } from '../../components';
-import { signInWithGoogle } from '../../firebase';
-import { AdminWrapper, FormWrapper, AdminNavigation, LeaderPhoto, Field } from './components';
+import { FormWrapper } from './components';
 import { archiveProtest, submitProtest, updateProtest } from './utils';
 import ProtestSidebar from './ProtestSidebar';
-import LeaderAdmin from './LeaderAdmin';
-import LeaderSidebar from './LeaderSidebar';
 
 const initialState = {
   currentProtest: undefined,
