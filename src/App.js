@@ -10,7 +10,7 @@ import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
-import { getFullUserData, signOut } from './api';
+import { getFullUserData } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -166,11 +166,9 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            <SiteLogo>
-              <Link to="/" style={{ color: 'black' }}>
-                קילומטר אחד
-              </Link>
-            </SiteLogo>
+            <Link to="/">
+              <img src="/logo.svg" alt="קילומטר אחד" />
+            </Link>
             <NavItemsWrapper>
               <NavProfileWrapper>
                 {state.user ? (
@@ -201,12 +199,12 @@ function App() {
 
                 <ProtestListWrapper>
                   <ProtestListHead>
-                    <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
+                    {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
-                    </SiteMessage>
+                    </SiteMessage> */}
                     <Button
                       color="#3C4F76"
-                      style={{ width: '100%', margin: '0' }}
+                      style={{ width: '100%', margin: '10px 0 0' }}
                       onClick={() => dispatch({ type: 'setModalState', payload: true })}
                     >
                       שינוי כתובת
@@ -274,10 +272,6 @@ const Header = styled.header`
   grid-row: 1;
   background-color: #fff;
   box-shadow: inset 0 -1px 0 #e1e4e8;
-`;
-
-const SiteLogo = styled.h1`
-  font-size: 26px;
 `;
 
 const NavItemsWrapper = styled.div`
