@@ -174,7 +174,7 @@ function App() {
             <NavItemsWrapper>
               {state.user ? (
                 <>
-                  {/* <img alt="" src={state.user.picture_url}></img>
+                  <img alt="" src={state.user.picture_url}></img>
                   <NavItem to="/profile">{state.user.displayName}</NavItem>
                   <NavButton
                     onClick={() => {
@@ -182,7 +182,7 @@ function App() {
                     }}
                   >
                     log out
-                  </NavButton> */}
+                  </NavButton>
                 </>
               ) : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
