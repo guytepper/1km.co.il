@@ -126,20 +126,17 @@ function ProtestPageContent({ protest }) {
                   הצטרפות לקבוצת הוואצאפ
                 </SocialButton>
               )}
-
               {telegramLink && (
                 <SocialButton type="telegram" link={telegramLink}>
                   הצטרפות לקבוצה בטלגרם
                 </SocialButton>
               )}
-
-              <SocialButton type="facebook" link="www.twitter.com">
+              {/* <SocialButton type="facebook" link="www.twitter.com">
                 הצטרפות לקבוצה בפייסבוק
               </SocialButton>
-
               <SocialButton type="twitter" link="www.twitter.com">
                 עקוב בטוויטר
-              </SocialButton>
+              </SocialButton> */}
             </SocialButtons>
           </SocialContainer>
         </DatesAndSocial>
