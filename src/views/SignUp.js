@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, PageWrapper, PageContentWrapper } from '../components';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../api';
-import styled from 'styled-components/macro';
 
 import queryString from 'query-string';
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import queryString from 'query-string';
-import { Button, PageWrapper, PageContentWrapper } from '../components';
+import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
 import { sendProtestLeaderRequest, isProtestValid, setPhoneNumberForUser, getProtestById } from '../api';
 import { LeaderRequestSubmitted } from '.';
 
@@ -103,12 +103,4 @@ const ProtestFormInput = styled.input`
   font-size: 16px;
   border: 1px solid #d2d2d2;
   -webkit-appearance: none;
-`;
-
-const PageParagraph = styled.p`
-  margin-bottom: 0;
-
-  &:last-of-type {
-    margin-bottom: 10px;
-  }
 `;

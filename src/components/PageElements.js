@@ -6,7 +6,7 @@ export const PageWrapper = styled.div`
   font-size: 18px;
 
   @media (min-width: 768px) {
-    max-width: 380px;
+    max-width: 400px;
     font-siz: 20px;
   }
 `;
@@ -17,4 +17,12 @@ export const PageContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   max-width: 320px;
+`;
+
+export const PageParagraph = styled.p`
+  margin-bottom: 0;
+
+  &:last-of-type {
+    margin-bottom: 10px;
+  }
 `;
