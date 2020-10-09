@@ -1,20 +1,45 @@
-import React from 'react';
+import React, { useReducer } from 'react';
 import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, ProtestForm } from '../../components';
 import { signInWithGoogle } from '../../firebase';
 import { AdminWrapper, FormWrapper, AdminNavigation, LeaderPhoto, Field } from './components';
-import { useAdminContext } from './Context';
 import { archiveProtest, submitProtest, updateProtest } from './utils';
 import ProtestSidebar from './ProtestSidebar';
 import LeaderAdmin from './LeaderAdmin';
 import LeaderSidebar from './LeaderSidebar';
 
+const initialState = {
+  currentProtest: undefined,
+  pendingProtests: [],
+  approvedProtests: [],
+  protestFilter: 'pending',
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'setCurrentProtest':
+      return { ...state, currentProtest: action.payload.currentProtest };
+    case 'setProtests':
+      return {
+        ...state,
+        pendingProtests: action.payload.pendingProtests ?? state.pendingProtests,
+        approvedProtests: action.payload.approvedProtests ?? state.approvedProtests,
+        currentProtest: action.payload.currentProtest ?? state.currentProtest,
+      };
+    case 'setProtestFilter': {
+      return { ...state, protestFilter: action.payload.protestFilter, currentProtest: undefined };
+    }
+    default:
+      return state;
+  }
+};
+
 const ProtestAdmin = () => {
-  const { state, dispatch } = useAdminContext();
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
     <>
-      <ProtestSidebar />
+      <ProtestSidebar state={state} dispatch={dispatch} />
       <FormWrapper>
         <ProtestForm
           initialCoords={state.currentProtest?.coordinates ?? {}}

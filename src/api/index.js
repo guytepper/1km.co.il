@@ -93,15 +93,13 @@ export async function updateProtest(protestId, params) {
 
 export async function archivePendingProtest(protestId) {
   try {
-    const request = await firestore.collection('pending_protests').doc(protestId).update({
+    await firestore.collection('pending_protests').doc(protestId).update({
       archived: true,
     });
-    console.log(request); // <-- Why is this undefined yet the operation successful?
-    if (request === undefined) return true;
-    return request;
+    return true;
   } catch (err) {
-    console.log(err);
-    return err;
+    console.error(err);
+    return false;
   }
 }
 
@@ -284,18 +282,16 @@ export async function listLeaderRequests() {
 }
 
 // When super-admin approves a protest-user request
-export async function assignRoleOnProtest(userId, protestId, requestId) {
-  await firestore
-    .collection('protests')
-    .doc(protestId)
-    .update({
-      'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId),
-    });
+export async function assignRoleOnProtest({ userId, protestId, requestId, status }) {
+  if (status === 'done') {
+    await firestore
+      .collection('protests')
+      .doc(protestId)
+      .update({
+        'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId),
+      });
+  }
 
   // Update request
-  await firestore.collection('leader_requests').doc(requestId).update({ status: 'done' });
-}
-
-export async function getProtestById(protestId) {
-  return (await firestore.collection('protests').doc(protestId).get()).data();
+  await firestore.collection('leader_requests').doc(requestId).update({ status });
 }

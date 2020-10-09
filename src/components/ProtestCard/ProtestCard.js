@@ -10,11 +10,12 @@ function formatDistance(distance) {
   }
 }
 
-function ProtestCard({ protestInfo }) {
+function ProtestCard({ protestInfo = {}, showAction = true, style } = {}) {
   const history = useHistory();
   const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
   return (
     <ProtestCardWrapper
+      style={style}
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
@@ -33,10 +34,12 @@ function ProtestCard({ protestInfo }) {
             {meetingTime}
           </ProtestCardDetail>
         )}
-        <ProtestCardDetail>
-          <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
-          {formatDistance(distance)}
-        </ProtestCardDetail>
+        {distance && (
+          <ProtestCardDetail>
+            <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
+            {formatDistance(distance)}
+          </ProtestCardDetail>
+        )}
       </ProtestCardInfo>
       {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
       {telegramLink || whatsAppLink ? (
@@ -55,11 +58,11 @@ function ProtestCard({ protestInfo }) {
             הקבוצה התמלאה? שלחו קבוצה מעודכנת
           </ProtestCardGroupButton>
         </>
-      ) : (
+      ) : showAction ? (
         <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
           הוספת קבוצת וואטסאפ
         </ProtestCardGroupButton>
-      )}
+      ) : null}
     </ProtestCardWrapper>
   );
 }

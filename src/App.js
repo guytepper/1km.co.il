@@ -1,10 +1,10 @@
 import React, { useReducer, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, GroupUpdate, ProjectUpdates, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng } from './utils';
+import { pointWithinRadius, validateLatLng, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -25,7 +25,7 @@ const initialState = {
   mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
-  user: null,
+  user: undefined,
 };
 
 function reducer(state, action) {
@@ -187,6 +187,7 @@ function App() {
               ) : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+              {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
             </NavItemsWrapper>
           </Header>
           <React.Fragment>
@@ -227,11 +228,11 @@ function App() {
                 }}
               />
             </Route>
-            <Route exact path="/add-protest/">
+            <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} />
             </Route>
-            <Route path="/admin/">
-              <Admin />
+            <Route path="/admin">
+              <Admin user={state.user} />
             </Route>
             <Route exact path="/admin/group">
               <GroupUpdate />

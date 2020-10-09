@@ -1,32 +1,109 @@
-import React from 'react';
+import React, { useReducer, useEffect } from 'react';
 import LeaderSidebar from './LeaderSidebar';
-import { fetchProtest } from '../../api';
-import { Button } from '../../components';
-import { useAdminContext } from './Context';
+import { fetchProtest, assignRoleOnProtest } from '../../api';
+import { Button, ProtestCard } from '../../components';
 import { FormWrapper, LeaderPhoto, Field } from './components';
+import { useParams, useHistory } from 'react-router-dom';
+
+const initialState = {
+  currentLeaderRequest: undefined,
+  leaderRequests: [],
+  protestData: {},
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'setCurrentLeaderRequest':
+      return { ...state, currentLeaderRequest: action.payload.currentLeaderRequest };
+    case 'setLeaderRequests':
+      return { ...state, leaderRequests: action.payload.leaderRequests };
+    case 'setProtestData':
+      return { ...state, protestData: action.payload.protestData };
+    case 'setInitialData':
+      return { ...state, currentLeaderRequest: action.payload.currentLeaderRequest, protestData: action.payload.protestData };
+    default:
+      return state;
+  }
+};
 
 const LeaderAdmin = () => {
-  const { state, dispatch } = useAdminContext();
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { leaderId } = useParams();
+  const history = useHistory();
 
-//   useEffect(() => {
+  useEffect(() => {
+    if (leaderId) {
+      const currentLeaderRequest = state.leaderRequests.find((request) => request.id === leaderId);
+      if (!currentLeaderRequest) return;
+      const fetchProtestData = async () => {
+        const protestData = await fetchProtest(currentLeaderRequest.protestId);
+        dispatch({ type: 'setInitialData', payload: { protestData, currentLeaderRequest } });
+      };
+      fetchProtestData();
+    }
+  }, [leaderId, state.leaderRequests, state.currentLeaderRequest]);
 
-//   }, [state.currentLeaderRequest]);
+  const handleStatusChange = (status) => async () => {
+    const {
+      protestId,
+      id: requestId,
+      user: { uid: userId },
+    } = state.currentLeaderRequest;
+    try {
+      await assignRoleOnProtest({ userId, protestId, requestId, status });
+      const filteredLeaderRequests = state.leaderRequests.filter((request) => request.id !== requestId);
+      dispatch({
+        type: 'setLeaderRequests',
+        payload: { leaderRequests: filteredLeaderRequests },
+      });
+      dispatch({ type: 'setInitialData', payload: { protestData: {}, currentLeaderRequest: undefined } });
+      alert('סטטוס עודכן בהצלחה!');
+      history.replace('/admin/leader-requests');
+    } catch (err) {
+      console.err(err);
+      alert('בעיה בשינוי הסטטוס');
+    }
+  };
 
   return (
     <>
-      <LeaderSidebar />
-      {state.currentLeaderRequest ? (
-        <FormWrapper>
-          <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
-          <Field name="שם" value={state.currentLeaderRequest.user.displayName} />
-          <Field name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />
-          <Field name="אימייל" value={state.currentLeaderRequest.user.email} />
-          <Field name="protestId" value={state.currentLeaderRequest.user.email} />
-          <Button onClick={() => alert(`הבקשה אושרה בהצלחה!`)} color="#1ED96E" disabled={!state.currentLeaderRequest}>
-            אישור בקשה
-          </Button>
-        </FormWrapper>
-      ) : null}
+      <LeaderSidebar state={state} dispatch={dispatch} />
+      <FormWrapper>
+        {state.currentLeaderRequest ? (
+          <div
+            style={{
+              height: '60vh',
+              padding: '16px',
+              backgroundColor: '#fff',
+              boxShadow: '0 1px 4px 0px rgba(80, 80, 82, 0.16)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'space-evenly',
+            }}
+          >
+            <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
+            <div>
+              <Field name="שם" value={state.currentLeaderRequest.user.displayName} />
+              <Field name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />
+              <Field name="אימייל" value={state.currentLeaderRequest.user.email} />
+            </div>
+            <ProtestCard
+              protestInfo={state.protestData}
+              showAction={false}
+              style={{ boxShadow: '0 1px 10px 1px rgba(80, 80, 82, 0.25)' }}
+            />
+            <Button onClick={handleStatusChange('done')} color="#1ED96E" disabled={!state.currentLeaderRequest}>
+              אישור בקשה
+            </Button>
+            <Button onClick={handleStatusChange('rejected')} color="tomato" disabled={!state.currentLeaderRequest}>
+              דחיית בקשה
+            </Button>
+          </div>
+        ) : (
+          <div style={{ alignSelf: 'center' }}>יש לבחור בקשה</div>
+        )}
+      </FormWrapper>
     </>
   );
 };
