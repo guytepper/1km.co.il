@@ -1,18 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import {
-  Admin,
-  GroupUpdate,
-  ProjectUpdates,
-  SignUp,
-  ProtestPage,
-  AddProtest,
-  Profile,
-  LeaderRequest,
-  PostView,
-  FourOhFour,
-} from './views';
+import { Admin, GroupUpdate, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -247,16 +236,6 @@ function App() {
             <Route exact path="/admin/group">
               <GroupUpdate />
             </Route>
-            <Route exact path="/support-the-project/">
-              <PostView overrideSlug="support-the-project" />
-            </Route>
-            <Route exact path="/legal-notice">
-              <PostView overrideSlug="legal-notice" />
-            </Route>
-            <Route exact path="/project-updates/:slug">
-              <PostView />
-            </Route>
-
             <Route path="/protest/:id">
               <ProtestPage />
             </Route>
@@ -268,6 +247,16 @@ function App() {
             </Route>
             <Route exact path="/profile">
               <Profile user={state.user} />
+            </Route>
+
+            <Route exact path="/support-the-project/">
+              <PostView overrideSlug="support-the-project" />
+            </Route>
+            <Route exact path="/legal-notice">
+              <PostView overrideSlug="legal-notice" />
+            </Route>
+            <Route exact path="/project-updates/:slug">
+              <PostView />
             </Route>
 
             {/* 404 */}
@@ -289,6 +278,8 @@ const AppWrapper = styled.div`
 
 const Header = styled.header`
   display: flex;
+  position: sticky;
+  top: 0;
   justify-content: space-between;
   align-items: center;
   padding: 5px 25px;

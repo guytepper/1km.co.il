@@ -4,8 +4,6 @@ import LegalNotice from './legal-notice.js';
 import ProjectSupport from './project-support';
 import One from './ProjectUpdates/one';
 
-console.dir(One);
-
 export const posts = [
   {
     slug: '404',

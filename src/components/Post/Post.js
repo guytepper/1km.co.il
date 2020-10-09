@@ -10,6 +10,8 @@ const Post = ({ overrideSlug = '404' }) => {
 
   let postData = posts.find((post) => post.slug === slug);
 
+  if (!postData) postData = posts.find((post) => post.slug === '404');
+
   if (postData.permalink && postData.permalink !== location.pathname) {
     history.replace(postData.permalink);
   }
