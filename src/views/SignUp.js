@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button } from '../../components';
+import { Button } from '../components';
 import {
   extractUserData,
   getUserFromRedirect,
   handleSignIn,
   saveUserInFirestore,
-} from './utils';
+} from '../api';
 import queryString from 'query-string';
 
 function SignUpBeforeRedirect() {

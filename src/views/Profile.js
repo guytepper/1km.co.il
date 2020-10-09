@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { firestore } from '../firebase';
+import { getProtestsForLeader } from '../api';
 
 function MyProtests({ protests }) {
   return <>
@@ -20,23 +20,9 @@ export default function Profile(props) {
       return;
     }
 
-    var protestsRef = firestore.collection('protests');
-    var query = protestsRef.where('roles.leader', 'array-contains', props.user.uid);
-  
-    query.get()
-    .then(function(querySnapshot) {
-      const protests = [];
-
-      querySnapshot.forEach(function(doc) {
-        protests.push({ id: doc.id, ...doc.data() });
-      });
-
+    getProtestsForLeader(props.user.uid).then(protests => {
       setMyProtests(protests);
-    })
-    .catch(function(error) {
-        console.log('Error getting documents: ', error);
     });
-
   }, [props.user]);
 
   if (!props.user) {

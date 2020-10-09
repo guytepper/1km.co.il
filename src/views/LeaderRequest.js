@@ -6,7 +6,7 @@ import { Button } from '../components';
 import {
   sendProtestLeaderRequest,
   isProtestValid
-} from './SignUp/utils';
+} from '../api';
 
 const ProtestFormLabel = styled.label`
   display: flex;
