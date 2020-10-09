@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { dateToDayOfWeek, formatDate } from '../../utils';
 
 function formatDistance(distance) {
   if (distance > 1000) {
@@ -15,6 +16,14 @@ function getUpcomingDate(dateTimeList) {
     return null;
   }
   return dateTimeList.sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+}
+
+function getFormattedDate(date) {
+  if (!date) {
+    return null;
+  }
+
+  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
 }
 
 function ProtestCard({ protestInfo }) {
@@ -33,6 +42,7 @@ function ProtestCard({ protestInfo }) {
   } = protestInfo;
 
   const upcomingDate = getUpcomingDate(dateTimeList);
+  const formattedDate = getFormattedDate(upcomingDate);
 
   return (
     <ProtestCardWrapper
@@ -52,7 +62,7 @@ function ProtestCard({ protestInfo }) {
         {upcomingDate && (
           <ProtestCardDetail key={upcomingDate.id}>
             <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
-            {upcomingDate.date} - {upcomingDate.time}
+            {formattedDate}
           </ProtestCardDetail>
         )}
         {!upcomingDate && meetingTime && (
