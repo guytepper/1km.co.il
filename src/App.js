@@ -177,10 +177,10 @@ function App() {
                     <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
                   </>
                 ) : (
-                  <>
+                  <GuestNavItems>
                     <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                     <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  </>
+                  </GuestNavItems>
                 )}
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -204,7 +204,7 @@ function App() {
                     </SiteMessage> */}
                     <Button
                       color="#3C4F76"
-                      style={{ width: '100%', margin: '10px 0 0' }}
+                      style={{ width: '100%' }}
                       onClick={() => dispatch({ type: 'setModalState', payload: true })}
                     >
                       שינוי כתובת
@@ -285,6 +285,16 @@ const NavItemsWrapper = styled.div`
 
   @media (min-width: 768px) {
     flex-direction: row;
+  }
+`;
+
+const GuestNavItems = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 550px) {
+    flex-direction: row-reverse;
+    align-items: center;
   }
 `;
 
@@ -393,7 +403,7 @@ const ProtestListWrapper = styled.div`
 
   @media (min-width: 768px) {
     grid-row: 1;
-    padding: 0 15px;
+    padding: 10px 15px 0;
     max-height: calc(100vh - 60px);
   }
 `;
