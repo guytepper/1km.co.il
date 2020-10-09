@@ -4,8 +4,11 @@ import { useAuth } from '../../hooks';
 const initialState = {
   currentUser: undefined,
   currentProtest: undefined,
+  pendingProtests: [],
+  approvedProtests: [],
   protestFilter: 'pending',
   currentLeaderRequest: undefined,
+  leaderRequests: [],
 };
 
 export const Store = createContext(initialState);
@@ -16,8 +19,17 @@ const reducer = (state, action) => {
       return { ...state, currentUser: action.payload.currentUser };
     case 'setCurrentProtest':
       return { ...state, currentProtest: action.payload.currentProtest };
+    case 'setProtests':
+      return {
+        ...state,
+        pendingProtests: action.payload.pendingProtests ?? state.pendingProtests,
+        approvedProtests: action.payload.approvedProtests ?? state.approvedProtests,
+        currentProtest: action.payload.currentProtest ?? state.currentProtest,
+      };
     case 'setCurrentLeaderRequest':
       return { ...state, currentLeaderRequest: action.payload.currentLeaderRequest };
+    case 'setLeaderRequests':
+      return { ...state, leaderRequests: action.payload.LeaderRequests };
     case 'setProtestFilter': {
       return { ...state, protestFilter: action.payload.protestFilter, currentProtest: undefined };
     }

@@ -57,9 +57,14 @@ export async function updateProtest({ protestId, params, updateCallback }) {
   }
 }
 
-export async function archivePendingProtest(protestId, archiveCallback) {
+export async function archiveProtest({ protestId, type, archiveCallback }) {
   try {
-    const archived = await API.archivePendingProtest(protestId);
+    let archived;
+    if (type === 'pending') {
+      archived = await API.archivePendingProtest(protestId);
+    } else {
+      archived = await API.archiveProtest(protestId);
+    }
     if (archived) {
       archiveCallback(archived);
     } else {

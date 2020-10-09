@@ -75,17 +75,24 @@ export function createProtest(params) {
   return request;
 }
 
-export async function updateProtest(protestId, params, approved) {
+export async function updateProtest(protestId, params) {
   try {
-    const request = await firestore
-      .collection('protests')
-      //.collection(approved ? 'protests' : 'pending_protests')
-      .doc(protestId)
-      .update(params);
+    await firestore.collection('protests').doc(protestId).update(params);
 
-    if (request === undefined) return { _document: true };
-    // Remain compatible with createProtest
-    return { ...request, _document: true };
+    const docRef = firestore.collection('protests').doc(protestId);
+
+    const updatedProtest = docRef.get().then((doc) => {
+      const { latitude, longitude } = doc.data().g.geopoint;
+      const protestLatlng = [latitude, longitude];
+      return {
+        id: doc.id,
+        latlng: protestLatlng,
+        ...doc.data(),
+        _document: true,
+      };
+    });
+
+    return updatedProtest;
   } catch (err) {
     console.log(err);
     return err;
@@ -95,6 +102,20 @@ export async function updateProtest(protestId, params, approved) {
 export async function archivePendingProtest(protestId) {
   try {
     const request = await firestore.collection('pending_protests').doc(protestId).update({
+      archived: true,
+    });
+    console.log(request); // <-- Why is this undefined yet the operation successful?
+    if (request === undefined) return true;
+    return request;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+export async function archiveProtest(protestId) {
+  try {
+    const request = await firestore.collection('protests').doc(protestId).update({
       archived: true,
     });
     console.log(request); // <-- Why is this undefined yet the operation successful?
@@ -259,8 +280,8 @@ export function handleSignIn() {
 // functions to be used by the admin page
 // in order to show data and complete the process of
 // assigning the leader role on protests
-export async function listPendingRequests() {
-  const pendingRequests = [];
+export async function listLeaderRequests() {
+  const leaderRequests = [];
   const snapshot = await firestore
     .collection('leader_requests')
     .where('status', '==', 'pending')
@@ -268,9 +289,9 @@ export async function listPendingRequests() {
     .limit(20)
     .get();
   snapshot.forEach((doc) => {
-    pendingRequests.push({ id: doc.id, ...doc.data() });
+    leaderRequests.push({ id: doc.id, ...doc.data() });
   });
-  return pendingRequests;
+  return leaderRequests;
 }
 
 // When super-admin approves a protest-user request
@@ -282,7 +303,7 @@ export async function assignRoleOnProtest(userId, protestId, requestId) {
       'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId),
     });
 
-  // Delete request
+  // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status: 'done' });
 }
 

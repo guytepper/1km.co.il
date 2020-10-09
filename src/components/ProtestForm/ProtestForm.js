@@ -42,27 +42,30 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
-  const setStreetAddress = (value) => setValue('streetAddress', value);
+  const setStreetAddress = React.useCallback((value) => setValue('streetAddress', value), [setValue]);
 
   // the two useEffects below this are in order to deal
   // with the defaultValues and the places auto complete
   useEffect(() => {
     if (Object.keys(defaultValues).length > 0) {
       reset(defaultValues);
+      setSubmitMessage('');
+      setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
+
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
         setMarkerPosition(defaultValues.latlng);
       }
     }
-  }, [defaultValues, reset]);
+  }, [defaultValues, reset, setStreetAddress]);
 
   useEffect(() => {
     reset({});
     setStreetAddressDefaultValue('');
     setStreetAddress('');
-  }, [editMode, reset]);
+  }, [editMode, reset, setStreetAddress]);
 
   // Load nearby protests on mount
   useEffect(() => {
@@ -84,6 +87,13 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
         // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
+
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          return;
+        }
+
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
@@ -109,7 +119,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
 
   return (
     <ProtestFormWrapper onSubmit={handleSubmit(onSubmit)}>
-      {submitSuccess ? (
+      {submitSuccess && !editMode ? (
         <>
           <SuccessMessage>{submitMessage}</SuccessMessage>
           <Link to="/">

@@ -2,9 +2,9 @@ import React from 'react';
 import { Link, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import { Button, ProtestForm } from '../../components';
 import { signInWithGoogle } from '../../firebase';
-import { AdminWrapper, FormWrapper, AdminNavigation, LeaderPhoto, CardField } from './components';
+import { AdminWrapper, FormWrapper, AdminNavigation, LeaderPhoto, Field } from './components';
 import { useAdminContext } from './Context';
-import { archivePendingProtest, submitProtest, updateProtest } from './utils';
+import { archiveProtest, submitProtest, updateProtest } from './utils';
 import ProtestSidebar from './ProtestSidebar';
 import LeaderSidebar from './LeaderSidebar';
 
@@ -32,13 +32,34 @@ const Admin = () => {
                       return submitProtest({
                         params,
                         protestId: state.currentProtest.id,
-                        submitCallback: () => history.go(0),
+                        submitCallback: () => {
+                          dispatch({
+                            type: 'setProtests',
+                            payload: {
+                              pendingProtests: state.pendingProtests.filter((protest) => protest.id !== state.currentProtest.id),
+                              currentProtest: state.pendingProtests.filter(
+                                (protest) => protest.id !== state.currentProtest.id
+                              )[0],
+                            },
+                          });
+                          alert(`ההפגנה נוצרה בהצלחה!`);
+                        },
                       });
                     } else {
                       return updateProtest({
                         params,
                         protestId: state.currentProtest.id,
-                        updateCallback: () => history.go(0),
+                        updateCallback: (updated) => {
+                          dispatch({
+                            type: 'setProtests',
+                            payload: {
+                              approvedProtests: state.approvedProtests.map((protest) =>
+                                protest.id === updated.id ? updated : protest
+                              ),
+                            },
+                          });
+                          alert(`ההפגנה עודכנה בהצלחה!`);
+                        },
                       });
                     }
                   }}
@@ -46,7 +67,27 @@ const Admin = () => {
                   editMode={state.protestFilter}
                 />
                 <Button
-                  onClick={() => archivePendingProtest(state.currentProtest.id, () => history.go(0))}
+                  onClick={() =>
+                    archiveProtest({
+                      protestId: state.currentProtest.id,
+                      type: state.protestFilter,
+                      archiveCallback: () => {
+                        dispatch({
+                          type: 'setProtests',
+                          payload: {
+                            [`${state.protestFilter}Protests`]: state[`${state.protestFilter}Protests`].filter(
+                              (protest) => protest.id !== state.currentProtest.id
+                            ),
+                            currentProtest: state[`${state.protestFilter}Protests`].filter(
+                              (protest) => protest.id !== state.currentProtest.id
+                            )[0],
+                          },
+                        });
+
+                        alert(`ההפגנה נמחקה בהצלחה!`);
+                      },
+                    })
+                  }
                   color="tomato"
                   disabled={!state.currentProtest}
                 >
@@ -59,9 +100,12 @@ const Admin = () => {
               {state.currentLeaderRequest ? (
                 <FormWrapper>
                   <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
-                  <CardField name="שם" value={state.currentLeaderRequest.user.displayName} />
-                  <CardField name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />
-                  <CardField name="אימייל" value={state.currentLeaderRequest.user.email} />
+                  <Field name="שם" value={state.currentLeaderRequest.user.displayName} />
+                  <Field name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />
+                  <Field name="אימייל" value={state.currentLeaderRequest.user.email} />
+                  <Button onClick={() => alert(`הבקשה אושרה בהצלחה!`)} color="#1ED96E" disabled={!state.currentLeaderRequest}>
+                    אישור בקשה
+                  </Button>
                 </FormWrapper>
               ) : null}
             </Route>

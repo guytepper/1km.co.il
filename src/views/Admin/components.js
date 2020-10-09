@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 
 export const AdminWrapper = styled.div`
@@ -41,6 +41,15 @@ export const LeaderCard = styled.li`
   display: flex;
   align-items: center;
   position: relative;
+  ${({ active }) =>
+    active &&
+    css`
+      outline: blue solid 2px;
+    `}
+  &:hover {
+    outline: blue solid ${({ active }) => (active ? 2 : 1)}px;
+  }
+  cursor: pointer;
 
   @media (max-width: 1340px) {
     flex-direction: column;
@@ -48,7 +57,7 @@ export const LeaderCard = styled.li`
   }
 `;
 
-export const CardField = ({ name, value }) => (
+export const Field = ({ name, value }) => (
   <div style={{ textAlign: 'right' }}>
     <strong>{name}</strong>: {value ?? 'אין'}
   </div>
@@ -94,6 +103,15 @@ export const SidebarListHeadFilter = styled.div`
 `;
 
 export const Card = styled.li`
+  ${({ active }) =>
+    active &&
+    css`
+      outline: blue solid 2px;
+    `}
+  &:hover {
+    outline: blue solid ${({ active }) => (active ? 2 : 1)}px;
+  }
+  cursor: pointer;
   background-color: #fff;
   padding: 15px;
 `;
