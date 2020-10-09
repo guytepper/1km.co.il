@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, OldAdmin, GroupUpdate, ProjectUpdates, ProtestPage, AddProtest } from './views';
+import { Admin, OldAdmin, GroupUpdate, ProjectUpdates, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest } from './views';
 import ProjectSupportPage from './views/ProjectSupportPage';
 import getDistance from 'geolib/es/getDistance';
 import { pointWithinRadius, validateLatLng } from './utils';
@@ -10,6 +10,7 @@ import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
+import { getFullUserData, signOut } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -24,6 +25,7 @@ const initialState = {
   mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
+  user: null,
 };
 
 function reducer(state, action) {
@@ -31,7 +33,11 @@ function reducer(state, action) {
     case 'setProtests':
       return { ...state, protests: { close: action.payload.close, far: action.payload.far } };
     case 'setMarkers':
-      return { ...state, markers: [...state.markers, ...action.payload] };
+      return {
+        ...state,
+        markers: [...state.markers, ...action.payload.markers],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
+      };
     case 'setMapPosition':
       return { ...state, mapPosition: action.payload };
     case 'setMapPositionHistory':
@@ -49,9 +55,18 @@ function reducer(state, action) {
         ...state,
         protests: { close: action.payload.close, far: action.payload.far },
         markers: [...state.markers, ...action.payload.markers],
-        mapPositionHistory: [...state.mapPositionHistory, ...action.payload.mapPositionHistory],
+        mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
         loading: false,
       };
+    case 'setInitialData':
+      return {
+        ...state,
+        userCoordinates: action.payload,
+        isModalOpen: false,
+        loading: true,
+      };
+    case 'setUser':
+      return { ...state, user: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -64,13 +79,26 @@ function App() {
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
     if (cachedCoordinates) {
-      dispatch({ type: 'setUserCoordinates', payload: cachedCoordinates });
-      dispatch({ type: 'setModalState', payload: false });
+      dispatch({ type: 'setInitialData', payload: cachedCoordinates });
     }
   }, []);
 
   useEffect(() => {
-    async function fetchProtests() {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        // Includes admin data and more
+        getFullUserData(user.uid).then((fullUserData) => {
+          dispatch({ type: 'setUser', payload: fullUserData });
+        });
+      } else {
+        dispatch({ type: 'setUser', payload: null });
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    // if onlyMarkers is true then don't update the protests, only the markers and history.
+    async function fetchProtests({ onlyMarkers = false } = {}) {
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -93,17 +121,27 @@ function App() {
 
         // Filter duplicate markers
         const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
-
-        // Set data
-        dispatch({
-          type: 'setLoadData',
-          payload: {
-            close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-            far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-            markers: filteredMarkers,
-            mapPositionHistory: [...state.mapPositionHistory, state.mapPosition],
-          },
-        });
+        if (onlyMarkers) {
+          // Set data
+          dispatch({
+            type: 'setMarkers',
+            payload: {
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
+          });
+        } else {
+          // Set data
+          dispatch({
+            type: 'setLoadData',
+            payload: {
+              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
+              markers: filteredMarkers,
+              mapPosition: state.mapPosition,
+            },
+          });
+        }
       } catch (err) {
         console.log(err);
       }
@@ -115,7 +153,7 @@ function App() {
       } else {
         const requested = state.mapPositionHistory.some((pos) => pointWithinRadius(pos, state.mapPosition, 5000));
         if (!requested) {
-          fetchProtests();
+          fetchProtests({ onlyMarkers: true });
         }
       }
     }
@@ -134,6 +172,19 @@ function App() {
               </Link>
             </SiteLogo>
             <NavItemsWrapper>
+              {state.user ? (
+                <>
+                  <img alt="" src={state.user.picture_url}></img>
+                  <NavItem to="/profile">{state.user.displayName}</NavItem>
+                  <NavButton
+                    onClick={() => {
+                      signOut();
+                    }}
+                  >
+                    log out
+                  </NavButton>
+                </>
+              ) : null}
               <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
               <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
             </NavItemsWrapper>
@@ -197,6 +248,15 @@ function App() {
             <Route path="/protest/:id">
               <ProtestPage />
             </Route>
+            <Route exact path="/sign-up">
+              <SignUp />
+            </Route>
+            <Route path="/leader-request">
+              <LeaderRequest user={state.user} />
+            </Route>
+            <Route exact path="/profile">
+              <Profile user={state.user} />
+            </Route>
           </React.Fragment>
         </Router>
       </AppWrapper>
@@ -235,6 +295,28 @@ const NavItemsWrapper = styled.div`
 `;
 
 const NavItem = styled(Link)`
+  &:hover {
+    color: #3498db;
+  }
+
+  &:nth-child(1) {
+    margin-bottom: 3px;
+
+    @media (min-width: 550px) {
+      margin-bottom: 0;
+    }
+  }
+
+  &:nth-child(2) {
+    @media (min-width: 550px) {
+      margin-left: 15px;
+    }
+  }
+`;
+
+const NavButton = styled.button`
+  cursor: pointer;
+
   &:hover {
     color: #3498db;
   }

@@ -5,9 +5,38 @@ import { fetchProtest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
+import {
+  FacebookShareButton,
+  FacebookIcon,
+  TwitterShareButton,
+  TwitterIcon,
+  WhatsappIcon,
+  WhatsappShareButton,
+  TelegramShareButton,
+  TelegramIcon,
+} from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
+import * as texts from './ProtestPageTexts.json';
 
 const mobile = `@media (max-width: 500px)`;
+
+function getSocialLinks(protest) {
+  const items = [];
+  const { whatsAppLink, telegramLink, facebookLink, twitterLink } = protest;
+  if (whatsAppLink) {
+    items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
+  }
+  if (telegramLink) {
+    items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
+  }
+  if (facebookLink) {
+    items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
+  }
+  if (twitterLink) {
+    items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
+  }
+  return items;
+}
 
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
@@ -33,6 +62,9 @@ function ProtestPageContent({ protest }) {
   const history = useHistory();
 
   const { coordinates, whatsAppLink, telegramLink, displayName, streetAddress, notes } = protest;
+  const shareUrl = window.location.href;
+  const shareTitle = `${texts.shareMassage}${displayName}`;
+  const socialLinks = getSocialLinks(protest);
 
   return (
     <ProtestPageContainer>
@@ -80,31 +112,44 @@ function ProtestPageContent({ protest }) {
           {/* Social */}
           <SocialContainer>
             <SectionTitle>
-              <img src="/icons/social.svg" alt="share icon" />
-              מידע ועדכונים:
+              <img src="/icons/social.svg" alt="social icon" />
+              שיתוף העמוד:
             </SectionTitle>
-
-            <SocialButtons>
-              {whatsAppLink && (
-                <SocialButton type="whatsapp" link={whatsAppLink}>
-                  הצטרפות לקבוצת הוואצאפ
-                </SocialButton>
-              )}
-
-              {telegramLink && (
-                <SocialButton type="telegram" link={telegramLink}>
-                  הצטרפות לקבוצה בטלגרם
-                </SocialButton>
-              )}
-
-              <SocialButton type="facebook" link="www.twitter.com">
-                הצטרפות לקבוצה בפייסבוק
-              </SocialButton>
-
-              <SocialButton type="twitter" link="www.twitter.com">
-                עקוב בטוויטר
-              </SocialButton>
-            </SocialButtons>
+            <SocialButtonWrapper>
+              <FacebookShareButton url={shareUrl} quote={shareTitle}>
+                <FacebookIcon size={30} round={true} />
+              </FacebookShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <TwitterShareButton url={shareUrl} title={shareTitle}>
+                <TwitterIcon size={30} round={true} />
+              </TwitterShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <WhatsappShareButton url={shareUrl} title={shareTitle} separator=" - ">
+                <WhatsappIcon size={30} round={true} />
+              </WhatsappShareButton>
+            </SocialButtonWrapper>
+            <SocialButtonWrapper>
+              <TelegramShareButton url={shareUrl} title={shareTitle}>
+                <TelegramIcon size={30} round={true} />
+              </TelegramShareButton>
+            </SocialButtonWrapper>
+            {socialLinks.length > 0 && (
+              <>
+                <SectionTitle>
+                  <img src="/icons/share.svg" alt="share icon" />
+                  קישורים:
+                </SectionTitle>
+                <SocialButtons>
+                  {socialLinks.map(({ url, type, text }) => (
+                    <SocialButton key={type} type={type} link={url}>
+                      {text}
+                    </SocialButton>
+                  ))}
+                </SocialButtons>
+              </>
+            )}
           </SocialContainer>
         </DatesAndSocial>
       </ProtestContainer>
@@ -329,4 +374,8 @@ const SocialContainer = styled(SectionContainer)`
   ${mobile} {
     margin-top: 20px;
   }
+`;
+
+const SocialButtonWrapper = styled.span`
+  margin: 0px 10px 10px 10px;
 `;
