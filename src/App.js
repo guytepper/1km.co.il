@@ -226,9 +226,6 @@ function App() {
             <Route exact path="/add-protest/">
               <AddProtest initialCoords={state.userCoordinates} />
             </Route>
-            <Route exact path="/old-admin/">
-              <OldAdmin />
-            </Route>
             <Route path="/admin/">
               <Admin />
             </Route>

@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { LeaderCard, SidebarList, SidebarListHead, SidebarListHeadTitle, SidebarWrapper, LeaderPhoto, Field } from './components';
 import { useAdminContext } from './Context';
-import { assignRoleOnProtest, getProtestById, listLeaderRequests } from '../../api';
+import { listLeaderRequests } from '../../api';
 
 const LeaderSidebar = () => {
   const { state, dispatch } = useAdminContext();
-  console.log(state.leaderRequests);
   useEffect(() => {
     const fetchLeaderRequests = async () => {
       const leaderRequests = await listLeaderRequests();

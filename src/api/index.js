@@ -76,27 +76,19 @@ export function createProtest(params) {
 }
 
 export async function updateProtest(protestId, params) {
-  try {
-    await firestore.collection('protests').doc(protestId).update(params);
+  await firestore.collection('protests').doc(protestId).update(params);
 
-    const docRef = firestore.collection('protests').doc(protestId);
+  const doc = await firestore.collection('protests').doc(protestId).get();
 
-    const updatedProtest = docRef.get().then((doc) => {
-      const { latitude, longitude } = doc.data().g.geopoint;
-      const protestLatlng = [latitude, longitude];
-      return {
-        id: doc.id,
-        latlng: protestLatlng,
-        ...doc.data(),
-        _document: true,
-      };
-    });
+  const { latitude, longitude } = doc.data().g.geopoint;
+  const protestLatlng = [latitude, longitude];
 
-    return updatedProtest;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
+  return {
+    id: doc.id,
+    latlng: protestLatlng,
+    ...doc.data(),
+    _document: true,
+  };
 }
 
 export async function archivePendingProtest(protestId) {
@@ -115,15 +107,13 @@ export async function archivePendingProtest(protestId) {
 
 export async function archiveProtest(protestId) {
   try {
-    const request = await firestore.collection('protests').doc(protestId).update({
+    await firestore.collection('protests').doc(protestId).update({
       archived: true,
     });
-    console.log(request); // <-- Why is this undefined yet the operation successful?
-    if (request === undefined) return true;
-    return request;
+    return true;
   } catch (err) {
-    console.log(err);
-    return err;
+    console.error(err);
+    return false;
   }
 }
 
@@ -253,7 +243,6 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 }
 
 export function extractUserData(result) {
-  console.log(result);
   const { uid, displayName, email } = result.user;
   const { first_name, last_name, picture } = result.additionalUserInfo.profile;
   const picture_url = picture.data.url;
