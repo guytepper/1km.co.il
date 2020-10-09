@@ -5,10 +5,11 @@ import { assignRoleOnProtest, getProtestById, listLeaderRequests } from '../../a
 
 const LeaderSidebar = () => {
   const { state, dispatch } = useAdminContext();
-
+  console.log(state.leaderRequests);
   useEffect(() => {
     const fetchLeaderRequests = async () => {
-      dispatch({ type: 'setLeaderRequests', payload: { leaderRequests: await listLeaderRequests() } });
+      const leaderRequests = await listLeaderRequests();
+      dispatch({ type: 'setLeaderRequests', payload: { leaderRequests } });
     };
     fetchLeaderRequests();
   }, [dispatch, listLeaderRequests]);
