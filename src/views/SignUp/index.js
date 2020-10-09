@@ -7,6 +7,7 @@ import {
   handleSignIn,
   saveUserInFirestore,
 } from './utils';
+import queryString from 'query-string';
 
 function SignUpBeforeRedirect() {
   return (
@@ -41,8 +42,11 @@ export default function SignUp(props) {
       setStage(stages.AFTER_FACEBOOK_AUTH);
   
       saveUserInFirestore(userData).then(() => {
-        console.log(window.location.search);
-        history.push(`/leader-request${window.location.search}`);
+        const { returnUrl } = queryString.parse(window.location.search);
+
+        if (returnUrl) {
+          history.push(returnUrl);
+        }
       });
     })
     .catch((error) => {
