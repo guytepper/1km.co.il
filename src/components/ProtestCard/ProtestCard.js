@@ -12,7 +12,18 @@ function formatDistance(distance) {
 
 function ProtestCard({ protestInfo }) {
   const history = useHistory();
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
+
+  const {
+    displayName,
+    streetAddress,
+    distance,
+    whatsAppLink,
+    telegramLink,
+    meeting_time: meetingTime,
+    dateTimeList,
+    notes,
+    id,
+  } = protestInfo;
   return (
     <ProtestCardWrapper
       onClick={() => {
@@ -27,6 +38,13 @@ function ProtestCard({ protestInfo }) {
             {streetAddress}
           </ProtestCardDetail>
         )}
+        {dateTimeList &&
+          dateTimeList.map((dateTimeElement) => (
+            <ProtestCardDetail key={dateTimeElement.id}>
+              <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
+              {dateTimeElement.date} - {dateTimeElement.time}
+            </ProtestCardDetail>
+          ))}
         {meetingTime && (
           <ProtestCardDetail>
             <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />

@@ -6,6 +6,7 @@ import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
+import DateTimeList from '../DateTimeList';
 import { validateLatLng } from '../../utils';
 import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
@@ -32,6 +33,9 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
+
+  const [dateTimeList, setDateTimeList] = useState([{ id: 0, time: '17:30' }]);
+
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -59,6 +63,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       try {
         params.coords = mapCenter;
         // params.recaptchaToken = recaptchaToken;
+        params.dateTimeList = dateTimeList;
 
         let protest = await submitCallback(params);
         if (protest._document) {
@@ -146,10 +151,11 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
               <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
             ))}
           </MapWrapper>
+
           <ProtestFormLabel>
-            שעת מפגש
-            <ProtestFormInput type="time" defaultValue="17:30" name="meeting_time" ref={register}></ProtestFormInput>
+            <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
           </ProtestFormLabel>
+
           <ProtestFormLabel>
             קבוצת וואטסאפ
             <ProtestFormInput placeholder="לינק לקבוצה" name="whatsAppLink" ref={register}></ProtestFormInput>
