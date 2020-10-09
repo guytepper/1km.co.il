@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { LeaderCard, SidebarList, SidebarListHead, SidebarListHeadTitle, SidebarWrapper, LeaderPhoto, Field } from './components';
-import { useAdminContext } from './Context';
 import { listLeaderRequests } from '../../api';
+import { useHistory } from 'react-router-dom';
 
-const LeaderSidebar = () => {
-  const { state, dispatch } = useAdminContext();
+const LeaderSidebar = ({ state, dispatch }) => {
+  const history = useHistory();
   useEffect(() => {
     const fetchLeaderRequests = async () => {
       const leaderRequests = await listLeaderRequests();
       dispatch({ type: 'setLeaderRequests', payload: { leaderRequests } });
     };
     fetchLeaderRequests();
-  }, [dispatch, listLeaderRequests]);
+  }, [dispatch]);
 
   return (
     <SidebarWrapper>
@@ -22,7 +22,7 @@ const LeaderSidebar = () => {
         {state.leaderRequests.map((request) => (
           <LeaderCard
             active={request.id === state.currentLeaderRequest?.id}
-            onClick={() => dispatch({ type: 'setCurrentLeaderRequest', payload: { currentLeaderRequest: request } })}
+            onClick={() => history.push(`/admin/leader-requests/${request.id}`)}
             key={request.id}
           >
             <div style={{ position: 'absolute', top: '5px', left: '5px', fontSize: '10px' }}>

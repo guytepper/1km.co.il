@@ -163,7 +163,6 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
               setMarkerPosition(newPosition);
               setZoomLevel(t.target._zoom);
               // fetch protests on move end
-              console.log(mapCenter);
               if (mapCenter) {
                 const protests = await fetchNearbyProtests(mapCenter);
                 setNearbyProtests(protests);

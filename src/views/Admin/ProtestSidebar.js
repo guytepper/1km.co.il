@@ -10,29 +10,31 @@ import {
   Field,
 } from './components';
 import { PlacesAutocomplete, Button } from '../../components';
-import { useAdminContext } from './Context';
 import { fetchPendingProtests } from './utils';
 import { fetchNearbyProtests } from '../../api';
 
-const ProtestSidebar = () => {
-  const { state, dispatch } = useAdminContext();
+const ProtestSidebar = ({ state, dispatch }) => {
   const [coordinates, setCoordinates] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
+      let payload = {};
       if (state.protestFilter === 'pending') {
         if (state.pendingProtests.length === 0) {
-          dispatch({ type: 'setProtests', payload: { pendingProtests: await fetchPendingProtests() } });
+          const pendingProtests = await fetchPendingProtests();
+          payload = { pendingProtests };
         }
       } else if (!coordinates) {
         if (state.approvedProtests.length > 0) {
-          dispatch({ type: 'setProtests', payload: { approvedProtests: [] } });
+          payload = { approvedProtests: [] };
         }
       } else {
         if (state.approvedProtests.length === 0) {
-          dispatch({ type: 'setProtests', payload: { approvedProtests: await fetchNearbyProtests(coordinates) } });
+          const approvedProtests = await fetchNearbyProtests(coordinates);
+          payload = { approvedProtests };
         }
       }
+      dispatch({ type: 'setProtests', payload });
     }
     fetchData();
   }, [state.protestFilter, state.pendingProtests, state.approvedProtests, coordinates, dispatch]);

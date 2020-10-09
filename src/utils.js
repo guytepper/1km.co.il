@@ -32,3 +32,5 @@ export function pointWithinRadius(point1, point2, radius) {
     radius
   );
 }
+
+export const isAdmin = (user) => user?.roles?.includes('admin');
