@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 
 export const AdminWrapper = styled.div`
   display: grid;
@@ -6,31 +7,55 @@ export const AdminWrapper = styled.div`
   padding: 20px;
 `;
 
-export const ProtestSidebarWrapper = styled.div`
-  height: 75vh;
+export const SidebarWrapper = styled.div`
+  height: 70vh;
+  grid-column: 1 / 1;
 `;
 
-export const ProtestsList = styled.ul`
+export const ProtestFormWrapper = styled.div`
+  /* height: 85vh; */
+  /* overflow-y: auto; */
+  overflow: hidden;
+  grid-column: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const SidebarList = styled.ul`
   display: grid;
   grid-auto-rows: min-content;
   gap: 15px;
   padding: 20px;
   list-style-type: none;
   height: 100%;
+  margin-top: 0;
   overflow: auto;
 `;
 
-export const ProtestsListHead = styled.div`
+export const AdminNavigation = styled(Link)`
+  grid-column: 4/4;
+  grid-row: 1/1;
+`;
+
+export const SidebarListHead = styled.div`
   padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  background-color: #f4f6fa;
 `;
-export const ProtestsListHeadTitle = styled.h3`
+export const SidebarListHeadTitle = styled.h3`
   margin-top: 0;
+  align-self: flex-start;
 `;
-export const ProtestsListHeadFilters = styled.div`
+export const SidebarListHeadFilters = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
-export const ProtestsListHeadFilter = styled.div`
+export const SidebarListHeadFilter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks';
 const initialState = {
   currentUser: undefined,
   currentProtest: undefined,
+  protestFilter: 'pending',
 };
 
 export const Store = createContext(initialState);
@@ -14,6 +15,9 @@ const reducer = (state, action) => {
       return { ...state, currentUser: action.payload.currentUser };
     case 'setCurrentProtest':
       return { ...state, currentProtest: action.payload.currentProtest };
+    case 'setProtestFilter': {
+      return { ...state, protestFilter: action.payload.protestFilter, currentProtest: undefined };
+    }
     default:
       return state;
   }
