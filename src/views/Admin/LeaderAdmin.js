@@ -82,7 +82,7 @@ const LeaderAdmin = () => {
               showAction={false}
               style={{ boxShadow: '0 1px 10px 1px rgba(80, 80, 82, 0.25)' }}
             />
-            <Button onClick={handleStatusChange('done')} color="#1ED96E" disabled={!state.currentLeaderRequest}>
+            <Button onClick={handleStatusChange('approved')} color="#1ED96E" disabled={!state.currentLeaderRequest}>
               אישור בקשה
             </Button>
             <Button onClick={handleStatusChange('rejected')} color="tomato" disabled={!state.currentLeaderRequest}>
