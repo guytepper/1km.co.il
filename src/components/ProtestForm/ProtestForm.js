@@ -96,6 +96,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
         if (editMode) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
           return;
         }
 
