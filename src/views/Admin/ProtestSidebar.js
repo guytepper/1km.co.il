@@ -47,21 +47,18 @@ const ProtestSidebar = ({ state, dispatch }) => {
         <SidebarListHeadTitle>הפגנות</SidebarListHeadTitle>
         <PlacesAutocomplete setManualAddress={setCoordinates} />
         <SidebarListHeadFilters>
-          <SidebarListHeadFilter>
-            <Button
-              style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'pending' ? 0.5 : 1 }}
-              onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'pending' } })}
-            >
-              מחכה לאישור
-            </Button>
+          <SidebarListHeadFilter
+            style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'approved' ? 1 : 0.5 }}
+            onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'approved' } })}
+          >
+            מאושר
           </SidebarListHeadFilter>
-          <SidebarListHeadFilter>
-            <Button
-              style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'approved' ? 0.5 : 1 }}
-              onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'approved' } })}
-            >
-              מאושר
-            </Button>
+
+          <SidebarListHeadFilter
+            style={{ width: '120px', height: '30px', fontSize: '14px', opacity: state.protestFilter === 'pending' ? 1 : 0.5 }}
+            onClick={() => dispatch({ type: 'setProtestFilter', payload: { protestFilter: 'pending' } })}
+          >
+            מחכה לאישור
           </SidebarListHeadFilter>
         </SidebarListHeadFilters>
       </SidebarListHead>
