@@ -1,14 +1,7 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
-
-function formatDistance(distance) {
-  if (distance > 1000) {
-    return `${(distance / 1000).toFixed(1)} ק"מ ממיקומך`;
-  } else {
-    return `${distance} מטר ממיקומך`;
-  }
-}
+import { formatDistance } from '../../utils';
 
 function ProtestCard({ protestInfo = {}, showAction = true, style } = {}) {
   const history = useHistory();

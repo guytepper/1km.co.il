@@ -44,4 +44,12 @@ export function calculateDistance(pointA, pointB) {
   return getDistance(pointA, pointB);
 }
 
+export function formatDistance(distance) {
+  if (distance > 1000) {
+    return `${(distance / 1000).toFixed(1)} ק"מ ממיקומך`;
+  } else {
+    return `${distance} מטר ממיקומך`;
+  }
+}
+
 export const isAdmin = (user) => user?.roles?.includes('admin');
