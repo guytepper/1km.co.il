@@ -26,7 +26,7 @@ const reducer = (state, action) => {
   }
 };
 
-const LeaderAdmin = () => {
+const LeaderAdmin = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { leaderId } = useParams();
   const history = useHistory();
@@ -50,7 +50,7 @@ const LeaderAdmin = () => {
       user: { uid: userId },
     } = state.currentLeaderRequest;
     try {
-      await assignRoleOnProtest({ userId, protestId, requestId, status });
+      await assignRoleOnProtest({ userId, protestId, requestId, status, adminId: user.uid });
       const filteredLeaderRequests = state.leaderRequests.filter((request) => request.id !== requestId);
       dispatch({
         type: 'setLeaderRequests',

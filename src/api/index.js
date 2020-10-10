@@ -283,7 +283,7 @@ export async function listLeaderRequests() {
 }
 
 // When super-admin approves a protest-user request
-export async function assignRoleOnProtest({ userId, protestId, requestId, status }) {
+export async function assignRoleOnProtest({ userId, protestId, requestId, status, adminId }) {
   if (status === 'approved') {
     await firestore
       .collection('protests')
@@ -294,5 +294,5 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
   }
 
   // Update request
-  await firestore.collection('leader_requests').doc(requestId).update({ status });
+  await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
 }
