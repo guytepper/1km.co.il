@@ -6,12 +6,22 @@ import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../compo
 import { sendProtestLeaderRequest, isProtestValid, setPhoneNumberForUser, fetchProtest } from '../api';
 import { LeaderRequestSubmitted } from '.';
 
+const israeliPhoneNumberRegex = /^[-+0-9]{7,13}$/;
+
 function LeaderRequestForm({ user }) {
   const history = useHistory();
   const [protestData, setProtestData] = useState(null);
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [showInvalidNumberError, setShowInvalidNumberError] = useState(false);
 
   async function submitLeaderRequest(phoneNumber) {
+    const validPhoneNumber = israeliPhoneNumberRegex.test(phoneNumber);
+
+    if (!validPhoneNumber) {
+      setShowInvalidNumberError(true);
+      return;
+    }
+
     const { protest: protestId } = queryString.parse(window.location.search);
 
     isProtestValid(protestId).then(async (validProtest) => {
@@ -59,6 +69,7 @@ function LeaderRequestForm({ user }) {
           <span style={{ marginBottom: 5 }}>מספר טלפון:</span>
           <ProtestFormInput type="tel" name="phoneNumber" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
         </ProtestFormLabel>
+        {showInvalidNumberError ? <InvalidPhoneNumberMessage>מספר הטלפון שהוזן אינו תקין</InvalidPhoneNumberMessage> : null}
         <Button color="#1ED96E" style={{ width: '100%' }} onClick={() => submitLeaderRequest(phoneNumber)}>
           הגשת בקשה
         </Button>
@@ -103,3 +114,8 @@ const ProtestFormInput = styled.input`
   border: 1px solid #d2d2d2;
   -webkit-appearance: none;
 `;
+
+const InvalidPhoneNumberMessage = styled.div`
+  color: red;
+  margin-bottom: 15px;
+`
