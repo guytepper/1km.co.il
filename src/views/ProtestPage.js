@@ -17,7 +17,7 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor} from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader} from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 
@@ -37,7 +37,7 @@ function getEditButtonLink(user, protest) {
 
   if (isAuthenticated(user)) {
     // The user is a leader
-    if (protest?.roles?.leader?.includes(user.uid)) {
+    if (isLeader(user, protest)) {
       return editRoute;
     }
     
@@ -211,9 +211,9 @@ export default function ProtestPage({ user }) {
     return <div>Loading...</div>;
   }
 
-  const { coordinates, id, roles } = protest;
+  const { coordinates, id } = protest;
 
-  const canEdit = isAdmin(user) || roles?.leader?.includes(user?.uid);
+  const canEdit = isAdmin(user) || isLeader(user, protest);
 
   return (
     <Switch>
