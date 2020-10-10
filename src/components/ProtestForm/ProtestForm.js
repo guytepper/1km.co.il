@@ -86,18 +86,18 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
     if (!editMode && !params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
-    } 
+    }
 
-    if(params.telegramLink && !isValidUrl(params.telegramLink)) {
+    if (params.telegramLink && !isValidUrl(params.telegramLink)) {
       alert('לינק לקבוצת הטלגרם אינו תקין');
-      return; 
+      return;
     }
 
-    if(params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
+    if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
       alert('לינק לקבוצת הוואטסאפ אינו תקין');
-      return; 
+      return;
     }
-    
+
     try {
       params.coords = mapCenter;
       params.dateTimeList = dateTimeList;
@@ -124,7 +124,6 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       setSubmitSuccess(true);
       setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
     }
-
   };
 
   // useEffect(() => {
