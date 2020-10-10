@@ -33,7 +33,7 @@ const ButtonWrapper = styled.button`
   cursor: pointer;
 
   &:disabled {
-    background-color: grey;
+    background: grey;
     cursor: not-allowed;
   }
 `;
