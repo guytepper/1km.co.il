@@ -230,7 +230,7 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage />
+              <ProtestPage coordinates={state.userCoordinates} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
