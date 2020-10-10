@@ -25,7 +25,7 @@ const Admin = ({ user }) => {
               <ProtestAdmin />
             </Route>
             <Route path="/admin/leader-requests/:leaderId?">
-              <LeaderAdmin />
+              <LeaderAdmin user={user} />
             </Route>
           </Switch>
           {['/admin/protest-requests/', '/admin/protest-requests'].includes(location.pathname) ? (
