@@ -105,7 +105,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
           afterSubmitCallback();
         } else {
-          throw protest;
+          throw new Error('protest._document was null.');
         }
       } catch (err) {
         console.log('error!!', err);
