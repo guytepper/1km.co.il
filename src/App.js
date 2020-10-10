@@ -170,17 +170,16 @@ function App() {
             <NavItemsWrapper>
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
-                  <>
-                    <NavProfilePicture src="/icons/guard.svg" alt="" />
-                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
-                    {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
-                  </>
-                ) : (
+                    <span style={{display: 'flex', alignItems: 'center', marginRight: '5px'}}>
+                      <NavProfilePicture src="/icons/guard.svg" alt="" />
+                      <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                      {/* {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>} */}
+                    </span>
+                ) : null}
                   <GuestNavItems>
                     <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                     <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
                   </GuestNavItems>
-                )}
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
@@ -282,7 +281,7 @@ const NavItemsWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media (min-width: 550px) {
+  @media (min-width: 585px) {
     flex-direction: row-reverse;
     align-items: center;
   }
@@ -295,8 +294,9 @@ const NavItemsWrapper = styled.div`
 const GuestNavItems = styled.div`
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 
-  @media (min-width: 550px) {
+  @media (min-width: 585px) {
     flex-direction: row-reverse;
     align-items: center;
   }
@@ -307,18 +307,15 @@ const NavItem = styled(Link)`
     color: #3498db;
   }
 
-  &:nth-child(1) {
-    margin-bottom: 3px;
+  margin-left: 10px;
 
-    @media (min-width: 550px) {
-      margin-bottom: 0;
-    }
+  @media (max-width: 585px) {
+    margin-left: 15px;
   }
 
-  &:nth-child(2) {
-    @media (min-width: 550px) {
-      margin-left: 15px;
-    }
+  @media (max-width: 415px) {
+    font-size: 13px;
+    margin-left: 10px;
   }
 `;
 
