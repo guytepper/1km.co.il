@@ -36,6 +36,7 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
+      data-testid="protestCard"
     >
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>

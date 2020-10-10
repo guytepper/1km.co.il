@@ -29,3 +29,5 @@ ui-debug.log
 
 #npm files
 package-lock.json
+
+/cypress/integration/examples/

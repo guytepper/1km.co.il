@@ -1,0 +1,11 @@
+name: ci
+# https://docs.github.com/en/actions/reference/events-that-trigger-workflows
+on: [push, deployment, deployment_status]
+jobs:
+  show-event:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
