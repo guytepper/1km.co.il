@@ -5,9 +5,7 @@ import { Link } from 'react-router-dom';
 function Footer() {
   return (
     <FooterWrapper>
-      <FooterRouterLink to="/legal-notice" target="_blank">
-        הצהרה משפטית
-      </FooterRouterLink>
+      <FooterRouterLink to="/legal-notice">הבהרה משפטית</FooterRouterLink>
       <FooterLink href="https://twitter.com/1kmcoil" target="_blank">
         <FooterLinkIcon src="/icons/twitter.svg" alt="" />
         טוויטר
