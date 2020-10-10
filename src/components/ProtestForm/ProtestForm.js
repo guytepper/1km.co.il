@@ -82,37 +82,37 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    // if (!params.streetAddress) {
-    //   alert('אנא הזינו את כתובת ההפגנה');
-    //   return;
-    // } else {
-    try {
-      params.coords = mapCenter;
-      params.dateTimeList = dateTimeList;
-      // params.recaptchaToken = recaptchaToken;
+    if (!editMode && !params.streetAddress) {
+      alert('אנא הזינו את כתובת ההפגנה');
+      return;
+    } else {
+      try {
+        params.coords = mapCenter;
+        params.dateTimeList = dateTimeList;
+        // params.recaptchaToken = recaptchaToken;
 
-      let protest = await submitCallback(params);
+        let protest = await submitCallback(params);
 
-      if (editMode) {
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+          return;
+        }
+
+        if (protest._document) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+        } else {
+          throw protest;
+        }
+      } catch (err) {
+        console.log('error!!', err);
         setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
-        return;
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
-
-      if (protest._document) {
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
-      } else {
-        throw protest;
-      }
-    } catch (err) {
-      console.log('error!!', err);
-      setSubmitSuccess(true);
-      setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
     }
-    //  }
   };
 
   // useEffect(() => {
@@ -145,7 +145,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             ></ProtestFormInput>
             <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
           </ProtestFormLabel>
-          {editMode && (
+          {!editMode && (
             <>
               <ProtestFormLabel>
                 כתובת
