@@ -60,3 +60,5 @@ export function getUpcomingDate(dateTimeList) {
 }
 
 export const isAdmin = (user) => user?.admin === true;
+export const isVisitor = (user) => user === 'visitor';
+export const isAuthenticated = (user) => user?.uid;

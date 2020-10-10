@@ -17,10 +17,36 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList } from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor} from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
+
 const mobile = `@media (max-width: 500px)`;
+
+function getEditButtonLink(user, protest) {
+  const editRoute = `/protest/${protest.id}/edit`;
+  
+  if (isAdmin(user)) {
+    return editRoute;
+  }
+
+  if (isVisitor(user)) {
+    // Sign up before redirected to leader request
+    return `/sign-up?returnUrl=/leader-request?protest=${protest.id}`;
+  }
+
+  if (isAuthenticated(user)) {
+    // The user is a leader
+    if (protest?.roles?.leader?.includes(user.uid)) {
+      return editRoute;
+    }
+    
+    // Go to leader request
+    return `/leader-request?protest=${protest.id}`;
+  }
+
+  console.error(`couldn't find a case`)
+}
 
 function getSocialLinks(protest) {
   const items = [];
@@ -68,7 +94,25 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest, canEdit }) {
+function shouldShowEditButton({ protestData, user }) {  
+  if (!user) {
+    return false;
+  }
+
+  if (isAdmin(user)) {
+    return true;
+  }
+
+  // This will only show the button in case there is no leader at the moment
+  // or in case you are the leader
+  if (!protestData?.roles?.leader || protestData?.roles?.leader?.includes(user.uid)) {
+    return true;
+  } 
+
+  return false;
+}
+
+function ProtestPageContent({ protest, user }) {
   const history = useHistory();
 
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
@@ -98,7 +142,9 @@ function ProtestPageContent({ protest, canEdit }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עריכה</EditButton>}
+            {shouldShowEditButton({ protestData: protest, user }) ? 
+              <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
+              : null}
           </Details>
         </Info>
 
@@ -187,7 +233,7 @@ export default function ProtestPage({ user }) {
 
   const { coordinates, id, roles } = protest;
 
-  const canEdit = isAdmin(user) || roles?.leaders?.includes(user?.uid);
+  const canEdit = isAdmin(user) || roles?.leader?.includes(user?.uid);
 
   return (
     <Switch>
@@ -208,7 +254,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} canEdit={canEdit} />
+        <ProtestPageContent protest={protest} user={user}/>
       </Route>
     </Switch>
   );
