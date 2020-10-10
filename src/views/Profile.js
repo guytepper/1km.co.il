@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import { PageWrapper, ProtestCard } from '../components';
 import { getProtestsForLeader } from '../api';
 
 function MyProtests({ protests }) {
-  return <>
-  <h1>my protests</h1>
+  return (
     <ul>
-      {protests.map(protest => {
-        return <li key={protest.id}>{protest.displayName}</li>
+      {protests.map((protest) => {
+        return (
+          <ProtestCard key={protest.id} protestInfo={protest}>
+            {protest.displayName}
+          </ProtestCard>
+        );
       })}
     </ul>
-  </>;
+  );
 }
 
 export default function Profile(props) {
@@ -20,7 +24,7 @@ export default function Profile(props) {
       return;
     }
 
-    getProtestsForLeader(props.user.uid).then(protests => {
+    getProtestsForLeader(props.user.uid).then((protests) => {
       setMyProtests(protests);
     });
   }, [props.user]);
@@ -29,8 +33,11 @@ export default function Profile(props) {
     return null;
   }
 
-  return <>
-    <h2>Hey {props.user.displayName}!</h2>
-    {myProtests ? <MyProtests protests={myProtests} /> : null}
-  </>;
+  return (
+    <PageWrapper>
+      <h2>הפגנות מורשות לעדכון</h2>
+      <div>כאן תוכלו לראות את ההפגנות שחשבונכן רשאי לעדכן. </div>
+      {myProtests ? <MyProtests protests={myProtests} /> : null}
+    </PageWrapper>
+  );
 }

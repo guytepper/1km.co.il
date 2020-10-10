@@ -2,7 +2,6 @@ import styled from 'styled-components/macro';
 
 const PostWrapper = styled.div`
   max-width: 1000px;
-  min-width: 60%;
   overflow-x: hidden;
   margin: 0 auto 15px;
   padding: 0 7.5%;

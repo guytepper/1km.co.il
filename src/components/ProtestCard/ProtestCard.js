@@ -19,7 +19,7 @@ function getFormattedDate(date) {
   return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
 }
 
-function ProtestCard({ protestInfo }) {
+function ProtestCard({ protestInfo, showAction = true, style } = {}) {
   const history = useHistory();
 
   const {
@@ -39,6 +39,7 @@ function ProtestCard({ protestInfo }) {
 
   return (
     <ProtestCardWrapper
+      style={style}
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
@@ -64,11 +65,12 @@ function ProtestCard({ protestInfo }) {
             {meetingTime}
           </ProtestCardDetail>
         )}
-
-        <ProtestCardDetail>
-          <ProtestCardIcon src="/icons/ruler.svg" alt="distance" aria-hidden="true" title="מרחק" />
-          {formatDistance(distance)}
-        </ProtestCardDetail>
+        {distance && (
+          <ProtestCardDetail>
+            <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
+            {formatDistance(distance)}
+          </ProtestCardDetail>
+        )}
       </ProtestCardInfo>
       {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
       {telegramLink || whatsAppLink ? (
@@ -87,11 +89,11 @@ function ProtestCard({ protestInfo }) {
             הקבוצה התמלאה? שלחו קבוצה מעודכנת
           </ProtestCardGroupButton>
         </>
-      ) : (
+      ) : showAction ? (
         <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
           הוספת קבוצת וואטסאפ
         </ProtestCardGroupButton>
-      )}
+      ) : null}
     </ProtestCardWrapper>
   );
 }

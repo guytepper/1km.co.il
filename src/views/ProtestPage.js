@@ -225,7 +225,6 @@ const EditViewContainer = styled.div`
 const ProtestPageContainer = styled.div`
   color: #000000;
   padding-bottom: 150px;
-
   h1,
   h1 {
     margin: 0;
@@ -269,7 +268,6 @@ const Location = styled.h2`
   font-weight: normal;
   display: flex;
   align-items: center;
-
   img {
     margin-left: 11px;
   }
@@ -315,7 +313,6 @@ const SectionTitle = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 30px;
-
   img {
     height: 15px;
     width: 15px;
@@ -328,10 +325,8 @@ const Details = styled.div`
   display: flex;
   justify-content: space-between;
   flex: 1;
-
   ${mobile} {
     flex-direction: column;
-
     ${EditButton} {
       margin-top: 24px;
     }
@@ -342,7 +337,6 @@ const DatesAndSocial = styled.div`
   margin-top: 24px;
   display: flex;
   justify-content: space-between;
-
   ${mobile} {
     flex-direction: column;
   }
@@ -353,7 +347,6 @@ const Dates = styled.ul`
   width: 420px;
   padding: 0;
   margin: 0;
-
   ${mobile} {
     width: 100%;
   }
@@ -363,7 +356,6 @@ const Date = styled.li`
   list-style: none;
   display: flex;
   justify-content: space-between;
-
   ${mobile} {
     flex-direction: column;
   }
@@ -382,11 +374,9 @@ const BoldDateText = styled(DateText)`
 
 const SocialButtons = styled.div`
   width: 284px;
-
   ${mobile} {
     width: 100%;
   }
-
   ${Button} {
     margin-bottom: 16px;
   }

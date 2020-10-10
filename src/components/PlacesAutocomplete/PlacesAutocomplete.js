@@ -5,23 +5,37 @@ import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption 
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef, defaultValue }) {
+export default function PlacesAutocomplete({ setManualAddress, setStreetAddress, inputRef, defaultValue }) {
   const {
     ready,
     value,
     suggestions: { status, data },
+    clearSuggestions,
     setValue,
   } = usePlacesAutocomplete({ debounce: 900, defaultValue });
+
+  // updates value when defaultValue changes
+  // happens on the admin page when choosing a protest
+  React.useEffect(() => {
+    setValue(defaultValue, false);
+    clearSuggestions();
+  }, [defaultValue, setValue, clearSuggestions]);
+
+  React.useEffect(() => {
+    if (value === '') {
+      setManualAddress(null);
+    }
+  }, [value, setManualAddress]);
+
+  const updateStreetAddress = (address) => setStreetAddress && setStreetAddress(address);
 
   const handleInput = (e) => {
     const charactersThreshold = 3;
     const term = e.target.value;
     const shouldFetch = term.length >= charactersThreshold;
     setValue(term, shouldFetch);
-    updateStreetName(term);
+    updateStreetAddress(term);
   };
-
-  const updateStreetName = (address) => setStreetName && setStreetName(address);
 
   const handleSelect = (address) => {
     setValue(address, false);
@@ -31,7 +45,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
       .then((latLng) => {
         const { lat, lng } = latLng;
         setManualAddress([lat, lng]);
-        updateStreetName(address);
+        updateStreetAddress(address);
       })
       .catch((error) => {
         console.log('Error: ', error);

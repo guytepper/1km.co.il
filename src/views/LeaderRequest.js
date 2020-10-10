@@ -3,7 +3,7 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 import queryString from 'query-string';
 import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
-import { sendProtestLeaderRequest, isProtestValid, setPhoneNumberForUser, getProtestById } from '../api';
+import { sendProtestLeaderRequest, isProtestValid, setPhoneNumberForUser, fetchProtest } from '../api';
 import { LeaderRequestSubmitted } from '.';
 
 function LeaderRequestForm({ user }) {
@@ -34,7 +34,7 @@ function LeaderRequestForm({ user }) {
       console.error('Missing protest ID, cannot assign user to a protest');
     }
 
-    getProtestById(protestId).then((protestData) => {
+    fetchProtest(protestId).then((protestData) => {
       setProtestData(protestData);
     });
   }, []);
