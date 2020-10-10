@@ -82,37 +82,37 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    if (!params.streetAddress) {
-      alert('אנא הזינו את כתובת ההפגנה');
-      return;
-    } else {
-      try {
-        params.coords = mapCenter;
-        params.dateTimeList = dateTimeList;
-        // params.recaptchaToken = recaptchaToken;
+    // if (!params.streetAddress) {
+    //   alert('אנא הזינו את כתובת ההפגנה');
+    //   return;
+    // } else {
+    try {
+      params.coords = mapCenter;
+      params.dateTimeList = dateTimeList;
+      // params.recaptchaToken = recaptchaToken;
 
-        let protest = await submitCallback(params);
+      let protest = await submitCallback(params);
 
-        if (editMode) {
-          setSubmitSuccess(true);
-          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-          afterSubmitCallback();
-          return;
-        }
-
-        if (protest._document) {
-          setSubmitSuccess(true);
-          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-          afterSubmitCallback();
-        } else {
-          throw protest;
-        }
-      } catch (err) {
-        console.log('error!!', err);
+      if (editMode) {
         setSubmitSuccess(true);
-        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
+        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+        afterSubmitCallback();
+        return;
       }
+
+      if (protest._document) {
+        setSubmitSuccess(true);
+        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+        afterSubmitCallback();
+      } else {
+        throw protest;
+      }
+    } catch (err) {
+      console.log('error!!', err);
+      setSubmitSuccess(true);
+      setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
     }
+    //  }
   };
 
   // useEffect(() => {
@@ -145,48 +145,52 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             ></ProtestFormInput>
             <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
           </ProtestFormLabel>
-          <ProtestFormLabel>
-            כתובת
-            <PlacesAutocomplete
-              setManualAddress={setMapCenter}
-              setStreetAddress={setStreetAddress}
-              inputRef={register}
-              defaultValue={streetAddressDefaultValue}
-            />
-            <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
-          </ProtestFormLabel>
-          <MapWrapper
-            center={mapCenter}
-            zoom={zoomLevel}
-            scrollWheelZoom={'center'}
-            onMove={(t) => {
-              setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-              setZoomLevel(t.target._zoom);
-            }}
-            onMoveEnd={async (t) => {
-              const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
-              setMapCenter(newPosition);
-              setMarkerPosition(newPosition);
-              setZoomLevel(t.target._zoom);
-              // fetch protests on move end
-              if (mapCenter) {
-                const protests = await fetchNearbyProtests(mapCenter);
-                setNearbyProtests(protests);
-              }
-            }}
-            onZoom={(event) => {
-              setZoomLevel(event.target._zoom);
-            }}
-          >
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={markerPostion}></Marker>
-            {nearbyProtests.map((protest) => (
-              <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
-            ))}
-          </MapWrapper>
+          {false && (
+            <>
+              <ProtestFormLabel>
+                כתובת
+                <PlacesAutocomplete
+                  setManualAddress={setMapCenter}
+                  setStreetAddress={setStreetAddress}
+                  inputRef={register}
+                  defaultValue={streetAddressDefaultValue}
+                />
+                <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
+              </ProtestFormLabel>
+              <MapWrapper
+                center={mapCenter}
+                zoom={zoomLevel}
+                scrollWheelZoom={'center'}
+                onMove={(t) => {
+                  setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+                  setZoomLevel(t.target._zoom);
+                }}
+                onMoveEnd={async (t) => {
+                  const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
+                  setMapCenter(newPosition);
+                  setMarkerPosition(newPosition);
+                  setZoomLevel(t.target._zoom);
+                  // fetch protests on move end
+                  if (mapCenter) {
+                    const protests = await fetchNearbyProtests(mapCenter);
+                    setNearbyProtests(protests);
+                  }
+                }}
+                onZoom={(event) => {
+                  setZoomLevel(event.target._zoom);
+                }}
+              >
+                <TileLayer
+                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={markerPostion}></Marker>
+                {nearbyProtests.map((protest) => (
+                  <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
+                ))}
+              </MapWrapper>
+            </>
+          )}
 
           <hr />
           <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>
