@@ -1,6 +1,6 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
 export default function ProtectedRoute({ children, authorized, ...props }) {
-  return <Route {...props}>{authorized ? children : null}</Route>;
+  return <Route {...props}>{authorized ? children : <Redirect path="sign-up" />}</Route>;
 }
