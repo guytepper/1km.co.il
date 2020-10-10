@@ -78,6 +78,15 @@ export function getUpcomingDate(dateTimeList) {
   return sortDateTimeList(dateTimeList).filter((dateTimeList) => new Date(dateTimeList.date) >= new Date())[0];
 }
 
+export function isValidUrl(url) {
+  try {
+    new URL(url);
+  } catch (e) {
+    return false;
+  }
+  return url.protocol === 'http:' || url.protocol === 'https:';
+}
+
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';
