@@ -8,12 +8,6 @@ import * as API from '../../api';
  */
 const createProtest = async (params, protestId) => {
   try {
-    // console.log(params);
-    // let finalParams = params;
-    // if (!params.streetAddress) {
-    //   const { streetAddress, ...restParams } = finalParams;
-    //   finalParams = restParams;
-    // }
     const a = await API.createProtest(params);
     const b = await API.archivePendingProtest(protestId);
     if (a === undefined && b === true) {
