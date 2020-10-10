@@ -90,7 +90,7 @@ function App() {
           dispatch({ type: 'setUser', payload: fullUserData });
         });
       } else {
-        dispatch({ type: 'setUser', payload: null });
+        dispatch({ type: 'setUser', payload: 'visitor' });
       }
     });
   }, []);

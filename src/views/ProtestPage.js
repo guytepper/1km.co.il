@@ -17,10 +17,36 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList } from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader} from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
+
 const mobile = `@media (max-width: 500px)`;
+
+function getEditButtonLink(user, protest) {
+  const editRoute = `/protest/${protest.id}/edit`;
+  
+  if (isAdmin(user)) {
+    return editRoute;
+  }
+
+  if (isVisitor(user)) {
+    // Sign up before redirected to leader request
+    return `/sign-up?returnUrl=/leader-request?protest=${protest.id}`;
+  }
+
+  if (isAuthenticated(user)) {
+    // The user is a leader
+    if (isLeader(user, protest)) {
+      return editRoute;
+    }
+    
+    // Go to leader request
+    return `/leader-request?protest=${protest.id}`;
+  }
+
+  throw new Error(`couldn't find route`);
+}
 
 function getSocialLinks(protest) {
   const items = [];
@@ -68,7 +94,7 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest, canEdit }) {
+function ProtestPageContent({ protest, user }) {
   const history = useHistory();
 
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
@@ -98,7 +124,7 @@ function ProtestPageContent({ protest, canEdit }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עריכה</EditButton>}
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
           </Details>
         </Info>
 
@@ -185,9 +211,9 @@ export default function ProtestPage({ user }) {
     return <div>Loading...</div>;
   }
 
-  const { coordinates, id, roles } = protest;
+  const { coordinates, id } = protest;
 
-  const canEdit = isAdmin(user) || roles?.leaders?.includes(user?.uid);
+  const canEdit = isAdmin(user) || isLeader(user, protest);
 
   return (
     <Switch>
@@ -208,7 +234,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} canEdit={canEdit} />
+        <ProtestPageContent protest={protest} user={user}/>
       </Route>
     </Switch>
   );
