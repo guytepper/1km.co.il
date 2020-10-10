@@ -2,7 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import LeaderSidebar from './LeaderSidebar';
 import { fetchProtest, assignRoleOnProtest } from '../../api';
 import { Button, ProtestCard } from '../../components';
-import { FormWrapper, LeaderPhoto, Field, LeaderSidebarCard } from './components';
+import { FormWrapper, LeaderPhoto, Field, LeaderCard } from './components';
 import { useParams, useHistory } from 'react-router-dom';
 
 const initialState = {
@@ -70,7 +70,7 @@ const LeaderAdmin = () => {
       <LeaderSidebar state={state} dispatch={dispatch} />
       <FormWrapper>
         {state.currentLeaderRequest ? (
-          <LeaderSidebarCard>
+          <LeaderCard>
             <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
             <div>
               <Field name="שם" value={state.currentLeaderRequest.user.displayName} />
@@ -88,7 +88,7 @@ const LeaderAdmin = () => {
             <Button onClick={handleStatusChange('rejected')} color="tomato" disabled={!state.currentLeaderRequest}>
               דחיית בקשה
             </Button>
-          </LeaderSidebarCard>
+          </LeaderCard>
         ) : (
           <div style={{ alignSelf: 'center' }}>יש לבחור בקשה</div>
         )}

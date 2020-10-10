@@ -9,7 +9,7 @@ import {
   SidebarWrapper,
   Field,
 } from './components';
-import { PlacesAutocomplete, Button } from '../../components';
+import { PlacesAutocomplete } from '../../components';
 import { fetchPendingProtests } from './AdminService';
 import { fetchNearbyProtests } from '../../api';
 
