@@ -84,7 +84,10 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        // Includes admin data and more
+       const { uid, displayName, email } = user;
+        // This is the minimal user interface that we need
+        dispatch({ type: 'setUser', payload: { uid, displayName, email } });
+        // This adds the "admin" data which is in our DB
         getFullUserData(user.uid).then((fullUserData) => {
           dispatch({ type: 'setUser', payload: fullUserData });
         });
