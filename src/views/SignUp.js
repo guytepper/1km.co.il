@@ -24,7 +24,6 @@ const stages = {
 
 export default function SignUp(props) {
   const [stage, setStage] = useState(stages.UNKNOWN);
-  const [userData, setUserData] = useState({});
   const history = useHistory();
 
   useEffect(() => {
@@ -36,7 +35,6 @@ export default function SignUp(props) {
         }
 
         const userData = extractUserData(result);
-        setUserData(userData);
         setStage(stages.AFTER_FACEBOOK_AUTH);
 
         saveUserInFirestore(userData).then(() => {
