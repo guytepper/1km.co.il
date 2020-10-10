@@ -15,7 +15,12 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from 'react-share';
-import { ProtestCardInfo, ProtestCardDetail, ProtestCardIcon } from '../components/ProtestCard/ProtestCardStyles';
+import {
+  ProtestCardInfo,
+  ProtestCardDetail,
+  ProtestCardIcon,
+  ProtestCardGroupButton,
+} from '../components/ProtestCard/ProtestCardStyles';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
 import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList } from '../utils';
@@ -105,18 +110,8 @@ function ProtestPageContent({ protest, canEdit }) {
               </ProtestCardDetail>
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
-            <Notes>{notes}</Notes>
-            <Left>
-              <Title>{displayName}</Title>
-              <Location>
-                <FlagIcon src="/icons/blue-flag.svg" alt="flag icon" />
-                {streetAddress}
-              </Location>
-              <Notes>{notes}</Notes>
-            </Left>
-            {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עריכה</EditButton>}
           </Details>
-          <EditButton onClick={() => history.push('edit')}>עדכון פרטי הפגנה</EditButton>
+          {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עדכון פרטי הפגנה</EditButton>}
         </Info>
 
         <DatesAndSocial>
@@ -132,13 +127,14 @@ function ProtestPageContent({ protest, canEdit }) {
                 dateTimeList.map((dateTime) => (
                   <Date key={dateTime.id}>
                     <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
-                    <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
-                    <BoldDateText>{dateTime.time}</BoldDateText>
+                    <DateText>
+                      יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                    </DateText>
                   </Date>
                 ))
               ) : (
                 <Date>
-                  <BoldDateText>{meeting_time}</BoldDateText>
+                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
                 </Date>
               )}
             </Dates>
@@ -147,43 +143,21 @@ function ProtestPageContent({ protest, canEdit }) {
           {/* Social */}
           <SocialContainer>
             <SectionTitle>
-              <img src="/icons/social.svg" alt="social icon" />
-              שיתוף העמוד:
+              <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
+              ערוצי תקשורת:
             </SectionTitle>
-            <SocialButtonWrapper>
-              <FacebookShareButton url={shareUrl} quote={shareTitle}>
-                <FacebookIcon size={30} round={true} />
-              </FacebookShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <TwitterShareButton url={shareUrl} title={shareTitle}>
-                <TwitterIcon size={30} round={true} />
-              </TwitterShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <WhatsappShareButton url={shareUrl} title={shareTitle} separator=" - ">
-                <WhatsappIcon size={30} round={true} />
-              </WhatsappShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <TelegramShareButton url={shareUrl} title={shareTitle}>
-                <TelegramIcon size={30} round={true} />
-              </TelegramShareButton>
-            </SocialButtonWrapper>
-            {socialLinks.length > 0 && (
+            {socialLinks.length > 0 ? (
               <>
-                <SectionTitle>
-                  <img src="/icons/share.svg" alt="share icon" />
-                  קישורים:
-                </SectionTitle>
                 <SocialButtons>
                   {socialLinks.map(({ url, type, text }) => (
-                    <SocialButton key={type} type={type} link={url}>
+                    <ProtestCardGroupButton key={type} type={type} href={url} target="_blank">
                       {text}
-                    </SocialButton>
+                    </ProtestCardGroupButton>
                   ))}
                 </SocialButtons>
               </>
+            ) : (
+              <p>להפגנה זו אין ערוצי תקשורת.</p>
             )}
           </SocialContainer>
         </DatesAndSocial>
@@ -250,10 +224,14 @@ const ProtestPageContainer = styled.div`
 `;
 
 const ProtestContainer = styled.div`
-  max-width: 920px;
   margin: 0 auto;
+  max-width: 700px;
   padding: 0 15px;
   z-index: 1;
+
+  @media (min-width: 1024px) {
+    max-width: 920px;
+  }
 `;
 
 const Info = styled.div`
@@ -346,7 +324,7 @@ const SectionTitle = styled.div`
   color: #1251f3;
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   img {
     height: 15px;
     width: 15px;
@@ -358,10 +336,10 @@ const Details = styled.div``;
 
 const DatesAndSocial = styled.div`
   margin-top: 24px;
-  @media (min-width: 768px) {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 25px;
+  display: grid;
+  gap: 25px;
+  @media (min-width: 1024px) {
+    grid-template-columns: 2fr 1.25fr;
   }
 `;
 
@@ -377,8 +355,6 @@ const Dates = styled.ul`
 
 const Date = styled.li`
   list-style: none;
-  display: flex;
-  justify-content: space-between;
 `;
 
 const DateText = styled.span`
@@ -390,17 +366,10 @@ const DateText = styled.span`
 
 const BoldDateText = styled(DateText)`
   font-weight: 700;
+  margin-left: 17.5px;
 `;
 
-const SocialButtons = styled.div`
-  width: 284px;
-  ${mobile} {
-    width: 100%;
-  }
-  ${Button} {
-    margin-bottom: 16px;
-  }
-`;
+const SocialButtons = styled.div``;
 
 const SocialContainer = styled(SectionContainer)`
   ${mobile} {
