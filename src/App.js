@@ -84,10 +84,20 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        // Includes admin data and more
+        // This adds the "admin" data which is in our DB
         getFullUserData(user.uid).then((fullUserData) => {
-          dispatch({ type: 'setUser', payload: fullUserData });
+          if (fullUserData) {
+            dispatch({ type: 'setUser', payload: fullUserData });
+          } else {
+            const { uid, email } = user;
+            const partialUserData = { uid, email };
+            // When the user is initially created, this request returns undefined
+            // This is a workaround in order to get the uid in the leader reqest page
+            // https://github.com/guytepper/1km.co.il/pull/114
+            dispatch({ type: 'setUser', payload: partialUserData });
+          }
         });
+        
       } else {
         dispatch({ type: 'setUser', payload: 'visitor' });
       }
