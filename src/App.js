@@ -93,6 +93,7 @@ function App() {
             const partialUserData = { uid, email };
             // When the user is initially created, this request returns undefined
             // This is a workaround in order to get the uid in the leader reqest page
+            // https://github.com/guytepper/1km.co.il/pull/114
             dispatch({ type: 'setUser', payload: partialUserData });
           }
         });
