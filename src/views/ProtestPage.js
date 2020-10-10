@@ -17,6 +17,8 @@ import {
 } from 'react-share';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList } from '../utils';
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 500px)`;
 
@@ -38,30 +40,38 @@ function getSocialLinks(protest) {
   return items;
 }
 
+async function _fetchProtest(id, setProtest) {
+  const result = await fetchProtest(id);
+  if (result) {
+    setProtest(result);
+  } else {
+    // TODO: handle 404
+  }
+}
+
 function useFetchProtest() {
   const [protest, setProtest] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
-    async function _fetchProtest(id) {
-      const result = await fetchProtest(id);
-      if (result) {
-        setProtest(result);
-      } else {
-        // TODO: handle 404
-      }
-    }
-
-    _fetchProtest(id);
+    _fetchProtest(id, setProtest);
   }, [id]);
 
-  return protest;
+  return {
+    protest: protest
+      ? {
+          ...protest,
+          dateTimeList: sortDateTimeList(protest.dateTimeList),
+        }
+      : null,
+    setProtest,
+  };
 }
 
-function ProtestPageContent({ protest }) {
+function ProtestPageContent({ protest, canEdit }) {
   const history = useHistory();
 
-  const { coordinates, displayName, streetAddress, notes } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
@@ -88,7 +98,7 @@ function ProtestPageContent({ protest }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            <EditButton onClick={() => history.push('edit')}>עריכה</EditButton>
+            {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עריכה</EditButton>}
           </Details>
         </Info>
 
@@ -101,11 +111,19 @@ function ProtestPageContent({ protest }) {
             </SectionTitle>
 
             <Dates>
-              <Date>
-                <BoldDateText>9.10.2020</BoldDateText>
-                <DateText>יום שישי, בשעה</DateText>
-                <BoldDateText>18:30</BoldDateText>
-              </Date>
+              {dateTimeList ? (
+                dateTimeList.map((dateTime) => (
+                  <Date key={dateTime.id}>
+                    <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
+                    <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
+                    <BoldDateText>{dateTime.time}</BoldDateText>
+                  </Date>
+                ))
+              ) : (
+                <Date>
+                  <BoldDateText>{meeting_time}</BoldDateText>
+                </Date>
+              )}
             </Dates>
           </SectionContainer>
 
@@ -157,8 +175,8 @@ function ProtestPageContent({ protest }) {
   );
 }
 
-export default function ProtestPage() {
-  const protest = useFetchProtest();
+export default function ProtestPage({ user }) {
+  const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
 
@@ -167,25 +185,30 @@ export default function ProtestPage() {
     return <div>Loading...</div>;
   }
 
-  const { coordinates, id } = protest;
+  const { coordinates, id, roles } = protest;
+
+  const canEdit = isAdmin(user) || roles?.leaders?.includes(user?.uid);
 
   return (
     <Switch>
-      <Route path="/protest/:id/edit">
+      <ProtectedRoute path="/protest/:id/edit" authorized={canEdit}>
         <EditViewContainer>
           <ProtestForm
-            initialCoords={coordinates}
+            initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
               const response = await updateProtest(id, params);
+              // refetch the protest once update is complete
+              _fetchProtest(id, setProtest);
               return response;
             }}
             afterSubmitCallback={() => history.goBack()}
             defaultValues={protest}
+            editMode={true}
           />
         </EditViewContainer>
-      </Route>
+      </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} />
+        <ProtestPageContent protest={protest} canEdit={canEdit} />
       </Route>
     </Switch>
   );
