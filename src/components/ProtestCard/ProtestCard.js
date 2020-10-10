@@ -78,14 +78,7 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
               קבוצת טלגרם
             </ProtestCardGroupButton>
           )}
-          <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-            הקבוצה התמלאה? שלחו קבוצה מעודכנת
-          </ProtestCardGroupButton>
         </>
-      ) : showAction ? (
-        <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-          הוספת קבוצת וואטסאפ
-        </ProtestCardGroupButton>
       ) : null}
     </ProtestCardWrapper>
   );
