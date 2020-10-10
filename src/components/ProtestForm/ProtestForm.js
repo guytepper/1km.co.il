@@ -17,16 +17,19 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {} }) {
+function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {}, editMode = null }) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
   }, [initialCoords]);
 
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, reset } = useForm({
     defaultValues,
   });
+
+  const [streetAddressDefaultValue, setStreetAddressDefaultValue] = useState(defaultValues.streetAddress);
+
   // These two are separate so that onMoveEnd isn't called on every map move
   // map center
   const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
@@ -39,7 +42,30 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
-  const setStreetName = (value) => setValue('streetAddress', value);
+  const setStreetAddress = React.useCallback((value) => setValue('streetAddress', value), [setValue]);
+
+  // the two useEffects below this are in order to deal
+  // with the defaultValues and the places auto complete
+  useEffect(() => {
+    if (Object.keys(defaultValues).length > 0) {
+      reset(defaultValues);
+      setSubmitMessage('');
+      setSubmitSuccess(false);
+      setStreetAddressDefaultValue(defaultValues.streetAddress);
+      setStreetAddress(defaultValues.streetAddress);
+
+      if (validateLatLng(defaultValues.latlng)) {
+        setMapCenter(defaultValues.latlng);
+        setMarkerPosition(defaultValues.latlng);
+      }
+    }
+  }, [defaultValues, reset, setStreetAddress]);
+
+  useEffect(() => {
+    reset({});
+    setStreetAddressDefaultValue('');
+    setStreetAddress('');
+  }, [editMode, reset, setStreetAddress]);
 
   // Load nearby protests on mount
   useEffect(() => {
@@ -61,6 +87,13 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
         // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
+
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          return;
+        }
+
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
@@ -86,7 +119,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
 
   return (
     <ProtestFormWrapper onSubmit={handleSubmit(onSubmit)}>
-      {submitSuccess ? (
+      {submitSuccess && !editMode ? (
         <>
           <SuccessMessage>{submitMessage}</SuccessMessage>
           <Link to="/">
@@ -110,9 +143,9 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             כתובת
             <PlacesAutocomplete
               setManualAddress={setMapCenter}
-              setStreetName={setStreetName}
+              setStreetAddress={setStreetAddress}
               inputRef={register}
-              defaultValue={defaultValues.streetAddress}
+              defaultValue={streetAddressDefaultValue}
             />
             <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
           </ProtestFormLabel>
@@ -130,8 +163,10 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
               setMarkerPosition(newPosition);
               setZoomLevel(t.target._zoom);
               // fetch protests on move end
-              const protests = await fetchNearbyProtests(mapCenter);
-              setNearbyProtests(protests);
+              if (mapCenter) {
+                const protests = await fetchNearbyProtests(mapCenter);
+                setNearbyProtests(protests);
+              }
             }}
             onZoom={(event) => {
               setZoomLevel(event.target._zoom);
@@ -163,31 +198,39 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             <ProtestFormInput placeholder="הערות להפגנה" name="notes" ref={register}></ProtestFormInput>
             <ProtestFormInputDetails>כל דבר שחשוב שיופיע בפרטי ההפגנה.</ProtestFormInputDetails>
           </ProtestFormLabel>
-          <hr />
-          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
-          <ProtestFormInputDetails margin="10px 0">
-            האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
-          </ProtestFormInputDetails>
+          {!editMode ? (
+            <>
+              <hr />
+              <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
+              <ProtestFormInputDetails margin="10px 0">
+                האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
+              </ProtestFormInputDetails>
 
-          <ProtestFormLabel>
-            כתובת מייל
-            <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
-          </ProtestFormLabel>
+              <ProtestFormLabel>
+                כתובת מייל
+                <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
+              </ProtestFormLabel>
 
-          <ProtestFormCheckboxWrapper>
-            <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
-            <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
-          </ProtestFormCheckboxWrapper>
+              <ProtestFormCheckboxWrapper>
+                <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
+                <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
+              </ProtestFormCheckboxWrapper>
 
-          {/* <ReCaptcha
+              {/* <ReCaptcha
             ref={recaptcha}
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
             action="action_name"
             verifyCallback={verifyCallback}
           /> */}
-          <Button type="submit" color="#1ED96E">
-            הוספת הפגנה
-          </Button>
+              <Button type="submit" color="#1ED96E">
+                הוספת הפגנה
+              </Button>
+            </>
+          ) : (
+            <Button type="submit" color="#1ED96E">
+              {editMode === 'pending' ? 'יצירת הפגנה' : 'עריכת הפגנה'}
+            </Button>
+          )}
         </>
       )}
     </ProtestFormWrapper>

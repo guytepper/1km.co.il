@@ -1,6 +1,8 @@
+// eslint-disable-next-line
 import React from 'react';
-import { mdx } from 'mdx.macro';
+// eslint-disable-next-line
 import { Link } from 'react-router-dom';
+import { mdx } from 'mdx.macro';
 
 const Content = mdx`
 # אופס...

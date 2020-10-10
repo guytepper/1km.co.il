@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, GroupUpdate, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng } from './utils';
+import { pointWithinRadius, validateLatLng, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -24,7 +24,7 @@ const initialState = {
   mapPositionHistory: [],
   isModalOpen: true,
   loading: false,
-  user: null,
+  user: undefined,
 };
 
 function reducer(state, action) {
@@ -174,6 +174,7 @@ function App() {
                   <>
                     <NavProfilePicture src="/icons/guard.svg" alt="" />
                     <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                    {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
                   </>
                 ) : (
                   <GuestNavItems>
@@ -223,14 +224,11 @@ function App() {
                 }}
               />
             </Route>
-            <Route exact path="/add-protest/">
+            <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} />
             </Route>
-            <Route exact path="/admin/">
-              <Admin />
-            </Route>
-            <Route exact path="/admin/group">
-              <GroupUpdate />
+            <Route path="/admin">
+              <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
               <ProtestPage />
@@ -328,28 +326,6 @@ const NavItem = styled(Link)`
   }
 `;
 
-const NavButton = styled.button`
-  cursor: pointer;
-
-  &:hover {
-    color: #3498db;
-  }
-
-  &:nth-child(1) {
-    margin-bottom: 3px;
-
-    @media (min-width: 550px) {
-      margin-bottom: 0;
-    }
-  }
-
-  &:nth-child(2) {
-    @media (min-width: 550px) {
-      margin-left: 15px;
-    }
-  }
-`;
-
 const NavProfileWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -383,24 +359,6 @@ const HomepageWrapper = styled.div`
 
   @media (min-width: 1700px) {
     grid-template-columns: 375px 1fr;
-  }
-`;
-
-const SiteMessage = styled(Link)`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 70px;
-  padding: 5px 10px;
-  background-color: #fdcb6e;
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 1.3;
-  text-align: center;
-  color: #fff;
-
-  @media (min-width: 768px) {
-    margin: 0 -15px 10px;
   }
 `;
 
