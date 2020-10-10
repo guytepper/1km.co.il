@@ -96,6 +96,14 @@ const ProtestCardWrapper = styled.div`
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
   cursor: pointer;
+  border-radius: 4px;
+  transition: box-shadow 50ms ease-out;
+
+  &:hover,
+  &:focus {
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1px #6e7dff, 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const ProtestCardTitle = styled.h2`
@@ -129,7 +137,12 @@ const ProtestCardGroupButton = styled.a`
   max-width: 100%;
   margin-top: 10px;
   padding: 4px 16px;
-  background: ${(props) => (props.type ? (props.type === 'whatsapp' ? '#00c647' : '#6AB2E4') : 'blue')};
+  background: ${(props) =>
+    props.type
+      ? props.type === 'whatsapp'
+        ? '#00c647'
+        : '#6AB2E4'
+      : 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)'};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;
