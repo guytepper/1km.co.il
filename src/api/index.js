@@ -289,7 +289,7 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
       .collection('protests')
       .doc(protestId)
       .update({
-        'roles.leaders': firebase.firestore.FieldValue.arrayUnion(userId),
+        'roles.leader': firebase.firestore.FieldValue.arrayUnion(userId),
       });
   }
 

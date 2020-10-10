@@ -78,4 +78,7 @@ export function getUpcomingDate(dateTimeList) {
   return sortDateTimeList(dateTimeList).filter((dateTimeList) => new Date(dateTimeList.date) >= new Date())[0];
 }
 
-export const isAdmin = (user) => user?.roles?.includes('admin');
+export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
+export const isAdmin = (user) => user?.admin === true;
+export const isVisitor = (user) => user === 'visitor';
+export const isAuthenticated = (user) => user?.uid;

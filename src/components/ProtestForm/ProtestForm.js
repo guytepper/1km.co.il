@@ -12,8 +12,8 @@ import L from 'leaflet';
 import DateTimeList from '../DateTimeList';
 
 const protestMarker = new L.Icon({
-  iconUrl: '/icons/black-flag.svg',
-  iconRetinaUrl: '/icons/black-flag.svg',
+  iconUrl: '/icons/fist.svg',
+  iconRetinaUrl: '/icons/fist.svg',
   iconSize: [50, 48],
   iconAnchor: [25, 48],
 });

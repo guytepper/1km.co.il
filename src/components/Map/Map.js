@@ -23,8 +23,8 @@ const positionPoint = new L.Icon({
 const PopupMarker = ({ latlng, displayName, marker }) => {
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
-    iconUrl: '/icons/black-flag.svg',
-    iconRetinaUrl: '/icons/black-flag.svg',
+    iconUrl: '/icons/fist.svg',
+    iconRetinaUrl: '/icons/fist.svg',
     iconSize: [50, 48],
     iconAnchor: [12, 43],
   };
