@@ -190,7 +190,13 @@ export function createLeaderRequestId(userId, protestId) {
 }
 
 export async function saveUserInFirestore(userData) {
-  await firestore.collection('users').doc(userData.uid).set(userData);
+  const userRef = firestore.collection('users').doc(userData.uid);
+  
+  if ((await userRef.get()).exists) {
+    await userRef.update(userData);
+  } else {
+    await userRef.set(userData);
+  }
 }
 
 export async function setPhoneNumberForUser(uid, phoneNumber) {
