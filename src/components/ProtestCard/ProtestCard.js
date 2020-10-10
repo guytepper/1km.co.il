@@ -1,15 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
+import { formatDistance } from '../../utils';
 import { dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
-
-function formatDistance(distance) {
-  if (distance > 1000) {
-    return `${(distance / 1000).toFixed(1)} ק"מ ממיקומך`;
-  } else {
-    return `${distance} מטר ממיקומך`;
-  }
-}
 
 function getFormattedDate(date) {
   if (!date) {
@@ -85,14 +78,7 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
               קבוצת טלגרם
             </ProtestCardGroupButton>
           )}
-          <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-            הקבוצה התמלאה? שלחו קבוצה מעודכנת
-          </ProtestCardGroupButton>
         </>
-      ) : showAction ? (
-        <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-          הוספת קבוצת וואטסאפ
-        </ProtestCardGroupButton>
       ) : null}
     </ProtestCardWrapper>
   );

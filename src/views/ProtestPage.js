@@ -15,17 +15,22 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from 'react-share';
+import {
+  ProtestCardInfo,
+  ProtestCardDetail,
+  ProtestCardIcon,
+  ProtestCardGroupButton,
+} from '../components/ProtestCard/ProtestCardStyles';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader} from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader } from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
-
-const mobile = `@media (max-width: 500px)`;
+const mobile = `@media (max-width: 768px)`;
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
-  
+
   if (isAdmin(user)) {
     return editRoute;
   }
@@ -40,7 +45,7 @@ function getEditButtonLink(user, protest) {
     if (isLeader(user, protest)) {
       return editRoute;
     }
-    
+
     // Go to leader request
     return `/leader-request?protest=${protest.id}`;
   }
@@ -57,12 +62,12 @@ function getSocialLinks(protest) {
   if (telegramLink) {
     items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
   }
-  if (facebookLink) {
-    items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
-  }
-  if (twitterLink) {
-    items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
-  }
+  // if (facebookLink) {
+  //   items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
+  // }
+  // if (twitterLink) {
+  //   items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
+  // }
   return items;
 }
 
@@ -114,18 +119,24 @@ function ProtestPageContent({ protest, user }) {
 
       <ProtestContainer>
         <Info>
-          <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" />
+          {/* <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" /> */}
           <Details>
-            <Left>
-              <Title>{displayName}</Title>
-              <Location>
-                <FlagIcon src="/icons/blue-flag.svg" alt="flag icon" />
-                {streetAddress}
-              </Location>
-              <Notes>{notes}</Notes>
-            </Left>
-            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
+            <Title>{displayName}</Title>
+            <ProtestCardInfo>
+              {streetAddress && (
+                <ProtestCardDetail>
+                  <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
+                  {streetAddress}
+                </ProtestCardDetail>
+              )}
+              <ProtestCardDetail>
+                <ProtestCardIcon src="/icons/ruler.svg" alt="" />
+                600 מטר ממיקומך
+              </ProtestCardDetail>
+              {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
+            </ProtestCardInfo>
           </Details>
+          <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
         </Info>
 
         <DatesAndSocial>
@@ -141,13 +152,14 @@ function ProtestPageContent({ protest, user }) {
                 dateTimeList.map((dateTime) => (
                   <Date key={dateTime.id}>
                     <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
-                    <DateText>יום {dateToDayOfWeek(dateTime.date)}, בשעה</DateText>
-                    <BoldDateText>{dateTime.time}</BoldDateText>
+                    <DateText>
+                      יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                    </DateText>
                   </Date>
                 ))
               ) : (
                 <Date>
-                  <BoldDateText>{meeting_time}</BoldDateText>
+                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
                 </Date>
               )}
             </Dates>
@@ -156,43 +168,21 @@ function ProtestPageContent({ protest, user }) {
           {/* Social */}
           <SocialContainer>
             <SectionTitle>
-              <img src="/icons/social.svg" alt="social icon" />
-              שיתוף העמוד:
+              <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
+              ערוצי תקשורת:
             </SectionTitle>
-            <SocialButtonWrapper>
-              <FacebookShareButton url={shareUrl} quote={shareTitle}>
-                <FacebookIcon size={30} round={true} />
-              </FacebookShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <TwitterShareButton url={shareUrl} title={shareTitle}>
-                <TwitterIcon size={30} round={true} />
-              </TwitterShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <WhatsappShareButton url={shareUrl} title={shareTitle} separator=" - ">
-                <WhatsappIcon size={30} round={true} />
-              </WhatsappShareButton>
-            </SocialButtonWrapper>
-            <SocialButtonWrapper>
-              <TelegramShareButton url={shareUrl} title={shareTitle}>
-                <TelegramIcon size={30} round={true} />
-              </TelegramShareButton>
-            </SocialButtonWrapper>
-            {socialLinks.length > 0 && (
+            {socialLinks.length > 0 ? (
               <>
-                <SectionTitle>
-                  <img src="/icons/share.svg" alt="share icon" />
-                  קישורים:
-                </SectionTitle>
                 <SocialButtons>
                   {socialLinks.map(({ url, type, text }) => (
-                    <SocialButton key={type} type={type} link={url}>
+                    <ProtestCardGroupButton key={type} type={type} href={url} target="_blank">
                       {text}
-                    </SocialButton>
+                    </ProtestCardGroupButton>
                   ))}
                 </SocialButtons>
               </>
+            ) : (
+              <p>להפגנה זו אין ערוצי תקשורת.</p>
             )}
           </SocialContainer>
         </DatesAndSocial>
@@ -234,7 +224,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} user={user}/>
+        <ProtestPageContent protest={protest} user={user} />
       </Route>
     </Switch>
   );
@@ -259,19 +249,29 @@ const ProtestPageContainer = styled.div`
 `;
 
 const ProtestContainer = styled.div`
-  max-width: 920px;
   margin: 0 auto;
+  max-width: 700px;
+  padding: 0 15px;
   z-index: 1;
+
+  @media (min-width: 1024px) {
+    max-width: 920px;
+  }
 `;
 
 const Info = styled.div`
   position: relative;
-  display: flex;
+  padding: 20px 34px;
   background: #ffffff;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   margin-top: -30px;
-  z-index: 10000;
+  z-index: 5;
+
+  @media (min-width: 600px) {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+  }
 `;
 
 const ProfilePic = styled.img`
@@ -279,17 +279,15 @@ const ProfilePic = styled.img`
   object-fit: cover;
 `;
 
-const Left = styled.div``;
-
 const Title = styled.h1`
   font-weight: bold;
-  font-size: 40px;
+  font-size: 28px;
   line-height: 47px;
   color: #000000;
   margin-bottom: 8px;
 `;
 
-const Location = styled.h2`
+const DetailItem = styled.h2`
   font-size: 24px;
   line-height: 28px;
   font-weight: normal;
@@ -311,9 +309,11 @@ const FlagIcon = styled.img``;
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 256px;
+  z-index: 0;
 `;
 
 const EditButton = styled.button`
+  width: 100%;
   height: 32px;
   color: #1251f3;
   border: 1px solid #1251f3;
@@ -325,9 +325,19 @@ const EditButton = styled.button`
   padding-left: 24px;
   padding-right: 24px;
   background: white;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s all;
+
+  &:hover {
+    background-color: #6e7dff;
+    color: #fff;
+  }
 `;
 
 const SectionContainer = styled.div`
+  width: 100%;
   padding: 40px 40px 34px 40px;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   background-color: white;
@@ -339,7 +349,7 @@ const SectionTitle = styled.div`
   color: #1251f3;
   display: flex;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   img {
     height: 15px;
     width: 15px;
@@ -347,25 +357,15 @@ const SectionTitle = styled.div`
   }
 `;
 
-const Details = styled.div`
-  padding: 40px 40px 34px 40px;
-  display: flex;
-  justify-content: space-between;
-  flex: 1;
-  ${mobile} {
-    flex-direction: column;
-    ${EditButton} {
-      margin-top: 24px;
-    }
-  }
-`;
+const Details = styled.div``;
 
 const DatesAndSocial = styled.div`
   margin-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  ${mobile} {
-    flex-direction: column;
+  display: grid;
+
+  @media (min-width: 1024px) {
+    gap: 25px;
+    grid-template-columns: 2fr 1.25fr;
   }
 `;
 
@@ -381,11 +381,6 @@ const Dates = styled.ul`
 
 const Date = styled.li`
   list-style: none;
-  display: flex;
-  justify-content: space-between;
-  ${mobile} {
-    flex-direction: column;
-  }
 `;
 
 const DateText = styled.span`
@@ -397,17 +392,10 @@ const DateText = styled.span`
 
 const BoldDateText = styled(DateText)`
   font-weight: 700;
+  margin-left: 17.5px;
 `;
 
-const SocialButtons = styled.div`
-  width: 284px;
-  ${mobile} {
-    width: 100%;
-  }
-  ${Button} {
-    margin-bottom: 16px;
-  }
-`;
+const SocialButtons = styled.div``;
 
 const SocialContainer = styled(SectionContainer)`
   ${mobile} {

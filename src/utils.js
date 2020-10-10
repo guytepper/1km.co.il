@@ -1,4 +1,5 @@
 import isPointWithinRadius from 'geolib/es/isPointWithinRadius';
+import getDistance from 'geolib/es/getDistance';
 
 export function getCurrentPosition() {
   return new Promise((resolve, reject) => {
@@ -33,6 +34,24 @@ export function pointWithinRadius(point1, point2, radius) {
   );
 }
 
+/**
+ * Calculate distance between 2 points.
+ * @param {array} pointA - array of [lat, lng]
+ * @param {array} pointB - array of [lat, lng]
+ * @returns The distance in meters as a numeric value.
+ */
+export function calculateDistance(pointA, pointB) {
+  return getDistance(pointA, pointB);
+}
+
+export function formatDistance(distance) {
+  if (distance > 1000) {
+    return `${(distance / 1000).toFixed(1)} ק"מ ממיקומך`;
+  } else {
+    return `${distance} מטר ממיקומך`;
+  }
+}
+
 export function formatDate(dateStr) {
   const date = new Date(dateStr);
   return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
@@ -60,7 +79,6 @@ export function getUpcomingDate(dateTimeList) {
 }
 
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
-
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';
 export const isAuthenticated = (user) => user?.uid;

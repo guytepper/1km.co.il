@@ -2,8 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
-import getDistance from 'geolib/es/getDistance';
-import { pointWithinRadius, validateLatLng, isAdmin } from './utils';
+import { pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -113,7 +112,7 @@ function App() {
           return {
             id: doc.id,
             latlng: protestLatlng,
-            distance: getDistance(state.userCoordinates, protestLatlng),
+            distance: calculateDistance(state.userCoordinates, protestLatlng),
             ...doc.data(),
           };
         });
@@ -227,7 +226,7 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage user={state.user} />
+              <ProtestPage user={state.user} coordinates={state.userCoordinates} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
@@ -276,6 +275,7 @@ const Header = styled.header`
   grid-row: 1;
   background-color: #fff;
   box-shadow: inset 0 -1px 0 #e1e4e8;
+  z-index: 10;
 `;
 
 const NavItemsWrapper = styled.div`
