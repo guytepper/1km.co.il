@@ -78,17 +78,18 @@ function ProtestPageContent({ protest }) {
 
       <ProtestContainer>
         <Info>
-          <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" />
+          {/* <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" /> */}
           <Details>
             <Left>
               <Title>{displayName}</Title>
-              <Location>
+              <DetailItem>
                 <FlagIcon src="/icons/blue-flag.svg" alt="flag icon" />
                 {streetAddress}
-              </Location>
+              </DetailItem>
+              <DetailItem>600 מטר ממיקומך</DetailItem>
               <Notes>{notes}</Notes>
             </Left>
-            <EditButton onClick={() => history.push('edit')}>עריכה</EditButton>
+            <EditButton onClick={() => history.push('edit')}>בקש אח</EditButton>
           </Details>
         </Info>
 
@@ -212,6 +213,7 @@ const ProtestPageContainer = styled.div`
 const ProtestContainer = styled.div`
   max-width: 920px;
   margin: 0 auto;
+  padding: 0 15px;
   z-index: 1;
 `;
 
@@ -234,13 +236,13 @@ const Left = styled.div``;
 
 const Title = styled.h1`
   font-weight: bold;
-  font-size: 40px;
+  font-size: 28px;
   line-height: 47px;
   color: #000000;
   margin-bottom: 8px;
 `;
 
-const Location = styled.h2`
+const DetailItem = styled.h2`
   font-size: 24px;
   line-height: 28px;
   font-weight: normal;
@@ -262,6 +264,7 @@ const FlagIcon = styled.img``;
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 256px;
+  z-index: 0;
 `;
 
 const EditButton = styled.button`
@@ -276,6 +279,15 @@ const EditButton = styled.button`
   padding-left: 24px;
   padding-right: 24px;
   background: white;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s all;
+
+  &:hover {
+    background-color: #6e7dff;
+    color: #fff;
+  }
 `;
 
 const SectionContainer = styled.div`
@@ -299,7 +311,7 @@ const SectionTitle = styled.div`
 `;
 
 const Details = styled.div`
-  padding: 40px 40px 34px 40px;
+  padding: 20px 34px;
   display: flex;
   justify-content: space-between;
   flex: 1;

@@ -279,6 +279,7 @@ const Header = styled.header`
   grid-row: 1;
   background-color: #fff;
   box-shadow: inset 0 -1px 0 #e1e4e8;
+  z-index: 10;
 `;
 
 const NavItemsWrapper = styled.div`
