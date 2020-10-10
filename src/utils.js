@@ -59,4 +59,4 @@ export function getUpcomingDate(dateTimeList) {
   return sortDateTimeList(dateTimeList)[0];
 }
 
-export const isAdmin = (user) => user?.roles?.includes('admin');
+export const isAdmin = (user) => user?.admin === true;

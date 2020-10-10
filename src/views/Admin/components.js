@@ -114,7 +114,8 @@ export const SidebarListHeadFilters = styled.div`
   display: flex;
   justify-content: space-evenly;
 `;
-export const SidebarListHeadFilter = styled.div`
+
+export const SidebarListHeadFilter = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;

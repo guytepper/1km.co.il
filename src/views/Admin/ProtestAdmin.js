@@ -8,7 +8,7 @@ const initialState = {
   currentProtest: undefined,
   pendingProtests: [],
   approvedProtests: [],
-  protestFilter: 'pending',
+  protestFilter: 'approved',
 };
 
 const reducer = (state, action) => {
