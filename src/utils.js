@@ -56,7 +56,7 @@ export function getUpcomingDate(dateTimeList) {
   if (!dateTimeList) {
     return null;
   }
-  return sortDateTimeList(dateTimeList)[0];
+  return sortDateTimeList(dateTimeList).filter((dateTimeList) => new Date(dateTimeList.date) >= new Date())[0];
 }
 
 export const isAdmin = (user) => user?.admin === true;
