@@ -169,7 +169,7 @@ function App() {
             </Link>
             <NavItemsWrapper>
               <NavProfileWrapper>
-                {!isAuthenticated(state.user) ? (
+                {isAuthenticated(state.user) ? (
                   <>
                     <NavProfilePicture src="/icons/guard.svg" alt="" />
                     <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
