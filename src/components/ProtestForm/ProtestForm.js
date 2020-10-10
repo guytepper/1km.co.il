@@ -63,13 +63,14 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
 
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
         setMarkerPosition(defaultValues.latlng);
       }
     }
-  }, [defaultValues, reset, setStreetAddress]);
+  }, [defaultValues, reset, setStreetAddress, setDateTimeList]);
 
   // Load nearby protests on mount
   useEffect(() => {
