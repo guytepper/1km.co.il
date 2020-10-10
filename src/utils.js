@@ -78,6 +78,9 @@ export function getUpcomingDate(dateTimeList) {
   return sortDateTimeList(dateTimeList).filter((dateTimeList) => new Date(dateTimeList.date) >= new Date())[0];
 }
 
+const israeliPhoneNumberRegex = /^[-+0-9]{7,13}$/;
+export const isValidIsraeliPhoneNumber = (phoneNumber) => israeliPhoneNumberRegex.test(phoneNumber);
+
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';

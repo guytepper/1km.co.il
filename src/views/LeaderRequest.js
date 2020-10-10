@@ -4,9 +4,8 @@ import styled from 'styled-components';
 import queryString from 'query-string';
 import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
 import { sendProtestLeaderRequest, isProtestValid, setPhoneNumberForUser, fetchProtest } from '../api';
+import { isValidIsraeliPhoneNumber } from '../utils';
 import { LeaderRequestSubmitted } from '.';
-
-const israeliPhoneNumberRegex = /^[-+0-9]{7,13}$/;
 
 function LeaderRequestForm({ user }) {
   const history = useHistory();
@@ -15,9 +14,7 @@ function LeaderRequestForm({ user }) {
   const [showInvalidNumberError, setShowInvalidNumberError] = useState(false);
 
   async function submitLeaderRequest(phoneNumber) {
-    const validPhoneNumber = israeliPhoneNumberRegex.test(phoneNumber);
-
-    if (!validPhoneNumber) {
+    if (!isValidIsraeliPhoneNumber(phoneNumber)) {
       setShowInvalidNumberError(true);
       return;
     }
@@ -118,4 +115,4 @@ const ProtestFormInput = styled.input`
 const InvalidPhoneNumberMessage = styled.div`
   color: red;
   margin-bottom: 15px;
-`
+`;
