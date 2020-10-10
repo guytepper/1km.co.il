@@ -19,7 +19,7 @@ export async function createPendingProtest(params) {
     streetAddress,
     telegramLink,
     whatsAppLink,
-    meeting_time,
+    dateTimeList,
     notes,
     coords,
     approveContact,
@@ -40,7 +40,7 @@ export async function createPendingProtest(params) {
       whatsAppLink,
       telegramLink,
       notes,
-      meeting_time,
+      dateTimeList,
       created_at: firebase.firestore.FieldValue.serverTimestamp(),
       coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
       approveContact,
@@ -190,7 +190,13 @@ export function createLeaderRequestId(userId, protestId) {
 }
 
 export async function saveUserInFirestore(userData) {
-  await firestore.collection('users').doc(userData.uid).set(userData);
+  const userRef = firestore.collection('users').doc(userData.uid);
+  
+  if ((await userRef.get()).exists) {
+    await userRef.update(userData);
+  } else {
+    await userRef.set(userData);
+  }
 }
 
 export async function setPhoneNumberForUser(uid, phoneNumber) {

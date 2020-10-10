@@ -2,10 +2,34 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components/macro';
 import { formatDistance } from '../../utils';
+import { dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
-function ProtestCard({ protestInfo = {}, showAction = true, style } = {}) {
+function getFormattedDate(date) {
+  if (!date) {
+    return null;
+  }
+
+  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
+}
+
+function ProtestCard({ protestInfo, showAction = true, style } = {}) {
   const history = useHistory();
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
+
+  const {
+    displayName,
+    streetAddress,
+    distance,
+    whatsAppLink,
+    telegramLink,
+    meeting_time: meetingTime,
+    dateTimeList,
+    notes,
+    id,
+  } = protestInfo;
+
+  const upcomingDate = getUpcomingDate(dateTimeList);
+  const formattedDate = getFormattedDate(upcomingDate);
+
   return (
     <ProtestCardWrapper
       style={style}
@@ -21,9 +45,16 @@ function ProtestCard({ protestInfo = {}, showAction = true, style } = {}) {
             {streetAddress}
           </ProtestCardDetail>
         )}
-        {meetingTime && (
+
+        {upcomingDate && (
+          <ProtestCardDetail key={upcomingDate.id}>
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
+            {formattedDate}
+          </ProtestCardDetail>
+        )}
+        {!upcomingDate && meetingTime && (
           <ProtestCardDetail>
-            <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
             {meetingTime}
           </ProtestCardDetail>
         )}
@@ -64,7 +95,7 @@ const ProtestCardWrapper = styled.div`
   padding: 16px;
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
-  /* cursor: pointer; */
+  cursor: pointer;
 `;
 
 const ProtestCardTitle = styled.h2`
