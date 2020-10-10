@@ -65,7 +65,10 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           </Button>
 
           {!addressInputDisplay && (
-            <Button onClick={() => setAddressInputDisplay(true)} color="#0096c7">
+            <Button
+              onClick={() => setAddressInputDisplay(true)}
+              color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
+            >
               הזנת מיקום ידנית
             </Button>
           )}
@@ -78,7 +81,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
                   setCoordinates(manualAddress);
                   resetModal();
                 }}
-                color="#0096c7"
+                color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
               >
                 הצגת הפגנות
               </Button>
