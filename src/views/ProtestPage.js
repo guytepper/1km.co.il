@@ -337,8 +337,9 @@ const Details = styled.div``;
 const DatesAndSocial = styled.div`
   margin-top: 24px;
   display: grid;
-  gap: 25px;
+
   @media (min-width: 1024px) {
+    gap: 25px;
     grid-template-columns: 2fr 1.25fr;
   }
 `;
