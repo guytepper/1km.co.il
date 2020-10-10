@@ -48,6 +48,12 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
 
   const setStreetAddress = React.useCallback((value) => setValue('streetAddress', value), [setValue]);
 
+  useEffect(() => {
+    reset({});
+    setStreetAddressDefaultValue('');
+    setStreetAddress('');
+  }, [editMode, reset, setStreetAddress]);
+
   // the two useEffects below this are in order to deal
   // with the defaultValues and the places auto complete
   useEffect(() => {
@@ -64,12 +70,6 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       }
     }
   }, [defaultValues, reset, setStreetAddress]);
-
-  useEffect(() => {
-    reset({});
-    setStreetAddressDefaultValue('');
-    setStreetAddress('');
-  }, [editMode, reset, setStreetAddress]);
 
   // Load nearby protests on mount
   useEffect(() => {

@@ -14,7 +14,7 @@ export function getCurrentPosition() {
 }
 
 export function validateLatLng(coords) {
-  if (coords.length !== 2) return false;
+  if (!coords || coords.length !== 2) return false;
   const [latitude, longitude] = coords;
   // Check latitude value
   if (!Number.isFinite(latitude) || latitude > 90 || latitude < -90) return false;

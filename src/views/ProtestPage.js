@@ -98,7 +98,7 @@ function ProtestPageContent({ protest, canEdit }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            {canEdit && <EditButton onClick={() => history.push(`${history.location.pathname}/edit`)}>עריכה</EditButton>}
+            {canEdit && <EditButton onClick={() => history.push(`/protest/${protest.id}/edit`)}>עריכה</EditButton>}
           </Details>
         </Info>
 
@@ -203,6 +203,7 @@ export default function ProtestPage({ user }) {
             }}
             afterSubmitCallback={() => history.goBack()}
             defaultValues={protest}
+            editMode={true}
           />
         </EditViewContainer>
       </ProtectedRoute>
