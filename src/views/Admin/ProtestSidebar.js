@@ -12,6 +12,15 @@ import {
 import { PlacesAutocomplete } from '../../components';
 import { fetchPendingProtests } from './AdminService';
 import { fetchNearbyProtests } from '../../api';
+import { dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
+
+function getFormattedDate(date) {
+  if (!date) {
+    return null;
+  }
+
+  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
+}
 
 const ProtestSidebar = ({ state, dispatch }) => {
   const [coordinates, setCoordinates] = useState(null);
@@ -63,19 +72,23 @@ const ProtestSidebar = ({ state, dispatch }) => {
         </SidebarListHeadFilters>
       </SidebarListHead>
       <SidebarList>
-        {protests.map((protest) => (
-          <Card
-            active={protest.id === state.currentProtest?.id}
-            onClick={() => {
-              dispatch({ type: 'setCurrentProtest', payload: { currentProtest: protest } });
-            }}
-            key={protest.id}
-          >
-            <Field name="שם המקום" value={protest.displayName} />
-            <Field name="כתובת" value={protest.streetAddress} />
-            <Field name="שעת מפגש" value={protest.meeting_time} />
-          </Card>
-        ))}
+        {protests.map((protest) => {
+          const upcomingDate = getUpcomingDate(protest.dateTimeList);
+          const formattedDate = getFormattedDate(upcomingDate);
+          return (
+            <Card
+              active={protest.id === state.currentProtest?.id}
+              onClick={() => {
+                dispatch({ type: 'setCurrentProtest', payload: { currentProtest: protest } });
+              }}
+              key={protest.id}
+            >
+              <Field name="שם המקום" value={protest.displayName} />
+              <Field name="כתובת" value={protest.streetAddress} />
+              <Field name={formattedDate ? 'תאריך' : 'שעת מפגש'} value={formattedDate ?? protest.meeting_time} />
+            </Card>
+          );
+        })}
       </SidebarList>
     </SidebarWrapper>
   );

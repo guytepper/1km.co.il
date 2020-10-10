@@ -58,16 +58,11 @@ export async function createPendingProtest(params) {
 }
 
 export function createProtest(params) {
-  const { displayName, streetAddress, telegramLink, whatsAppLink, meeting_time, notes, coords } = params;
+  const { coords, ...restParams } = params;
   const [lat, lng] = coords;
   const geocollection = GeoFirestore.collection('protests');
   const request = geocollection.add({
-    displayName,
-    streetAddress,
-    telegramLink,
-    whatsAppLink,
-    notes,
-    meeting_time,
+    ...restParams,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
   });
@@ -191,7 +186,7 @@ export function createLeaderRequestId(userId, protestId) {
 
 export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
-  
+
   if ((await userRef.get()).exists) {
     await userRef.update(userData);
   } else {
