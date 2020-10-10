@@ -173,7 +173,7 @@ function App() {
                     <span style={{display: 'flex', alignItems: 'center', marginRight: '5px'}}>
                       <NavProfilePicture src="/icons/guard.svg" alt="" />
                       <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
-                      {/* {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>} */}
+                      {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
                     </span>
                 ) : null}
                   <GuestNavItems>
