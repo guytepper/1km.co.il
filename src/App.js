@@ -2,7 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
-import { pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
+import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -169,7 +169,7 @@ function App() {
             </Link>
             <NavItemsWrapper>
               <NavProfileWrapper>
-                {state.user ? (
+                {!isAuthenticated(state.user) ? (
                   <>
                     <NavProfilePicture src="/icons/guard.svg" alt="" />
                     <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
