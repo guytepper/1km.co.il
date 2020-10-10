@@ -1,4 +1,5 @@
 import isPointWithinRadius from 'geolib/es/isPointWithinRadius';
+import getDistance from 'geolib/es/getDistance';
 
 export function getCurrentPosition() {
   return new Promise((resolve, reject) => {
@@ -31,6 +32,16 @@ export function pointWithinRadius(point1, point2, radius) {
     { latitude: point2[0], longitude: point2[1] },
     radius
   );
+}
+
+/**
+ * Calculate distance between 2 points.
+ * @param {array} pointA - array of [lat, lng]
+ * @param {array} pointB - array of [lat, lng]
+ * @returns The distance in meters as a numeric value.
+ */
+export function calculateDistance(pointA, pointB) {
+  return getDistance(pointA, pointB);
 }
 
 export const isAdmin = (user) => user?.roles?.includes('admin');
