@@ -90,7 +90,6 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       try {
         params.coords = mapCenter;
         params.dateTimeList = dateTimeList;
-        params.streetAddress = streetAddressDefaultValue;
         // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
