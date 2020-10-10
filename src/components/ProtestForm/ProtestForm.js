@@ -88,12 +88,12 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       return;
     } 
 
-    if(!isValidUrl(params.telegramLink)) {
+    if(params.telegramLink && !isValidUrl(params.telegramLink)) {
       alert('לינק לקבוצת הטלגרם אינו תקין');
       return; 
     }
 
-    if(!isValidUrl(params.whatsAppLink)) {
+    if(params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
       alert('לינק לקבוצת הוואטסאפ אינו תקין');
       return; 
     }
