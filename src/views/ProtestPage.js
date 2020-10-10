@@ -15,10 +15,11 @@ import {
   TelegramShareButton,
   TelegramIcon,
 } from 'react-share';
+import { ProtestCardInfo, ProtestCardDetail, ProtestCardIcon } from '../components/ProtestCard/ProtestCardStyles';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
 
-const mobile = `@media (max-width: 500px)`;
+const mobile = `@media (max-width: 768px)`;
 
 function getSocialLinks(protest) {
   const items = [];
@@ -29,12 +30,12 @@ function getSocialLinks(protest) {
   if (telegramLink) {
     items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
   }
-  if (facebookLink) {
-    items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
-  }
-  if (twitterLink) {
-    items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
-  }
+  // if (facebookLink) {
+  //   items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
+  // }
+  // if (twitterLink) {
+  //   items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
+  // }
   return items;
 }
 
@@ -80,17 +81,23 @@ function ProtestPageContent({ protest }) {
         <Info>
           {/* <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" /> */}
           <Details>
-            <Left>
-              <Title>{displayName}</Title>
-              <DetailItem>
-                <FlagIcon src="/icons/blue-flag.svg" alt="flag icon" />
-                {streetAddress}
-              </DetailItem>
-              <DetailItem>600 מטר ממיקומך</DetailItem>
-              <Notes>{notes}</Notes>
-            </Left>
-            <EditButton onClick={() => history.push('edit')}>בקש אח</EditButton>
+            <Title>{displayName}</Title>
+            <ProtestCardInfo>
+              {streetAddress && (
+                <ProtestCardDetail>
+                  <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
+                  {streetAddress}
+                </ProtestCardDetail>
+              )}
+              <ProtestCardDetail>
+                <ProtestCardIcon src="/icons/ruler.svg" alt="" />
+                600 מטר ממיקומך
+              </ProtestCardDetail>
+              {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
+            </ProtestCardInfo>
+            <Notes>{notes}</Notes>
           </Details>
+          <EditButton onClick={() => history.push('edit')}>עדכון פרטי הפגנה</EditButton>
         </Info>
 
         <DatesAndSocial>
@@ -103,9 +110,8 @@ function ProtestPageContent({ protest }) {
 
             <Dates>
               <Date>
-                <BoldDateText>9.10.2020</BoldDateText>
-                <DateText>יום שישי, בשעה</DateText>
-                <BoldDateText>18:30</BoldDateText>
+                <BoldDateText>09.10.2020</BoldDateText>
+                <DateText>יום שישי, בשעה 18:30</DateText>
               </Date>
             </Dates>
           </SectionContainer>
@@ -219,20 +225,23 @@ const ProtestContainer = styled.div`
 
 const Info = styled.div`
   position: relative;
-  display: flex;
+  padding: 20px 34px;
   background: #ffffff;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   margin-top: -30px;
-  z-index: 10000;
+  z-index: 5;
+
+  @media (min-width: 600px) {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+  }
 `;
 
 const ProfilePic = styled.img`
   width: 163px;
   object-fit: cover;
 `;
-
-const Left = styled.div``;
 
 const Title = styled.h1`
   font-weight: bold;
@@ -268,6 +277,7 @@ const MapWrapper = styled(Map)`
 `;
 
 const EditButton = styled.button`
+  width: 100%;
   height: 32px;
   color: #1251f3;
   border: 1px solid #1251f3;
@@ -291,6 +301,7 @@ const EditButton = styled.button`
 `;
 
 const SectionContainer = styled.div`
+  width: 100%;
   padding: 40px 40px 34px 40px;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   background-color: white;
@@ -310,25 +321,14 @@ const SectionTitle = styled.div`
   }
 `;
 
-const Details = styled.div`
-  padding: 20px 34px;
-  display: flex;
-  justify-content: space-between;
-  flex: 1;
-  ${mobile} {
-    flex-direction: column;
-    ${EditButton} {
-      margin-top: 24px;
-    }
-  }
-`;
+const Details = styled.div``;
 
 const DatesAndSocial = styled.div`
   margin-top: 24px;
-  display: flex;
-  justify-content: space-between;
-  ${mobile} {
-    flex-direction: column;
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
   }
 `;
 
@@ -346,9 +346,6 @@ const Date = styled.li`
   list-style: none;
   display: flex;
   justify-content: space-between;
-  ${mobile} {
-    flex-direction: column;
-  }
 `;
 
 const DateText = styled.span`
