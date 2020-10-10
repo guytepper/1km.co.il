@@ -84,7 +84,7 @@ export function isValidUrl(url){
   } catch (e) {
     return false;  
   }
-  return true;
+  return url.protocol === "http:" || url.protocol === "https:";
 }
 
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
