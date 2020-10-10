@@ -145,7 +145,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             ></ProtestFormInput>
             <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
           </ProtestFormLabel>
-          {false && (
+          {editMode && (
             <>
               <ProtestFormLabel>
                 כתובת
