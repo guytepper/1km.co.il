@@ -45,7 +45,7 @@ function getEditButtonLink(user, protest) {
     return `/leader-request?protest=${protest.id}`;
   }
 
-  console.error(`couldn't find a case`)
+  throw new Error(`couldn't find route`);
 }
 
 function getSocialLinks(protest) {
@@ -94,24 +94,6 @@ function useFetchProtest() {
   };
 }
 
-function shouldShowEditButton({ protestData, user }) {  
-  if (!user) {
-    return false;
-  }
-
-  if (isAdmin(user)) {
-    return true;
-  }
-
-  // This will only show the button in case there is no leader at the moment
-  // or in case you are the leader
-  if (!protestData?.roles?.leader || protestData?.roles?.leader?.includes(user.uid)) {
-    return true;
-  } 
-
-  return false;
-}
-
 function ProtestPageContent({ protest, user }) {
   const history = useHistory();
 
@@ -142,9 +124,7 @@ function ProtestPageContent({ protest, user }) {
               </Location>
               <Notes>{notes}</Notes>
             </Left>
-            {shouldShowEditButton({ protestData: protest, user }) ? 
-              <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
-              : null}
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
           </Details>
         </Info>
 
