@@ -103,6 +103,14 @@ const ProtestCardWrapper = styled.div`
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
   cursor: pointer;
+  border-radius: 4px;
+  transition: box-shadow 50ms ease-out;
+
+  &:hover,
+  &:focus {
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1px #6e7dff, 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
+  }
 `;
 
 const ProtestCardTitle = styled.h2`
