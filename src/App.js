@@ -44,7 +44,6 @@ function reducer(state, action) {
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
       // Save the user coordinates in order to reuse them on the next user session
-      console.log('set user coordinates with', action.payload);
       setLocalStorage('1km_user_coordinates', action.payload);
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
@@ -85,9 +84,18 @@ function App() {
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
-        // Includes admin data and more
+        // This adds the "admin" data which is in our DB
         getFullUserData(user.uid).then((fullUserData) => {
-          dispatch({ type: 'setUser', payload: fullUserData });
+          if (fullUserData) {
+            dispatch({ type: 'setUser', payload: fullUserData });
+          } else {
+            const { uid, email } = user;
+            const partialUserData = { uid, email };
+            // When the user is initially created, this request returns undefined
+            // This is a workaround in order to get the uid in the leader reqest page
+            // https://github.com/guytepper/1km.co.il/pull/114
+            dispatch({ type: 'setUser', payload: partialUserData });
+          }
         });
       } else {
         dispatch({ type: 'setUser', payload: 'visitor' });
@@ -98,7 +106,6 @@ function App() {
   useEffect(() => {
     // if onlyMarkers is true then don't update the protests, only the markers and history.
     async function fetchProtests({ onlyMarkers = false } = {}) {
-      console.log('in fetch Protests!');
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -147,9 +154,7 @@ function App() {
       }
     }
 
-    console.log('here with map position', state.mapPosition);
     if (validateLatLng(state.mapPosition)) {
-      console.log('valid map position', state.mapPosition, 'state loading', state.loading);
       if (state.loading) {
         fetchProtests();
       } else {
