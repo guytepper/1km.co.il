@@ -32,6 +32,7 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
 
   return (
     <ProtestCardWrapper
+      tabIndex="0"
       style={style}
       onClick={() => {
         history.push(`/protest/${id}`);
@@ -98,7 +99,9 @@ const ProtestCardWrapper = styled.div`
   }
 
   &:hover,
-  &:focus {
+  &:focus,
+  &:focus-within {
+    outline: none;
     box-sizing: border-box;
     box-shadow: 0 0 0 1px #6e7dff, 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   }
