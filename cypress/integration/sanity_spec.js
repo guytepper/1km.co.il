@@ -26,7 +26,20 @@ function fakeLocation(latitude = 31.7749837, longitude = 35.219797) {
   };
 }
 
-describe('Manual location', () => {
+describe('Location modal', () => {
+  it('should show results when using user location', () => {
+    cy.visit('/', fakeLocation());
+
+    selectors.autoLocationBtn().click();
+
+    cy.waitUntil(function () {
+      return selectors.protestCards().should('exist');
+    });
+
+    selectors.protestCards().its('length').should('be.gt', 1);
+    selectors.protestCards().first().get('[data-testid="protestCard__streetAddress"]').should('contain.text', 'ירושלים');
+  });
+
   it('Should show results when searching for address manually', () => {
     cy.visit('/');
 
@@ -57,17 +70,25 @@ describe('Manual location', () => {
   });
 });
 
-describe('Auto location', () => {
-  it('should show results when using user location', () => {
-    cy.visit('/', fakeLocation());
+describe('Add protest', () => {
+  it('should successfully add a protest', () => {
+    cy.visit('/add-protest', fakeLocation());
 
-    selectors.autoLocationBtn().click();
+    cy.get('input[name="displayName"]').type('בדיקה');
 
-    cy.waitUntil(function () {
-      return selectors.protestCards().should('exist');
-    });
+    cy.get('input[name="streetAddress"]').type('באר שבע');
+    const firstAddress = selectors.autocompleteResults().first();
+    firstAddress.should('be.visible');
+    firstAddress.click();
 
-    selectors.protestCards().its('length').should('be.gt', 1);
-    selectors.protestCards().first().get('[data-testid="protestCard__streetAddress"]').should('contain.text', 'ירושלים');
+    cy.wait(200);
+
+    cy.get('input[name="meeting_date"]').type('2020-10-23');
+    cy.get('input[name="meeting_time"]').type('17:30');
+    cy.get('input[name="email"]').type('uriklar@gmail.com');
+
+    cy.get('button[type="submit"]').click();
+
+    cy.get('h2').contains('ההפגנה נשלחה בהצלחה').should('exist');
   });
 });
