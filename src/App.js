@@ -44,6 +44,7 @@ function reducer(state, action) {
       return { ...state, isModalOpen: action.payload };
     case 'setUserCoordinates':
       // Save the user coordinates in order to reuse them on the next user session
+      console.log('set user coordinates with', action.payload);
       setLocalStorage('1km_user_coordinates', action.payload);
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
@@ -97,6 +98,7 @@ function App() {
   useEffect(() => {
     // if onlyMarkers is true then don't update the protests, only the markers and history.
     async function fetchProtests({ onlyMarkers = false } = {}) {
+      console.log('in fetch Protests!');
       // TODO: Move API call outside from here
       const geocollection = GeoFirestore.collection('protests');
       const query = geocollection.near({
@@ -145,7 +147,9 @@ function App() {
       }
     }
 
+    console.log('here with map position', state.mapPosition);
     if (validateLatLng(state.mapPosition)) {
+      console.log('valid map position', state.mapPosition, 'state loading', state.loading);
       if (state.loading) {
         fetchProtests();
       } else {
@@ -170,16 +174,16 @@ function App() {
             <NavItemsWrapper>
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
-                    <span style={{display: 'flex', alignItems: 'center', marginRight: '5px'}}>
-                      <NavProfilePicture src="/icons/guard.svg" alt="" />
-                      <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
-                      {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
-                    </span>
+                  <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
+                    <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                    {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
+                  </span>
                 ) : null}
-                  <GuestNavItems>
-                    <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-                    <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  </GuestNavItems>
+                <GuestNavItems>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
@@ -214,6 +218,7 @@ function App() {
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
                 setCoordinates={(coords) => {
+                  dispatch({ type: 'setMapPosition', payload: coords });
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
               />

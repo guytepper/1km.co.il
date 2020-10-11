@@ -33,7 +33,10 @@
     "deploy": "npm run build && firebase deploy --only hosting"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "globals": {
+      "cy": true
+    }
   },
   "browserslist": {
     "production": [
@@ -48,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "cypress": "^5.3.0"
+    "cypress": "^5.3.0",
+    "cypress-wait-until": "^1.7.1"
   }
 }

@@ -41,7 +41,7 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
         {streetAddress && (
-          <ProtestCardDetail>
+          <ProtestCardDetail data-testid="protestCard__streetAddress">
             <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
             {streetAddress}
           </ProtestCardDetail>
