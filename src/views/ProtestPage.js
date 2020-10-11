@@ -31,23 +31,13 @@ const mobile = `@media (max-width: 768px)`;
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
 
-  if (isAdmin(user)) {
+  if (isAdmin(user) || isAuthenticated(user)) {
     return editRoute;
   }
 
   if (isVisitor(user)) {
     // Sign up before redirected to leader request
-    return `/sign-up?returnUrl=/leader-request?protest=${protest.id}`;
-  }
-
-  if (isAuthenticated(user)) {
-    // The user is a leader
-    if (isLeader(user, protest)) {
-      return editRoute;
-    }
-
-    // Go to leader request
-    return `/leader-request?protest=${protest.id}`;
+    return `/sign-up?returnUrl=${editRoute}`;
   }
 
   throw new Error(`couldn't find route`);
