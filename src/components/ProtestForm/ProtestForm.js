@@ -86,43 +86,43 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
     if (!editMode && !params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
-    }
-
-    if (params.telegramLink && !isValidUrl(params.telegramLink)) {
-      alert('לינק לקבוצת הטלגרם אינו תקין');
-      return;
-    }
-
-    if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
-      alert('לינק לקבוצת הוואטסאפ אינו תקין');
-      return;
-    }
-
-    try {
-      params.coords = mapCenter;
-      params.dateTimeList = dateTimeList;
-      // params.recaptchaToken = recaptchaToken;
-
-      let protest = await submitCallback(params);
-
-      if (editMode) {
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
+    } else {
+      if (params.telegramLink && !isValidUrl(params.telegramLink)) {
+        alert('לינק לקבוצת הטלגרם אינו תקין');
         return;
       }
 
-      if (protest._document) {
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
-      } else {
-        throw new Error('protest._document was null.');
+      if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
+        alert('לינק לקבוצת הוואטסאפ אינו תקין');
+        return;
       }
-    } catch (err) {
-      console.log('error!!', err);
-      setSubmitSuccess(true);
-      setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
+
+      try {
+        params.coords = mapCenter;
+        params.dateTimeList = dateTimeList;
+        // params.recaptchaToken = recaptchaToken;
+
+        let protest = await submitCallback(params);
+
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+          return;
+        }
+
+        if (protest._document) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+        } else {
+          throw new Error('protest._document was null.');
+        }
+      } catch (err) {
+        console.log('error!!', err);
+        setSubmitSuccess(true);
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
+      }
     }
   };
 
