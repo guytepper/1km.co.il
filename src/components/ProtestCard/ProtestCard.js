@@ -87,11 +87,16 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
 
 const ProtestCardWrapper = styled.div`
   padding: 16px;
+  margin: 0 10px;
   background-color: #fff;
   box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
   cursor: pointer;
   border-radius: 4px;
   transition: box-shadow 50ms ease-out;
+
+  &:last-child {
+    margin-bottom: 10px;
+  }
 
   &:hover,
   &:focus {

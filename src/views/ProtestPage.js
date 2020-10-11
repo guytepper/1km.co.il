@@ -169,7 +169,7 @@ function ProtestPageContent({ protest, user }) {
           <SocialContainer>
             <SectionTitle>
               <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
-              ערוצי תקשורת:
+              ערוצי תקשורת
             </SectionTitle>
             {socialLinks.length > 0 ? (
               <>

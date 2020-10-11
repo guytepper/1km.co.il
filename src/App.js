@@ -97,6 +97,7 @@ function App() {
             dispatch({ type: 'setUser', payload: partialUserData });
           }
         });
+        
       } else {
         dispatch({ type: 'setUser', payload: 'visitor' });
       }
