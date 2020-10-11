@@ -14,4 +14,6 @@ jobs:
         with:
           start: yarn start
           wait-on: 'http://localhost:3000'
-          env: REACT_APP_GOOGLE_MAPS_API_KEY:${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
+          env:
+            stage: LOCAL
+            REACT_APP_GOOGLE_MAPS_API_KEY:${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }} 
