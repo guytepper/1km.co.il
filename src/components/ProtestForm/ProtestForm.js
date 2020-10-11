@@ -156,52 +156,54 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
             ></ProtestFormInput>
             <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
           </ProtestFormLabel>
-          {!editMode && (
-            <>
-              <ProtestFormLabel>
-                כתובת
-                <PlacesAutocomplete
-                  setManualAddress={setMapCenter}
-                  setStreetAddress={setStreetAddress}
-                  inputRef={register}
-                  defaultValue={streetAddressDefaultValue}
-                />
-                <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
-              </ProtestFormLabel>
-              <MapWrapper
-                center={mapCenter}
-                zoom={zoomLevel}
-                scrollWheelZoom={'center'}
-                onMove={(t) => {
-                  setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-                  setZoomLevel(t.target._zoom);
-                }}
-                onMoveEnd={async (t) => {
-                  const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
-                  setMapCenter(newPosition);
-                  setMarkerPosition(newPosition);
-                  setZoomLevel(t.target._zoom);
-                  // fetch protests on move end
-                  if (mapCenter) {
-                    const protests = await fetchNearbyProtests(mapCenter);
-                    setNearbyProtests(protests);
-                  }
-                }}
-                onZoom={(event) => {
-                  setZoomLevel(event.target._zoom);
-                }}
-              >
-                <TileLayer
-                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={markerPostion}></Marker>
-                {nearbyProtests.map((protest) => (
-                  <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
-                ))}
-              </MapWrapper>
-            </>
-          )}
+
+          <ProtestFormLabel>
+            כתובת
+            <PlacesAutocomplete
+              setManualAddress={setMapCenter}
+              setStreetAddress={setStreetAddress}
+              inputRef={register}
+              defaultValue={streetAddressDefaultValue}
+            />
+            <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
+          </ProtestFormLabel>
+          <MapWrapper
+            center={mapCenter}
+            zoom={zoomLevel}
+            scrollWheelZoom={'center'}
+            onMove={(t) => {
+              setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+              setZoomLevel(t.target._zoom);
+            }}
+            onMoveEnd={async (t) => {
+              const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
+              setMapCenter(newPosition);
+              setMarkerPosition(newPosition);
+              setZoomLevel(t.target._zoom);
+
+              // fetch protests on move end
+              if (mapCenter) {
+                const protests = await fetchNearbyProtests(mapCenter);
+                setNearbyProtests(protests);
+              }
+            }}
+            onZoom={(event) => {
+              setZoomLevel(event.target._zoom);
+            }}
+          >
+            <TileLayer
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={markerPostion}></Marker>
+            {nearbyProtests.map((protest) => (
+              <Marker
+                position={[protest.coordinates.latitude, protest.coordinates.longitude]}
+                icon={protestMarker}
+                key={protest.id}
+              ></Marker>
+            ))}
+          </MapWrapper>
 
           <hr />
           <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>

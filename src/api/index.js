@@ -71,16 +71,21 @@ export function createProtest(params) {
 }
 
 export async function updateProtest(protestId, params) {
-  await firestore.collection('protests').doc(protestId).update(params);
+  const [lat, lng] = params.coords;
+  await firestore
+    .collection('protests')
+    .doc(protestId)
+    .update({
+      ...params,
+      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+    });
 
   const doc = await firestore.collection('protests').doc(protestId).get();
 
-  const { latitude, longitude } = doc.data().g.geopoint;
-  const protestLatlng = [latitude, longitude];
-
+  console.log(lat, lng);
   return {
     id: doc.id,
-    latlng: protestLatlng,
+    latlng: params.coords,
     ...doc.data(),
     _document: true,
   };
