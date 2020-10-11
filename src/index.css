@@ -28,6 +28,7 @@
 
 html {
   box-sizing: border-box;
+
 }
 
 *,
@@ -56,10 +57,20 @@ input {
 }
 
 .android-device .ReactModal__Content {
-  position: unset;
-  height: 100%;
-  padding: 0px 15px;
+  position: sticky !important;
+  padding: 10px 25px;
+  margin: 0px 10px;
+  margin-top: 40px;
 }
+
+.android-device .Image_Disappear {
+  display: none;
+}
+
+.android-device .Image_Appear {
+  display: fadein 0.5s;
+}
+
 
 .leaflet-marker-icon {
   animation: fadein 0.5s;
@@ -69,6 +80,7 @@ input {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }

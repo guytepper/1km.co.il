@@ -43,9 +43,12 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     return () => clearTimeout(timeout);
   }, [addressInputDisplay]);
 
+  const [ImageCss, setImageCss] = useState('Image_Appear');
+
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
+        <img src="1kIllustration.svg" className={ImageCss} style={{ maxWidth: 300 }} alt="אילוסטרציה של הפגנה" />
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
         <h3 style={{ fontWeight: 400 }}>
           חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
@@ -66,7 +69,10 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 
           {!addressInputDisplay && (
             <Button
-              onClick={() => setAddressInputDisplay(true)}
+              onClick={() => {
+                setAddressInputDisplay(true);
+                setImageCss('Image_Disappear');
+              }}
               color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
             >
               הזנת מיקום ידנית
@@ -95,34 +101,32 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
-  top: 50px;
+  display: inline-block;
+  top: 100px;
   left: 25px;
   right: 25px;
-  bottom: 50px;
+
   border: 1px solid #d2d2d2;
   background-color: #fff;
   padding: 10px 25px;
   z-index: 2;
 
   @media (min-width: 768px) {
-    top: 75px;
+    top: 100px;
     left: 100px;
     right: 100px;
-    bottom: 75px;
   }
 
   @media (min-width: 1280px) {
     top: 100px;
     left: 250px;
     right: 250px;
-    bottom: 250px;
   }
 
   @media (min-width: 1440px) {
     top: 100px;
     left: 500px;
     right: 500px;
-    bottom: 250px;
   }
 `;
 
