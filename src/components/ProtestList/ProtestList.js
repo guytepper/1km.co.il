@@ -62,6 +62,19 @@ const ProtestListWrapper = styled.div`
   @media (min-width: 1700px) {
     padding: 15px 5px;
   }
+  scrollbar-color: #5f6ffa #dde0ff;
+  scrollbar-width: thin;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #dde0ff;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #5f6ffa;
+    border-radius: 10px;
+  }
 `;
 
 const ProtestListHeader = styled.h2`
