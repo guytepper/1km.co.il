@@ -87,6 +87,11 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       alert('אנא הזינו את כתובת ההפגנה');
       return;
     } else {
+      if (!mapCenter) {
+        alert('אנא הזינו כתובת תקינה');
+        return;
+      }
+
       if (params.telegramLink && !isValidUrl(params.telegramLink)) {
         alert('לינק לקבוצת הטלגרם אינו תקין');
         return;
