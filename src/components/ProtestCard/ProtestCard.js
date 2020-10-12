@@ -89,10 +89,10 @@ const ProtestCardWrapper = styled.div`
   padding: 16px;
   margin: 0 10px;
   background-color: #fff;
-  box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
+  box-shadow: 0 1px 4px 0px #00000026;
   cursor: pointer;
   border-radius: 4px;
-  transition: box-shadow 50ms ease-out;
+  transition: box-shadow 175ms ease-out;
 
   &:last-child {
     margin-bottom: 10px;
@@ -103,7 +103,7 @@ const ProtestCardWrapper = styled.div`
   &:focus-within {
     outline: none;
     box-sizing: border-box;
-    box-shadow: 0 0 0 1px #6e7dff, 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 0 0 1px #6e7dff, 0px 4px 6px -1px #00000026;
   }
 `;
 
