@@ -37,7 +37,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
-  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
 
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);

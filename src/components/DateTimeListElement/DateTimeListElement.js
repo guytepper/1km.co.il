@@ -51,7 +51,7 @@ export default function DateTimeListElement(props) {
         תאריך מפגש
         <ProtestFormInput
           type="date"
-          defaultValue={dateTimeElement.date ? dateTimeElement.date : ''}
+          defaultValue={dateTimeElement.date ? dateTimeElement.date : '2020-10-17'}
           name="meeting_date"
           onChange={(event) => onDateChanged(event, dateTimeElement.id)}
         ></ProtestFormInput>
