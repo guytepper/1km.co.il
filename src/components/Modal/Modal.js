@@ -50,13 +50,15 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
         {/* image "thumbnail" lower resolution image until the high resolution one loaded"*/}
         <img
           src="welcome-illustration-lowres.webp"
-          style={{ width: 250, display: ImageLoaded ? 'none' : '' }}
+          style={{ width: 250, height: 176.7, display: ImageLoaded ? 'none' : '' }}
           alt="אילוסטרציה של הפגנה"
         />
         <img
           src="welcome-illustration.svg"
           onLoad={() => {
-            setImageLoaded(true);
+            setTimeout(() => {
+              setImageLoaded(true);
+            }, 3000);
           }}
           style={{ maxWidth: 250, display: ImageLoaded ? '' : 'none' }}
           alt="אילוסטרציה של הפגנה"
