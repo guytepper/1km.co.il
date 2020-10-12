@@ -18,6 +18,8 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
     try {
       const position = await getCurrentPosition();
       setCoordinates(position);
+      setValue('');
+      clearSuggestions();
     } catch (err) {
       alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
     }
