@@ -78,12 +78,15 @@ export function getUpcomingDate(dateTimeList) {
   return sortDateTimeList(dateTimeList).filter((dateTimeList) => new Date(dateTimeList.date) >= new Date())[0];
 }
 
-export function isValidUrl(url) {
+export function isValidUrl(link) {
+  let url;
+
   try {
-    new URL(url);
+    url = new URL(link);
   } catch (e) {
     return false;
   }
+
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
