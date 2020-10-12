@@ -207,7 +207,7 @@ export default function ProtestPage({ user }) {
               _fetchProtest(id, setProtest);
               return response;
             }}
-            afterSubmitCallback={() => history.goBack()}
+            afterSubmitCallback={() => history.push(`/protest/${id}`)}
             defaultValues={protest}
             editMode={true}
           />
