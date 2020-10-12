@@ -13,7 +13,7 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start
+          start: yarn test:e2e
           wait-on: 'http://localhost:3000'
         env:
           stage: LOCAL
