@@ -185,8 +185,8 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -194,15 +194,6 @@ function App() {
           <Switch>
             <Route exact path="/">
               <HomepageWrapper>
-                <Map
-                  coordinates={state.userCoordinates}
-                  setMapPosition={(position) => {
-                    dispatch({ type: 'setMapPosition', payload: position });
-                  }}
-                  h
-                  markers={state.markers}
-                />
-
                 <ProtestListWrapper>
                   <ProtestListHead>
                     {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
@@ -216,6 +207,15 @@ function App() {
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
                 </ProtestListWrapper>
+
+                <Map
+                  coordinates={state.userCoordinates}
+                  setMapPosition={(position) => {
+                    dispatch({ type: 'setMapPosition', payload: position });
+                  }}
+                  h
+                  markers={state.markers}
+                />
               </HomepageWrapper>
               <Modal
                 isOpen={state.isModalOpen}
@@ -305,7 +305,7 @@ const GuestNavItems = styled.div`
   flex-shrink: 0;
 
   @media (min-width: 585px) {
-    flex-direction: row-reverse;
+    flex-direction: row;
     align-items: center;
   }
 `;

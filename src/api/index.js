@@ -286,15 +286,19 @@ export async function listLeaderRequests() {
   return leaderRequests;
 }
 
+export async function makeUserProtestLeader(protestId, userId) {
+  return firestore
+    .collection('protests')
+    .doc(protestId)
+    .update({
+      'roles.leader': firebase.firestore.FieldValue.arrayUnion(userId),
+    });
+}
+
 // When super-admin approves a protest-user request
 export async function assignRoleOnProtest({ userId, protestId, requestId, status, adminId }) {
   if (status === 'approved') {
-    await firestore
-      .collection('protests')
-      .doc(protestId)
-      .update({
-        'roles.leader': firebase.firestore.FieldValue.arrayUnion(userId),
-      });
+    await makeUserProtestLeader(protestId, userId);
   }
 
   // Update request

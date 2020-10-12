@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, updateProtest } from '../api';
+import { assignRoleOnProtest, fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -31,23 +31,13 @@ const mobile = `@media (max-width: 768px)`;
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
 
-  if (isAdmin(user)) {
+  if (isAdmin(user) || isAuthenticated(user)) {
     return editRoute;
   }
 
   if (isVisitor(user)) {
     // Sign up before redirected to leader request
-    return `/sign-up?returnUrl=/leader-request?protest=${protest.id}`;
-  }
-
-  if (isAuthenticated(user)) {
-    // The user is a leader
-    if (isLeader(user, protest)) {
-      return editRoute;
-    }
-
-    // Go to leader request
-    return `/leader-request?protest=${protest.id}`;
+    return `/sign-up?returnUrl=${editRoute}`;
   }
 
   throw new Error(`couldn't find route`);
@@ -203,7 +193,7 @@ export default function ProtestPage({ user }) {
 
   const { coordinates, id } = protest;
 
-  const canEdit = isAdmin(user) || isLeader(user, protest);
+  const canEdit = !!user; //isAdmin(user) || isLeader(user, protest);
 
   return (
     <Switch>
@@ -215,9 +205,14 @@ export default function ProtestPage({ user }) {
               const response = await updateProtest(id, params);
               // refetch the protest once update is complete
               _fetchProtest(id, setProtest);
+
+              if (!isAdmin(user)) {
+                sendProtestLeaderRequest(user, null, id);
+                makeUserProtestLeader(id, user.uid);
+              }
               return response;
             }}
-            afterSubmitCallback={() => history.goBack()}
+            afterSubmitCallback={() => history.push(`/protest/${id}`)}
             defaultValues={protest}
             editMode={true}
           />
