@@ -56,20 +56,6 @@ input {
   font-family: inherit;
 }
 
-.android-device .ReactModal__Content {
-  position: sticky !important;
-  padding: 10px 25px;
-  margin: 0px 10px;
-  margin-top: 40px;
-}
-
-.android-device .Image_Disappear {
-  display: none;
-}
-
-.android-device .Image_Appear {
-  display: fadein 0.5s;
-}
 
 
 .leaflet-marker-icon {

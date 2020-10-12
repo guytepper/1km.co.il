@@ -43,12 +43,25 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     return () => clearTimeout(timeout);
   }, [addressInputDisplay]);
 
-  const [ImageCss, setImageCss] = useState('Image_Appear');
-
+  const [ImageLoaded, setImageLoaded] = useState(false);
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
-        <img src="welcome-illustration.svg" className={ImageCss} style={{ maxWidth: 250 }} alt="אילוסטרציה של הפגנה" />
+        {/* image "thumbnail" lower resolution image until the high resolution one loaded"*/}
+        <img
+          src="welcome-illustration-lowres.webp"
+          style={{ width: 250, display: ImageLoaded ? 'none' : '' }}
+          alt="אילוסטרציה של הפגנה"
+        />
+        <img
+          src="welcome-illustration.svg"
+          onLoad={() => {
+            setImageLoaded(true);
+          }}
+          style={{ maxWidth: 250, display: ImageLoaded ? '' : 'none' }}
+          alt="אילוסטרציה של הפגנה"
+        />
+
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
         <h3 style={{ fontWeight: 400 }}>
           חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
@@ -71,7 +84,6 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
             <Button
               onClick={() => {
                 setAddressInputDisplay(true);
-                setImageCss('Image_Disappear');
               }}
               color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
             >
@@ -102,10 +114,11 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
-  top: 75px;
+  top: 70px;
   left: 25px;
   right: 25px;
-
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
   padding: 10px 25px;
@@ -118,7 +131,7 @@ const ModalWrapper = styled(ReactModal)`
   }
 
   @media (min-width: 1280px) {
-    top: 100px;
+    top: 75px;
     left: 250px;
     right: 250px;
   }
