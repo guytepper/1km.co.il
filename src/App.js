@@ -116,11 +116,10 @@ function App() {
       try {
         const snapshot = await query.limit(30).get();
         const protests = snapshot.docs.map((doc) => {
-          const { latitude, longitude } = doc.data().g.geopoint;
+          const { latitude, longitude } = doc.data().coordinates;
           const protestLatlng = [latitude, longitude];
           return {
             id: doc.id,
-            latlng: protestLatlng,
             distance: calculateDistance(state.userCoordinates, protestLatlng),
             ...doc.data(),
           };

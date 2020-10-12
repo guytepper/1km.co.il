@@ -20,7 +20,7 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName, marker }) => {
+const PopupMarker = ({ coordinates, displayName, marker }) => {
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
     iconUrl: '/icons/fist.svg',
@@ -30,7 +30,7 @@ const PopupMarker = ({ latlng, displayName, marker }) => {
   };
 
   return (
-    <Marker position={latlng} icon={protestPoint(markerInfo)}>
+    <Marker position={[coordinates.latitude, coordinates.longitude]} icon={protestPoint(markerInfo)}>
       <Popup>{displayName}</Popup>
     </Marker>
   );
