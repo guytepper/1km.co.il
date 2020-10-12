@@ -82,7 +82,6 @@ export async function updateProtest(protestId, params) {
 
   const doc = await firestore.collection('protests').doc(protestId).get();
 
-  console.log(lat, lng);
   return {
     id: doc.id,
     latlng: params.coords,
