@@ -48,7 +48,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
-        <img src="1kIllustration.svg" className={ImageCss} style={{ maxWidth: 300 }} alt="אילוסטרציה של הפגנה" />
+        <img src="welcome-illustration.svg" className={ImageCss} style={{ maxWidth: 250 }} alt="אילוסטרציה של הפגנה" />
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
         <h3 style={{ fontWeight: 400 }}>
           חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
@@ -102,7 +102,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
-  top: 100px;
+  top: 75px;
   left: 25px;
   right: 25px;
 
@@ -112,7 +112,7 @@ const ModalWrapper = styled(ReactModal)`
   z-index: 2;
 
   @media (min-width: 768px) {
-    top: 100px;
+    top: 75px;
     left: 100px;
     right: 100px;
   }
