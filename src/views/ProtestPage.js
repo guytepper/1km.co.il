@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, updateProtest } from '../api';
+import { assignRoleOnProtest, fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -205,6 +205,11 @@ export default function ProtestPage({ user }) {
               const response = await updateProtest(id, params);
               // refetch the protest once update is complete
               _fetchProtest(id, setProtest);
+
+              if (!isAdmin(user)) {
+                sendProtestLeaderRequest(user, null, id);
+                makeUserProtestLeader(id, user.uid);
+              }
               return response;
             }}
             afterSubmitCallback={() => history.push(`/protest/${id}`)}
