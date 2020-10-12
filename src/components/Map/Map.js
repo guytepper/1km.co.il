@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import L from 'leaflet';
+import MapSearchAutocomplete from '../MapSearchAutocomplete';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
   new L.Icon({
@@ -44,30 +45,43 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition }) {
+function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
+  const addressInputRef = useRef(); //search input ref
   return (
-    <MapWrapper
-      center={coordinates.length > 0 ? coordinates : balfur}
-      onMoveEnd={(t) => {
-        setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-      }}
-      zoom={14}
-    >
-      <TileLayer
-        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {coordinates.length === 2 && (
-        <>
-          <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={markers} />
-          <Circle radius={1000} center={coordinates} />
-        </>
-      )}
-    </MapWrapper>
+    <>
+      <MapWrapper
+        center={coordinates.length > 0 ? coordinates : balfur}
+        onMoveEnd={(t) => {
+          setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+        }}
+        zoom={14}
+      >
+        <SearchPlaceAutoComplete
+          style={{ zIndex: 1, position: 'absolute', top: '30px' }}
+          setCoordinates={setCoordinates}
+          inputRef={addressInputRef}
+          className="leaflet-pane leaflet-map-pane"
+        />
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {coordinates.length === 2 && (
+          <>
+            <Marker position={coordinates} icon={positionPoint}></Marker>
+            <MarkersList markers={markers} />
+            <Circle radius={1000} center={coordinates} />
+          </>
+        )}
+      </MapWrapper>
+    </>
   );
 }
-
+const SearchPlaceAutoComplete = styled(MapSearchAutocomplete)`
+  z-index: 10000;
+  position:absolute;
+  top 30;
+`;
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 350px;

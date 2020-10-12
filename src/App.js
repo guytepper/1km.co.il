@@ -97,7 +97,6 @@ function App() {
             dispatch({ type: 'setUser', payload: partialUserData });
           }
         });
-        
       } else {
         dispatch({ type: 'setUser', payload: 'visitor' });
       }
@@ -180,16 +179,16 @@ function App() {
             <NavItemsWrapper>
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
-                    <span style={{display: 'flex', alignItems: 'center', marginRight: '5px'}}>
-                      <NavProfilePicture src="/icons/guard.svg" alt="" />
-                      <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
-                      {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
-                    </span>
+                  <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
+                    <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                    {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
+                  </span>
                 ) : null}
-                  <GuestNavItems>
-                    <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
-                    <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  </GuestNavItems>
+                <GuestNavItems>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
@@ -201,7 +200,9 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
-                  h
+                  setCoordinates={(coords) => {
+                    dispatch({ type: 'setUserCoordinates', payload: coords });
+                  }}
                   markers={state.markers}
                 />
 
