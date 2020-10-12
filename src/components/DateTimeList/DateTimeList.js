@@ -7,7 +7,10 @@ export default function DateTimeList(props) {
 
   const addDateTime = (e) => {
     e.preventDefault();
-    setDateTimeList([...dateTimeList, { id: Math.max(...dateTimeList.map((item) => item.id)) + 1, time: '17:30' }]);
+    setDateTimeList([
+      ...dateTimeList,
+      { id: Math.max(...dateTimeList.map((item) => item.id)) + 1, date: '2020-10-17', time: '17:30' },
+    ]);
   };
 
   return (
