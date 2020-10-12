@@ -56,9 +56,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
         <img
           src="welcome-illustration.svg"
           onLoad={() => {
-            setTimeout(() => {
-              setImageLoaded(true);
-            }, 3000);
+            setImageLoaded(true);
           }}
           style={{ maxWidth: 250, display: ImageLoaded ? '' : 'none' }}
           alt="אילוסטרציה של הפגנה"
