@@ -179,8 +179,8 @@ function App() {
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
                   <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                    <NavProfilePicture src="/icons/guard.svg" alt="" />
-                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                    {/* <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem> */}
                     {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
                   </span>
                 ) : null}
@@ -311,19 +311,12 @@ const GuestNavItems = styled.div`
 `;
 
 const NavItem = styled(Link)`
+  font-size: 16px;
+  margin-left: 15px;
+  margin-bottom: 2px;
+
   &:hover {
     color: #3498db;
-  }
-
-  margin-left: 10px;
-
-  @media (max-width: 585px) {
-    margin-left: 15px;
-  }
-
-  @media (max-width: 415px) {
-    font-size: 13px;
-    margin-left: 10px;
   }
 `;
 
