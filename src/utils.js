@@ -98,6 +98,19 @@ export function arrayToHashMap(arr, key) {
   return _hashMap;
 };
 
+export function objectDiff(oldObj, newObj) {
+  let diff = Object.keys(newObj).reduce((diff, key) => {
+    if (JSON.stringify(oldObj[key]) === JSON.stringify(newObj[key])) return diff
+    return {
+      ...diff,
+      [key]: { oldValue: oldObj[key], newValue: newObj[key]}
+    }
+  }, {});
+
+  return diff;
+}
+
+
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';

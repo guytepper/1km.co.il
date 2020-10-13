@@ -23,7 +23,7 @@ import {
 } from '../components/ProtestCard/ProtestCardStyles';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader } from '../utils';
+import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader, objectDiff } from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 768px)`;
@@ -202,12 +202,13 @@ export default function ProtestPage({ user }) {
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
+              const diff = objectDiff(protest, params)
               const response = await updateProtest(id, params);
               // refetch the protest once update is complete
               _fetchProtest(id, setProtest);
 
               if (!isAdmin(user)) {
-                createProtestEdit(user.uid, id);
+                createProtestEdit(user.uid, id, diff);
                 setProtestEditsForUser(user, id);
               }
               return response;

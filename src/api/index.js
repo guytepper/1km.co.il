@@ -283,12 +283,13 @@ export function handleSignIn() {
 }
 
 
-export async function createProtestEdit(userId, protestId) {
+export async function createProtestEdit(userId, protestId, diff) {
   await firestore
   .collection('protest_edits')
   .add({
       userId,
       protestId,
+      diff,
       created_at: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'pending'
   });
