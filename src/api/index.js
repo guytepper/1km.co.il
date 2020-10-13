@@ -199,7 +199,9 @@ export async function setPhoneNumberForUser(uid, phoneNumber) {
 }
 
 export async function setProtestEditsForUser(user, protestId) {
-  await firestore.collection('users').doc(user.uid).update({ edits: [...(user.edits || []), protestId] });
+  await firestore.collection('users').doc(user.uid).update({ 
+    edits: [...new Set([...(user.edits || []), protestId])]
+  });
 }
 
 
