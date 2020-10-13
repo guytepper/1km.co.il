@@ -309,6 +309,8 @@ export async function fetchPendingEdits() {
     edits.push(doc.data());
   });
 
+  console.log('edits in function', edits)
+
   return edits;
 }
 
