@@ -276,8 +276,8 @@ export async function createProtestEdit(userId, protestId) {
   await firestore
   .collection('protest_edits')
   .add({
-      userRef:  firestore.doc(`users/${userId}`),
-      protestRef: firestore.doc(`protests/${protestId}`),
+      user:  firestore.doc(`users/${userId}`),
+      protest: firestore.doc(`protests/${protestId}`),
       created_at: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'pending'
   });
