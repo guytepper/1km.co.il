@@ -105,7 +105,7 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest, user }) {
+function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
 
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time, distance } = protest;
@@ -135,10 +135,10 @@ function ProtestPageContent({ protest, user }) {
                   {streetAddress}
                 </ProtestCardDetail>
               )}
-              {distance && (
+              {userCoordinates && (
                 <ProtestCardDetail>
                   <ProtestCardIcon src="/icons/ruler.svg" alt="" />
-                  {formatDistance(distance)}
+                  {formatDistance(calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
                 </ProtestCardDetail>
               )}
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
@@ -199,7 +199,7 @@ function ProtestPageContent({ protest, user }) {
   );
 }
 
-export default function ProtestPage({ user }) {
+export default function ProtestPage({ user, userCoordinates }) {
   const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
@@ -237,7 +237,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} user={user} />
+        <ProtestPageContent protest={protest} userCoordinates={userCoordinates} user={user} />
       </Route>
     </Switch>
   );
