@@ -1,5 +1,6 @@
 import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
+import {arrayToHashMap} from "../utils";
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 // async function verifyRecaptcha(token) {
@@ -180,6 +181,16 @@ export async function getProtestsForLeader(uid) {
   return protests;
 }
 
+export async function fetchProtestsById(ids) {
+  const protests = await firestore.collection('protests').where(firestore.FieldPath.documentId(), 'in', ids).get();
+  return protests.map(doc => doc.data())
+}
+
+export async function fetchUsersById(ids) {
+  const users = await firestore.collection('users').where(firestore.FieldPath.documentId(), 'in', ids).get()
+  return users.map(doc => doc.data())
+}
+
 export function createLeaderRequestId(userId, protestId) {
   return `${userId}${protestId}`;
 }
@@ -276,8 +287,8 @@ export async function createProtestEdit(userId, protestId) {
   await firestore
   .collection('protest_edits')
   .add({
-      user:  firestore.doc(`users/${userId}`),
-      protest: firestore.doc(`protests/${protestId}`),
+      userId,
+      protestId,
       created_at: firebase.firestore.FieldValue.serverTimestamp(),
       status: 'pending'
   });
