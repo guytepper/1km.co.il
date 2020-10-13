@@ -122,7 +122,7 @@ const ModalWrapper = styled(ReactModal)`
   border: 1px solid #d2d2d2;
   background-color: #fff;
   padding: 20px 25px;
-  z-index: 2;
+  z-index: 20;
 
   @media (min-width: 768px) {
     top: 75px;
