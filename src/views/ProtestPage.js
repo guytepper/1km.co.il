@@ -77,10 +77,10 @@ async function getDistance(protest) {
 }
 
 async function _fetchProtest(id, setProtest) {
-  const result = await fetchProtest(id);
-  if (result) {
-    result.distance = await getDistance(result);
-    setProtest(result);
+  const protest = await fetchProtest(id);
+  if (protest) {
+    protest.distance = await getDistance(protest);
+    setProtest(protest);
   } else {
     // TODO: handle 404
   }
