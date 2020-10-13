@@ -55,12 +55,6 @@ input {
   font-family: inherit;
 }
 
-.android-device .ReactModal__Content {
-  position: unset;
-  height: 100%;
-  padding: 0px 15px;
-}
-
 .leaflet-marker-icon {
   animation: fadein 0.5s;
 }
@@ -69,6 +63,7 @@ input {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -76,4 +71,8 @@ input {
 
 li {
   margin-bottom: 5px;
+}
+
+.ReactModal__Overlay {
+  z-index: 20;
 }
