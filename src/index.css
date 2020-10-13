@@ -28,7 +28,6 @@
 
 html {
   box-sizing: border-box;
-
 }
 
 *,
@@ -56,8 +55,6 @@ input {
   font-family: inherit;
 }
 
-
-
 .leaflet-marker-icon {
   animation: fadein 0.5s;
 }
@@ -74,4 +71,8 @@ input {
 
 li {
   margin-bottom: 5px;
+}
+
+.ReactModal__Overlay {
+  z-index: 20;
 }
