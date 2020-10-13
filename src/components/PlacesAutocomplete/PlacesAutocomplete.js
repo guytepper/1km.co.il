@@ -83,7 +83,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
 }
 
 const ComboboxInputWrapper = styled(ComboboxInput)`
-  width: 300px;
+  width: 100%;
   padding: 6px 20px;
   margin-bottom: 10px;
   font-size: 16px;
