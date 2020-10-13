@@ -75,7 +75,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
         ref={inputRef}
         placeholder="מה הכתובת?"
       />
-      <ComboboxPopover>
+      <ComboboxPopover style={{ zIndex: 30 }}>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>
     </Combobox>
