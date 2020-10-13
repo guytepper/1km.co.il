@@ -215,6 +215,9 @@ export async function setProtestEditsForUser(user, protestId) {
   });
 }
 
+export async function setEditAsViewed(id) {
+  firestore.collection('protest_edits').doc(id).update({status: 'viewed'})
+}
 
 // return true is the protest exist in the database
 export async function isProtestValid(protestId) {
