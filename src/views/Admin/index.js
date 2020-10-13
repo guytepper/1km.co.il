@@ -4,7 +4,7 @@ import { Button } from '../../components';
 import { AdminWrapper, AdminNavigation, AdminNavButton } from './components';
 import LeaderAdmin from './LeaderAdmin';
 import ProtestAdmin from './ProtestAdmin';
-import EditsAdmin from "./EditsAdmin";
+import EditsAdmin from './EditsAdmin';
 import { handleSignIn } from '../../api';
 import { isAdmin } from '../../utils';
 
@@ -17,6 +17,21 @@ const Admin = ({ user }) => {
         <div>טוען...</div>
       ) : user ? (
         <>
+          <div style={{ display: 'flex' }}>
+            <AdminNavigation to="/admin/protest-requests">
+              <AdminNavButton disabled={location.pathname.includes('protest-requests')}>אישור הפגנות</AdminNavButton>
+            </AdminNavigation>
+            <AdminNavigation
+              to="/admin/leader-requests"
+              disabled={location.pathname.includes('leader-requests')}
+              style={{ height: 'min-content' }}
+            >
+              <AdminNavButton>אישור מובילים</AdminNavButton>
+            </AdminNavigation>
+            <AdminNavigation to="/admin/edits" disabled={location.pathname.includes('edits')} style={{ height: 'min-content' }}>
+              <AdminNavButton>אישור עריכות</AdminNavButton>
+            </AdminNavigation>
+          </div>
           <Switch>
             {!isAdmin(user) && <Redirect to="/" />}
             <Route exact path="/admin">
@@ -31,17 +46,7 @@ const Admin = ({ user }) => {
             <Route path="/admin/edits">
               <EditsAdmin />
             </Route>
-      
           </Switch>
-          {['/admin/protest-requests/', '/admin/protest-requests'].includes(location.pathname) ? (
-            <AdminNavigation to="/admin/leader-requests" style={{ height: 'min-content' }}>
-              <AdminNavButton>אישור מובילים</AdminNavButton>
-            </AdminNavigation>
-          ) : (
-            <AdminNavigation to="/admin/protest-requests">
-              <AdminNavButton>אישור הפגנות</AdminNavButton>
-            </AdminNavigation>
-          )}
         </>
       ) : (
         <Button onClick={handleSignIn}>התחבר למערכת</Button>

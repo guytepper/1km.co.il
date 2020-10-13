@@ -37,9 +37,7 @@ export const LeaderCard = styled.div`
 `;
 
 export const AdminNavButton = styled(Button)`
-  width: 140px;
-  height: 35px;
-  font-size: 14px;
+  margin-bottom: 20px;
 `;
 
 export const SidebarList = styled.ul`
@@ -89,13 +87,7 @@ export const LeaderPhoto = styled.img`
   border-radius: 50%;
 `;
 
-export const AdminNavigation = styled(Link)`
-  grid-column: 2/2;
-  position: absolute;
-  left: 0;
-  top: 15px;
-  grid-row: 1/1;
-`;
+export const AdminNavigation = styled(Link)``;
 
 export const SidebarListHead = styled.div`
   padding: 0 20px;

@@ -2,9 +2,9 @@ import React from 'react';
 import styled from 'styled-components/macro';
 
 export default function Button(props) {
-  const { color, type, onClick, disabled, style, icon, children } = props;
+  const { color, type, onClick, disabled, style, icon, children, className } = props;
   return (
-    <ButtonWrapper color={color} type={type} onClick={onClick} disabled={disabled} style={style}>
+    <ButtonWrapper color={color} type={type} onClick={onClick} disabled={disabled} style={style} className={className}>
       {icon && <ButtonIcon src={icon} alt="" aria-hidden="true" />}
       <span style={{ paddingBottom: 3 }}>{children}</span>
     </ButtonWrapper>
