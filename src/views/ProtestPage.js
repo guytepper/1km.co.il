@@ -23,7 +23,18 @@ import {
 } from '../components/ProtestCard/ProtestCardStyles';
 import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader } from '../utils';
+import {
+  dateToDayOfWeek,
+  formatDate,
+  isAdmin,
+  sortDateTimeList,
+  isAuthenticated,
+  isVisitor,
+  isLeader,
+  getCurrentPosition,
+  calculateDistance,
+  formatDistance,
+} from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 768px)`;
@@ -61,9 +72,25 @@ function getSocialLinks(protest) {
   return items;
 }
 
+async function getDistance(protest) {
+  if (!protest || !protest.coordinates) {
+    return undefined;
+  }
+  try {
+    const position = await getCurrentPosition();
+    const protestLocation = [protest.coordinates.latitude, protest.coordinates.longitude];
+    const distance = calculateDistance(position, protestLocation);
+    return distance;
+  } catch (e) {
+    console.warn('could get current location', e);
+    return undefined;
+  }
+}
+
 async function _fetchProtest(id, setProtest) {
   const result = await fetchProtest(id);
   if (result) {
+    result.distance = await getDistance(result);
     setProtest(result);
   } else {
     // TODO: handle 404
@@ -92,7 +119,7 @@ function useFetchProtest() {
 function ProtestPageContent({ protest, user }) {
   const history = useHistory();
 
-  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time, distance } = protest;
   const shareUrl = window.location.href;
   const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
@@ -119,10 +146,12 @@ function ProtestPageContent({ protest, user }) {
                   {streetAddress}
                 </ProtestCardDetail>
               )}
-              <ProtestCardDetail>
-                <ProtestCardIcon src="/icons/ruler.svg" alt="" />
-                600 מטר ממיקומך
-              </ProtestCardDetail>
+              {distance && (
+                <ProtestCardDetail>
+                  <ProtestCardIcon src="/icons/ruler.svg" alt="" />
+                  {formatDistance(distance)}
+                </ProtestCardDetail>
+              )}
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
           </Details>
