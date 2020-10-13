@@ -107,7 +107,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
-  max-height: 100vh;
+  max-height: calc(100vh - 50px);
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
@@ -119,25 +119,37 @@ const ModalWrapper = styled(ReactModal)`
     left: 25px;
     right: 25px;
     bottom: 20px;
-    max-height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px) !important;
   }
 
   @media (min-width: 768px) {
     top: 75px;
     left: 100px;
     right: 100px;
+    max-height: calc(100vh - 100px);
   }
 
   @media (min-width: 1280px) {
     top: 75px;
     left: 250px;
     right: 250px;
+    max-height: calc(100vh - 200px);
   }
 
   @media (min-width: 1440px) {
     top: 100px;
     left: 500px;
     right: 500px;
+    max-height: calc(100vh - 200px);
+  }
+  /*in short screens - modal higher*/
+  @media (max-height: 700px) {
+    top: 30px !important;
+    max-height: calc(100vh) !important;
+  }
+  /* in high screens, modal is shorter (only if its not a phone - width is large)*/
+  @media (min-height: 850px) and (min-width: 1280px) {
+    max-height: calc(100vh - 350px) !important;
   }
 `;
 
