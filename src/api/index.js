@@ -1,6 +1,6 @@
 import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
-import {arrayToHashMap} from "../utils";
+import { arrayToHashMap } from '../utils';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 // async function verifyRecaptcha(token) {
@@ -121,6 +121,16 @@ export async function fetchProtest(protestId) {
   }
 }
 
+export async function fetchUser(userId) {
+  const user = await firestore.collection('users').doc(userId).get();
+
+  if (user.exists) {
+    return user.data();
+  } else {
+    return false;
+  }
+}
+
 export async function uploadFile(params) {
   const request = await fetch('http://localhost:5001/onekm-50c7f/us-central1/uploadImage', {
     method: 'post',
@@ -183,12 +193,12 @@ export async function getProtestsForLeader(uid) {
 
 export async function fetchProtestsById(ids) {
   const protests = await firestore.collection('protests').where(firestore.FieldPath.documentId(), 'in', ids).get();
-  return protests.map(doc => doc.data())
+  return protests.map((doc) => doc.data());
 }
 
 export async function fetchUsersById(ids) {
-  const users = await firestore.collection('users').where(firestore.FieldPath.documentId(), 'in', ids).get()
-  return users.map(doc => doc.data())
+  const users = await firestore.collection('users').where(firestore.FieldPath.documentId(), 'in', ids).get();
+  return users.map((doc) => doc.data());
 }
 
 export function createLeaderRequestId(userId, protestId) {
@@ -210,13 +220,16 @@ export async function setPhoneNumberForUser(uid, phoneNumber) {
 }
 
 export async function setProtestEditsForUser(user, protestId) {
-  await firestore.collection('users').doc(user.uid).update({ 
-    edits: [...new Set([...(user.edits || []), protestId])]
-  });
+  await firestore
+    .collection('users')
+    .doc(user.uid)
+    .update({
+      edits: [...new Set([...(user.edits || []), protestId])],
+    });
 }
 
 export async function setEditAsViewed(id) {
-  firestore.collection('protest_edits').doc(id).update({status: 'viewed'})
+  firestore.collection('protest_edits').doc(id).update({ status: 'viewed' });
 }
 
 // return true is the protest exist in the database
@@ -285,16 +298,13 @@ export function handleSignIn() {
   firebase.auth().signInWithRedirect(provider);
 }
 
-
 export async function createProtestEdit(userId, protestId, diff) {
-  await firestore
-  .collection('protest_edits')
-  .add({
-      userId,
-      protestId,
-      diff,
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      status: 'pending'
+  await firestore.collection('protest_edits').add({
+    userId,
+    protestId,
+    diff,
+    created_at: firebase.firestore.FieldValue.serverTimestamp(),
+    status: 'pending',
   });
 }
 
@@ -306,10 +316,10 @@ export async function fetchPendingEdits() {
   const edits = [];
 
   querySnapshot.forEach(function (doc) {
-    edits.push(doc.data());
+    edits.push({ id: doc.id, ...doc.data() });
   });
 
-  console.log('edits in function', edits)
+  console.log('edits in function', edits);
 
   return edits;
 }
