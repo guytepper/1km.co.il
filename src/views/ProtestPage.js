@@ -19,7 +19,6 @@ import {
   sortDateTimeList,
   isAuthenticated,
   isVisitor,
-  isLeader,
   getCurrentPosition,
   calculateDistance,
   formatDistance,
@@ -45,41 +44,22 @@ function getEditButtonLink(user, protest) {
 
 function getSocialLinks(protest) {
   const items = [];
-  const { whatsAppLink, telegramLink, facebookLink, twitterLink } = protest;
+  const { whatsAppLink, telegramLink } = protest;
+
   if (whatsAppLink) {
     items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
   }
   if (telegramLink) {
     items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
   }
-  // if (facebookLink) {
-  //   items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
-  // }
-  // if (twitterLink) {
-  //   items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
-  // }
-  return items;
-}
 
-async function getDistance(protest) {
-  if (!protest || !protest.coordinates) {
-    return undefined;
-  }
-  try {
-    const position = await getCurrentPosition();
-    const protestLocation = [protest.coordinates.latitude, protest.coordinates.longitude];
-    const distance = calculateDistance(position, protestLocation);
-    return distance;
-  } catch (e) {
-    console.warn('could get current location', e);
-    return undefined;
-  }
+  return items;
 }
 
 async function _fetchProtest(id, setProtest) {
   const protest = await fetchProtest(id);
+
   if (protest) {
-    protest.distance = await getDistance(protest);
     setProtest(protest);
   } else {
     // TODO: handle 404
@@ -108,9 +88,7 @@ function useFetchProtest() {
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
 
-  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time, distance } = protest;
-  const shareUrl = window.location.href;
-  const shareTitle = `${texts.shareMassage}${displayName}`;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const socialLinks = getSocialLinks(protest);
 
   return (
