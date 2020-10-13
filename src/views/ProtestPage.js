@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { assignRoleOnProtest, fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  WhatsappIcon,
-  WhatsappShareButton,
-  TelegramShareButton,
-  TelegramIcon,
-} from 'react-share';
 import {
   ProtestCardInfo,
   ProtestCardDetail,
   ProtestCardIcon,
   ProtestCardGroupButton,
 } from '../components/ProtestCard/ProtestCardStyles';
-import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
-import { dateToDayOfWeek, formatDate, isAdmin, sortDateTimeList, isAuthenticated, isVisitor, isLeader } from '../utils';
+import {
+  dateToDayOfWeek,
+  formatDate,
+  isAdmin,
+  sortDateTimeList,
+  isAuthenticated,
+  isVisitor,
+  getCurrentPosition,
+  calculateDistance,
+  formatDistance,
+} from '../utils';
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 768px)`;
@@ -45,26 +44,23 @@ function getEditButtonLink(user, protest) {
 
 function getSocialLinks(protest) {
   const items = [];
-  const { whatsAppLink, telegramLink, facebookLink, twitterLink } = protest;
+  const { whatsAppLink, telegramLink } = protest;
+
   if (whatsAppLink) {
     items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
   }
   if (telegramLink) {
     items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
   }
-  // if (facebookLink) {
-  //   items.push({ type: 'facebook', url: facebookLink, text: 'הצטרפות לקבוצת הפייסבוק' });
-  // }
-  // if (twitterLink) {
-  //   items.push({ type: 'twitter', url: twitterLink, text: 'הצטרפות לקבוצת הטוויטר' });
-  // }
+
   return items;
 }
 
 async function _fetchProtest(id, setProtest) {
-  const result = await fetchProtest(id);
-  if (result) {
-    setProtest(result);
+  const protest = await fetchProtest(id);
+
+  if (protest) {
+    setProtest(protest);
   } else {
     // TODO: handle 404
   }
@@ -89,12 +85,10 @@ function useFetchProtest() {
   };
 }
 
-function ProtestPageContent({ protest, user }) {
+function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
 
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
-  const shareUrl = window.location.href;
-  const shareTitle = `${texts.shareMassage}${displayName}`;
   const socialLinks = getSocialLinks(protest);
 
   return (
@@ -119,10 +113,12 @@ function ProtestPageContent({ protest, user }) {
                   {streetAddress}
                 </ProtestCardDetail>
               )}
-              <ProtestCardDetail>
-                <ProtestCardIcon src="/icons/ruler.svg" alt="" />
-                600 מטר ממיקומך
-              </ProtestCardDetail>
+              {userCoordinates && (
+                <ProtestCardDetail>
+                  <ProtestCardIcon src="/icons/ruler.svg" alt="" />
+                  {formatDistance(calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
+                </ProtestCardDetail>
+              )}
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
           </Details>
@@ -181,7 +177,7 @@ function ProtestPageContent({ protest, user }) {
   );
 }
 
-export default function ProtestPage({ user }) {
+export default function ProtestPage({ user, userCoordinates }) {
   const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
@@ -219,7 +215,7 @@ export default function ProtestPage({ user }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} user={user} />
+        <ProtestPageContent protest={protest} userCoordinates={userCoordinates} user={user} />
       </Route>
     </Switch>
   );
