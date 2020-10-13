@@ -3,6 +3,7 @@ import { Button, ProtestForm } from '../../components';
 import { FormWrapper } from './components';
 import { archiveProtest, submitProtest, updateProtest } from './AdminService';
 import ProtestSidebar from './ProtestSidebar';
+import { isAdmin } from '../../utils';
 
 const initialState = {
   currentProtest: undefined,
@@ -30,7 +31,7 @@ const reducer = (state, action) => {
   }
 };
 
-const ProtestAdmin = () => {
+const ProtestAdmin = ({ user }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
@@ -73,6 +74,7 @@ const ProtestAdmin = () => {
           }}
           defaultValues={state.currentProtest}
           editMode={state.protestFilter}
+          isAdmin={isAdmin(user)}
         />
         <Button
           onClick={() =>
