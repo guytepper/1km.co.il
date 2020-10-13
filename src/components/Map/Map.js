@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
+import MKs from './MKs.json';
 import L from 'leaflet';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -61,6 +62,13 @@ function AppMap({ markers, coordinates, setMapPosition }) {
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
           <MarkersList markers={markers} />
+          {MKs.map((mk) => (
+            <>
+              <Marker position={mk.position} icon={new L.icon(mk.icon)}>
+                <Popup>{mk.name}</Popup>
+              </Marker>
+            </>
+          ))}
           <Circle radius={1000} center={coordinates} />
         </>
       )}

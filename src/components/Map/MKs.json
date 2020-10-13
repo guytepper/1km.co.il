@@ -1,0 +1,22 @@
+[
+  {
+    "name": "בני גנץ",
+    "position": [32.094419, 34.97454],
+    "icon": {
+      "iconUrl": "/icons/markers/benny.png",
+      "iconRetinaUrl": "/icons/markers/benny@2x.png",
+      "iconSize": [45, 69],
+      "iconAnchor": [22.5, 69]
+    }
+  },
+  {
+    "name": "מירי רגב",
+    "position": [32.096603, 34.980548],
+    "icon": {
+      "iconUrl": "/icons/markers/miri.png",
+      "iconRetinaUrl": "/icons/markers/miri@2x.png",
+      "iconSize": [54, 53],
+      "iconAnchor": [27, 53]
+    }
+  }
+]
