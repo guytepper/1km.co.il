@@ -22,7 +22,7 @@ const Admin = ({ user }) => {
               <Redirect to="/admin/protest-requests" />
             </Route>
             <Route path="/admin/protest-requests">
-              <ProtestAdmin />
+              <ProtestAdmin user={user} />
             </Route>
             <Route path="/admin/leader-requests/:leaderId?">
               <LeaderAdmin user={user} />
