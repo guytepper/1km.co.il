@@ -157,7 +157,7 @@ function ProtestForm({
         </>
       ) : (
         <>
-          {!editMode || isAdmin && (
+          {(!editMode || isAdmin) && (
             <>
               <ProtestFormLabel>
                 שם המקום
