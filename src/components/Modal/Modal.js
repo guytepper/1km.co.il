@@ -61,7 +61,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           <br />
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
-        <div style={{ maxWidth: 280 }}>
+        <ModalButtonsWrapper>
           <Button
             onClick={() => {
               getUserPosition();
@@ -98,7 +98,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
               </Button>
             </>
           )}
-        </div>
+        </ModalButtonsWrapper>
       </ModalContentWrapper>
     </ModalWrapper>
   );
@@ -107,10 +107,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
-  top: 30px;
-  left: 10px;
-  right: 10px;
-  max-height: calc(100vh - 50px);
+  max-height: 100vh;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
@@ -118,8 +115,11 @@ const ModalWrapper = styled(ReactModal)`
   z-index: 20;
 
   @media (min-width: 360px) {
+    top: 30px;
     left: 25px;
     right: 25px;
+    bottom: 20px;
+    max-height: calc(100vh - 50px);
   }
 
   @media (min-width: 768px) {
@@ -156,6 +156,14 @@ const ModalContentImage = styled.img`
   @media (min-width: 375px) {
     width: 250px;
     height: 176.7px;
+  }
+`;
+
+const ModalButtonsWrapper = styled.div`
+  max-width: 280px;
+
+  @media (min-width: 400px) {
+    max-width: 300px;
   }
 `;
 
