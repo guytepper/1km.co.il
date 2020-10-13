@@ -117,7 +117,7 @@ const ModalWrapper = styled(ReactModal)`
   top: 70px;
   left: 25px;
   right: 25px;
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 100px)
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
