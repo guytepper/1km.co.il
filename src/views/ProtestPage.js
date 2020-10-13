@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { assignRoleOnProtest, fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
-import {
-  FacebookShareButton,
-  FacebookIcon,
-  TwitterShareButton,
-  TwitterIcon,
-  WhatsappIcon,
-  WhatsappShareButton,
-  TelegramShareButton,
-  TelegramIcon,
-} from 'react-share';
 import {
   ProtestCardInfo,
   ProtestCardDetail,
   ProtestCardIcon,
   ProtestCardGroupButton,
 } from '../components/ProtestCard/ProtestCardStyles';
-import SocialButton, { Button } from '../components/Button/SocialButton';
 import * as texts from './ProtestPageTexts.json';
 import {
   dateToDayOfWeek,
