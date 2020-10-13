@@ -18,7 +18,14 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {}, editMode = null }) {
+function ProtestForm({
+  initialCoords,
+  submitCallback,
+  defaultValues = {},
+  afterSubmitCallback = () => {},
+  editMode = null,
+  isAdmin,
+}) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
@@ -150,67 +157,71 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
         </>
       ) : (
         <>
-          <ProtestFormLabel>
-            שם המקום
-            <ProtestFormInput
-              type="text"
-              name="displayName"
-              ref={register}
-              placeholder="איפה ההפגנה?"
-              autoFocus
-            ></ProtestFormInput>
-            <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
-          </ProtestFormLabel>
+          {isAdmin && (
+            <>
+              <ProtestFormLabel>
+                שם המקום
+                <ProtestFormInput
+                  type="text"
+                  name="displayName"
+                  ref={register}
+                  placeholder="איפה ההפגנה?"
+                  autoFocus
+                ></ProtestFormInput>
+                <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
+              </ProtestFormLabel>
 
-          <ProtestFormLabel>
-            כתובת
-            <PlacesAutocomplete
-              setManualAddress={setMapCenter}
-              setStreetAddress={setStreetAddress}
-              inputRef={register}
-              defaultValue={streetAddressDefaultValue}
-            />
-            <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
-          </ProtestFormLabel>
-          <MapWrapper
-            center={mapCenter}
-            zoom={zoomLevel}
-            scrollWheelZoom={'center'}
-            onMove={(t) => {
-              setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
-              setZoomLevel(t.target._zoom);
-            }}
-            onMoveEnd={async (t) => {
-              const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
-              setMapCenter(newPosition);
-              setMarkerPosition(newPosition);
-              setZoomLevel(t.target._zoom);
+              <ProtestFormLabel>
+                כתובת
+                <PlacesAutocomplete
+                  setManualAddress={setMapCenter}
+                  setStreetAddress={setStreetAddress}
+                  inputRef={register}
+                  defaultValue={streetAddressDefaultValue}
+                />
+                <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
+              </ProtestFormLabel>
+              <MapWrapper
+                center={mapCenter}
+                zoom={zoomLevel}
+                scrollWheelZoom={'center'}
+                onMove={(t) => {
+                  setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+                  setZoomLevel(t.target._zoom);
+                }}
+                onMoveEnd={async (t) => {
+                  const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
+                  setMapCenter(newPosition);
+                  setMarkerPosition(newPosition);
+                  setZoomLevel(t.target._zoom);
 
-              // fetch protests on move end
-              if (mapCenter) {
-                const protests = await fetchNearbyProtests(mapCenter);
-                setNearbyProtests(protests);
-              }
-            }}
-            onZoom={(event) => {
-              setZoomLevel(event.target._zoom);
-            }}
-          >
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={markerPostion}></Marker>
-            {nearbyProtests.map((protest) => (
-              <Marker
-                position={[protest.coordinates.latitude, protest.coordinates.longitude]}
-                icon={protestMarker}
-                key={protest.id}
-              ></Marker>
-            ))}
-          </MapWrapper>
+                  // fetch protests on move end
+                  if (mapCenter) {
+                    const protests = await fetchNearbyProtests(mapCenter);
+                    setNearbyProtests(protests);
+                  }
+                }}
+                onZoom={(event) => {
+                  setZoomLevel(event.target._zoom);
+                }}
+              >
+                <TileLayer
+                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={markerPostion}></Marker>
+                {nearbyProtests.map((protest) => (
+                  <Marker
+                    position={[protest.coordinates.latitude, protest.coordinates.longitude]}
+                    icon={protestMarker}
+                    key={protest.id}
+                  ></Marker>
+                ))}
+              </MapWrapper>
 
-          <hr />
+              <hr />
+            </>
+          )}
           <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>
           <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
 

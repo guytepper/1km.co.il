@@ -211,6 +211,7 @@ export default function ProtestPage({ user, userCoordinates }) {
             afterSubmitCallback={() => history.push(`/protest/${id}`)}
             defaultValues={protest}
             editMode={true}
+            isAdmin={isAdmin(user)}
           />
         </EditViewContainer>
       </ProtectedRoute>
