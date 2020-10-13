@@ -113,7 +113,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                   {streetAddress}
                 </ProtestCardDetail>
               )}
-              {userCoordinates && (
+              {userCoordinates.length > 0 && (
                 <ProtestCardDetail>
                   <ProtestCardIcon src="/icons/ruler.svg" alt="" />
                   {formatDistance(calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
