@@ -198,6 +198,11 @@ export async function setPhoneNumberForUser(uid, phoneNumber) {
   await firestore.collection('users').doc(uid).update({ phoneNumber });
 }
 
+export async function setProtestEditsForUser(user, protestId) {
+  await firestore.collection('users').doc(user.uid).update({ edits: [...(user.edits || []), protestId] });
+}
+
+
 // return true is the protest exist in the database
 export async function isProtestValid(protestId) {
   try {
@@ -262,6 +267,28 @@ export function handleSignIn() {
   var provider = new firebase.auth.FacebookAuthProvider();
   provider.addScope('email');
   firebase.auth().signInWithRedirect(provider);
+}
+
+export async function fetchProtestEdits(protestId) {
+  const protestEdits = await firestore.collection('protest_edits').doc(protestId).get();
+
+  if (protestEdits.exists) {
+    return protestEdits.data().edits
+  } else {
+    return false;
+  }
+}
+
+export async function createProtestEdit(protestId, userId, edits) {
+  await firestore
+  .collection('protest_edits')
+  .doc(protestId)
+  .set({
+    edits: [...edits, {
+      userRef:  firestore.doc(`users/${userId}`),
+      created_at: Date.now(),
+    }]
+  });
 }
 
 ///////////////////////////////////////////////////////
