@@ -271,26 +271,30 @@ export function handleSignIn() {
   firebase.auth().signInWithRedirect(provider);
 }
 
-export async function fetchProtestEdits(protestId) {
-  const protestEdits = await firestore.collection('protest_edits').doc(protestId).get();
 
-  if (protestEdits.exists) {
-    return protestEdits.data().edits
-  } else {
-    return false;
-  }
-}
-
-export async function createProtestEdit(protestId, userId, edits) {
+export async function createProtestEdit(userId, protestId) {
   await firestore
   .collection('protest_edits')
-  .doc(protestId)
-  .set({
-    edits: [...edits, {
+  .add({
       userRef:  firestore.doc(`users/${userId}`),
-      created_at: Date.now(),
-    }]
+      protestRef: firestore.doc(`protests/${protestId}`),
+      created_at: firebase.firestore.FieldValue.serverTimestamp(),
+      status: 'pending'
   });
+}
+
+export async function fetchPendingEdits() {
+  const editsRef = firestore.collection('protest_edits');
+  const query = editsRef.where('status', '==', 'pending');
+
+  const querySnapshot = await query.get();
+  const edits = [];
+
+  querySnapshot.forEach(function (doc) {
+    edits.push(doc.data());
+  });
+
+  return edits;
 }
 
 ///////////////////////////////////////////////////////

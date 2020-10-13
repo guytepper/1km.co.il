@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { createProtestEdit, fetchProtest, fetchProtestEdits, setProtestEditsForUser, updateProtest } from '../api';
+import { createProtestEdit, fetchProtest, setProtestEditsForUser, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -87,19 +87,6 @@ function useFetchProtest() {
       : null,
     setProtest,
   };
-}
-
-function useFetchEdits() {
-  const [edits, setEdits] = useState([]);
-  const { id } = useParams();
-
-  useEffect(async () => {
-    const serverEdits = await fetchProtestEdits(id) || [];
-
-    setEdits(serverEdits);
-  }, [id]);
-
-  return { edits };
 }
 
 function ProtestPageContent({ protest, user }) {
@@ -196,7 +183,6 @@ function ProtestPageContent({ protest, user }) {
 
 export default function ProtestPage({ user }) {
   const { protest, setProtest } = useFetchProtest();
-  const { edits } = useFetchEdits();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
 
@@ -221,7 +207,7 @@ export default function ProtestPage({ user }) {
               _fetchProtest(id, setProtest);
 
               if (!isAdmin(user)) {
-                createProtestEdit(id, user.uid, edits);
+                createProtestEdit(user.uid, id);
                 setProtestEditsForUser(user, id);
               }
               return response;
