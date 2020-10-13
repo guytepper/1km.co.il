@@ -31,3 +31,4 @@ ui-debug.log
 package-lock.json
 
 /cypress/integration/examples/
+/cypress/videos/
