@@ -222,6 +222,7 @@ function App() {
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
                 setCoordinates={(coords) => {
+                  dispatch({ type: 'setMapPosition', payload: coords });
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
               />
