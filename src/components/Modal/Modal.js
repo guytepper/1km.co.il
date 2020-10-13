@@ -151,6 +151,21 @@ const ModalWrapper = styled(ReactModal)`
   @media (min-height: 850px) and (min-width: 1280px) {
     max-height: calc(100vh - 350px) !important;
   }
+
+  /*scrollbar*/
+  scrollbar-color: #5f6ffa #dde0ff;
+  scrollbar-width: thin;
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #dde0ff;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #5f6ffa;
+    border-radius: 10px;
+  }
 `;
 
 const ModalContentWrapper = styled.div`
