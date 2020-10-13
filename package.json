@@ -21,7 +21,6 @@
     "react-recaptcha-v3": "^2.0.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
-    "react-share": "^4.3.0",
     "styled-components": "^5.2.0",
     "use-places-autocomplete": "^1.5.0"
   },
@@ -32,7 +31,16 @@
     "test:e2e": "start-server-and-test  start http://localhost:3000 cy:run",
     "cy:run": "cypress run",
     "eject": "react-scripts eject",
+    "format": "prettier --write .",
     "deploy": "npm run build && firebase deploy --only hosting"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "prettier --write"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -55,6 +63,9 @@
   "devDependencies": {
     "cypress": "^5.3.0",
     "cypress-wait-until": "^1.7.1",
-    "start-server-and-test": "^1.11.5"
+    "start-server-and-test": "^1.11.5",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.4.0",
+    "prettier": "^2.1.2"
   }
 }

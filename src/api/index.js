@@ -72,16 +72,20 @@ export function createProtest(params) {
 }
 
 export async function updateProtest(protestId, params) {
-  await firestore.collection('protests').doc(protestId).update(params);
+  const [lat, lng] = params.coords;
+  await firestore
+    .collection('protests')
+    .doc(protestId)
+    .update({
+      ...params,
+      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
+    });
 
   const doc = await firestore.collection('protests').doc(protestId).get();
 
-  const { latitude, longitude } = doc.data().g.geopoint;
-  const protestLatlng = [latitude, longitude];
-
   return {
     id: doc.id,
-    latlng: protestLatlng,
+    latlng: params.coords,
     ...doc.data(),
     _document: true,
   };
@@ -283,15 +287,19 @@ export async function listLeaderRequests() {
   return leaderRequests;
 }
 
+export async function makeUserProtestLeader(protestId, userId) {
+  return firestore
+    .collection('protests')
+    .doc(protestId)
+    .update({
+      'roles.leader': firebase.firestore.FieldValue.arrayUnion(userId),
+    });
+}
+
 // When super-admin approves a protest-user request
 export async function assignRoleOnProtest({ userId, protestId, requestId, status, adminId }) {
   if (status === 'approved') {
-    await firestore
-      .collection('protests')
-      .doc(protestId)
-      .update({
-        'roles.leader': firebase.firestore.FieldValue.arrayUnion(userId),
-      });
+    await makeUserProtestLeader(protestId, userId);
   }
 
   // Update request

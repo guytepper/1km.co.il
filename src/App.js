@@ -97,7 +97,6 @@ function App() {
             dispatch({ type: 'setUser', payload: partialUserData });
           }
         });
-        
       } else {
         dispatch({ type: 'setUser', payload: 'visitor' });
       }
@@ -117,11 +116,10 @@ function App() {
       try {
         const snapshot = await query.limit(30).get();
         const protests = snapshot.docs.map((doc) => {
-          const { latitude, longitude } = doc.data().g.geopoint;
+          const { latitude, longitude } = doc.data().coordinates;
           const protestLatlng = [latitude, longitude];
           return {
             id: doc.id,
-            latlng: protestLatlng,
             distance: calculateDistance(state.userCoordinates, protestLatlng),
             ...doc.data(),
           };
@@ -181,14 +179,14 @@ function App() {
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
                   <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                    <NavProfilePicture src="/icons/guard.svg" alt="" />
-                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem>
+                    {/* <NavProfilePicture src="/icons/guard.svg" alt="" />
+                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem> */}
                     {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -196,15 +194,6 @@ function App() {
           <Switch>
             <Route exact path="/">
               <HomepageWrapper>
-                <Map
-                  coordinates={state.userCoordinates}
-                  setMapPosition={(position) => {
-                    dispatch({ type: 'setMapPosition', payload: position });
-                  }}
-                  h
-                  markers={state.markers}
-                />
-
                 <ProtestListWrapper>
                   <ProtestListHead>
                     {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
@@ -218,6 +207,15 @@ function App() {
                   <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
                   <Footer />
                 </ProtestListWrapper>
+
+                <Map
+                  coordinates={state.userCoordinates}
+                  setMapPosition={(position) => {
+                    dispatch({ type: 'setMapPosition', payload: position });
+                  }}
+                  h
+                  markers={state.markers}
+                />
               </HomepageWrapper>
               <Modal
                 isOpen={state.isModalOpen}
@@ -236,7 +234,7 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage user={state.user} coordinates={state.userCoordinates} />
+              <ProtestPage user={state.user} userCoordinates={state.userCoordinates} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
@@ -308,25 +306,18 @@ const GuestNavItems = styled.div`
   flex-shrink: 0;
 
   @media (min-width: 585px) {
-    flex-direction: row-reverse;
+    flex-direction: row;
     align-items: center;
   }
 `;
 
 const NavItem = styled(Link)`
+  font-size: 16px;
+  margin-left: 15px;
+  margin-bottom: 2px;
+
   &:hover {
     color: #3498db;
-  }
-
-  margin-left: 10px;
-
-  @media (max-width: 585px) {
-    margin-left: 15px;
-  }
-
-  @media (max-width: 415px) {
-    font-size: 13px;
-    margin-left: 10px;
   }
 `;
 

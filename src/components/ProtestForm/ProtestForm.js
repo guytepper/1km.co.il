@@ -18,7 +18,14 @@ const protestMarker = new L.Icon({
   iconAnchor: [25, 48],
 });
 
-function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterSubmitCallback = () => {}, editMode = null }) {
+function ProtestForm({
+  initialCoords,
+  submitCallback,
+  defaultValues = {},
+  afterSubmitCallback = () => {},
+  editMode = null,
+  isAdmin,
+}) {
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
@@ -37,7 +44,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
-  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
 
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -63,7 +70,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
-      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
 
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
@@ -86,43 +93,48 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
     if (!editMode && !params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
-    }
-
-    if (params.telegramLink && !isValidUrl(params.telegramLink)) {
-      alert('לינק לקבוצת הטלגרם אינו תקין');
-      return;
-    }
-
-    if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
-      alert('לינק לקבוצת הוואטסאפ אינו תקין');
-      return;
-    }
-
-    try {
-      params.coords = mapCenter;
-      params.dateTimeList = dateTimeList;
-      // params.recaptchaToken = recaptchaToken;
-
-      let protest = await submitCallback(params);
-
-      if (editMode) {
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
+    } else {
+      if (!mapCenter) {
+        alert('אנא הזינו כתובת תקינה');
         return;
       }
 
-      if (protest._document) {
-        setSubmitSuccess(true);
-        setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
-        afterSubmitCallback();
-      } else {
-        throw new Error('protest._document was null.');
+      if (params.telegramLink && !isValidUrl(params.telegramLink)) {
+        alert('לינק לקבוצת הטלגרם אינו תקין');
+        return;
       }
-    } catch (err) {
-      console.log('error!!', err);
-      setSubmitSuccess(true);
-      setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
+
+      if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
+        alert('לינק לקבוצת הוואטסאפ אינו תקין');
+        return;
+      }
+
+      try {
+        params.coords = mapCenter;
+        params.dateTimeList = dateTimeList;
+        // params.recaptchaToken = recaptchaToken;
+
+        let protest = await submitCallback(params);
+
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+          return;
+        }
+
+        if (protest._document) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+        } else {
+          throw new Error('protest._document was null.');
+        }
+      } catch (err) {
+        console.log('error!!', err);
+        setSubmitSuccess(true);
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
+      }
     }
   };
 
@@ -145,19 +157,20 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
         </>
       ) : (
         <>
-          <ProtestFormLabel>
-            שם המקום
-            <ProtestFormInput
-              type="text"
-              name="displayName"
-              ref={register}
-              placeholder="איפה ההפגנה?"
-              autoFocus
-            ></ProtestFormInput>
-            <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
-          </ProtestFormLabel>
-          {!editMode && (
+          {!editMode || isAdmin && (
             <>
+              <ProtestFormLabel>
+                שם המקום
+                <ProtestFormInput
+                  type="text"
+                  name="displayName"
+                  ref={register}
+                  placeholder="איפה ההפגנה?"
+                  autoFocus
+                ></ProtestFormInput>
+                <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
+              </ProtestFormLabel>
+
               <ProtestFormLabel>
                 כתובת
                 <PlacesAutocomplete
@@ -181,6 +194,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
                   setMapCenter(newPosition);
                   setMarkerPosition(newPosition);
                   setZoomLevel(t.target._zoom);
+
                   // fetch protests on move end
                   if (mapCenter) {
                     const protests = await fetchNearbyProtests(mapCenter);
@@ -197,13 +211,17 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
                 />
                 <Marker position={markerPostion}></Marker>
                 {nearbyProtests.map((protest) => (
-                  <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
+                  <Marker
+                    position={[protest.coordinates.latitude, protest.coordinates.longitude]}
+                    icon={protestMarker}
+                    key={protest.id}
+                  ></Marker>
                 ))}
               </MapWrapper>
+
+              <hr />
             </>
           )}
-
-          <hr />
           <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>
           <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
 
