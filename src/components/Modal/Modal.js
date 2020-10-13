@@ -52,7 +52,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
             srcset="/illustrations/welcome-illustration@2x.webp 1x, /illustrations/welcome-illustration@2x.webp 2x, /illustrations/welcome-illustration@3x.webp 3x"
           />
           <source srcset="/illustrations/welcome-illustration@1x.png 1x, /illustrations/welcome-illustration@2x.png 2x, /illustrations/welcome-illustration@3x.png 3x" />
-          <img src="/welcome-illustration@1x.jpg" alt="" style={{ maxWidth: 250, height: 176.7 }} />
+          <ModalContentImage src="/welcome-illustration@1x.jpg" alt="" />
         </picture>
 
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
@@ -108,14 +108,19 @@ const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
   top: 30px;
-  left: 25px;
-  right: 25px;
-  max-height: calc(100vh - 100px);
+  left: 10px;
+  right: 10px;
+  max-height: calc(100vh - 50px);
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
   padding: 20px 25px;
   z-index: 20;
+
+  @media (min-width: 360px) {
+    left: 25px;
+    right: 25px;
+  }
 
   @media (min-width: 768px) {
     top: 75px;
@@ -142,6 +147,16 @@ const ModalContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+`;
+
+const ModalContentImage = styled.img`
+  width: 200px;
+  height: 142px;
+
+  @media (min-width: 375px) {
+    width: 250px;
+    height: 176.7px;
+  }
 `;
 
 export default Modal;
