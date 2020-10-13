@@ -63,7 +63,7 @@ function ProtestForm({ initialCoords, submitCallback, defaultValues = {}, afterS
       setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
-      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, time: '17:30' }]);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
 
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
