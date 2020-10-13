@@ -49,7 +49,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
         <picture>
           <source
             type="image/webp"
-            srcset="/illustrations/welcome-illustration@1x.webp 1x, /illustrations/welcome-illustration@2x.webp 2x, /illustrations/welcome-illustration@3x.webp 3x"
+            srcset="/illustrations/welcome-illustration@2x.webp 1x, /illustrations/welcome-illustration@2x.webp 2x, /illustrations/welcome-illustration@3x.webp 3x"
           />
           <source srcset="/illustrations/welcome-illustration@1x.png 1x, /illustrations/welcome-illustration@2x.png 2x, /illustrations/welcome-illustration@3x.png 3x" />
           <img src="/welcome-illustration@1x.jpg" alt="" style={{ maxWidth: 250, height: 176.7 }} />
