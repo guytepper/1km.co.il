@@ -10,16 +10,12 @@ import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { fetchNearbyProtests, getFullUserData } from './api';
 import { protestStore } from './stores/protest.store';
+import { observer } from 'mobx-react';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 const initialState = {
   userCoordinates: [],
-  protests: {
-    close: [],
-    far: [],
-  },
-  markers: [],
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
@@ -34,7 +30,6 @@ function reducer(state, action) {
     case 'setMarkers':
       return {
         ...state,
-        markers: [...state.markers, ...action.payload.markers],
         mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
       };
     case 'setMapPosition':
@@ -52,8 +47,6 @@ function reducer(state, action) {
     case 'setLoadData':
       return {
         ...state,
-        protests: { close: action.payload.close, far: action.payload.far },
-        markers: [...state.markers, ...action.payload.markers],
         mapPositionHistory: [...state.mapPositionHistory, action.payload.mapPosition],
         loading: false,
       };
@@ -113,18 +106,15 @@ function App() {
         radius: 15,
         limit: 30,
       });
-      
+
       protestStore.setProtests(arrayToHashMap(protests));
-   
+
       try {
-        // Filter duplicate markers
-        const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
         if (onlyMarkers) {
           // Set data
           dispatch({
             type: 'setMarkers',
             payload: {
-              markers: filteredMarkers,
               mapPosition: state.mapPosition,
             },
           });
@@ -133,9 +123,6 @@ function App() {
           dispatch({
             type: 'setLoadData',
             payload: {
-              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
-              far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
-              markers: filteredMarkers,
               mapPosition: state.mapPosition,
             },
           });
@@ -158,6 +145,8 @@ function App() {
     //TODO: remove this line and make sure deps are correct
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
+
+  const { protestArray: protests, protestsByDistance } = protestStore;
 
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -196,7 +185,11 @@ function App() {
                     </Button>
                   </ProtestListHead>
 
-                  <ProtestList closeProtests={state.protests.close} farProtests={state.protests.far} loading={state.loading} />
+                  <ProtestList
+                    closeProtests={protestsByDistance.close}
+                    farProtests={protestsByDistance.far}
+                    loading={state.loading}
+                  />
                   <Footer />
                 </ProtestListWrapper>
 
@@ -205,8 +198,7 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
-                  h
-                  markers={state.markers}
+                  markers={protests}
                 />
               </HomepageWrapper>
               <Modal
@@ -367,4 +359,4 @@ const ProtestListHead = styled.div`
   margin-bottom: 8px;
 `;
 
-export default App;
+export default observer(App);

@@ -97,6 +97,10 @@ export function arrayToHashMap(arr, key = 'id') {
   }, {});
 }
 
+export function sortBy(arr, prop){
+  return arr.sort((p1, p2) => p1[prop] - p2[prop])
+}
+
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';
