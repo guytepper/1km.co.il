@@ -87,7 +87,7 @@ function useFetchProtest() {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-
+  console.log(history);
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const socialLinks = getSocialLinks(protest);
 
@@ -188,8 +188,7 @@ export default function ProtestPage({ user, userCoordinates }) {
   }
 
   const { coordinates, id } = protest;
-
-  const canEdit = !!user; //isAdmin(user) || isLeader(user, protest);
+  const canEdit = !isVisitor(user); //isAdmin(user) || isLeader(user, protest);
 
   return (
     <Switch>

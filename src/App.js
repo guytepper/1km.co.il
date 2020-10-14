@@ -1,8 +1,8 @@
 import React, { useReducer, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { useHistory, BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
-import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
+import { isAuthenticated, isVisitor, pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
@@ -10,6 +10,7 @@ import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 const initialState = {
@@ -69,11 +70,22 @@ function reducer(state, action) {
       throw new Error('Unexpected action');
   }
 }
+function getAddProtestButtonLink(user) {
+  const addProtestRoute = '/add-protest';
+  if (isAdmin(user) || isAuthenticated(user)) {
+    return addProtestRoute;
+  }
+  if (isVisitor(user)) {
+    // Sign up before redirected to leader request
+    return `/sign-up?returnUrl=${addProtestRoute}`;
+  }
+
+  throw new Error(`couldn't find route`);
+}
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const canCreateProtest = !!state.user;
-
+  const canAddProtest = !isVisitor(state.user);
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
@@ -187,7 +199,9 @@ function App() {
                 ) : null}
                 <GuestNavItems>
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItem to="/" onClick={() => (window.location = getAddProtestButtonLink(state.user))}>
+                    + הוספת הפגנה
+                  </NavItem>
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -228,7 +242,7 @@ function App() {
                 }}
               />
             </Route>
-            <ProtectedRoute exact path="/add-protest" authorized={!state.user}>
+            <ProtectedRoute exact path="/add-protest" authorized={canAddProtest}>
               <AddProtest initialCoords={state.userCoordinates} />
             </ProtectedRoute>
             <Route path="/admin">
