@@ -28,6 +28,7 @@ export async function createPendingProtest(params) {
   try {
     // Skip protest approval during development
     const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
+
     // const verification = await verifyRecaptcha(recaptchaToken);
 
     // if (verification.success) {
