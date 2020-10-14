@@ -1,28 +1,32 @@
 import styled from 'styled-components/macro';
 
 const PostWrapper = styled.div`
-  max-width: 1000px;
   overflow-x: hidden;
   margin: 0 auto 15px;
-  padding: 0 7.5%;
+  padding: 0px 8%;
   font-size: 18px;
   line-height: 1.45;
 
-  @media (min-width: 768px) {
-    max-width: 600px;
-    font-size: 20px;
+  @media (min-width: 580px) {
+    max-width: 580px;
+    font-size: 19px;
     margin: 30px auto;
     border-radius: 20px;
     background-color: #fff;
   }
 
   @media (min-width: 1024px) {
-    max-width: 800px;
-    /* font-size: 21px; */
+    max-width: 760px;
+    padding-top: 10px;
+    font-size: 20px;
   }
 
   & a {
     font-weight: 600;
+  }
+
+  & h2 {
+    text-align: center;
   }
 `;
 
