@@ -2,13 +2,14 @@ import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
-import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
+import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin, arrayToHashMap } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
-import { getFullUserData } from './api';
+import { fetchNearbyProtests, getFullUserData } from './api';
+import { protestStore } from './stores/protest.store';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -106,25 +107,16 @@ function App() {
   useEffect(() => {
     // if onlyMarkers is true then don't update the protests, only the markers and history.
     async function fetchProtests({ onlyMarkers = false } = {}) {
-      // TODO: Move API call outside from here
-      const geocollection = GeoFirestore.collection('protests');
-      const query = geocollection.near({
-        center: new firebase.firestore.GeoPoint(state.mapPosition[0], state.mapPosition[1]),
+      const protests = await fetchNearbyProtests({
+        position: state.mapPosition,
+        userPosition: state.userCoordinates,
         radius: 15,
+        limit: 30,
       });
-
+      
+      protestStore.setProtests(arrayToHashMap(protests));
+   
       try {
-        const snapshot = await query.limit(30).get();
-        const protests = snapshot.docs.map((doc) => {
-          const { latitude, longitude } = doc.data().coordinates;
-          const protestLatlng = [latitude, longitude];
-          return {
-            id: doc.id,
-            distance: calculateDistance(state.userCoordinates, protestLatlng),
-            ...doc.data(),
-          };
-        });
-
         // Filter duplicate markers
         const filteredMarkers = protests.filter((a) => !state.markers.find((b) => b.id === a.id));
         if (onlyMarkers) {

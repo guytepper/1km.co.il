@@ -1,5 +1,7 @@
 import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
+import { calculateDistance } from '../utils';
+import { CoordinatesArray } from '../types';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 // async function verifyRecaptcha(token) {
@@ -136,19 +138,29 @@ export async function uploadFile(params) {
   // TODO: assign s3 url to protest
 }
 
-export async function fetchNearbyProtests(position) {
+export async function fetchNearbyProtests({
+  position,
+  userPosition,
+  radius = 2,
+  limit = 10,
+}: {
+  position: CoordinatesArray;
+  userPosition: any;
+  radius?: number;
+  limit?: number;
+}) {
   const geocollection = GeoFirestore.collection('protests');
   const query = geocollection.near({
     center: new firebase.firestore.GeoPoint(position[0], position[1]),
-    radius: 2,
+    radius,
   });
-  const snapshot = await query.limit(10).get();
+  const snapshot = await query.limit(limit).get();
   const protests = snapshot.docs.map((doc) => {
-    const { latitude, longitude } = doc.data().g.geopoint;
+    const { latitude, longitude } = doc.data().coordinates;
     const protestLatlng = [latitude, longitude];
     return {
       id: doc.id,
-      latlng: protestLatlng,
+      distance: calculateDistance(userPosition, protestLatlng),
       ...doc.data(),
     };
   });

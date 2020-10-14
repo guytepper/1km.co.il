@@ -90,6 +90,13 @@ export function isValidUrl(link) {
   return url.protocol === 'http:' || url.protocol === 'https:';
 }
 
+export function arrayToHashMap(arr, key = 'id') {
+  return arr.reduce(function (map, obj) {
+    map[obj[key]] = obj;
+    return map;
+  }, {});
+}
+
 export const isLeader = (user, protest) => protest?.roles?.leader?.includes(user?.uid);
 export const isAdmin = (user) => user?.admin === true;
 export const isVisitor = (user) => user === 'visitor';
