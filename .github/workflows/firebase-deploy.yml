@@ -17,4 +17,3 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           FIREBASE_PROJECT: one-kol
-          TARGET_BRANCH: main
