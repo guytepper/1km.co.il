@@ -47,28 +47,24 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
-        {/* image "thumbnail" lower resolution image until the high resolution one loaded"*/}
-        <img
-          src="welcome-illustration-lowres.webp"
-          style={{ width: 250, height: 176.7, display: ImageLoaded ? 'none' : '' }}
-          alt="אילוסטרציה של הפגנה"
-        />
-        <img
-          src="welcome-illustration.svg"
-          onLoad={() => {
-            setImageLoaded(true);
-          }}
-          style={{ maxWidth: 250, display: ImageLoaded ? '' : 'none' }}
-          alt="אילוסטרציה של הפגנה"
-        />
+
+        <picture>
+          <source
+            type="image/webp"
+            srcSet="/illustrations/welcome-illustration@2x.webp 1x, /illustrations/welcome-illustration@2x.webp 2x, /illustrations/welcome-illustration@3x.webp 3x"
+          />
+          <source srcSet="/illustrations/welcome-illustration@1x.png 1x, /illustrations/welcome-illustration@2x.png 2x, /illustrations/welcome-illustration@3x.png 3x" />
+          <ModalContentImage src="/welcome-illustration@1x.jpg" alt="" />
+        </picture>
+
 
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
-        <h3 style={{ fontWeight: 400 }}>
-          חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
+        <h3 style={{ fontWeight: 400, maxWidth: 355 }}>
+          חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת וואטסאפ וצאו לרחובות. <br />
           <br />
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
-        <div style={{ maxWidth: 300 }}>
+        <ModalButtonsWrapper>
           <Button
             onClick={() => {
               getUserPosition();
@@ -105,7 +101,7 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
               </Button>
             </>
           )}
-        </div>
+        </ModalButtonsWrapper>
       </ModalContentWrapper>
     </ModalWrapper>
   );
@@ -114,15 +110,21 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
-  top: 70px;
-  left: 25px;
-  right: 25px;
-  max-height: calc(100vh - 100px);
+
+  max-height: 100vh;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
-  padding: 10px 25px;
-  z-index: 2;
+  padding: 20px 25px;
+  z-index: 20;
+
+  @media (min-width: 360px) {
+    top: 30px;
+    left: 25px;
+    right: 25px;
+    bottom: 20px;
+    max-height: calc(100vh - 50px);
+  }
 
   @media (min-width: 768px) {
     top: 75px;
@@ -149,6 +151,24 @@ const ModalContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+`;
+
+const ModalContentImage = styled.img`
+  width: 200px;
+  height: 142px;
+
+  @media (min-width: 375px) {
+    width: 250px;
+    height: 176.7px;
+  }
+`;
+
+const ModalButtonsWrapper = styled.div`
+  max-width: 280px;
+
+  @media (min-width: 400px) {
+    max-width: 300px;
+  }
 `;
 
 export default Modal;
