@@ -9,6 +9,7 @@ import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
+import { getCurrentPosition } from './utils';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -73,6 +74,14 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const getUserPosition = async () => {
+    try {
+      const position = await getCurrentPosition();
+      dispatch({ type: 'setUserCoordinates', payload: position });
+    } catch (err) {
+      alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
+    }
+  };
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
@@ -194,14 +203,22 @@ function App() {
           <Switch>
             <Route exact path="/">
               <HomepageWrapper>
-
                 <ProtestListWrapper>
                   <ProtestListHead>
                     {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
                     </SiteMessage> */}
-                    <Button style={{ width: '100%' }} onClick={() => dispatch({ type: 'setModalState', payload: true })}>
+                    {/*<Button style={{ width: '100%' }} onClick={() => dispatch({ type: 'setModalState', payload: true })}>
                       שינוי כתובת
+                    </Button>*/}
+                    <Button
+                      onClick={() => {
+                        getUserPosition();
+                      }}
+                      icon="/icons/gps.svg"
+                      style={{ width: '100%' }}
+                    >
+                      מציאת הפגנות באיזורי
                     </Button>
                   </ProtestListHead>
 
