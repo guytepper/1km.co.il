@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
-import { useHistory, BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import { isAuthenticated, isVisitor, pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
@@ -86,6 +86,7 @@ function getAddProtestButtonLink(user) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const canAddProtest = !isVisitor(state.user);
+
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
