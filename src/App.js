@@ -282,7 +282,7 @@ const Header = styled.header`
   padding: 5px 25px;
   grid-row: 1;
   background-color: #fff;
-  box-shadow: inset 0 -1px 0 #e1e4e8;
+  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
 
