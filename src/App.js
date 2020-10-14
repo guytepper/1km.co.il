@@ -72,7 +72,6 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const canCreateProtest = !!state.user;
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
