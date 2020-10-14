@@ -9,7 +9,7 @@ import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
-
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 const initialState = {
@@ -72,6 +72,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const canCreateProtest = !!state.user;
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
@@ -227,9 +228,9 @@ function App() {
                 }}
               />
             </Route>
-            <Route exact path="/add-protest">
+            <ProtectedRoute exact path="/add-protest" authorized={!state.user}>
               <AddProtest initialCoords={state.userCoordinates} />
-            </Route>
+            </ProtectedRoute>
             <Route path="/admin">
               <Admin user={state.user} />
             </Route>
