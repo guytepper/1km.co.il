@@ -222,6 +222,7 @@ function App() {
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
                 setCoordinates={(coords) => {
+                  dispatch({ type: 'setMapPosition', payload: coords });
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
               />
@@ -233,7 +234,7 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage user={state.user} coordinates={state.userCoordinates} />
+              <ProtestPage user={state.user} userCoordinates={state.userCoordinates} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
