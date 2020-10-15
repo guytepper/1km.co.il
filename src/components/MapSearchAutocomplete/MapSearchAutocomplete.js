@@ -101,12 +101,14 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   top: 20px;
   left: 15%;
   right: 15%;
+
   width: 70%;
   margin-bottom: 10px;
-  font-size: 16px;
   padding: 10px 50px;
+
   border: 0px;
   border-radius: 50px;
+  font-size: 16px;
   appearance: none;
   box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
 
@@ -123,6 +125,7 @@ const LocationIcon = styled.img`
   top: 29px;
   right: calc(15% + 17px);
   position: absolute;
+
   height: 20px;
   user-select: none;
 
@@ -136,6 +139,7 @@ const GpsIcon = styled.img`
   top: 29px;
   left: calc(15% + 17px);
   position: absolute;
+
   height: 20px;
   user-select: none;
 
