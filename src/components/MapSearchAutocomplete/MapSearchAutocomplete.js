@@ -78,7 +78,7 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
 
   return (
     <Combobox style={{ position: 'absolute', zIndex: 10000, width: '100%' }} onSelect={handleSelect} aria-labelledby="demo">
-      <LocationIcon src="/icons/marker-purple.svg" alt="marker icon" />
+      <LocationIcon src="/icons/marker-purple.svg" />
       <GpsIcon src="/icons/gps.svg" alt="gps icon" onClick={() => getUserPosition()} />
       <ComboboxInputWrapper
         value={value}
