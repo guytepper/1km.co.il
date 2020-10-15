@@ -109,52 +109,43 @@ const ModalWrapper = styled(ReactModal)`
   position: fixed;
   display: inline-block;
   padding: 20px 25px;
-  max-height: calc(100vh - 50px);
+  height: 100vh;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
 
   @media (min-width: 360px) {
     top: 30px;
-    left: 25px;
-    right: 25px;
-    bottom: 20px;
+    left: 7.5vw;
+    right: 7.5vw;
+    bottom: 7.5vw;
+    max-height: calc(100vh - 10vh);
   }
 
   @media (min-width: 768px) {
     top: 75px;
-    left: 100px;
-    right: 100px;
-    max-height: calc(100vh - 100px);
+    left: 21vw;
+    right: 21vw;
+    max-height: 550px;
   }
 
   @media (min-width: 1280px) {
-    top: 75px;
-    left: 250px;
-    right: 250px;
-    max-height: calc(100vh - 200px);
+    left: 30vw;
+    right: 30vw;
   }
 
   @media (min-width: 1440px) {
     top: 100px;
-    left: 500px;
-    right: 500px;
-    max-height: calc(100vh - 200px);
+    left: 35vw;
+    right: 35vw;
   }
 
-  /*====in short screens - modal higher*/
-  @media (max-height: 700px) {
-    top: 30px !important;
-    max-height: calc(100vh) !important;
+  /** Make the modal higher on short screens **/
+  @media (max-height: 700px) and (min-width: 1024px) {
+    top: 30px;
   }
 
-  /*==== in high screens, modal is shorter 
-  =============(only if its not a phone - width is large)*/
-  @media (min-height: 850px) and (min-width: 1280px) {
-    max-height: calc(100vh - 350px) !important;
-  }
-
-  //****==== Scrollbar =====****//
+  /*** Scrollbar ***/
   scrollbar-color: #5f6ffa #dde0ff;
   scrollbar-width: thin;
 
