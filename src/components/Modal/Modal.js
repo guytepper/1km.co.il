@@ -2,24 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
 import styled from 'styled-components/macro';
 import Button from '../Button';
-import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 
 ReactModal.setAppElement('#root');
 
-function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
+function Modal({ isOpen, setIsOpen, coordinates, setCoordinates, getUserPosition }) {
   const [addressInputDisplay, setAddressInputDisplay] = useState(false);
   const [manualAddress, setManualAddress] = useState(null);
   const addressInputRef = useRef();
-
-  const getUserPosition = async () => {
-    try {
-      const position = await getCurrentPosition();
-      setCoordinates(position);
-    } catch (err) {
-      alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
-    }
-  };
 
   const resetModal = () => {
     setAddressInputDisplay(false);

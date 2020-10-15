@@ -233,6 +233,7 @@ function App() {
                   }}
                   h
                   markers={state.markers}
+                  getUserPosition={getUserPosition}
                 />
               </HomepageWrapper>
               <Modal
@@ -243,6 +244,7 @@ function App() {
                   dispatch({ type: 'setMapPosition', payload: coords });
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
+                getUserPosition={getUserPosition}
               />
             </Route>
             <Route exact path="/add-protest">

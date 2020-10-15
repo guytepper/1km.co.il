@@ -46,7 +46,7 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
+function AppMap({ markers, coordinates, setMapPosition, setCoordinates, getUserPosition }) {
   const addressInputRef = useRef(); // Search Bar ref
   return (
     <MapWrapper
@@ -60,6 +60,7 @@ function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
         setCoordinates={setCoordinates}
         inputRef={addressInputRef}
         className="leaflet-pane leaflet-map-pane"
+        getUserPosition={getUserPosition}
       />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'

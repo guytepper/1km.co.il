@@ -2,10 +2,9 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
-import { getCurrentPosition } from '../../utils';
 import '@reach/combobox/styles.css';
 
-export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates, inputRef, defaultValue }) {
+export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates, inputRef, defaultValue, getUserPosition }) {
   const {
     ready,
     value,
@@ -13,17 +12,6 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
     clearSuggestions,
     setValue,
   } = usePlacesAutocomplete({ debounce: 900, defaultValue });
-
-  const getUserPosition = async () => {
-    try {
-      const position = await getCurrentPosition();
-      setCoordinates(position);
-      setValue('');
-      clearSuggestions();
-    } catch (err) {
-      alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
-    }
-  };
 
   // updates value when defaultValue changes
   // happens on the admin page when choosing a protest
