@@ -22,8 +22,9 @@ const positionPoint = new L.Icon({
 });
 
 const PopupMarker = ({ coordinates, displayName, marker, hovered }) => {
-  const iconUrl = hovered ? '/icons/blue-flag.svg' : '/icons/fist.svg';
-  // Use a speical marker / the default black flag.
+  const iconUrl = hovered ? '/icons/protesting.svg' : '/icons/fist.svg';
+
+  // Use a speical marker from the protest object / the default fist.
   let markerInfo = marker || {
     iconUrl,
     iconRetinaUrl: iconUrl,
