@@ -155,6 +155,7 @@ const ModalWrapper = styled(ReactModal)`
   /*scrollbar*/
   scrollbar-color: #5f6ffa #dde0ff;
   scrollbar-width: thin;
+
   ::-webkit-scrollbar {
     width: 5px;
   }
