@@ -164,6 +164,7 @@ const ModalWrapper = styled(ReactModal)`
     background: #dde0ff;
     border-radius: 10px;
   }
+
   ::-webkit-scrollbar-thumb {
     background: #5f6ffa;
     border-radius: 10px;
