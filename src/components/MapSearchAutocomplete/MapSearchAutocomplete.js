@@ -97,32 +97,28 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
 
 const ComboboxInputWrapper = styled(ComboboxInput)`
   z-index: 10000;
-  position:absolute;
-  top 20px;
-  left:15%;
-  right:15%;
+  position: absolute;
+  top: 20px;
+  left: 15%;
+  right: 15%;
   width: 70%;
   margin-bottom: 10px;
   font-size: 16px;
-  padding:10px 50px;
- 
+  padding: 10px 50px;
+
   border: 0px;
-  border-radius:50px;
+  border-radius: 50px;
   -webkit-appearance: none;
 
-  -webkit-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
-  -moz-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
-  box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
+  -webkit-box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
+  -moz-box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
+  box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
 
-
-@media (min-width: 768px) {
-  left:10%;
-  right:10%;
-  width: 80%;
-}
-
-
-
+  @media (min-width: 768px) {
+    left: 10%;
+    right: 10%;
+    width: 80%;
+  }
 `;
 const LocationIcon = styled.img`
   z-index: 10001;
