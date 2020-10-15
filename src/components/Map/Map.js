@@ -47,7 +47,7 @@ const MarkersList = ({ markers }) => {
 const balfur = [31.7749837, 35.219797];
 
 function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
-  const addressInputRef = useRef(); //search input ref
+  const addressInputRef = useRef(); // Search Bar ref
   return (
 
     <MapWrapper
