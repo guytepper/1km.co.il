@@ -75,8 +75,9 @@ function getAddProtestButtonLink(user) {
   if (isAdmin(user) || isAuthenticated(user)) {
     return addProtestRoute;
   }
+
   if (isVisitor(user)) {
-    // Sign up before redirected to leader request
+    // Ask sign up before adding a protest
     return `/sign-up?returnUrl=${addProtestRoute}`;
   }
 
