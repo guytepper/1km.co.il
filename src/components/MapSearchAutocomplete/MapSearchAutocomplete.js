@@ -111,8 +111,8 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   -webkit-appearance: none;
 
   -webkit-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
--moz-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
+  -moz-box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
+  box-shadow: 14px 19px 22px -7px rgba(0,0,0,0.19);
 
 
 @media (min-width: 768px) {
