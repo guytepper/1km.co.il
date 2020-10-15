@@ -8,7 +8,7 @@ import queryString from 'query-string';
 function SignUpBeforeRedirect() {
   return (
     <PageContentWrapper>
-      <p>היי! כדי ליצור הפגנה או לערוך עמוד הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק. </p>
+      <p>היי! כדי ליצור או לערוך הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק. </p>
       <div></div>
 
       <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
