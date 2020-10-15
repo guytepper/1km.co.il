@@ -159,6 +159,7 @@ const ModalWrapper = styled(ReactModal)`
   ::-webkit-scrollbar {
     width: 5px;
   }
+
   ::-webkit-scrollbar-track {
     background: #dde0ff;
     border-radius: 10px;
