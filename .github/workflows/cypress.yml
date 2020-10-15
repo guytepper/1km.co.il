@@ -1,4 +1,8 @@
 name: End-to-end tests
+on:
+  push:
+    branches-ignore:
+      - '**'
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
