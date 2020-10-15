@@ -138,6 +138,7 @@ const GpsIcon = styled.img`
   position: absolute;
   height: 20px;
   user-select: none;
+  cursor: pointer;
 
   /****gps icon is white-changed it to black****/
   filter: invert(100%);
