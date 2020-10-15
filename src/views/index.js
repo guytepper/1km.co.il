@@ -1,4 +1,4 @@
-export { default as Admin } from './Admin';
+export { default as Admin } from './Admin/index.js';
 export { default as ProtestPage } from './ProtestPage';
 export { default as PostView } from './PostView';
 export { default as AddProtest } from './AddProtest';

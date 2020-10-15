@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
@@ -23,6 +23,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
+  hoveredProtest: null,
   loading: false,
   user: undefined,
 };
@@ -49,6 +50,8 @@ function reducer(state, action) {
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
+    case 'setHoveredProtest':
+      return { ...state, hoveredProtestId: action.payload };
     case 'setLoadData':
       return {
         ...state,
@@ -82,6 +85,15 @@ function App() {
       alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
     }
   };
+
+  const hoveredProtest = useMemo(() => {
+    if (!state.hoveredProtestId) {
+      return null;
+    }
+
+    return [...state.protests.close, ...state.protests.far].find((protest) => protest.id === state.hoveredProtestId);
+  }, [state.hoveredProtestId, state.protests.close, state.protests.far]);
+
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
@@ -172,7 +184,7 @@ function App() {
         }
       }
     }
-    //TODO: remove this line and make sure deps are correct
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
@@ -228,10 +240,12 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
+
                   setCoordinates={(coords) => {
                     dispatch({ type: 'setUserCoordinates', payload: coords });
                   }}
                   h
+                  hoveredProtest={hoveredProtest}
                   markers={state.markers}
                   getUserPosition={getUserPosition}
                 />
@@ -302,7 +316,7 @@ const Header = styled.header`
   padding: 5px 25px;
   grid-row: 1;
   background-color: #fff;
-  box-shadow: inset 0 -1px 0 #e1e4e8;
+  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
 

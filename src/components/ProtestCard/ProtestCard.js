@@ -1,8 +1,8 @@
-import React from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { formatDistance } from '../../utils';
-import { dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
+import { DispatchContext } from '../../context';
+import { useHistory } from 'react-router-dom';
+import { formatDistance, dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
 function getFormattedDate(date) {
   if (!date) {
@@ -12,7 +12,8 @@ function getFormattedDate(date) {
   return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
 }
 
-function ProtestCard({ protestInfo, showAction = true, style } = {}) {
+function ProtestCard({ protestInfo, showAction = false, style }) {
+  const dispatch = useContext(DispatchContext);
   const history = useHistory();
 
   const {
@@ -34,6 +35,8 @@ function ProtestCard({ protestInfo, showAction = true, style } = {}) {
     <ProtestCardWrapper
       tabIndex="0"
       style={style}
+      onMouseOver={() => dispatch({ type: 'setHoveredProtest', payload: id })}
+      onMouseOut={() => dispatch({ type: 'setHoveredProtest', payload: null })}
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
