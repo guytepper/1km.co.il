@@ -49,7 +49,6 @@ const balfur = [31.7749837, 35.219797];
 function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
   const addressInputRef = useRef(); // Search Bar ref
   return (
-
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
       onMoveEnd={(t) => {
@@ -57,12 +56,11 @@ function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
       }}
       zoom={14}
     >
-         <SearchPlaceAutoComplete
-          style={{ zIndex: 1, position: 'absolute', top: '30px' }}
-          setCoordinates={setCoordinates}
-          inputRef={addressInputRef}
-          className="leaflet-pane leaflet-map-pane"
-        />
+      <SearchPlaceAutoComplete
+        setCoordinates={setCoordinates}
+        inputRef={addressInputRef}
+        className="leaflet-pane leaflet-map-pane"
+      />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
