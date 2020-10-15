@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactModal from 'react-modal';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import Button from '../Button';
 import { getCurrentPosition } from '../../utils';
 import PlacesAutocomplete from '../PlacesAutocomplete';
@@ -21,49 +21,84 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     }
   };
 
+  const resetModal = () => {
+    setAddressInputDisplay(false);
+    setManualAddress(null);
+  };
+
   useEffect(() => {
     if (coordinates.length === 2) {
       setIsOpen(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [coordinates]);
 
   useEffect(() => {
     // Timeout needed to allow the rendering finish before setting the focus
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (addressInputDisplay && addressInputRef.current) {
         addressInputRef.current.focus();
       }
     }, 0);
-  }, [addressInputDisplay])
+    return () => clearTimeout(timeout);
+  }, [addressInputDisplay]);
 
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
+        <picture>
+          <source
+            type="image/webp"
+            srcSet="/illustrations/welcome-illustration@2x.webp 1x, /illustrations/welcome-illustration@2x.webp 2x, /illustrations/welcome-illustration@3x.webp 3x"
+          />
+          <source srcSet="/illustrations/welcome-illustration@1x.png 1x, /illustrations/welcome-illustration@2x.png 2x, /illustrations/welcome-illustration@3x.png 3x" />
+          <ModalContentImage src="/welcome-illustration@1x.jpg" alt="" />
+        </picture>
+
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
-        <h3 style={{ fontWeight: 400 }}>
-          חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת הטלגרם/וואטסאפ וצאו לרחובות. <br />
+        <h3 style={{ fontWeight: 400, maxWidth: 355 }}>
+          חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת וואטסאפ וצאו לרחובות. <br />
           <br />
           לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
         </h3>
-        <div style={{ maxWidth: 300 }}>
-          <Button onClick={() => getUserPosition()} icon="/icons/gps.svg" style={{ marginBottom: 10 }}>
+        <ModalButtonsWrapper>
+          <Button
+            onClick={() => {
+              getUserPosition();
+              resetModal();
+            }}
+            icon="/icons/gps.svg"
+            style={{ marginBottom: 10 }}
+          >
             מציאת הפגנות באיזורי
           </Button>
 
           {!addressInputDisplay && (
-            <Button onClick={() => setAddressInputDisplay(true)} color="#0096c7">
+            <Button
+              onClick={() => {
+                setAddressInputDisplay(true);
+              }}
+              color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
+            >
               הזנת מיקום ידנית
             </Button>
           )}
           {addressInputDisplay && (
             <>
               <PlacesAutocomplete setManualAddress={setManualAddress} inputRef={addressInputRef} />{' '}
-              <Button disabled={!manualAddress} onClick={() => setCoordinates(manualAddress)} color="#0096c7">
+              <Button
+                disabled={!manualAddress}
+                onClick={() => {
+                  setCoordinates(manualAddress);
+                  resetModal();
+                }}
+                color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"
+              >
                 הצגת הפגנות
               </Button>
             </>
           )}
-        </div>
+        </ModalButtonsWrapper>
       </ModalContentWrapper>
     </ModalWrapper>
   );
@@ -71,34 +106,38 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 
 const ModalWrapper = styled(ReactModal)`
   position: fixed;
-  top: 50px;
-  left: 25px;
-  right: 25px;
-  bottom: 50px;
+  display: inline-block;
+  max-height: 100vh;
+  overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
-  padding: 10px 25px;
-  z-index: 2;
+  padding: 20px 25px;
+  z-index: 20;
+
+  @media (min-width: 360px) {
+    top: 30px;
+    left: 25px;
+    right: 25px;
+    bottom: 20px;
+    max-height: calc(100vh - 50px);
+  }
 
   @media (min-width: 768px) {
     top: 75px;
     left: 100px;
     right: 100px;
-    bottom: 75px;
   }
 
   @media (min-width: 1280px) {
-    top: 100px;
+    top: 75px;
     left: 250px;
     right: 250px;
-    bottom: 250px;
   }
 
   @media (min-width: 1440px) {
     top: 100px;
     left: 500px;
     right: 500px;
-    bottom: 250px;
   }
 `;
 
@@ -108,6 +147,24 @@ const ModalContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
+`;
+
+const ModalContentImage = styled.img`
+  width: 200px;
+  height: 142px;
+
+  @media (min-width: 375px) {
+    width: 250px;
+    height: 176.7px;
+  }
+`;
+
+const ModalButtonsWrapper = styled.div`
+  max-width: 280px;
+
+  @media (min-width: 400px) {
+    max-width: 300px;
+  }
 `;
 
 export default Modal;

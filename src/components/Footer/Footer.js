@@ -1,9 +1,11 @@
 import React, { memo } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   return (
     <FooterWrapper>
+      <FooterRouterLink to="/legal-notice">הבהרה משפטית</FooterRouterLink>
       <FooterLink href="https://twitter.com/1kmcoil" target="_blank">
         <FooterLinkIcon src="/icons/twitter.svg" alt="" />
         טוויטר
@@ -41,6 +43,12 @@ const FooterLink = styled.a`
   align-items: center;
   padding: 0 5px;
   font-size: 14px;
+`;
+const FooterRouterLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  margin-left: auto;
 `;
 
 const FooterLinkIcon = styled.img`

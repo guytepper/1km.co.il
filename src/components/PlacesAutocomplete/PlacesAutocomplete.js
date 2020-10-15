@@ -1,27 +1,41 @@
 import * as React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
 
 import '@reach/combobox/styles.css';
 
-export default function PlacesAutocomplete({ setManualAddress, setStreetName, inputRef }) {
+export default function PlacesAutocomplete({ setManualAddress, setStreetAddress, inputRef, defaultValue }) {
   const {
     ready,
     value,
     suggestions: { status, data },
+    clearSuggestions,
     setValue,
-  } = usePlacesAutocomplete({ debounce: 900 });
+  } = usePlacesAutocomplete({ debounce: 900, defaultValue });
+
+  // updates value when defaultValue changes
+  // happens on the admin page when choosing a protest
+  React.useEffect(() => {
+    setValue(defaultValue, false);
+    clearSuggestions();
+  }, [defaultValue, setValue, clearSuggestions]);
+
+  React.useEffect(() => {
+    if (value === '') {
+      setManualAddress(null);
+    }
+  }, [value, setManualAddress]);
+
+  const updateStreetAddress = (address) => setStreetAddress && setStreetAddress(address);
 
   const handleInput = (e) => {
     const charactersThreshold = 3;
     const term = e.target.value;
     const shouldFetch = term.length >= charactersThreshold;
     setValue(term, shouldFetch);
-    updateStreetName(term);
+    updateStreetAddress(term);
   };
-
-  const updateStreetName = (address) => setStreetName && setStreetName(address);
 
   const handleSelect = (address) => {
     setValue(address, false);
@@ -31,7 +45,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
       .then((latLng) => {
         const { lat, lng } = latLng;
         setManualAddress([lat, lng]);
-        updateStreetName(address);
+        updateStreetAddress(address);
       })
       .catch((error) => {
         console.log('Error: ', error);
@@ -55,13 +69,13 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
     <Combobox onSelect={handleSelect} aria-labelledby="demo">
       <ComboboxInputWrapper
         value={value}
-        name="streetName"
+        name="streetAddress"
         onChange={handleInput}
         disabled={!ready}
-        placeholder="מה הכתובת?"
         ref={inputRef}
+        placeholder="מה הכתובת?"
       />
-      <ComboboxPopover>
+      <ComboboxPopover style={{ zIndex: 30 }}>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>
     </Combobox>
@@ -69,7 +83,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetName, in
 }
 
 const ComboboxInputWrapper = styled(ComboboxInput)`
-  width: 300px;
+  width: 100%;
   padding: 6px 20px;
   margin-bottom: 10px;
   font-size: 16px;

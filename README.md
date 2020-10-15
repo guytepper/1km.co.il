@@ -3,10 +3,6 @@
 Fighting for democracy during lockdown.<br>
 </p>
 
-<p align="center" >
-<b>  We're looking for maintainers to help lead the project, <br/>see <a href="https://github.com/guytepper/1km.co.il/issues/22">#22</a> for details.</b>
-</p>
-
 <hr/>
 
 ## Welcome to 1km
@@ -40,3 +36,9 @@ If you want to tinker with the database, view the UI & set up security rules, yo
 <hr/>
 
 Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/VuzxwKN).
+
+
+## E2E tests
+
+E2E tests will run on every PR to master. You can run them locally by running `npm run test:e2e`
+Test failure will not cause a PR to be blocked so please verify it passed before merging.

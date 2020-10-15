@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import MKs from './MKs.json';
 import L from 'leaflet';
 import ProtestCard from '../ProtestCard';
 
@@ -21,18 +22,19 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, marker, ...props }) => {
-  // Use a speical marker / the default black flag.
+const PopupMarker = ({ coordinates, marker, ...props }) => {
   let markerInfo = marker || {
-    iconUrl: '/icons/black-flag.svg',
-    iconRetinaUrl: '/icons/black-flag.svg',
+    iconUrl: '/icons/fist.svg',
+    iconRetinaUrl: '/icons/fist.svg',
     iconSize: [50, 48],
-    iconAnchor: [25, 48],
+    iconAnchor: [12, 43],
   };
 
   return (
-    <Marker position={latlng} icon={protestPoint(markerInfo)}>
-      <Popup><ProtestCard protestInfo={props} /></Popup>
+    <Marker position={[coordinates.latitude, coordinates.longitude]} icon={protestPoint(markerInfo)}>
+      <Popup>
+        <ProtestCard protestInfo={props} />
+      </Popup>
     </Marker>
   );
 };
@@ -45,7 +47,7 @@ const MarkersList = ({ markers }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory }) {
+function AppMap({ markers, coordinates, setMapPosition }) {
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
@@ -62,6 +64,11 @@ function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory })
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
           <MarkersList markers={markers} />
+          {MKs.map((mk) => (
+            <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
+              <Popup>{mk.name}</Popup>
+            </Marker>
+          ))}
           <Circle radius={1000} center={coordinates} />
         </>
       )}
