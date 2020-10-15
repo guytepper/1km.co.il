@@ -208,7 +208,6 @@ function App() {
                     {/* <SiteMessage to="/project-updates/1" style={{ backgroundColor: '#6ab04c' }}>
                       <span style={{ boxShadow: '0 2px 0 0 #fff', fontSize: 19 }}>מה נעשה עכשיו? עדכון פרוייקט #1</span>
                     </SiteMessage> */}
-                    {/*<Button style={{ width: '100%' }} onClick={() => dispatch({ type: 'setModalState', payload: true })}>
                       שינוי כתובת
                     </Button>*/}
                     <Button
