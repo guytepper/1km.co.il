@@ -87,7 +87,6 @@ function useFetchProtest() {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-  console.log(history);
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const socialLinks = getSocialLinks(protest);
 
