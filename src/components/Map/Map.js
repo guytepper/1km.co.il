@@ -1,6 +1,7 @@
 import React from 'react';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
+import MKs from './MKs.json';
 import L from 'leaflet';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -20,18 +21,18 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ latlng, displayName, marker, hovered }) => {
-  const iconUrl = hovered ? '/icons/blue-flag.svg' : '/icons/black-flag.svg';
+const PopupMarker = ({ coordinates, displayName, marker, hovered }) => {
+  const iconUrl = hovered ? '/icons/blue-flag.svg' : '/icons/fist.svg';
   // Use a speical marker / the default black flag.
   let markerInfo = marker || {
     iconUrl,
     iconRetinaUrl: iconUrl,
     iconSize: [50, 48],
-    iconAnchor: [25, 48],
+    iconAnchor: [12, 43],
   };
 
   return (
-    <Marker position={latlng} icon={protestPoint(markerInfo)}>
+    <Marker position={[coordinates.latitude, coordinates.longitude]} icon={protestPoint(markerInfo)}>
       <Popup>{displayName}</Popup>
     </Marker>
   );
@@ -45,7 +46,7 @@ const MarkersList = ({ markers, hoveredProtest }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory, hoveredProtest }) {
+function AppMap({ markers, coordinates, setMapPosition, hoveredProtest }) {
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
@@ -62,6 +63,11 @@ function AppMap({ markers, coordinates, setMapPosition, setMapPositionHistory, h
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
           <MarkersList markers={markers} hoveredProtest={hoveredProtest} />
+          {MKs.map((mk) => (
+            <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
+              <Popup>{mk.name}</Popup>
+            </Marker>
+          ))}
           <Circle radius={1000} center={coordinates} />
         </>
       )}

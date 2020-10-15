@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 
 export default function Button(props) {
   const { color, type, onClick, disabled, style, icon, children } = props;
@@ -21,7 +21,7 @@ const ButtonWrapper = styled.button`
   background: ${(props) => {
     if (props.color) return props.color;
     if (props.type) return props.type.whatsapp ? '#1ED96E' : '#6AB2E4';
-    return 'blue';
+    return 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)';
   }};
   color: #fff;
   font-family: Simpler, sans-serif;
@@ -33,7 +33,7 @@ const ButtonWrapper = styled.button`
   cursor: pointer;
 
   &:disabled {
-    background-color: grey;
+    background: grey;
     cursor: not-allowed;
   }
 `;

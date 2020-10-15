@@ -1,41 +1,74 @@
 import React, { useContext } from 'react';
-import styled from 'styled-components';
+import styled from 'styled-components/macro';
 import { DispatchContext } from '../../context';
+import { useHistory } from 'react-router-dom';
+import { formatDistance, dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
-function formatDistance(distance) {
-  if (distance > 1000) {
-    return `${(distance / 1000).toFixed(1)} ק"מ ממיקומך`;
-  } else {
-    return `${distance} מטר ממיקומך`;
+function getFormattedDate(date) {
+  if (!date) {
+    return null;
   }
+
+  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
 }
 
-function ProtestCard({ protestInfo }) {
+function ProtestCard({ protestInfo, showAction = false, style }) {
   const dispatch = useContext(DispatchContext);
-  const { displayName, streetAddress, distance, whatsAppLink, telegramLink, meeting_time: meetingTime, notes, id } = protestInfo;
+  const history = useHistory();
+
+  const {
+    displayName,
+    streetAddress,
+    distance,
+    whatsAppLink,
+    telegramLink,
+    meeting_time: meetingTime,
+    dateTimeList,
+    notes,
+    id,
+  } = protestInfo;
+
+  const upcomingDate = getUpcomingDate(dateTimeList);
+  const formattedDate = getFormattedDate(upcomingDate);
+
   return (
     <ProtestCardWrapper
+      tabIndex="0"
+      style={style}
       onMouseOver={() => dispatch({ type: 'setHoveredProtest', payload: id })}
       onMouseOut={() => dispatch({ type: 'setHoveredProtest', payload: null })}
+      onClick={() => {
+        history.push(`/protest/${id}`);
+      }}
+      data-testid="protestCard"
     >
       <ProtestCardTitle>{displayName}</ProtestCardTitle>
       <ProtestCardInfo>
         {streetAddress && (
-          <ProtestCardDetail>
+          <ProtestCardDetail data-testid="protestCard__streetAddress">
             <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
             {streetAddress}
           </ProtestCardDetail>
         )}
-        {meetingTime && (
+
+        {upcomingDate && (
+          <ProtestCardDetail key={upcomingDate.id}>
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
+            {formattedDate}
+          </ProtestCardDetail>
+        )}
+        {!upcomingDate && meetingTime && (
           <ProtestCardDetail>
-            <ProtestCardIcon src="/icons/time.svg" alt="" aria-hidden="true" title="שעת מפגש" />
+            <ProtestCardIcon src="/icons/time.svg" alt="meeting time" aria-hidden="true" title="שעת מפגש" />
             {meetingTime}
           </ProtestCardDetail>
         )}
-        <ProtestCardDetail>
-          <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
-          {formatDistance(distance)}
-        </ProtestCardDetail>
+        {distance && (
+          <ProtestCardDetail>
+            <ProtestCardIcon src="/icons/ruler.svg" alt="" aria-hidden="true" title="מרחק" />
+            {formatDistance(distance)}
+          </ProtestCardDetail>
+        )}
       </ProtestCardInfo>
       {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
       {telegramLink || whatsAppLink ? (
@@ -50,23 +83,32 @@ function ProtestCard({ protestInfo }) {
               קבוצת טלגרם
             </ProtestCardGroupButton>
           )}
-          <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-            הקבוצה התמלאה? שלחו קבוצה מעודכנת
-          </ProtestCardGroupButton>
         </>
-      ) : (
-        <ProtestCardGroupButton href="https://forms.gle/xESvVCD6Q2CMXKpUA" target="_blank">
-          הוספת קבוצת וואטסאפ
-        </ProtestCardGroupButton>
-      )}
+      ) : null}
     </ProtestCardWrapper>
   );
 }
 
 const ProtestCardWrapper = styled.div`
   padding: 16px;
+  margin: 0 10px;
   background-color: #fff;
-  box-shadow: 0 1px 4px 0px rgba(80, 80, 82, 0.16);
+  box-shadow: 0 1px 4px 0px #00000026;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: box-shadow 175ms ease-out;
+
+  &:last-child {
+    margin-bottom: 10px;
+  }
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+    outline: none;
+    box-sizing: border-box;
+    box-shadow: 0 0 0 1px #6e7dff, 0px 4px 6px -1px #00000026;
+  }
 `;
 
 const ProtestCardTitle = styled.h2`
@@ -100,7 +142,12 @@ const ProtestCardGroupButton = styled.a`
   max-width: 100%;
   margin-top: 10px;
   padding: 4px 16px;
-  background: ${(props) => (props.type ? (props.type === 'whatsapp' ? '#00c647' : '#6AB2E4') : 'blue')};
+  background: ${(props) =>
+    props.type
+      ? props.type === 'whatsapp'
+        ? '#00c647'
+        : '#6AB2E4'
+      : 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)'};
   color: #fff;
   font-family: Simpler, sans-serif;
   font-size: 18px;

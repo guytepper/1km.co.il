@@ -1,53 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useCallback } from 'react';
+import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
 // import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import Button from '../Button';
-import { validateLatLng } from '../../utils';
-import { createPendingProtest } from '../../api';
-import firebase, { firestore } from '../../firebase';
-import * as geofirestore from 'geofirestore';
+import { validateLatLng, isValidUrl } from '../../utils';
+import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
-
-const GeoFirestore = geofirestore.initializeApp(firestore);
+import DateTimeList from '../DateTimeList';
 
 const protestMarker = new L.Icon({
-  iconUrl: '/icons/black-flag.svg',
-  iconRetinaUrl: '/icons/black-flag.svg',
+  iconUrl: '/icons/fist.svg',
+  iconRetinaUrl: '/icons/fist.svg',
   iconSize: [50, 48],
   iconAnchor: [25, 48],
 });
 
-const geocollection = GeoFirestore.collection('protests');
-const getNearProtests = async (position) => {
-  const query = geocollection.near({
-    center: new firebase.firestore.GeoPoint(position[0], position[1]),
-    radius: 2,
-  });
-  const snapshot = await query.limit(10).get();
-  const protests = snapshot.docs.map((doc) => {
-    const { latitude, longitude } = doc.data().g.geopoint;
-    const protestLatlng = [latitude, longitude];
-    return {
-      id: doc.id,
-      latlng: protestLatlng,
-      ...doc.data(),
-    };
-  });
-  return protests;
-};
-
-function ProtestForm({ initialCoords }) {
-  const { register, handleSubmit } = useForm();
-  const [coordinates, setCoordinates] = useState(() => {
+function ProtestForm({
+  initialCoords,
+  submitCallback,
+  defaultValues = {},
+  afterSubmitCallback = () => {},
+  editMode = null,
+  isAdmin,
+}) {
+  const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
     return initialState;
+  }, [initialCoords]);
+
+  const { register, handleSubmit, setValue, reset } = useForm({
+    defaultValues,
   });
-  const [streetName, setStreetName] = useState('');
+
+  const [streetAddressDefaultValue, setStreetAddressDefaultValue] = useState(defaultValues.streetAddress);
+
+  // These two are separate so that onMoveEnd isn't called on every map move
+  // map center
+  const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
+  // position of marker
+  const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
+
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
@@ -55,34 +53,87 @@ function ProtestForm({ initialCoords }) {
   const [zoomLevel, setZoomLevel] = useState(14);
   // const { recaptcha } = useRef(null);
 
+  const setStreetAddress = React.useCallback((value) => setValue('streetAddress', value), [setValue]);
+
   useEffect(() => {
+    reset({});
+    setStreetAddressDefaultValue('');
+    setStreetAddress('');
+  }, [editMode, reset, setStreetAddress]);
+
+  // the two useEffects below this are in order to deal
+  // with the defaultValues and the places auto complete
+  useEffect(() => {
+    if (Object.keys(defaultValues).length > 0) {
+      reset(defaultValues);
+      setSubmitMessage('');
+      setSubmitSuccess(false);
+      setStreetAddressDefaultValue(defaultValues.streetAddress);
+      setStreetAddress(defaultValues.streetAddress);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+
+      if (validateLatLng(defaultValues.latlng)) {
+        setMapCenter(defaultValues.latlng);
+        setMarkerPosition(defaultValues.latlng);
+      }
+    }
+  }, [defaultValues, reset, setStreetAddress, setDateTimeList]);
+
+  // Load nearby protests on mount
+  useEffect(() => {
+    const coords = coordinatesUpdater();
     async function nearbyProtests() {
-      const protests = await getNearProtests(coordinates);
+      const protests = await fetchNearbyProtests(coords);
       setNearbyProtests(protests);
     }
     nearbyProtests();
-  }, [streetName]);
+  }, [coordinatesUpdater]);
 
   const onSubmit = async (params) => {
-    if (!streetName) {
+    if (!editMode && !params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
       return;
     } else {
+      if (!mapCenter) {
+        alert('אנא הזינו כתובת תקינה');
+        return;
+      }
+
+      if (params.telegramLink && !isValidUrl(params.telegramLink)) {
+        alert('לינק לקבוצת הטלגרם אינו תקין');
+        return;
+      }
+
+      if (params.whatsAppLink && !isValidUrl(params.whatsAppLink)) {
+        alert('לינק לקבוצת הוואטסאפ אינו תקין');
+        return;
+      }
+
       try {
-        params.coords = coordinates;
-        params.streetAddress = streetName;
+        params.coords = mapCenter;
+        params.dateTimeList = dateTimeList;
         // params.recaptchaToken = recaptchaToken;
 
-        let protest = await createPendingProtest(params);
+        let protest = await submitCallback(params);
+
+        if (editMode) {
+          setSubmitSuccess(true);
+          setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
+          return;
+        }
+
         if (protest._document) {
           setSubmitSuccess(true);
           setSubmitMessage('ההפגנה נשלחה בהצלחה ותתווסף למפה בזמן הקרוב :)');
+          afterSubmitCallback();
         } else {
-          throw protest;
+          throw new Error('protest._document was null.');
         }
       } catch (err) {
+        console.log('error!!', err);
         setSubmitSuccess(true);
-        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.co.il');
+        setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
     }
   };
@@ -97,7 +148,7 @@ function ProtestForm({ initialCoords }) {
 
   return (
     <ProtestFormWrapper onSubmit={handleSubmit(onSubmit)}>
-      {submitSuccess ? (
+      {submitSuccess && !editMode ? (
         <>
           <SuccessMessage>{submitMessage}</SuccessMessage>
           <Link to="/">
@@ -106,47 +157,76 @@ function ProtestForm({ initialCoords }) {
         </>
       ) : (
         <>
-          <ProtestFormLabel>
-            שם המקום
-            <ProtestFormInput
-              type="text"
-              name="displayName"
-              ref={register}
-              placeholder="איפה ההפגנה?"
-              autoFocus
-            ></ProtestFormInput>
-            <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
-          </ProtestFormLabel>
-          <ProtestFormLabel>
-            כתובת
-            <PlacesAutocomplete setManualAdress={setCoordinates} setStreetName={setStreetName} />
-            <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
-          </ProtestFormLabel>
-          <MapWrapper
-            center={coordinates}
-            zoom={zoomLevel}
-            scrollWheelZoom={'center'}
-            onMove={(t) => {
-              setCoordinates([t.target.getCenter().lat, t.target.getCenter().lng]);
-              setZoomLevel(t.target._zoom);
-            }}
-            onZoom={(event)=>{
-              setZoomLevel(event.target._zoom);
-            }}
-          >
-            <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={coordinates}></Marker>
-            {nearbyProtests.map((protest) => (
-              <Marker position={protest.latlng} icon={protestMarker} key={protest.id}></Marker>
-            ))}
-          </MapWrapper>
-          <ProtestFormLabel>
-            שעת מפגש
-            <ProtestFormInput type="time" defaultValue="17:30" name="meeting_time" ref={register}></ProtestFormInput>
-          </ProtestFormLabel>
+          {(!editMode || isAdmin) && (
+            <>
+              <ProtestFormLabel>
+                שם המקום
+                <ProtestFormInput
+                  type="text"
+                  name="displayName"
+                  ref={register}
+                  placeholder="איפה ההפגנה?"
+                  autoFocus
+                ></ProtestFormInput>
+                <ProtestFormInputDetails>שם המקום כפי שתושבי האיזור מכירים אותו</ProtestFormInputDetails>
+              </ProtestFormLabel>
+
+              <ProtestFormLabel>
+                כתובת
+                <PlacesAutocomplete
+                  setManualAddress={setMapCenter}
+                  setStreetAddress={setStreetAddress}
+                  inputRef={register}
+                  defaultValue={streetAddressDefaultValue}
+                />
+                <ProtestFormInputDetails>לאחר בחירת הכתובת, הזיזו את הסמן למיקום המדויק:</ProtestFormInputDetails>
+              </ProtestFormLabel>
+              <MapWrapper
+                center={mapCenter}
+                zoom={zoomLevel}
+                scrollWheelZoom={'center'}
+                onMove={(t) => {
+                  setMarkerPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+                  setZoomLevel(t.target._zoom);
+                }}
+                onMoveEnd={async (t) => {
+                  const newPosition = [t.target.getCenter().lat, t.target.getCenter().lng];
+                  setMapCenter(newPosition);
+                  setMarkerPosition(newPosition);
+                  setZoomLevel(t.target._zoom);
+
+                  // fetch protests on move end
+                  if (mapCenter) {
+                    const protests = await fetchNearbyProtests(mapCenter);
+                    setNearbyProtests(protests);
+                  }
+                }}
+                onZoom={(event) => {
+                  setZoomLevel(event.target._zoom);
+                }}
+              >
+                <TileLayer
+                  attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={markerPostion}></Marker>
+                {nearbyProtests.map((protest) => (
+                  <Marker
+                    position={[protest.coordinates.latitude, protest.coordinates.longitude]}
+                    icon={protestMarker}
+                    key={protest.id}
+                  ></Marker>
+                ))}
+              </MapWrapper>
+
+              <hr />
+            </>
+          )}
+          <ProtestFormSectionTitle>תאריך ושעה</ProtestFormSectionTitle>
+          <DateTimeList dateTimeList={dateTimeList} setDateTimeList={setDateTimeList} />
+
+          <hr />
+          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
           <ProtestFormLabel>
             קבוצת וואטסאפ
             <ProtestFormInput placeholder="לינק לקבוצה" name="whatsAppLink" ref={register}></ProtestFormInput>
@@ -160,31 +240,37 @@ function ProtestForm({ initialCoords }) {
             <ProtestFormInput placeholder="הערות להפגנה" name="notes" ref={register}></ProtestFormInput>
             <ProtestFormInputDetails>כל דבר שחשוב שיופיע בפרטי ההפגנה.</ProtestFormInputDetails>
           </ProtestFormLabel>
-          <hr />
-          <ProtestFormSectionTitle>פרטי יצירת קשר</ProtestFormSectionTitle>
-          <ProtestFormInputDetails margin="10px 0">
-            האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
-          </ProtestFormInputDetails>
+          {!editMode ? (
+            <>
+              <ProtestFormInputDetails margin="10px 0">
+                האימייל לא יפורסם באתר ולא יועבר לשום גורם חיצוני. ניצור קשר במידה ונצטרך לוודא את פרטי ההפגנה.
+              </ProtestFormInputDetails>
 
-          <ProtestFormLabel>
-            כתובת מייל
-            <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
-          </ProtestFormLabel>
+              <ProtestFormLabel>
+                כתובת מייל
+                <ProtestFormInput type="email" placeholder="האימייל שלך" name="email" ref={register}></ProtestFormInput>
+              </ProtestFormLabel>
 
-          <ProtestFormCheckboxWrapper>
-            <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
-            <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
-          </ProtestFormCheckboxWrapper>
+              <ProtestFormCheckboxWrapper>
+                <ProtestFormCheckbox type="checkbox" id="contact-approve" name="approveContact" ref={register} />
+                <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
+              </ProtestFormCheckboxWrapper>
 
-          {/* <ReCaptcha
+              {/* <ReCaptcha
             ref={recaptcha}
             sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
             action="action_name"
             verifyCallback={verifyCallback}
           /> */}
-          <Button type="submit" color="#1ED96E">
-            הוספת הפגנה
-          </Button>
+              <Button type="submit" color="#1ED96E">
+                הוספת הפגנה
+              </Button>
+            </>
+          ) : (
+            <Button type="submit" color="#1ED96E">
+              {editMode === 'pending' ? 'יצירת הפגנה' : 'עריכת הפגנה'}
+            </Button>
+          )}
         </>
       )}
     </ProtestFormWrapper>
@@ -201,7 +287,7 @@ const ProtestFormWrapper = styled.form`
   }
 `;
 
-const ProtestFormLabel = styled.label`
+export const ProtestFormLabel = styled.label`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -209,7 +295,7 @@ const ProtestFormLabel = styled.label`
   font-weight: 600;
 `;
 
-const ProtestFormInput = styled.input`
+export const ProtestFormInput = styled.input`
   width: 100%;
   padding: 6px 12px;
   margin-bottom: 0;
