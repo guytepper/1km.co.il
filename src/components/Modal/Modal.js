@@ -43,11 +43,9 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
     return () => clearTimeout(timeout);
   }, [addressInputDisplay]);
 
-  const [ImageLoaded, setImageLoaded] = useState(false);
   return (
     <ModalWrapper isOpen={isOpen}>
       <ModalContentWrapper>
-
         <picture>
           <source
             type="image/webp"
@@ -56,7 +54,6 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
           <source srcSet="/illustrations/welcome-illustration@1x.png 1x, /illustrations/welcome-illustration@2x.png 2x, /illustrations/welcome-illustration@3x.png 3x" />
           <ModalContentImage src="/welcome-illustration@1x.jpg" alt="" />
         </picture>
-
 
         <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
         <h3 style={{ fontWeight: 400, maxWidth: 355 }}>
