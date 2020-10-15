@@ -152,7 +152,7 @@ const ModalWrapper = styled(ReactModal)`
     max-height: calc(100vh - 350px) !important;
   }
 
-  /*scrollbar*/
+//**** Scrollbar ****//
   scrollbar-color: #5f6ffa #dde0ff;
   scrollbar-width: thin;
 
