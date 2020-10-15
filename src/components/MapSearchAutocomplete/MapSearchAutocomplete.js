@@ -105,13 +105,9 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   margin-bottom: 10px;
   font-size: 16px;
   padding: 10px 50px;
-
   border: 0px;
   border-radius: 50px;
-  -webkit-appearance: none;
-
-  -webkit-box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
-  -moz-box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
+  appearance: none;
   box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
 
   @media (min-width: 768px) {
