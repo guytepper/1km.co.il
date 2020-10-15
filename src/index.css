@@ -76,3 +76,14 @@ li {
 .ReactModal__Overlay {
   z-index: 20;
 }
+
+/** Leaflet protest card popup resets **/
+
+.leaflet-popup-content {
+  font-family: Simpler, sans-serif;
+  text-align: right;
+}
+
+.leaflet-container a {
+  color: #fff;
+}
