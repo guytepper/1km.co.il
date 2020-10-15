@@ -126,7 +126,6 @@ const LocationIcon = styled.img`
   right: calc(15% + 17px);
   position: absolute;
   height: 20px;
-
   user-select: none;
 
   @media (min-width: 768px) {
@@ -141,7 +140,7 @@ const GpsIcon = styled.img`
   height: 20px;
   user-select: none;
 
-  /*logo is white*/
+  /****gps icon is white-changed it to black****/
   -webkit-filter: invert(100%); /* Safari/Chrome */
   filter: invert(100%);
 
