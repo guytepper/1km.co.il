@@ -1,4 +1,4 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
@@ -22,6 +22,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
+  hoveredProtest: null,
   loading: false,
   user: undefined,
 };
@@ -48,6 +49,8 @@ function reducer(state, action) {
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
+    case 'setHoveredProtest':
+      return { ...state, hoveredProtestId: action.payload };
     case 'setLoadData':
       return {
         ...state,
@@ -72,6 +75,14 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const hoveredProtest = useMemo(() => {
+    if (!state.hoveredProtestId) {
+      return null;
+    }
+
+    return [...state.protests.close, ...state.protests.far].find((protest) => protest.id === state.hoveredProtestId);
+  }, [state.hoveredProtestId, state.protests.close, state.protests.far]);
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
@@ -163,7 +174,7 @@ function App() {
         }
       }
     }
-    //TODO: remove this line and make sure deps are correct
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
@@ -213,7 +224,7 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
-                  h
+                  hoveredProtest={hoveredProtest}
                   markers={state.markers}
                 />
               </HomepageWrapper>
