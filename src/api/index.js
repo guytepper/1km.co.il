@@ -2,62 +2,6 @@ import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-// async function verifyRecaptcha(token) {
-//   try {
-//     const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
-//     const response = await request.json();
-//     return response;
-//   } catch (err) {
-//     throw err;
-//   }
-// }
-
-export async function createPendingProtest(params) {
-  const {
-    // recaptchaToken,
-    displayName,
-    streetAddress,
-    telegramLink,
-    whatsAppLink,
-    dateTimeList,
-    notes,
-    coords,
-    approveContact,
-  } = params;
-
-  try {
-    // Skip protest approval during development
-    const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
-
-    // const verification = await verifyRecaptcha(recaptchaToken);
-
-    // if (verification.success) {
-    const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection(tableName);
-
-    const request = geocollection.add({
-      displayName,
-      streetAddress,
-      whatsAppLink,
-      telegramLink,
-      notes,
-      dateTimeList,
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-      approveContact,
-      archived: false,
-    });
-
-    return request;
-    // } else {
-    //   throw new Error('Recaptcha error');
-    // }
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
-}
-
 export async function createProtest(params) {
   const { coords, ...restParams } = params;
   const [lat, lng] = coords;
