@@ -141,7 +141,6 @@ const GpsIcon = styled.img`
   user-select: none;
 
   /****gps icon is white-changed it to black****/
-  -webkit-filter: invert(100%); /* Safari/Chrome */
   filter: invert(100%);
 
   @media (min-width: 768px) {
