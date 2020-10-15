@@ -131,7 +131,7 @@ const LocationIcon = styled.img`
   }
 `;
 
-const GpsIcon = styled.img`
+const GPSIcon = styled.img`
   z-index: 10001; /* 1 */
   top: 29px;
   left: calc(15% + 17px);
