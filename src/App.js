@@ -244,7 +244,7 @@ function App() {
               />
             </Route>
             <ProtectedRoute exact path="/add-protest" authorized={canAddProtest}>
-              <AddProtest initialCoords={state.userCoordinates} />
+              <AddProtest initialCoords={state.userCoordinates} user={state.user} />
             </ProtectedRoute>
             <Route path="/admin">
               <Admin user={state.user} />

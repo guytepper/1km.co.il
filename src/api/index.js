@@ -58,11 +58,11 @@ export async function createPendingProtest(params) {
   }
 }
 
-export function createProtest(params) {
+export async function createProtest(params) {
   const { coords, ...restParams } = params;
   const [lat, lng] = coords;
   const geocollection = GeoFirestore.collection('protests');
-  const request = geocollection.add({
+  const request = await geocollection.add({
     ...restParams,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
