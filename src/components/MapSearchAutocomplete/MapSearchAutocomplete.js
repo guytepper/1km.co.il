@@ -116,8 +116,10 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
     width: 80%;
   }
 `;
+
+/*1. z-index should be higher then 10000-(the input z-index)*/
 const LocationIcon = styled.img`
-  z-index: 10001;
+  z-index: 10001; /* 1 */
   top: 29px;
   right: calc(15% + 17px);
   position: absolute;
@@ -128,8 +130,9 @@ const LocationIcon = styled.img`
     right: calc(10% + 20px);
   }
 `;
+
 const GpsIcon = styled.img`
-  z-index: 10001;
+  z-index: 10001; /* 1 */
   top: 29px;
   left: calc(15% + 17px);
   position: absolute;
