@@ -85,7 +85,7 @@ function AppMap({ markers, coordinates, setMapPosition, setCoordinates }) {
 const SearchPlaceAutoComplete = styled(MapSearchAutocomplete)`
   z-index: 10000;
   position:absolute;
-  top 30;
+  top: 30px;
 `;
 const MapWrapper = styled(Map)`
   width: 100%;
