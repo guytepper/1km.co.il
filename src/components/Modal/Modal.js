@@ -105,39 +105,62 @@ function Modal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
 }
 
 const ModalWrapper = styled(ReactModal)`
+  z-index: 20;
   position: fixed;
   display: inline-block;
-  max-height: 100vh;
+  padding: 20px 25px;
+  height: 100vh;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
-  padding: 20px 25px;
-  z-index: 20;
 
   @media (min-width: 360px) {
     top: 30px;
-    left: 25px;
-    right: 25px;
-    bottom: 20px;
-    max-height: calc(100vh - 50px);
+    left: 7.5vw;
+    right: 7.5vw;
+    bottom: 7.5vw;
+    max-height: calc(100vh - 10vh);
   }
 
   @media (min-width: 768px) {
     top: 75px;
-    left: 100px;
-    right: 100px;
+    left: 21vw;
+    right: 21vw;
+    max-height: 550px;
   }
 
   @media (min-width: 1280px) {
-    top: 75px;
-    left: 250px;
-    right: 250px;
+    left: 30vw;
+    right: 30vw;
   }
 
   @media (min-width: 1440px) {
     top: 100px;
-    left: 500px;
-    right: 500px;
+    left: 35vw;
+    right: 35vw;
+  }
+
+  /** Make the modal higher on short screens **/
+  @media (max-height: 700px) and (min-width: 1024px) {
+    top: 30px;
+  }
+
+  /*** Scrollbar ***/
+  scrollbar-color: #5f6ffa #dde0ff;
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #dde0ff;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #5f6ffa;
+    border-radius: 10px;
   }
 `;
 
