@@ -1,4 +1,5 @@
 import 'cypress-wait-until';
+import * as firebase from '../../src/firebase';
 
 beforeEach(() => {
   cy.clearLocalStorage();
@@ -28,6 +29,11 @@ function fakeLocation(latitude = 31.7749837, longitude = 35.219797) {
 
 describe('Location modal', () => {
   it('should show results when using user location', () => {
+    cy.stub(firebase, 'auth', () => {
+      return {
+        onAuthStateChanged: (callback) => callback({ uid: '12345' }),
+      };
+    });
     cy.visit('/', fakeLocation());
 
     selectors.autoLocationBtn().click();
