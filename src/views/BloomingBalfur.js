@@ -106,9 +106,6 @@ export default function BloomingBalfur() {
   return (
     <BalfurWrapper>
       <Button style={{ width: '100%' }}> פרחים: {flowerCount}</Button>
-      <Button onClick={() => addFlower()} style={{ width: '100%' }}>
-        עוד פרח
-      </Button>
       <StageWrapper width={360} height={500} options={{ backgroundColor: 0xeef1f5 }} sortableChildren={true}>
         <Container position={[0, 0]} sortableChildren={true}>
           <Sprite image="/castle.png" width={cWidth} height={cHeight} x={castleX} y={castleY} zIndex={20} />
@@ -128,6 +125,9 @@ export default function BloomingBalfur() {
           })}
         </Container>
       </StageWrapper>
+      <Button onClick={() => addFlower()} style={{ width: '100%' }}>
+        עוד פרח
+      </Button>
     </BalfurWrapper>
   );
 }
