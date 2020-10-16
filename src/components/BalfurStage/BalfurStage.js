@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Stage, Sprite, Container } from '@inlet/react-pixi';
 import styled from 'styled-components/macro';
-import { getRandomCoord, getRandomNumber } from './gameUtils';
+import { getRandomCoord, getRandomNumber } from './stageUtils';
 
 const castleInfo = {
   castleX: 100,
