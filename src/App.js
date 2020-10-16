@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, BloomingBalfur, FourOhFour } from './views';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
 import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
@@ -257,7 +257,10 @@ function App() {
               <Profile user={state.user} />
             </Route>
             <Route exact path="/balfur">
-              <BloomingBalfur />
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/balfur/flower-modal">
+              <Balfur user={state.user} />
             </Route>
 
             <Route exact path="/support-the-project/">
