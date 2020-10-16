@@ -50,7 +50,7 @@ function getRandomCoord({ minLen, maxLen, behindCastle }) {
   var y = -x1 * Math.sin(rotAngle) + y1 * Math.cos(rotAngle);
 
   /*If object isnt suppose to be behind castle -> recalculate position*/
-  if (!behindCastle && x > castleX && x < castleX + cWidth && y > castleY && y < castleY + cHeight)
+  if (!behindCastle && x > castleX - 15 && x < castleX + cWidth && y > castleY && y < castleY + cHeight)
     [x, y] = getRandomCoord({ minLen: minLen, macLen: maxLen });
 
   return [x, y];
@@ -110,7 +110,7 @@ export default function BloomingBalfur() {
                 x={x}
                 y={y}
                 key={index}
-                zIndex={thron.bloomed ? 2 : 1}
+                zIndex={thron.bloomed ? 200 : 1}
               />
             );
           })}
