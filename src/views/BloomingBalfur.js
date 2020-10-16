@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../components';
 import { PixiComponent, Stage, Sprite } from '@inlet/react-pixi';
+import firebase, { realtimeDB } from '../firebase';
 import styled from 'styled-components/macro';
 
 function getRandomNumber({ max }) {
@@ -27,17 +28,28 @@ export default function BloomingBalfur() {
         let item = { ...list[index], bloomed: true };
         list[index] = item;
         updateThronsList(list);
-        console.log(item, index, list);
         foundThron = true;
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [flowerCount]);
 
+  useEffect(() => {
+    const flowerCount = realtimeDB.ref('flowers_count');
+    flowerCount.on('value', (snapshot) => {
+      console.log('Realtime Database Update: ' + snapshot.val());
+      setFlowerCount(snapshot.val());
+    });
+  }, []);
+
+  const addFlower = () => {
+    realtimeDB.ref('flowers_count').set(firebase.database.ServerValue.increment(1));
+  };
+
   return (
     <BalfurWrapper>
-      <Button onClick={() => setFlowerCount(flowerCount + 1)} style={{ width: '100%' }}>
+      <Button style={{ width: '100%' }}> פרחים: {flowerCount}</Button>
+      <Button onClick={() => addFlower()} style={{ width: '100%' }}>
         עוד פרח
       </Button>
       <StageWrapper width={360} height={500} options={{ backgroundColor: 0xeef1f5 }}>
