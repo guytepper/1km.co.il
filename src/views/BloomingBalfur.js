@@ -10,11 +10,6 @@ function getRandomCoord({ maxX, maxY }) {
   return [getRandomNumber({ max: maxX }), getRandomNumber({ max: maxY })];
 }
 
-const thronCoordinates = new Array(50)
-  .fill([0, 0])
-  .map(() => ({ bloomed: false, position: getRandomCoord({ maxX: 300, maxY: 480 }) }));
-console.log(thronCoordinates);
-
 export default function BloomingBalfur() {
   const [thronsList, updateThronsList] = useState(() =>
     new Array(50).fill([0, 0]).map(() => ({ bloomed: false, position: getRandomCoord({ maxX: 300, maxY: 480 }) }))
