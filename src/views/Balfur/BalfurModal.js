@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory } from 'react-router-dom';
+import ReactModal from 'react-modal';
 import queryString from 'query-string';
 import { Button } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
+
 import firebase, { realtimeDB } from '../../firebase';
 
 const balfurCheckIn = ({ profilePic, firstName, userMessage }) => {
@@ -65,7 +67,7 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.BEFORE_FACEBOOK_AUTH && isVisitor(user)) {
     return (
-      <BalfurModalWrapper>
+      <BalfurModalWrapper isOpen={false}>
         <BalfurModalContent>
           <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
         </BalfurModalContent>
@@ -96,14 +98,46 @@ export default function BalfurModal({ user }) {
   }
 }
 
-const BalfurModalWrapper = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
+const BalfurModalWrapper = styled(ReactModal)`
+  z-index: 20;
+  position: fixed;
+  display: inline-block;
+  padding: 20px 25px;
   height: 100vh;
-  width: 100%;
-  background-color: #ffffffed;
-  z-index: 10;
+  overflow-y: auto;
+  border: 1px solid #d2d2d2;
+  background-color: #fff;
+
+  @media (min-width: 360px) {
+    top: 30px;
+    left: 7.5vw;
+    right: 7.5vw;
+    bottom: 7.5vw;
+    max-height: calc(100vh - 10vh);
+  }
+
+  @media (min-width: 768px) {
+    top: 75px;
+    left: 21vw;
+    right: 21vw;
+    max-height: 550px;
+  }
+
+  @media (min-width: 1280px) {
+    left: 30vw;
+    right: 30vw;
+  }
+
+  @media (min-width: 1440px) {
+    top: 100px;
+    left: 35vw;
+    right: 35vw;
+  }
+
+  /** Make the modal higher on short screens **/
+  @media (max-height: 700px) and (min-width: 1024px) {
+    top: 30px;
+  }
 `;
 
 const BalfurModalContent = styled.div`
