@@ -196,26 +196,20 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <Link to="/">
+                  {/* <Link to="/">
                     <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
                       <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
                       LIVE
                     </NavItemLive>
-                  </Link>
-                  {/* <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem> */}
+                  </Link> */}
+                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
           <Switch>
-            <Route exact path="/">
-              <Link to="/map">
-                <Button style={{ width: '100%' }}> לחיפוש הפגנות לחץ כאן</Button>
-              </Link>
-              <Balfur user={state.user} />
-            </Route>
-            <Route exact path="/map">
+            <Route exact path={['/', '/map']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -271,9 +265,6 @@ function App() {
             </Route>
             <Route exact path="/balfur">
               <Balfur user={state.user} setUser={(user) => dispatch({ type: 'setUser', payload: user })} />
-            </Route>
-            <Route exact path="/balfur/flower-modal">
-              <Balfur user={state.user} />
             </Route>
             <Route exact path="/balfur/qr">
               <Redirect to="/balfur" />
