@@ -152,7 +152,7 @@ export default function BalfurModal({ user, setUser }) {
           </FormLabel>
           <FormLabel>
             מסר לאומה (לא חובה)
-            <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
+            <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} maxLength="80" />
           </FormLabel>
           <Button
             disabled={firstName == ''}
