@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
-import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
@@ -196,14 +196,22 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                    <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+                    LIVE
+                  </NavItemLive>
+
+                  {/* <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem> */}
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
           <Switch>
             <Route exact path="/">
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/map">
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -238,6 +246,7 @@ function App() {
                 }}
               />
             </Route>
+
             <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} />
             </Route>
@@ -255,6 +264,15 @@ function App() {
             </Route>
             <Route exact path="/profile">
               <Profile user={state.user} />
+            </Route>
+            <Route exact path="/balfur">
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/balfur/flower-modal">
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/balfur/qr">
+              <Redirect to="/balfur" />
             </Route>
 
             <Route exact path="/support-the-project/">
@@ -330,6 +348,26 @@ const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
   }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+`;
+
+const NavItemLive = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  color: tomato;
+  font-weight: bold;
+  font-size: 18px;
+  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
 `;
 
 const NavProfileWrapper = styled.div`

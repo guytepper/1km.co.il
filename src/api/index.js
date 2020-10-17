@@ -1,5 +1,6 @@
-import firebase, { firestore } from '../firebase';
+import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
+import { nanoid } from 'nanoid';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 // async function verifyRecaptcha(token) {
@@ -193,9 +194,31 @@ export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
 
   if ((await userRef.get()).exists) {
-    await userRef.update(userData);
+    return userRef.get();
   } else {
-    await userRef.set(userData);
+    const { picture_url } = userData;
+    const filename = `${nanoid()}.jpeg`;
+    const profilePicsRef = storage.child('profile_pics/' + filename);
+
+    fetch(picture_url)
+      .then((res) => {
+        return res.blob();
+      })
+      .then((blob) => {
+        //uploading blob to firebase storage
+        profilePicsRef
+          .put(blob)
+          .then(function (snapshot) {
+            return snapshot.ref.getDownloadURL();
+          })
+          .then((url) => {
+            console.log('Firebase storage image uploaded : ', url);
+            userRef.set({ ...userData, picture_url: url }).then((s) => console.log(`user saved: ${s}`));
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 
@@ -305,3 +328,5 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
   // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
 }
+
+export async function protestCheckIn({ userId, protestId }) {}
