@@ -105,6 +105,11 @@ const EventHero = styled.img`
   object-fit: cover;
   position: relative;
   z-index: 10;
+
+  @media (min-width: 600px) {
+    height: 340px;
+    object-position: 0px -140px;
+  }
 `;
 
 const EventContentWrapper = styled.div`
