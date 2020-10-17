@@ -17,7 +17,7 @@ firebase.initializeApp(config);
 
 export const firestore = firebase.firestore();
 export const realtimeDB = firebase.database();
-export const storage = firebase.storage().ref();
+export const storage = firebase.app().storage(process.env.REACT_APP_FIREBASE_CUSTOM_STORAGE).ref();
 export const auth = firebase.auth();
 
 export const provider = new firebase.auth.GoogleAuthProvider();

@@ -67,7 +67,7 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.BEFORE_FACEBOOK_AUTH && isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={false}>
+      <BalfurModalWrapper isOpen={true}>
         <BalfurModalContent>
           <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
         </BalfurModalContent>
@@ -77,7 +77,7 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.AFTER_FACEBOOK_AUTH || !isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={false}>
+      <BalfurModalWrapper isOpen={true}>
         <BalfurModalContent>
           <h2>תודה!</h2>
           <p> כבר תוספו לרשימת המפגינים.</p>
