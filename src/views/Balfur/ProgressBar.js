@@ -11,7 +11,7 @@ function ProgressBar({ checkInsCount, MaxCheckIns }) {
   return (
     <Box>
       <h4 style={{ textAlign: 'center' }}>מד העצבים של ביבי: {checkInsCount} צ'ק אינים</h4>
-      <Bar class="progress-bar" length={CountPercentage}></Bar>
+      <Bar className="progress-bar" length={CountPercentage}></Bar>
     </Box>
   );
 }

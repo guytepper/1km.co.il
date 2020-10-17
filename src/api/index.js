@@ -209,7 +209,8 @@ export async function saveUserInFirestore(userData) {
         profilePicsRef
           .put(blob)
           .then(function (snapshot) {
-            return snapshot.ref.getDownloadURL();
+            const url = snapshot.ref.getDownloadURL();
+            return url;
           })
           .then((url) => {
             console.log('Firebase storage image uploaded : ', url);

@@ -36,11 +36,12 @@ const stages = {
   AFTER_ANONYMOUS_ENTRY: 'afterAnonymousEntry',
 };
 
-export default function BalfurModal({ user }) {
+export default function BalfurModal({ user, setUser }) {
   const [stage, setStage] = useState(stages.UNKNOWN);
   const [firstName, setFirstName] = useState('');
   const [userMessage, setUserMessage] = useState('');
   const [showSocialLinks, setSocialLinks] = useState(false);
+  const [pictureUrl, setPictureUrl] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function BalfurModal({ user }) {
         saveUserInFirestore(userData).then(() => {
           setStage(stages.AFTER_FACEBOOK_AUTH);
           setFirstName(userData.first_name);
+          setPictureUrl(userData.picture_url);
         });
       })
       .catch((error) => {
@@ -97,7 +99,13 @@ export default function BalfurModal({ user }) {
             עמוד האינסטגרם שלנו
           </Button>
           <hr style={{ width: '100%' }} />
-          <Button style={{ marginBottom: 10 }} onClick={() => setSocialLinks(false)}>
+          <Button
+            style={{ marginBottom: 10 }}
+            onClick={() => {
+              setSocialLinks(false);
+              setStage('');
+            }}
+          >
             סגירה
           </Button>
         </BalfurModalContent>
@@ -122,14 +130,10 @@ export default function BalfurModal({ user }) {
         <BalfurModalContent>
           <h1>מרעידים את בלפור!</h1>
           <h2 style={{ fontWeight: 500 }}>דווח/י שהגעת להפגנה וביחד נגרום לביבי לרעוד מפחד.</h2>
-          {getLocalStorage('guyguyguy') == true ? (
-            <Button style={{ marginBottom: 10 }} onClick={() => handleSignIn()}>
-              צ'ק אין עם תמונת פייסבוק
-            </Button>
-          ) : (
-            ''
-          )}
-          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין להפגנה</Button>
+          <Button style={{ marginBottom: 10 }} onClick={() => handleSignIn()}>
+            צ'ק-אין עם תמונת פייסבוק
+          </Button>
+          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק-אין אנונימי</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
@@ -150,9 +154,11 @@ export default function BalfurModal({ user }) {
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
           <Button
+            disabled={firstName == ''}
             onClick={() => {
               setStage(stages.UNKNOWN);
-              balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : user.picture_url, firstName });
+              console.log(user);
+              balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : pictureUrl, firstName });
               // Open social links modal
               setTimeout(() => {
                 setSocialLinks(true);

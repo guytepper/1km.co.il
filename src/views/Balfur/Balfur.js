@@ -7,7 +7,7 @@ import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 import { isVisitor } from '../../utils';
 import ProgressBar from './ProgressBar';
 
-export default function Balfur({ user }) {
+export default function Balfur({ user, setUser }) {
   const history = useHistory();
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,7 +51,7 @@ export default function Balfur({ user }) {
 
   return (
     <>
-      {history.location.pathname === '/balfur' && <BalfurModal user={user} />}
+      {history.location.pathname === '/balfur' && <BalfurModal user={user} setUser={setUser} />}
       <EventWrapper>
         <picture>
           <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />

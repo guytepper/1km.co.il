@@ -270,7 +270,7 @@ function App() {
               <Profile user={state.user} />
             </Route>
             <Route exact path="/balfur">
-              <Balfur user={state.user} />
+              <Balfur user={state.user} setUser={(user) => dispatch({ type: 'setUser', payload: user })} />
             </Route>
             <Route exact path="/balfur/flower-modal">
               <Balfur user={state.user} />
