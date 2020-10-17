@@ -25,14 +25,21 @@ export default function Balfur({ user }) {
   // }, []);
 
   useEffect(() => {
-    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(15);
+    var timeout = 1;
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(7);
     checkIns.on('child_added', (data) => {
       const { firstName, userMessage, profilePic, createdAt } = data.val();
-      setCheckIns((prevState) => {
-        return [{ firstName, userMessage, profilePic, createdAt }, ...prevState];
-      });
-      // addCommentElement(postElement, data.key, data.val().text, data.val().author);
-      console.log(data.val());
+      setTimeout(() => {
+        setCheckIns((prevState) => {
+          /*Set display to none, after animation the row wil be shown*/
+          return [{ firstName, userMessage, profilePic, createdAt, display: 'none' }, ...prevState];
+        });
+        // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+        console.log(data.val());
+      }, timeout);
+      /*Make first 6 rows appear with 1sec delay 
+      after 6 secondes timeout=0*/
+      timeout = timeout >= 6000 ? 0 : timeout != 0 ? timeout + 1000 : 0;
     });
 
     checkIns.once('value', () => {
@@ -58,7 +65,7 @@ export default function Balfur({ user }) {
             <EventBox>
               <EventBoxTitleWrapper>
                 <EventBoxTitle>מי בבלפור?</EventBoxTitle>
-                <BalfurCheckIns checkIns={checkIns} />
+                <BalfurCheckIns checkIns={checkIns} setCheckIns={setCheckIns} />
               </EventBoxTitleWrapper>
             </EventBox>
             <EventBox>

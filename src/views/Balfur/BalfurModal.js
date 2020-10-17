@@ -10,11 +10,19 @@ import { isVisitor } from '../../utils';
 
 import firebase, { realtimeDB } from '../../firebase';
 
-const balfurCheckIn = ({ profilePic, firstName, userMessage }) => {
+const balfurCheckIn = ({ profilePic, firstName, userMessage, uid }) => {
   const checkIn = realtimeDB.ref('balfur_check_ins').push();
-  checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
+  checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP, uid });
 };
-
+/*
+const checkIfUserCheckedIn=({uid})=>{
+  ref.child("balfur_check_ins").orderByChild("uid").equalTo(uid).once("value",snapshot => {
+    if (snapshot.exists()){
+      const userData = snapshot.val();
+      console.log("exists!", userData);
+    }
+});
+}*/
 const stages = {
   UNKNOWN: 'unkonwn',
   BEFORE_FACEBOOK_AUTH: 'beforeFacebookAuth',
@@ -91,7 +99,9 @@ export default function BalfurModal({ user }) {
             מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName })}>צ'ק אין</Button>
+          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName, uid: user.uid })}>
+            צ'ק אין
+          </Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
