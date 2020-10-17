@@ -1,5 +1,5 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
@@ -209,6 +209,9 @@ function App() {
           </Header>
           <Switch>
             <Route exact path="/">
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/map">
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -243,6 +246,7 @@ function App() {
                 }}
               />
             </Route>
+
             <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} />
             </Route>
@@ -266,6 +270,9 @@ function App() {
             </Route>
             <Route exact path="/balfur/flower-modal">
               <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/balfur/qr">
+              <Redirect to="/balfur" />
             </Route>
 
             <Route exact path="/support-the-project/">
