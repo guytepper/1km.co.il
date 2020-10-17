@@ -196,11 +196,12 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                    <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-                    LIVE
-                  </NavItemLive>
-
+                  <Link to="/">
+                    <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                      <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+                      LIVE
+                    </NavItemLive>
+                  </Link>
                   {/* <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
                   <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem> */}
                 </GuestNavItems>
@@ -209,10 +210,9 @@ function App() {
           </Header>
           <Switch>
             <Route exact path="/">
-              <Button onClick={() => (window.location = './map')} style={{ width: '100%' }}>
-                {' '}
-                לחיפוש הפגנות לחץ כאן
-              </Button>
+              <Link to="/map">
+                <Button style={{ width: '100%' }}> לחיפוש הפגנות לחץ כאן</Button>
+              </Link>
               <Balfur user={state.user} />
             </Route>
             <Route exact path="/map">
