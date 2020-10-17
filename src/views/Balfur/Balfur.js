@@ -48,12 +48,19 @@ export default function Balfur({ user }) {
     <Switch>
       <Route path="/">
         <BalfurModal user={user} />
-        <BalfurWrapper>
+        <EventWrapper>
           <picture>
-            <source srcSet="/images/balfur-eran-menashri-small.jpg" />
+            <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />
             <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
-            <BalfurHero src="/images/balfur-eran-menashri.jpg" alt="" />
+            <EventHero src="/images/balfur-eran-menashri.jpg" alt="" />
           </picture>
+          <EventContentWrapper>
+            <EventBox>
+              <EventBoxTitleWrapper>
+                <EventBoxTitle>מי בבלפור?</EventBoxTitle>
+              </EventBoxTitleWrapper>
+            </EventBox>
+          </EventContentWrapper>
 
           {/* {loading ? (
             <div style={{ textAlign: 'center' }}>
@@ -66,19 +73,37 @@ export default function Balfur({ user }) {
               <BalfurCheckIns checkIns={checkIns} />
             </div>
           )} */}
-        </BalfurWrapper>
+        </EventWrapper>
       </Route>
     </Switch>
   );
 }
 
-const BalfurWrapper = styled.div``;
+const EventWrapper = styled.div``;
 
-const BalfurHero = styled.img`
+const EventHero = styled.img`
   width: 100%;
   height: 280px;
   object-fit: cover;
+  position: relative;
+  z-index: 10;
 `;
+
+const EventContentWrapper = styled.div`
+  padding: 0 15px;
+`;
+
+const EventBox = styled.div`
+  width: 100%;
+  height: 300px;
+  margin-top: -60px;
+  background-color: red;
+  position: relative;
+  z-index: 20;
+`;
+
+const EventBoxTitleWrapper = styled.div``;
+const EventBoxTitle = styled.div``;
 
 const LoadingIcon = styled.img`
   display: flex;
