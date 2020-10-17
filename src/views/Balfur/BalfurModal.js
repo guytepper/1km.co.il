@@ -38,6 +38,7 @@ export default function BalfurModal({ user }) {
   const [stage, setStage] = useState(stages.UNKNOWN);
   const [firstName, setFirstName] = useState('');
   const [userMessage, setUserMessage] = useState('');
+  const [showSocialLinks, setSocialLinks] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -66,9 +67,45 @@ export default function BalfurModal({ user }) {
     }
   }, [user]);
 
-  if (stage === stages.UNKNOWN) {
+  if (showSocialLinks) {
     return (
-      <BalfurModalWrapper>
+      <BalfurModalWrapper isOpen={true}>
+        <BalfurModalContent>
+          <h2 style={{ marginBottom: 5 }}>הצטרפו אלינו גם בהפגנות הבאות</h2>
+          <p style={{ marginTop: 10 }}>המשיכו לעקוב אחרינו כדי שנמשיך להגדיל את המחאה גם בהפגנה הבאה</p>
+          <Button
+            style={{ marginBottom: 10 }}
+            color={'#3859a2'}
+            onClick={() => window.open('https://www.facebook.com/1km.co.il/', '_blank')}
+          >
+            עמוד הפייסבוק שלנו
+          </Button>
+          <Button
+            style={{ marginBottom: 10 }}
+            color={'#2dcbf6'}
+            onClick={() => window.open('https://www.twitter.com/1kmcoil/', '_blank')}
+          >
+            עמוד הטוויטר שלנו
+          </Button>
+          <Button
+            style={{ marginBottom: 10 }}
+            color={'#9668bf'}
+            onClick={() => window.open('https://www.instagram.com/1km.co.il/', '_blank')}
+          >
+            עמוד האינסטגרם שלנו
+          </Button>
+          <hr style={{ width: '100%' }} />
+          <Button style={{ marginBottom: 10 }} onClick={() => setSocialLinks(false)}>
+            סגירה
+          </Button>
+        </BalfurModalContent>
+      </BalfurModalWrapper>
+    );
+  }
+
+  if (stage === stages.UNKNOWN && !isVisitor(user)) {
+    return (
+      <BalfurModalWrapper isOpen={true}>
         <BalfurModalContent>
           <p>רק כמה שניות...</p>
           <img src="/icons/loading-spinner.svg" alt="" />
@@ -81,10 +118,12 @@ export default function BalfurModal({ user }) {
     return (
       <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
-          <h2>מרעידים את בלפור!</h2>
-          <p>דווח/י שהגעת להפגנה וביחד נגרום לביבי לרעוד מפחד.</p>
-          <Button onClick={() => handleSignIn()}>צ'ק אין דרך פייסבוק עם התמונה</Button>
-          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין ישיר</Button>
+          <h1>מרעידים את בלפור!</h1>
+          <h2 style={{ fontWeight: 500 }}>דווח/י שהגעת להפגנה וביחד נגרום לביבי לרעוד מפחד.</h2>
+          <Button style={{ marginBottom: 10 }} onClick={() => handleSignIn()}>
+            צ'ק אין עם תמונת פייסבוק
+          </Button>
+          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין ללא תמונה</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
@@ -108,6 +147,10 @@ export default function BalfurModal({ user }) {
             onClick={() => {
               setStage(stages.UNKNOWN);
               balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : user.picture_url, firstName });
+              // Open social links modal
+              setTimeout(() => {
+                setSocialLinks(true);
+              }, 2020);
             }}
           >
             צ'ק אין

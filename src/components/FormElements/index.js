@@ -6,6 +6,7 @@ export const FormLabel = styled.label`
   width: 100%;
   margin-bottom: 10px;
   font-weight: 600;
+  font-size: 18px;
 `;
 
 export const TextInput = styled.input`

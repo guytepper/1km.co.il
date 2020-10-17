@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, useHistory } from 'react-router-dom';
 import { Button } from '../../components';
 import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
@@ -40,7 +40,7 @@ export default function Balfur({ user }) {
   }, []);
 
   return (
-    <Switch>
+    <>
       {history.location.pathname === '/balfur' && <BalfurModal user={user} />}
       <EventWrapper>
         <picture>
@@ -70,7 +70,7 @@ export default function Balfur({ user }) {
           </EventBox>
         </EventContentWrapper>
       </EventWrapper>
-    </Switch>
+    </>
   );
 }
 
