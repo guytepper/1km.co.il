@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, Modal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
@@ -198,7 +198,7 @@ function App() {
                 <GuestNavItems>
                   <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
                     <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-                    LIVE
+                    <NavItemLiveText>LIVE</NavItemLiveText>
                   </NavItemLive>
 
                   {/* <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
@@ -209,6 +209,9 @@ function App() {
           </Header>
           <Switch>
             <Route exact path="/">
+              <Balfur user={state.user} />
+            </Route>
+            <Route exact path="/map">
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -343,6 +346,16 @@ const NavItem = styled(Link)`
   }
 `;
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+`;
+
 const NavItemLive = styled.div`
   display: flex;
   flex-direction: row-reverse;
@@ -350,7 +363,10 @@ const NavItemLive = styled.div`
   color: tomato;
   font-weight: bold;
   font-size: 18px;
+  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
 `;
+
+const NavItemLiveText = styled.span``;
 
 const NavProfileWrapper = styled.div`
   display: flex;
