@@ -41,42 +41,35 @@ export default function Balfur({ user }) {
 
   return (
     <Switch>
-      <Route path="/">
-        <BalfurModal user={user} />
-        <EventWrapper>
-          <picture>
-            <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />
-            <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
-            <EventHero src="/images/balfur-eran-menashri.jpg" alt="" />
-          </picture>
-          <EventContentWrapper>
-            <EventBox>
-              <EventBoxTitleWrapper>
-                <EventBoxTitle>מי בבלפור?</EventBoxTitle>
+      {history.location.pathname === '/balfur' && <BalfurModal user={user} />}
+      <EventWrapper>
+        <picture>
+          <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />
+          <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
+          <EventHero src="/images/balfur-eran-menashri.jpg" alt="" />
+        </picture>
+        <EventContentWrapper>
+          <EventBox>
+            <EventBoxTitleWrapper>
+              <EventBoxTitle>מי בבלפור?</EventBoxTitle>
+              {loading ? (
+                <div style={{ textAlign: 'center' }}>
+                  <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
+                  <p>טוענים את המהפכה..</p>
+                </div>
+              ) : (
                 <BalfurCheckIns checkIns={checkIns} setCheckIns={setCheckIns} />
-              </EventBoxTitleWrapper>
-            </EventBox>
-            <EventBox>
-              <EventBoxTitleWrapper>
-                <EventBoxTitle>תמונות מהשטח</EventBoxTitle>
-                <BalfurPictures />
-              </EventBoxTitleWrapper>
-            </EventBox>
-          </EventContentWrapper>
-
-          {/* {loading ? (
-            <div style={{ textAlign: 'center' }}>
-              <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
-              <p>טוענים את המהפכה..</p>
-            </div>
-          ) : (
-            <div>
-              492 ביצעו צ'ק אין בבלפור
-              <BalfurCheckIns checkIns={checkIns} />
-            </div>
-          )} */}
-        </EventWrapper>
-      </Route>
+              )}
+            </EventBoxTitleWrapper>
+          </EventBox>
+          <EventBox>
+            <EventBoxTitleWrapper>
+              <EventBoxTitle>תמונות מהשטח</EventBoxTitle>
+              <BalfurPictures />
+            </EventBoxTitleWrapper>
+          </EventBox>
+        </EventContentWrapper>
+      </EventWrapper>
     </Switch>
   );
 }
