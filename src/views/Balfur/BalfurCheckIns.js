@@ -39,6 +39,10 @@ const CheckInEntry = styled.div`
   max-width: 320px;
   align-items: center;
   margin: 0 12.5px;
+
+  @media (min-width: 600px) {
+    max-width: 400px;
+  }
 `;
 
 const CheckInAvatar = styled.img`

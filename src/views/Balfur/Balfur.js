@@ -102,7 +102,7 @@ const EventContentWrapper = styled.div`
   @media (min-width: 600px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 15px;
     padding: 0 30px;
   }
 `;
@@ -111,11 +111,15 @@ const EventBox = styled.div`
   position: relative;
   width: 100%;
   height: 400px;
-  margin-top: -60px;
+  margin-top: 30px;
   overflow: hidden;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px -1px;
   z-index: 20;
+
+  &:first-of-type {
+    margin-top: -60px;
+  }
 `;
 
 const EventBoxTitleWrapper = styled.div``;
