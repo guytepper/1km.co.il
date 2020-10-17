@@ -5,19 +5,27 @@ import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import BalfurStage from '../../components/BalfurStage';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
+import { isVisitor } from '../../utils';
 
 export default function Balfur({ user }) {
   const history = useHistory();
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  console.log('visitor? ', isVisitor(user));
   useEffect(() => {
-    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(15);
+    var timeout = 1;
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(7);
     checkIns.on('child_added', (data) => {
       const { firstName, userMessage, picture_url, createdAt } = data.val();
-      setCheckIns((prevState) => {
-        return [{ firstName, userMessage, picture_url, createdAt }, ...prevState];
-      });
+      setTimeout(() => {
+        setCheckIns((prevState) => {
+          /* Set display to none, after animation the row wil be shown */
+          return [{ firstName, userMessage, picture_url, createdAt, display: 'none' }, ...prevState];
+        });
+      }, timeout);
+      /*Make first 6 rows appear with 1sec delay 
+      after 6 secondes timeout=0*/
+      timeout = timeout >= 6000 ? 0 : timeout != 0 ? timeout + 1000 : 0;
     });
 
     checkIns.once('value', () => {
@@ -43,7 +51,7 @@ export default function Balfur({ user }) {
             <EventBox>
               <EventBoxTitleWrapper>
                 <EventBoxTitle>מי בבלפור?</EventBoxTitle>
-                <BalfurCheckIns checkIns={checkIns} />
+                <BalfurCheckIns checkIns={checkIns} setCheckIns={setCheckIns} />
               </EventBoxTitleWrapper>
             </EventBox>
             <EventBox>

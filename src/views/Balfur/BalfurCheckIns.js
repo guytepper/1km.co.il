@@ -2,11 +2,45 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
 function BalfurCheckIns({ checkIns }) {
+  const [animations, setAnimations] = useState([]);
+  const [animateDone, setAnimateDone] = useState(true);
+  const slideDown = (index) => {
+    animations[index] = 'slide-bottom';
+    setTimeout(() => {
+      animations[index] = ' ';
+    }, 500);
+  };
+
+  useEffect(() => {
+    setAnimateDone(false);
+    if (checkIns[0] != undefined) {
+      animations[0] = '';
+      setAnimations(animations);
+      setTimeout(() => {
+        checkIns[0].display = '';
+        animations[0] = 'slide-left-blue';
+        setAnimations(animations);
+      }, 100);
+      setTimeout(() => {
+        animations[0] = '';
+      }, 600);
+
+      checkIns.slice(1).forEach((checkIn, index) => slideDown(index + 1));
+    }
+
+    setTimeout(() => {
+      setAnimations(animations);
+      setAnimateDone(true);
+    }, 500);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkIns]);
+
   return (
     <CheckInsWrapper>
       <CheckInsList>
-        {checkIns.map((checkIn) => (
-          <CheckInEntry key={checkIn.createdAt}>
+        {checkIns.map((checkIn, index) => (
+          <CheckInEntry key={checkIn.createdAt} style={{ display: checkIn.display }} className={animations[index]}>
             <CheckInAvatar src={checkIn.picture_url} />
             <CheckInInfo>
               <CheckInName>{checkIn.firstName} עכשיו בבלפור</CheckInName>
