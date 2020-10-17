@@ -54,10 +54,11 @@ export default function BalfurModal({ user, setUser }) {
 
         const userData = extractUserData(result);
         console.log(userData);
-        saveUserInFirestore(userData).then(() => {
+        saveUserInFirestore(userData).then((fullUserData) => {
+          console.log('fullUserData:', fullUserData);
           setStage(stages.AFTER_FACEBOOK_AUTH);
           setFirstName(userData.first_name);
-          setPictureUrl(userData.picture_url);
+          setPictureUrl(fullUserData.picture_url);
         });
       })
       .catch((error) => {

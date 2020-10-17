@@ -200,13 +200,13 @@ export async function saveUserInFirestore(userData) {
     const filename = `${nanoid()}.jpeg`;
     const profilePicsRef = storage.child('profile_pics/' + filename);
 
-    fetch(picture_url)
+    return fetch(picture_url)
       .then((res) => {
         return res.blob();
       })
       .then((blob) => {
         //uploading blob to firebase storage
-        profilePicsRef
+        return profilePicsRef
           .put(blob)
           .then(function (snapshot) {
             const url = snapshot.ref.getDownloadURL();
@@ -214,7 +214,8 @@ export async function saveUserInFirestore(userData) {
           })
           .then((url) => {
             console.log('Firebase storage image uploaded : ', url);
-            userRef.set({ ...userData, picture_url: url }).then((s) => console.log(`user saved: ${s}`));
+            const result = { ...userData, picture_url: url };
+            return userRef.set(result).then(() => result);
           });
       })
       .catch((error) => {
