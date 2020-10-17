@@ -11,10 +11,13 @@ export default function Balfur({ user }) {
   const history = useHistory();
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
-  console.log('visitor? ', isVisitor(user));
+
+  const delayRowsApear = 1500;
+  const numberOfRowsToSlide = 6;
+
   useEffect(() => {
     var timeout = 1;
-    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(7);
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(10);
     checkIns.on('child_added', (data) => {
       const { firstName, userMessage, picture_url, createdAt } = data.val();
       setTimeout(() => {
@@ -25,7 +28,7 @@ export default function Balfur({ user }) {
       }, timeout);
       /*Make first 6 rows appear with 1sec delay 
       after 6 secondes timeout=0*/
-      timeout = timeout >= 6000 ? 0 : timeout != 0 ? timeout + 1000 : 0;
+      timeout = timeout >= numberOfRowsToSlide * delayRowsApear ? 0 : timeout != 0 ? timeout + delayRowsApear : 0;
     });
 
     checkIns.once('value', () => {
