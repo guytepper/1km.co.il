@@ -6,6 +6,7 @@ import styled from 'styled-components/macro';
 import BalfurStage from '../../components/BalfurStage';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 import { isVisitor } from '../../utils';
+import ProgressBar from './ProgressBar';
 
 export default function Balfur({ user }) {
   const history = useHistory();
@@ -45,6 +46,7 @@ export default function Balfur({ user }) {
       <Route path="/">
         <BalfurModal user={user} />
         <EventWrapper>
+          <ProgressBar />
           <picture>
             <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />
             <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
