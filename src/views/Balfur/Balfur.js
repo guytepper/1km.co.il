@@ -26,9 +26,9 @@ export default function Balfur({ user }) {
   useEffect(() => {
     const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(15);
     checkIns.on('child_added', (data) => {
-      const { firstName, userMessage, profilePic } = data.val();
+      const { firstName, userMessage, profilePic, createdAt } = data.val();
       setCheckIns((prevState) => {
-        return [{ firstName, userMessage, profilePic }, ...prevState];
+        return [{ firstName, userMessage, profilePic, createdAt }, ...prevState];
       });
       // addCommentElement(postElement, data.key, data.val().text, data.val().author);
       console.log(data.val());
@@ -48,14 +48,7 @@ export default function Balfur({ user }) {
       <Route path="/">
         <BalfurWrapper>
           <BalfurCheckIns checkIns={checkIns} />
-          <Button style={{ width: '100%' }}> פרחים: {flowerCount}</Button>
-          <BalfurStage flowerCount={flowerCount} />
-          <Button onClick={() => addFlower()} style={{ width: '100%' }}>
-            עוד פרח
-          </Button>
-          <Button onClick={() => history.push('/balfur/flower-modal')} style={{ width: '100%' }}>
-            עוד פרח
-          </Button>
+
           <Route path="/balfur/flower-modal">
             <BalfurModal user={user} />
           </Route>

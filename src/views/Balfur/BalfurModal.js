@@ -21,6 +21,7 @@ const stages = {
 
 export default function BalfurModal({ user }) {
   const [stage, setStage] = useState(stages.UNKNOWN);
+  const [firstName, setFirstName] = useState('');
   const [userMessage, setUserMessage] = useState('');
   const history = useHistory();
 
@@ -36,6 +37,7 @@ export default function BalfurModal({ user }) {
 
         saveUserInFirestore(userData).then(() => {
           setStage(stages.AFTER_FACEBOOK_AUTH);
+          setFirstName(userData.first_name);
           console.log(userData);
         });
       })
@@ -43,6 +45,12 @@ export default function BalfurModal({ user }) {
         console.log(error);
       });
   }, [history]);
+
+  useEffect(() => {
+    if (user?.first_name) {
+      setFirstName(user.first_name);
+    }
+  }, [user]);
 
   if (stage === stages.UNKNOWN) {
     return (
@@ -74,12 +82,14 @@ export default function BalfurModal({ user }) {
           <p>תרצו להוסיף מסר לעולם?</p>
           <br />
           <FormLabel>
-            טקסט חופשי
+            השם הפרטי (מומלץ לשנות לעברית!)
+            <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
+          </FormLabel>
+          <FormLabel>
+            מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName: user.first_name })}>
-            צ'ק אין
-          </Button>
+          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName })}>צ'ק אין</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );

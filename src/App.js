@@ -196,8 +196,13 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
-                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                    <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+                    LIVE
+                  </NavItemLive>
+
+                  {/* <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
+                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem> */}
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -336,6 +341,15 @@ const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
   }
+`;
+
+const NavItemLive = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  color: tomato;
+  font-weight: bold;
+  font-size: 18px;
 `;
 
 const NavProfileWrapper = styled.div`
