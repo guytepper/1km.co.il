@@ -5,7 +5,7 @@ import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 import { isVisitor } from '../../utils';
-import ProgressBar from './ProgressBar';
+import { ProgressBar, SimpleProgress } from './ProgressBar';
 
 export default function Balfur({ user, setUser }) {
   const history = useHistory();
@@ -36,6 +36,7 @@ export default function Balfur({ user, setUser }) {
     realtimeDB.ref('balfur_count').on('value', (snapshot) => {
       setCheckInsCount(snapshot.val());
     });
+
     realtimeDB.ref('max_checkIn').on('value', (snapshot) => {
       setMaxCheckInCount(snapshot.val());
     });
@@ -73,12 +74,23 @@ export default function Balfur({ user, setUser }) {
               )}
             </EventBoxTitleWrapper>
           </EventBox>
-          {/* <EventBox>
+          <EventBox>
             <EventBoxTitleWrapper>
-              <EventBoxTitle>תמונות מהשטח</EventBoxTitle>
-              <BalfurPictures />
+              <EventBoxTitle>מדד העצבים של ביבי</EventBoxTitle>
+              {loading || checkInsCount === -1 ? (
+                <div style={{ textAlign: 'center' }}>
+                  <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
+                  <p>טוענים את המהפכה..</p>
+                </div>
+              ) : (
+                <div>
+                  <h2 style={{ textAlign: 'center ', marginBottom: 0 }}>{checkInsCount}</h2>
+                  <h2 style={{ textAlign: 'center', margin: 0 }}>מפגינים באתר</h2>
+                  <SimpleProgress checkInsCount={checkInsCount} MaxCheckIns={maxCheckInCount} />
+                </div>
+              )}
             </EventBoxTitleWrapper>
-          </EventBox> */}
+          </EventBox>
         </EventContentWrapper>
       </EventWrapper>
     </>
@@ -111,6 +123,7 @@ const EventBox = styled.div`
   width: 100%;
   height: 400px;
   margin-top: 30px;
+  margin-bottom: 20px;
   overflow: hidden;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px -1px;
@@ -118,6 +131,18 @@ const EventBox = styled.div`
 
   &:first-of-type {
     margin-top: -60px;
+  }
+
+  &:last-of-type {
+    display: none;
+  }
+
+  @media (min-width: 600px) {
+    margin-top: -60px;
+
+    &:last-of-type {
+      display: block;
+    }
   }
 `;
 

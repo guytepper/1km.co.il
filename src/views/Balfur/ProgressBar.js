@@ -1,27 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
-function ProgressBar({ checkInsCount, MaxCheckIns }) {
-  const [CountPercentage, setCountPercentage] = useState(0);
+export const SimpleProgress = function SimpleProgress({ checkInsCount, MaxCheckIns }) {
+  const [countPercentage, setCountPercentage] = useState(0);
+
   useEffect(() => {
     setCountPercentage((checkInsCount * 100) / MaxCheckIns);
-    console.log(CountPercentage);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
+
+  return <Bar className="progress-bar" length={countPercentage}></Bar>;
+};
+
+export const ProgressBar = function ProgressBar({ checkInsCount, MaxCheckIns }) {
+  const [countPercentage, setCountPercentage] = useState(0);
+
+  useEffect(() => {
+    setCountPercentage((checkInsCount * 100) / MaxCheckIns);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   return (
     <Box>
       <h4 style={{ textAlign: 'center' }}>מד העצבים של ביבי: {checkInsCount} צ'ק אינים</h4>
-      <Bar className="progress-bar" length={CountPercentage}></Bar>
+      <Bar className="progress-bar" length={countPercentage}></Bar>
     </Box>
   );
-}
+};
 const Bar = styled.div`
   /**Progress Bar - Bibi nervous bar**/
   background: #e3e3e3;
   border-radius: 8px;
   display: block;
   height: 16px;
-  margin: 40px auto;
+  margin: 20px auto 40px;
   position: relative;
   width: 85%;
 
@@ -40,6 +54,7 @@ const Bar = styled.div`
     top: 0;
   }
 `;
+
 const Box = styled.div`
   position: absolute;
   top: 150px;
@@ -51,19 +66,19 @@ const Box = styled.div`
   box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px -1px;
   z-index: 20;
 
-  &:first-of-type {
-    margin-top: -60px;
+  @media (min-width: 600px) {
+    display: none;
   }
 
-  @media (min-width: 720px) {
+  /* @media (min-width: 720px) {
     top: 175px;
   }
+
   @media (min-width: 1280px) {
     top: 200px;
   }
+
   @media (min-width: 1444px) {
     top: 200px;
-  } ;
+  } ; */
 `;
-
-export default ProgressBar;
