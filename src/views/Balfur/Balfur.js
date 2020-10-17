@@ -4,7 +4,7 @@ import { Button } from '../../components';
 import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import BalfurStage from '../../components/BalfurStage';
-import { BalfurModal, BalfurCheckIns } from './';
+import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 
 export default function Balfur({ user }) {
   const history = useHistory();
@@ -58,6 +58,13 @@ export default function Balfur({ user }) {
             <EventBox>
               <EventBoxTitleWrapper>
                 <EventBoxTitle>מי בבלפור?</EventBoxTitle>
+                <BalfurCheckIns checkIns={checkIns} />
+              </EventBoxTitleWrapper>
+            </EventBox>
+            <EventBox>
+              <EventBoxTitleWrapper>
+                <EventBoxTitle>תמונות מהשטח</EventBoxTitle>
+                <BalfurPictures />
               </EventBoxTitleWrapper>
             </EventBox>
           </EventContentWrapper>
@@ -91,19 +98,33 @@ const EventHero = styled.img`
 
 const EventContentWrapper = styled.div`
   padding: 0 15px;
+
+  @media (min-width: 600px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    padding: 0 30px;
+  }
 `;
 
 const EventBox = styled.div`
-  width: 100%;
-  height: 300px;
-  margin-top: -60px;
-  background-color: red;
   position: relative;
+  width: 100%;
+  height: 400px;
+  margin-top: -60px;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px -1px;
   z-index: 20;
 `;
 
 const EventBoxTitleWrapper = styled.div``;
-const EventBoxTitle = styled.div``;
+const EventBoxTitle = styled.div`
+  position: relative;
+  padding: 15px 19px;
+  font-size: 21px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+`;
 
 const LoadingIcon = styled.img`
   display: flex;
