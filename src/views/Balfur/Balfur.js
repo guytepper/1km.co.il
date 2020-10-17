@@ -31,7 +31,7 @@ export default function Balfur({ user }) {
       setCheckIns((prevState) => {
         return [{ firstName, userMessage, profilePic, createdAt }, ...prevState];
       });
-      // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+
       console.log(data.val());
     });
 
