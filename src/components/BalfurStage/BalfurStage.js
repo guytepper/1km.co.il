@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Stage, Sprite, Container } from '@inlet/react-pixi';
 import styled from 'styled-components/macro';
 import { getRandomCoord, getRandomNumber } from './stageUtils';
@@ -16,6 +16,30 @@ const staticThrons = new Array(1000).fill([0, 0]).map(() => ({
   position: getRandomCoord({ ...castleInfo, minLength: 0, maxLength: 50, behindCastle: true }),
 }));
 
+function useUpdateInitialFlowerCount({ flowerCount, updateThronsList, thronsList }) {
+  const initialCount = useRef(flowerCount);
+
+  useEffect(() => {
+    // only do this the first time *after* fower count has been loaded
+    if (initialCount.current === 1 && flowerCount > 1) {
+      const clonedList = [...thronsList];
+      let counter = flowerCount;
+
+      while (counter >= 0) {
+        const index = getRandomNumber({ max: clonedList.length - 1 });
+        if (!clonedList[index].bloomed) {
+          clonedList[index].bloomed = true;
+          counter = counter - 1;
+        }
+      }
+
+      initialCount.current = true;
+      updateThronsList(clonedList);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flowerCount]);
+}
+
 export default function BalfurStage({ flowerCount }) {
   /* Array of throns that will transform to flowers*/
   const [thronsList, updateThronsList] = useState(() =>
@@ -24,6 +48,8 @@ export default function BalfurStage({ flowerCount }) {
       position: getRandomCoord({ ...castleInfo, minLength: 35, maxLength: 65, behindCastle: false }),
     }))
   );
+
+  useUpdateInitialFlowerCount({ flowerCount, thronsList, updateThronsList });
 
   useEffect(() => {
     // Look for a thron that hasn't bloomed and turn it to a flower
