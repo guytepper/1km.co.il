@@ -209,6 +209,10 @@ function App() {
           </Header>
           <Switch>
             <Route exact path="/">
+              <Button onClick={() => (window.location = './map')} style={{ width: '100%' }}>
+                {' '}
+                לחיפוש הפגנות לחץ כאן
+              </Button>
               <Balfur user={state.user} />
             </Route>
             <Route exact path="/map">

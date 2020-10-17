@@ -52,7 +52,7 @@ export default function BalfurModal({ user }) {
         }
 
         const userData = extractUserData(result);
-
+        console.log(userData);
         saveUserInFirestore(userData).then(() => {
           setStage(stages.AFTER_FACEBOOK_AUTH);
           setFirstName(userData.first_name);
@@ -122,10 +122,14 @@ export default function BalfurModal({ user }) {
         <BalfurModalContent>
           <h1>מרעידים את בלפור!</h1>
           <h2 style={{ fontWeight: 500 }}>דווח/י שהגעת להפגנה וביחד נגרום לביבי לרעוד מפחד.</h2>
-          <Button style={{ marginBottom: 10 }} onClick={() => handleSignIn()}>
-            צ'ק אין עם תמונת פייסבוק
-          </Button>
-          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין ללא תמונה</Button>
+          {getLocalStorage('guyguyguy') == true ? (
+            <Button style={{ marginBottom: 10 }} onClick={() => handleSignIn()}>
+              צ'ק אין עם תמונת פייסבוק
+            </Button>
+          ) : (
+            ''
+          )}
+          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין להפגנה</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
