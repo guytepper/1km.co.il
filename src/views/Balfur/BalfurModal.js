@@ -7,13 +7,16 @@ import { Button } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
+import { setLocalStorage, getLocalStorage } from '../../localStorage';
 
 import firebase, { realtimeDB } from '../../firebase';
 
 const balfurCheckIn = ({ profilePic, firstName, userMessage, uid }) => {
   const checkIn = realtimeDB.ref('balfur_check_ins').push();
   checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP, uid });
+  setLocalStorage('protest_event_checked_in', true);
 };
+
 /*
 const checkIfUserCheckedIn=({uid})=>{
   ref.child("balfur_check_ins").orderByChild("uid").equalTo(uid).once("value",snapshot => {
@@ -23,10 +26,12 @@ const checkIfUserCheckedIn=({uid})=>{
     }
 });
 }*/
+
 const stages = {
   UNKNOWN: 'unkonwn',
   BEFORE_FACEBOOK_AUTH: 'beforeFacebookAuth',
   AFTER_FACEBOOK_AUTH: 'afterFacebookAuth',
+  AFTER_ANONYMOUS_ENTRY: 'afterAnonymousEntry',
 };
 
 export default function BalfurModal({ user }) {
@@ -34,7 +39,7 @@ export default function BalfurModal({ user }) {
   const [firstName, setFirstName] = useState('');
   const [userMessage, setUserMessage] = useState('');
   const history = useHistory();
-
+  console.log(!getLocalStorage('protest_event_checked_in'));
   useEffect(() => {
     getUserFromRedirect()
       .then((result) => {
@@ -61,7 +66,7 @@ export default function BalfurModal({ user }) {
       setFirstName(user.first_name);
     }
   }, [user]);
-
+  console.log('a:' + user);
   if (stage === stages.UNKNOWN) {
     return (
       <BalfurModalWrapper>
@@ -75,9 +80,10 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.BEFORE_FACEBOOK_AUTH && isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={true}>
+      <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
           <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
+          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>מעבר לעמוד ללא התחברות</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
@@ -85,27 +91,50 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.AFTER_FACEBOOK_AUTH || !isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={true}>
+      <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
           <h2>תודה!</h2>
           <p> כבר תוספו לרשימת המפגינים.</p>
           <p>תרצו להוסיף מסר לעולם?</p>
           <br />
           <FormLabel>
-            השם הפרטי (מומלץ לשנות לעברית!)
+            שם פרטי (עדיף בעברית)
             <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
           </FormLabel>
           <FormLabel>
             מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName, uid: user.uid })}>
+          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.profilePic, firstName, uid: user.uid })}>
             צ'ק אין
           </Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
   }
+
+  if (stage === stages.AFTER_ANONYMOUS_ENTRY) {
+    return (
+      <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
+        <BalfurModalContent>
+          <h2>תודה!</h2>
+          <p> כבר תוספו לרשימת המפגינים.</p>
+          <p>תרצו להוסיף מסר לעולם?</p>
+          <br />
+          <FormLabel>
+            כינוי
+            <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
+          </FormLabel>
+          <FormLabel>
+            מסר לאומה
+            <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
+          </FormLabel>
+          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: null, firstName, uid: user.uid })}>צ'ק אין</Button>
+        </BalfurModalContent>
+      </BalfurModalWrapper>
+    );
+  }
+  return null;
 }
 
 const BalfurModalWrapper = styled(ReactModal)`
