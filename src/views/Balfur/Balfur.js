@@ -62,12 +62,12 @@ export default function Balfur({ user }) {
               )}
             </EventBoxTitleWrapper>
           </EventBox>
-          <EventBox>
+          {/* <EventBox>
             <EventBoxTitleWrapper>
               <EventBoxTitle>תמונות מהשטח</EventBoxTitle>
               <BalfurPictures />
             </EventBoxTitleWrapper>
-          </EventBox>
+          </EventBox> */}
         </EventContentWrapper>
       </EventWrapper>
     </>
