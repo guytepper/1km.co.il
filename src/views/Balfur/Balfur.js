@@ -12,6 +12,8 @@ export default function Balfur({ user }) {
   const history = useHistory();
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkInsCount, setCheckInsCount] = useState(-1);
+  const [maxCheckInCount, setMaxCheckInCount] = useState(-1);
 
   const delayRowsApear = 1500;
   const numberOfRowsToSlide = 6;
@@ -32,6 +34,13 @@ export default function Balfur({ user }) {
       timeout = timeout >= numberOfRowsToSlide * delayRowsApear ? 0 : timeout != 0 ? timeout + delayRowsApear : 0;
     });
 
+    realtimeDB.ref('balfur_count').on('value', (snapshot) => {
+      setCheckInsCount(snapshot.val());
+    });
+    realtimeDB.ref('max_checkIn').on('value', (snapshot) => {
+      setMaxCheckInCount(snapshot.val());
+    });
+
     checkIns.once('value', () => {
       setLoading(false);
     });
@@ -46,7 +55,7 @@ export default function Balfur({ user }) {
       <Route path="/">
         <BalfurModal user={user} />
         <EventWrapper>
-          <ProgressBar />
+          <ProgressBar checkInsCount={checkInsCount} MaxCheckIns={maxCheckInCount} />
           <picture>
             <source media="(max-width: 800px)" srcSet="/images/balfur-eran-menashri-small.jpg" />
             <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
