@@ -6,6 +6,12 @@ import { Button } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
+import firebase, { realtimeDB } from '../../firebase';
+
+const balfurCheckIn = ({ profilePic, firstName, userMessage }) => {
+  const checkIn = realtimeDB.ref('balfur_check_ins').push();
+  checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
+};
 
 const stages = {
   UNKNOWN: 'unkonwn',
@@ -15,6 +21,7 @@ const stages = {
 
 export default function BalfurModal({ user }) {
   const [stage, setStage] = useState(stages.UNKNOWN);
+  const [userMessage, setUserMessage] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -68,9 +75,11 @@ export default function BalfurModal({ user }) {
           <br />
           <FormLabel>
             טקסט חופשי
-            <TextInput />
+            <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button>צ'ק אין</Button>
+          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName: user.first_name })}>
+            צ'ק אין
+          </Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );

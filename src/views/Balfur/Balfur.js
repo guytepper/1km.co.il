@@ -4,11 +4,12 @@ import { Button } from '../../components';
 import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import BalfurStage from '../../components/BalfurStage';
-import BalfurModal from './BalfurModal';
+import { BalfurModal, BalfurCheckIns } from './';
 
 export default function Balfur({ user }) {
   const history = useHistory();
   const [flowerCount, setFlowerCount] = useState(1);
+  const [checkIns, setCheckIns] = useState([]);
 
   useEffect(() => {
     const flowerCount = realtimeDB.ref('flowers_count');
@@ -16,6 +17,26 @@ export default function Balfur({ user }) {
       console.log('Realtime Database Update: ' + snapshot.val());
       setFlowerCount(snapshot.val());
     });
+
+    return () => {
+      flowerCount.off();
+    };
+  }, []);
+
+  useEffect(() => {
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(15);
+    checkIns.on('child_added', (data) => {
+      const { firstName, userMessage, profilePic } = data.val();
+      setCheckIns((prevState) => {
+        return [{ firstName, userMessage, profilePic }, ...prevState];
+      });
+      // addCommentElement(postElement, data.key, data.val().text, data.val().author);
+      console.log(data.val());
+    });
+
+    return () => {
+      checkIns.off();
+    };
   }, []);
 
   const addFlower = () => {
@@ -26,6 +47,7 @@ export default function Balfur({ user }) {
     <Switch>
       <Route path="/">
         <BalfurWrapper>
+          <BalfurCheckIns checkIns={checkIns} />
           <Button style={{ width: '100%' }}> פרחים: {flowerCount}</Button>
           <BalfurStage flowerCount={flowerCount} />
           <Button onClick={() => addFlower()} style={{ width: '100%' }}>
@@ -43,6 +65,4 @@ export default function Balfur({ user }) {
   );
 }
 
-const BalfurWrapper = styled.div`
-  margin: 0 auto;
-`;
+const BalfurWrapper = styled.div``;
