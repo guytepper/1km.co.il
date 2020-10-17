@@ -88,7 +88,7 @@ export default function BalfurModal({ user }) {
     );
   }
 
-  if (stage === stages.AFTER_FACEBOOK_AUTH || !isVisitor(user)) {
+  if (stage === stages.AFTER_FACEBOOK_AUTH || stage === stages.AFTER_ANONYMOUS_ENTRY || !isVisitor(user)) {
     return (
       <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
@@ -104,7 +104,12 @@ export default function BalfurModal({ user }) {
             מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : user.picture_url, firstName })}>
+          <Button
+            onClick={() => {
+              setStage(stages.UNKNOWN);
+              balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : user.picture_url, firstName });
+            }}
+          >
             צ'ק אין
           </Button>
         </BalfurModalContent>
