@@ -12,9 +12,11 @@ import { setLocalStorage, getLocalStorage } from '../../localStorage';
 import firebase, { realtimeDB } from '../../firebase';
 
 const balfurCheckIn = ({ picture_url, firstName, userMessage }) => {
+  setLocalStorage('protest_event_checked_in', true);
   const checkIn = realtimeDB.ref('balfur_check_ins').push();
   checkIn.set({ picture_url, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
-  setLocalStorage('protest_event_checked_in', true);
+  /*increase counter*/
+  realtimeDB.ref('balfur_count').set(firebase.database.ServerValue.increment(1));
 };
 
 /*

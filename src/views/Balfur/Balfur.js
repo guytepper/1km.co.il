@@ -5,11 +5,14 @@ import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 import { isVisitor } from '../../utils';
+import ProgressBar from './ProgressBar';
 
 export default function Balfur({ user }) {
   const history = useHistory();
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkInsCount, setCheckInsCount] = useState(-1);
+  const [maxCheckInCount, setMaxCheckInCount] = useState(-1);
 
   const delayRowsApear = 1500;
   const numberOfRowsToSlide = 6;
@@ -30,6 +33,13 @@ export default function Balfur({ user }) {
       timeout = timeout >= numberOfRowsToSlide * delayRowsApear ? 0 : timeout != 0 ? timeout + delayRowsApear : 0;
     });
 
+    realtimeDB.ref('balfur_count').on('value', (snapshot) => {
+      setCheckInsCount(snapshot.val());
+    });
+    realtimeDB.ref('max_checkIn').on('value', (snapshot) => {
+      setMaxCheckInCount(snapshot.val());
+    });
+
     checkIns.once('value', () => {
       setLoading(false);
     });
@@ -48,6 +58,7 @@ export default function Balfur({ user }) {
           <source media="(min-width: 800px)" type="image/webp" srcSet="/images/balfur-eran-menashri.webp 1x" />
           <EventHero src="/images/balfur-eran-menashri.jpg" alt="" />
         </picture>
+        <ProgressBar checkInsCount={checkInsCount} MaxCheckIns={maxCheckInCount} />
         <EventContentWrapper>
           <EventBox>
             <EventBoxTitleWrapper>
