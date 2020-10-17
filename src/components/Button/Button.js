@@ -31,6 +31,7 @@ const ButtonWrapper = styled.button`
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  user-select: none;
 
   &:disabled {
     background: grey;

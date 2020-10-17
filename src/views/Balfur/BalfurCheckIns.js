@@ -32,6 +32,8 @@ function BalfurCheckIns({ checkIns }) {
       setAnimations(animations);
       setAnimateDone(true);
     }, 500);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkIns]);
 
   return (
@@ -39,10 +41,10 @@ function BalfurCheckIns({ checkIns }) {
       <CheckInsList>
         {checkIns.map((checkIn, index) => (
           <CheckInEntry key={checkIn.createdAt} style={{ display: checkIn.display }} className={animations[index]}>
-            <CheckInAvatar src={checkIn.profilePic} />
+            <CheckInAvatar src={checkIn.picture_url} />
             <CheckInInfo>
               <CheckInName>{checkIn.firstName} עכשיו בבלפור</CheckInName>
-              <CheckInComment>{checkIn.userMessage}</CheckInComment>
+              {checkIn.userMessage && <CheckInComment>{checkIn.userMessage}</CheckInComment>}
             </CheckInInfo>
           </CheckInEntry>
         ))}
@@ -71,6 +73,10 @@ const CheckInEntry = styled.div`
   max-width: 320px;
   align-items: center;
   margin: 0 12.5px;
+
+  @media (min-width: 600px) {
+    max-width: 400px;
+  }
 `;
 
 const CheckInAvatar = styled.img`

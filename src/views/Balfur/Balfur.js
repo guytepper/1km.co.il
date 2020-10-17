@@ -5,37 +5,23 @@ import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import BalfurStage from '../../components/BalfurStage';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
+import { isVisitor } from '../../utils';
 
 export default function Balfur({ user }) {
   const history = useHistory();
-  const [flowerCount, setFlowerCount] = useState(1);
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const flowerCount = realtimeDB.ref('flowers_count');
-  //   flowerCount.on('value', (snapshot) => {
-  //     console.log('Realtime Database Update: ' + snapshot.val());
-  //     setFlowerCount(snapshot.val());
-  //   });
-
-  //   return () => {
-  //     flowerCount.off();
-  //   };
-  // }, []);
-
+  console.log('visitor? ', isVisitor(user));
   useEffect(() => {
     var timeout = 1;
     const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(7);
     checkIns.on('child_added', (data) => {
-      const { firstName, userMessage, profilePic, createdAt } = data.val();
+      const { firstName, userMessage, picture_url, createdAt } = data.val();
       setTimeout(() => {
         setCheckIns((prevState) => {
-          /*Set display to none, after animation the row wil be shown*/
-          return [{ firstName, userMessage, profilePic, createdAt, display: 'none' }, ...prevState];
+          /* Set display to none, after animation the row wil be shown */
+          return [{ firstName, userMessage, picture_url, createdAt, display: 'none' }, ...prevState];
         });
-        // addCommentElement(postElement, data.key, data.val().text, data.val().author);
-        console.log(data.val());
       }, timeout);
       /*Make first 6 rows appear with 1sec delay 
       after 6 secondes timeout=0*/
@@ -109,7 +95,7 @@ const EventContentWrapper = styled.div`
   @media (min-width: 600px) {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 15px;
     padding: 0 30px;
   }
 `;
@@ -118,11 +104,15 @@ const EventBox = styled.div`
   position: relative;
   width: 100%;
   height: 400px;
-  margin-top: -60px;
+  margin-top: 30px;
   overflow: hidden;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 4px 10px -1px;
   z-index: 20;
+
+  &:first-of-type {
+    margin-top: -60px;
+  }
 `;
 
 const EventBoxTitleWrapper = styled.div``;

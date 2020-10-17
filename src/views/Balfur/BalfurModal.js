@@ -11,9 +11,9 @@ import { setLocalStorage, getLocalStorage } from '../../localStorage';
 
 import firebase, { realtimeDB } from '../../firebase';
 
-const balfurCheckIn = ({ profilePic, firstName, userMessage, uid }) => {
+const balfurCheckIn = ({ picture_url, firstName, userMessage }) => {
   const checkIn = realtimeDB.ref('balfur_check_ins').push();
-  checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP, uid });
+  checkIn.set({ picture_url, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
   setLocalStorage('protest_event_checked_in', true);
 };
 
@@ -39,7 +39,7 @@ export default function BalfurModal({ user }) {
   const [firstName, setFirstName] = useState('');
   const [userMessage, setUserMessage] = useState('');
   const history = useHistory();
-  console.log(!getLocalStorage('protest_event_checked_in'));
+
   useEffect(() => {
     getUserFromRedirect()
       .then((result) => {
@@ -53,11 +53,10 @@ export default function BalfurModal({ user }) {
         saveUserInFirestore(userData).then(() => {
           setStage(stages.AFTER_FACEBOOK_AUTH);
           setFirstName(userData.first_name);
-          console.log(userData);
         });
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, [history]);
 
@@ -66,7 +65,7 @@ export default function BalfurModal({ user }) {
       setFirstName(user.first_name);
     }
   }, [user]);
-  console.log('a:' + user);
+
   if (stage === stages.UNKNOWN) {
     return (
       <BalfurModalWrapper>
@@ -98,14 +97,14 @@ export default function BalfurModal({ user }) {
           <p>תרצו להוסיף מסר לעולם?</p>
           <br />
           <FormLabel>
-            שם פרטי (עדיף בעברית)
+            כינוי (עדיף בעברית)
             <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
           </FormLabel>
           <FormLabel>
             מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.profilePic, firstName, uid: user.uid })}>
+          <Button onClick={() => balfurCheckIn({ userMessage, picture_url: isVisitor(user) ? '' : user.picture_url, firstName })}>
             צ'ק אין
           </Button>
         </BalfurModalContent>
@@ -113,27 +112,6 @@ export default function BalfurModal({ user }) {
     );
   }
 
-  if (stage === stages.AFTER_ANONYMOUS_ENTRY) {
-    return (
-      <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
-        <BalfurModalContent>
-          <h2>תודה!</h2>
-          <p> כבר תוספו לרשימת המפגינים.</p>
-          <p>תרצו להוסיף מסר לעולם?</p>
-          <br />
-          <FormLabel>
-            כינוי
-            <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
-          </FormLabel>
-          <FormLabel>
-            מסר לאומה
-            <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
-          </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: null, firstName, uid: user.uid })}>צ'ק אין</Button>
-        </BalfurModalContent>
-      </BalfurModalWrapper>
-    );
-  }
   return null;
 }
 
