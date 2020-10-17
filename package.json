@@ -11,6 +11,7 @@
     "geolib": "^3.3.1",
     "leaflet": "^1.7.1",
     "mdx.macro": "^0.2.9",
+    "nanoid": "^3.1.12",
     "pixi.js": "^5.3.3",
     "query-string": "^6.13.5",
     "react": "^16.13.1",
