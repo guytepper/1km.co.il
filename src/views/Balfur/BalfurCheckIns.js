@@ -41,7 +41,7 @@ function BalfurCheckIns({ checkIns }) {
       <CheckInsList>
         {checkIns.map((checkIn, index) => (
           <CheckInEntry key={checkIn.createdAt} style={{ display: checkIn.display }} className={animations[index]}>
-            <CheckInAvatar src={checkIn.picture_url} />
+            <CheckInAvatar src={checkIn.picture_url == '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckInInfo>
               <CheckInName>{checkIn.firstName} עכשיו בבלפור</CheckInName>
               {checkIn.userMessage && <CheckInComment>{checkIn.userMessage}</CheckInComment>}
