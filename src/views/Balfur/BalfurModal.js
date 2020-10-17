@@ -81,8 +81,10 @@ export default function BalfurModal({ user }) {
     return (
       <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
-          <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
-          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>מעבר לעמוד ללא התחברות</Button>
+          <h2>מרעידים את בלפור!</h2>
+          <p>דווח/י שהגעת להפגנה וביחד נגרום לביבי לרעוד מפחד.</p>
+          <Button onClick={() => handleSignIn()}>צ'ק אין דרך פייסבוק עם התמונה</Button>
+          <Button onClick={() => setStage(stages.AFTER_ANONYMOUS_ENTRY)}>צ'ק אין ישיר</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );
@@ -93,15 +95,13 @@ export default function BalfurModal({ user }) {
       <BalfurModalWrapper isOpen={!getLocalStorage('protest_event_checked_in')}>
         <BalfurModalContent>
           <h2>תודה!</h2>
-          <p> כבר תוספו לרשימת המפגינים.</p>
-          <p>תרצו להוסיף מסר לעולם?</p>
+          <p>מיד נוסיף אותך לרשימת המפגינים.</p>
           <br />
           <FormLabel>
-            כינוי (עדיף בעברית)
-            <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
+            כינוי <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} />
           </FormLabel>
           <FormLabel>
-            מסר לאומה
+            מסר לאומה (לא חובה)
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
           <Button
@@ -128,6 +128,7 @@ const BalfurModalWrapper = styled(ReactModal)`
   height: 100vh;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
+  text-align: center;
   background-color: #fff;
 
   @media (min-width: 360px) {

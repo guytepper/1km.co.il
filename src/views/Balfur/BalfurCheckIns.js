@@ -43,7 +43,7 @@ function BalfurCheckIns({ checkIns }) {
           <CheckInEntry key={checkIn.createdAt} style={{ display: checkIn.display }} className={animations[index]}>
             <CheckInAvatar src={checkIn.picture_url == '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckInInfo>
-              <CheckInName>{checkIn.firstName} עכשיו בבלפור</CheckInName>
+              <CheckInName>{checkIn.firstName}</CheckInName>
               {checkIn.userMessage && <CheckInComment>{checkIn.userMessage}</CheckInComment>}
             </CheckInInfo>
           </CheckInEntry>
