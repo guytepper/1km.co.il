@@ -8,31 +8,16 @@ import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 
 export default function Balfur({ user }) {
   const history = useHistory();
-  const [flowerCount, setFlowerCount] = useState(1);
   const [checkIns, setCheckIns] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //   const flowerCount = realtimeDB.ref('flowers_count');
-  //   flowerCount.on('value', (snapshot) => {
-  //     console.log('Realtime Database Update: ' + snapshot.val());
-  //     setFlowerCount(snapshot.val());
-  //   });
-
-  //   return () => {
-  //     flowerCount.off();
-  //   };
-  // }, []);
 
   useEffect(() => {
     const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(15);
     checkIns.on('child_added', (data) => {
-      const { firstName, userMessage, profilePic, createdAt } = data.val();
+      const { firstName, userMessage, picture_url, createdAt } = data.val();
       setCheckIns((prevState) => {
-        return [{ firstName, userMessage, profilePic, createdAt }, ...prevState];
+        return [{ firstName, userMessage, picture_url, createdAt }, ...prevState];
       });
-
-      console.log(data.val());
     });
 
     checkIns.once('value', () => {

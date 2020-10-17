@@ -10,9 +10,9 @@ import { isVisitor } from '../../utils';
 
 import firebase, { realtimeDB } from '../../firebase';
 
-const balfurCheckIn = ({ profilePic, firstName, userMessage }) => {
+const balfurCheckIn = ({ picture_url, firstName, userMessage }) => {
   const checkIn = realtimeDB.ref('balfur_check_ins').push();
-  checkIn.set({ profilePic, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
+  checkIn.set({ picture_url, firstName, userMessage, createdAt: firebase.database.ServerValue.TIMESTAMP });
 };
 
 const stages = {
@@ -67,7 +67,7 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.BEFORE_FACEBOOK_AUTH && isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={true}>
+      <BalfurModalWrapper isOpen={false}>
         <BalfurModalContent>
           <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
         </BalfurModalContent>
@@ -77,7 +77,7 @@ export default function BalfurModal({ user }) {
 
   if (stage === stages.AFTER_FACEBOOK_AUTH || !isVisitor(user)) {
     return (
-      <BalfurModalWrapper isOpen={true}>
+      <BalfurModalWrapper isOpen={false}>
         <BalfurModalContent>
           <h2>תודה!</h2>
           <p> כבר תוספו לרשימת המפגינים.</p>
@@ -91,7 +91,7 @@ export default function BalfurModal({ user }) {
             מסר לאומה
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} />
           </FormLabel>
-          <Button onClick={() => balfurCheckIn({ userMessage, profilePic: user.picture_url, firstName })}>צ'ק אין</Button>
+          <Button onClick={() => balfurCheckIn({ userMessage, picture_url: user.picture_url, firstName })}>צ'ק אין</Button>
         </BalfurModalContent>
       </BalfurModalWrapper>
     );

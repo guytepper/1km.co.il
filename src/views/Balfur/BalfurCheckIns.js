@@ -7,10 +7,10 @@ function BalfurCheckIns({ checkIns }) {
       <CheckInsList>
         {checkIns.map((checkIn) => (
           <CheckInEntry key={checkIn.createdAt}>
-            <CheckInAvatar src={checkIn.profilePic} />
+            <CheckInAvatar src={checkIn.picture_url} />
             <CheckInInfo>
               <CheckInName>{checkIn.firstName} עכשיו בבלפור</CheckInName>
-              <CheckInComment>באתי לכאן כי נמאס לי מלחשוב על עוגת הביסקוויטים!!</CheckInComment>
+              {checkIn.userMessage && <CheckInComment>{checkIn.userMessage}</CheckInComment>}
             </CheckInInfo>
           </CheckInEntry>
         ))}
