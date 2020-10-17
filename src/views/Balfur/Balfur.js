@@ -3,7 +3,6 @@ import { Switch, Route, useHistory } from 'react-router-dom';
 import { Button } from '../../components';
 import firebase, { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
-import BalfurStage from '../../components/BalfurStage';
 import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
 import { isVisitor } from '../../utils';
 
