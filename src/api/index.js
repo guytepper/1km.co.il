@@ -15,6 +15,7 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 export async function createProtest(params, fromPending = false) {
   const { coords, user, ...restParams } = params;
   const [lat, lng] = coords;
+  console.log(user);
 
   const protestsCollection = GeoFirestore.collection('protests');
   const pendingCollection = GeoFirestore.collection('pending_protests');
@@ -26,12 +27,12 @@ export async function createProtest(params, fromPending = false) {
   };
 
   // If an authed user created  the protest, add them as a leader.
-  if (user?.uid) {
+  // Protests created from pending should not have a user attached to them initially.
+  if (user?.uid && fromPending === false) {
     protestParams.roles = { leader: [user.uid] };
   }
 
-  // Add protest to `protests` collection.
-  if (fromPending === false) {
+  if (user?.uid || fromPending === true) {
     const protestDoc = await protestsCollection.add(protestParams);
     protestParams.protestRef = protestDoc.id;
   }

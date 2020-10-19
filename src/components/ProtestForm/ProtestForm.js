@@ -135,7 +135,7 @@ function ProtestForm({
           throw new Error('protest._document was null.');
         }
       } catch (err) {
-        console.log('error!!', err);
+        console.error(err);
         setSubmitSuccess(true);
         setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
