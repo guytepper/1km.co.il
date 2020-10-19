@@ -21,11 +21,13 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ coordinates, displayName, marker }) => {
-  // Use a speical marker / the default black flag.
+const PopupMarker = ({ coordinates, displayName, marker, hovered }) => {
+  const iconUrl = hovered ? '/icons/protesting.svg' : '/icons/fist.svg';
+
+  // Use a speical marker from the protest object / the default fist.
   let markerInfo = marker || {
-    iconUrl: '/icons/fist.svg',
-    iconRetinaUrl: '/icons/fist.svg',
+    iconUrl,
+    iconRetinaUrl: iconUrl,
     iconSize: [50, 48],
     iconAnchor: [12, 43],
   };
@@ -37,15 +39,15 @@ const PopupMarker = ({ coordinates, displayName, marker }) => {
   );
 };
 
-const MarkersList = ({ markers }) => {
-  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} />);
+const MarkersList = ({ markers, hoveredProtest }) => {
+  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} hovered={hoveredProtest?.id === id} />);
   return <>{items}</>;
 };
 
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition }) {
+function AppMap({ markers, coordinates, setMapPosition, hoveredProtest }) {
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
@@ -61,13 +63,11 @@ function AppMap({ markers, coordinates, setMapPosition }) {
       {coordinates.length === 2 && (
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={markers} />
+          <MarkersList markers={markers} hoveredProtest={hoveredProtest} />
           {MKs.map((mk) => (
-            <>
-              <Marker position={mk.position} icon={new L.icon(mk.icon)}>
-                <Popup>{mk.name}</Popup>
-              </Marker>
-            </>
+            <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
+              <Popup>{mk.name}</Popup>
+            </Marker>
           ))}
           <Circle radius={1000} center={coordinates} />
         </>

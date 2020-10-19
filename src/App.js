@@ -1,9 +1,9 @@
-import React, { useReducer, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, Button, ProtectedRoute } from './components';
-import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
-import { isAuthenticated, isVisitor, pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
-import styled from 'styled-components/macro';
+import React, { useReducer, useEffect, useMemo } from 'react';
+import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
+import { Map, ProtestList, Footer, Modal, Button } from './components';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
+import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
+import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
@@ -22,6 +22,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
+  hoveredProtest: null,
   loading: false,
   user: undefined,
 };
@@ -48,6 +49,8 @@ function reducer(state, action) {
       return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
+    case 'setHoveredProtest':
+      return { ...state, hoveredProtestId: action.payload };
     case 'setLoadData':
       return {
         ...state,
@@ -69,22 +72,17 @@ function reducer(state, action) {
       throw new Error('Unexpected action');
   }
 }
-function getAddProtestButtonLink(user) {
-  const addProtestRoute = '/add-protest';
-  if (isAdmin(user) || isAuthenticated(user)) {
-    return addProtestRoute;
-  }
-
-  if (isVisitor(user)) {
-    // Ask sign up before adding a protest
-    return `/sign-up?returnUrl=${addProtestRoute}`;
-  }
-
-  throw new Error(`couldn't find route`);
-}
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const hoveredProtest = useMemo(() => {
+    if (!state.hoveredProtestId) {
+      return null;
+    }
+
+    return [...state.protests.close, ...state.protests.far].find((protest) => protest.id === state.hoveredProtestId);
+  }, [state.hoveredProtestId, state.protests.close, state.protests.far]);
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
@@ -176,7 +174,7 @@ function App() {
         }
       }
     }
-    //TODO: remove this line and make sure deps are correct
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.userCoordinates, state.mapPosition]);
 
@@ -198,6 +196,12 @@ function App() {
                   </span>
                 ) : null}
                 <GuestNavItems>
+                  {/* <Link to="/">
+                    <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
+                      <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+                      LIVE
+                    </NavItemLive>
+                  </Link> */}
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
                   <NavItem to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}>
                     + הוספת הפגנה
@@ -207,7 +211,7 @@ function App() {
             </NavItemsWrapper>
           </Header>
           <Switch>
-            <Route exact path="/">
+            <Route exact path={['/', '/map']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -228,7 +232,7 @@ function App() {
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
-                  h
+                  hoveredProtest={hoveredProtest}
                   markers={state.markers}
                 />
               </HomepageWrapper>
@@ -242,6 +246,7 @@ function App() {
                 }}
               />
             </Route>
+
             <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} user={state.user} />
             </Route>
@@ -259,6 +264,12 @@ function App() {
             </Route>
             <Route exact path="/profile">
               <Profile user={state.user} />
+            </Route>
+            <Route exact path="/balfur">
+              <Balfur user={state.user} setUser={(user) => dispatch({ type: 'setUser', payload: user })} />
+            </Route>
+            <Route exact path="/balfur/qr">
+              <Redirect to="/balfur" />
             </Route>
 
             <Route exact path="/support-the-project/">
@@ -297,7 +308,7 @@ const Header = styled.header`
   padding: 5px 25px;
   grid-row: 1;
   background-color: #fff;
-  box-shadow: inset 0 -1px 0 #e1e4e8;
+  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
 
@@ -334,6 +345,26 @@ const NavItem = styled(Link)`
   &:hover {
     color: #3498db;
   }
+`;
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0.5;
+  }
+
+  to {
+    opacity: 1;
+  }
+`;
+
+const NavItemLive = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  color: tomato;
+  font-weight: bold;
+  font-size: 18px;
+  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
 `;
 
 const NavProfileWrapper = styled.div`

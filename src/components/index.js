@@ -7,5 +7,6 @@ export { default as ProtestCard } from './ProtestCard';
 export { default as ProtestList } from './ProtestList';
 export { default as ProtectedRoute } from './ProtectedRoute';
 export { default as ProtestForm } from './ProtestForm';
+export { default as SignUp } from './SignUp';
 export { Post, PostWrapper } from './Post';
 export * from './PageElements';
