@@ -2,16 +2,44 @@ import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-export async function createProtest(params) {
-  const { coords, ...restParams } = params;
+/**
+ * Creates a new protest document.
+ * - If the visitor is authenticated - add the protest to the public protests & pending protests collection.
+ *   The protest will exist in the pending protests only for tracking it's validity.
+ * - If the visitor is a guest - add the protest only to the pending protests collection.
+ * @param {object} params - The protest object parameters.
+ * @param {boolean} fromPending - Is the protest being created from a pending protest.
+ * @returns {object} The new protest.
+ */
+export async function createProtest(params, fromPending = false) {
+  const { coords, user, ...restParams } = params;
   const [lat, lng] = coords;
-  const geocollection = GeoFirestore.collection('protests');
-  const request = await geocollection.add({
+
+  const protestsCollection = GeoFirestore.collection('protests');
+  const pendingCollection = GeoFirestore.collection('pending_protests');
+
+  const protestParams = {
     ...restParams,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-  });
+  };
 
+  // If an authed user created  the protest, add them as a leader.
+  if (user?.uid) {
+    protestParams.roles = { leader: [user.uid] };
+  }
+
+  // Add protest to `protests` collection.
+  if (fromPending === false) {
+    const protestDoc = await protestsCollection.add(protestParams);
+    protestParams.protestRef = protestDoc.id;
+  }
+
+  // Set archived field for pending protests verifcations.
+  protestParams.archived = false;
+
+  // Add protest to `pending_protests` collection
+  const request = await pendingCollection.add(protestParams);
   return request;
 }
 

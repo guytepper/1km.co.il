@@ -85,7 +85,6 @@ function getAddProtestButtonLink(user) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const canAddProtest = !isVisitor(state.user);
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
@@ -187,7 +186,7 @@ function App() {
         <Router>
           <Header>
             <Link to="/">
-              <img src="/logo.svg" alt="קילומטר אחד" />
+              <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
             <NavItemsWrapper>
               <NavProfileWrapper>
@@ -200,7 +199,7 @@ function App() {
                 ) : null}
                 <GuestNavItems>
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/" onClick={() => (window.location = getAddProtestButtonLink(state.user))}>
+                  <NavItem to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}>
                     + הוספת הפגנה
                   </NavItem>
                 </GuestNavItems>
@@ -243,9 +242,9 @@ function App() {
                 }}
               />
             </Route>
-            <ProtectedRoute exact path="/add-protest" authorized={canAddProtest}>
+            <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} user={state.user} />
-            </ProtectedRoute>
+            </Route>
             <Route path="/admin">
               <Admin user={state.user} />
             </Route>
