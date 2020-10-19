@@ -1,7 +1,15 @@
 import React from 'react';
-import { createPendingProtest } from '../api';
+import { createProtest } from '../api';
 import { ProtestForm } from '../components';
 
-export default function AddProtest({ initialCoords }) {
-  return <ProtestForm initialCoords={initialCoords} submitCallback={createPendingProtest} />;
+export default function AddProtest({ initialCoords, user }) {
+  return (
+    <ProtestForm
+      initialCoords={initialCoords}
+      submitCallback={async (params) => {
+        const result = await createProtest({ ...params, user });
+        return result;
+      }}
+    />
+  );
 }

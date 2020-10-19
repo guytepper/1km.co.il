@@ -41,6 +41,33 @@ const ProtestAdmin = ({ user }) => {
         <ProtestForm
           initialCoords={state.currentProtest?.coordinates ?? {}}
           submitCallback={(params) => {
+            // If the protest already exists in the `protests` collection, we just need to archive the pending one.
+            if (params.protestRef) {
+              // First, update the published protest in case it was changed.
+              const updateAndArchive = new Promise((resolve, reject) => {
+                updateProtest({
+                  params,
+                  protestId: params.protestRef,
+                }).then(() => {
+                  archiveProtest({
+                    protestId: state.currentProtest.id,
+                    type: 'pending',
+                    archiveCallback: () => {
+                      dispatch({
+                        type: 'setProtests',
+                        payload: {
+                          pendingProtests: state.pendingProtests.filter((protest) => protest.id !== state.currentProtest.id),
+                          currentProtest: state.pendingProtests.filter((protest) => protest.id !== state.currentProtest.id)[0],
+                        },
+                      });
+                    },
+                  })
+                    .then((protest) => resolve(protest))
+                    .catch((err) => reject(err));
+                });
+              });
+              return updateAndArchive;
+            }
             if (state.protestFilter === 'pending') {
               return submitProtest({
                 params,

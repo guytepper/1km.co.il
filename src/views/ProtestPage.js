@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
 import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-import { ProtestForm } from '../components';
+import { ProtestForm, ProtectedRoute } from '../components';
 import { Switch, Route } from 'react-router-dom';
 import {
   ProtestCardInfo,
@@ -23,7 +23,6 @@ import {
   calculateDistance,
   formatDistance,
 } from '../utils';
-import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 768px)`;
 
@@ -87,7 +86,6 @@ function useFetchProtest() {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const socialLinks = getSocialLinks(protest);
 
@@ -188,8 +186,7 @@ export default function ProtestPage({ user, userCoordinates }) {
   }
 
   const { coordinates, id } = protest;
-
-  const canEdit = !!user; //isAdmin(user) || isLeader(user, protest);
+  const canEdit = !isVisitor(user); //isAdmin(user) || isLeader(user, protest);
 
   return (
     <Switch>

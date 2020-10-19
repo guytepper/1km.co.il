@@ -184,7 +184,7 @@ function App() {
         <Router>
           <Header>
             <Link to="/">
-              <img src="/logo.svg" alt="קילומטר אחד" />
+              <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
             <NavItemsWrapper>
               <NavProfileWrapper>
@@ -203,7 +203,9 @@ function App() {
                     </NavItemLive>
                   </Link> */}
                   <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to="/add-protest/">+ הוספת הפגנה</NavItem>
+                  <NavItem to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}>
+                    + הוספת הפגנה
+                  </NavItem>
                 </GuestNavItems>
               </NavProfileWrapper>
             </NavItemsWrapper>
@@ -246,7 +248,7 @@ function App() {
             </Route>
 
             <Route exact path="/add-protest">
-              <AddProtest initialCoords={state.userCoordinates} />
+              <AddProtest initialCoords={state.userCoordinates} user={state.user} />
             </Route>
             <Route path="/admin">
               <Admin user={state.user} />
