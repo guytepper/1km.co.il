@@ -8,8 +8,14 @@ import queryString from 'query-string';
 function SignUpBeforeRedirect({ returnUrl }) {
   return (
     <PageContentWrapper>
-      <p style={{ marginBottom: 10 }}>על מנת ליצור הפגנה יש להזדהות דרך פייסבוק. </p>
-      <p style={{ marginTop: 0 }}>ניתן ליצור הפגנה ללא הזדהות, אך היא תתווסף למפה לאחר אישור הנהלת האתר. </p>
+      {returnUrl === '/add-protest' ? (
+        <>
+          <p style={{ marginBottom: 10 }}>על מנת ליצור הפגנה יש להזדהות דרך פייסבוק. </p>
+          <p style={{ marginTop: 0 }}>ניתן ליצור הפגנה ללא הזדהות, אך היא תתווסף למפה לאחר אישור הנהלת האתר. </p>
+        </>
+      ) : (
+        <p>היי! כדי ליצור או לערוך הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק.</p>
+      )}
 
       <Button onClick={() => handleSignIn()} style={{ marginBottom: 10 }}>
         התחברות דרך פייסבוק
