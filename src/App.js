@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, Button } from './components';
+import { Map, ProtestList, Footer, Modal, Button, ProtectedRoute } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, FourOhFour } from './views';
 import { isAuthenticated, isVisitor, pointWithinRadius, validateLatLng, calculateDistance, isAdmin } from './utils';
 import styled from 'styled-components/macro';
@@ -9,7 +9,6 @@ import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
-import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
