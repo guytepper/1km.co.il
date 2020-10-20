@@ -45,7 +45,7 @@ export async function createProtest(params, fromPending = false) {
   return request;
 }
 
-export async function updateProtest(protestId, params) {
+export async function updateProtest({ protestId, params }) {
   const [lat, lng] = params.coords;
   await firestore
     .collection('protests')
