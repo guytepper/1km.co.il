@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest, getProtestsForLeader } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
 import { ProtestForm, ProtectedRoute } from '../components';
 import { Switch, Route } from 'react-router-dom';
@@ -195,14 +195,17 @@ export default function ProtestPage({ user, userCoordinates }) {
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
-              debugger;
-              if (!isAdmin(user)) {
-                debugger;
+              // If the user is not a leader for this protest, check if they reached the leader amount limit.
+              if (!protest.roles.leader.includes(user.uid) && !isAdmin(user)) {
+                const userProtests = await getProtestsForLeader(user.uid);
+                if (userProtests.length > 4) {
+                  throw new Error('Reached the amont of protests a user can lead');
+                }
                 await sendProtestLeaderRequest(user, null, protestId);
                 await makeUserProtestLeader(protestId, user.uid);
               }
-              debugger;
-              const response = await updateProtest(protestId, params);
+
+              const response = await updateProtest({ protestId, params, userId: user.uid });
               // refetch the protest once update is complete
               _fetchProtest(protestId, setProtest);
 
