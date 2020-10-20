@@ -44,7 +44,7 @@ function ProtestForm({
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
-  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-24', time: '17:30' }]);
 
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -70,7 +70,7 @@ function ProtestForm({
       setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
-      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-24', time: '17:30' }]);
 
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
