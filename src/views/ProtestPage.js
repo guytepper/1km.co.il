@@ -196,10 +196,11 @@ export default function ProtestPage({ user, userCoordinates }) {
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
               // If the user is not a leader for this protest, check if they reached the leader amount limit.
-              if (!protest.roles.leader.includes(user.uid) && !isAdmin(user)) {
+              if (!protest.roles?.leader.includes(user.uid) && !isAdmin(user)) {
                 const userProtests = await getProtestsForLeader(user.uid);
                 if (userProtests.length > 4) {
-                  throw new Error('Reached the amont of protests a user can lead');
+                  alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
+                  throw new Error('Reached the max amount of protests a user can lead');
                 }
                 await sendProtestLeaderRequest(user, null, protestId);
                 await makeUserProtestLeader(protestId, user.uid);
