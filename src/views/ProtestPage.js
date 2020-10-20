@@ -182,7 +182,7 @@ export default function ProtestPage({ user, userCoordinates }) {
 
   if (!protest) {
     // TODO: loading state
-    return <div>Loading...</div>;
+    return <div>טוען...</div>;
   }
 
   const { coordinates, id } = protest;
