@@ -186,7 +186,7 @@ export default function ProtestPage({ user, userCoordinates }) {
   }
 
   const { coordinates, id } = protest;
-  const canEdit = !isVisitor(user); //isAdmin(user) || isLeader(user, protest);
+  const canEdit = !isVisitor(user);
 
   return (
     <Switch>
