@@ -185,7 +185,7 @@ export default function ProtestPage({ user, userCoordinates }) {
     return <div>טוען...</div>;
   }
 
-  const { coordinates, id } = protest;
+  const { coordinates, id: protestId } = protest;
   const canEdit = !isVisitor(user);
 
   return (
@@ -195,17 +195,20 @@ export default function ProtestPage({ user, userCoordinates }) {
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
-              const response = await updateProtest(id, params);
-              // refetch the protest once update is complete
-              _fetchProtest(id, setProtest);
-
+              debugger;
               if (!isAdmin(user)) {
-                sendProtestLeaderRequest(user, null, id);
-                makeUserProtestLeader(id, user.uid);
+                debugger;
+                await sendProtestLeaderRequest(user, null, protestId);
+                await makeUserProtestLeader(protestId, user.uid);
               }
+              debugger;
+              const response = await updateProtest(protestId, params);
+              // refetch the protest once update is complete
+              _fetchProtest(protestId, setProtest);
+
               return response;
             }}
-            afterSubmitCallback={() => history.push(`/protest/${id}`)}
+            afterSubmitCallback={() => history.push(`/protest/${protestId}`)}
             defaultValues={protest}
             editMode={true}
             isAdmin={isAdmin(user)}
