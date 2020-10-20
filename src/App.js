@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
-import { Map, ProtestList, Footer, Modal, Button } from './components';
+import { Map, ProtestList, Footer, IntroModal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
@@ -236,7 +236,7 @@ function App() {
                   markers={state.markers}
                 />
               </HomepageWrapper>
-              <Modal
+              <IntroModal
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
                 coordinates={state.userCoordinates}
