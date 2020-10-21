@@ -1,4 +1,4 @@
-export { default as Button } from './Button';
+export { default as Button } from './elements/Button';
 export { default as Footer } from './Footer';
 export { default as Map } from './Map';
 export { default as Modal } from './Modal';

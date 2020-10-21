@@ -13,7 +13,7 @@ export default function Button(props) {
 
 const ButtonWrapper = styled.button`
   display: flex;
-  width: 300px;
+  width: ${(props) => (props.type === 'small' ? '100px' : '300px')};
   height: 50px;
   align-items: center;
   justify-content: center;

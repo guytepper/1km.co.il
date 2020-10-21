@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, LocationButtons } from '../';
+import ProtestListSelection from './ProtestListSelection';
 import { getLocalStorage } from '../../localStorage';
 
 const steps = {
@@ -36,7 +37,7 @@ function CheckInModal({ setCoordinates, closeProtests }) {
       case steps.PICK_LOCATION:
         return <LocationButtons setCoordinates={setCoordinates} />;
       case steps.PICK_PROTEST:
-        return 'pick protest';
+        return <ProtestListSelection />;
 
       default:
         return 'test';
