@@ -14,7 +14,7 @@ export default function Button(props) {
 const ButtonWrapper = styled.button`
   display: flex;
   width: ${(props) => (props.type === 'small' ? '100px' : '300px')};
-  height: 50px;
+  height: ${(props) => (props.type === 'small' ? '40px' : '50px')};
   align-items: center;
   justify-content: center;
   max-width: 100%;
@@ -25,7 +25,7 @@ const ButtonWrapper = styled.button`
   }};
   color: #fff;
   font-family: Simpler, sans-serif;
-  font-size: 20px;
+  font-size: ${(props) => (props.type === 'small' ? '18px' : '20px')};
   font-weight: 600;
   padding: 6px 20px;
   border: none;

@@ -13,7 +13,8 @@ const steps = {
 };
 
 function CheckInModal({ setCoordinates, closeProtests }) {
-  const [currentStep, setCurrentStep] = useState(steps.LOADING);
+  const [currentStep, setCurrentStep] = useState(steps.PICK_PROTEST);
+  const [currentProtest, setProtest] = useState(null);
 
   useEffect(() => {
     if (closeProtests.length > 0) {
@@ -21,9 +22,15 @@ function CheckInModal({ setCoordinates, closeProtests }) {
       setCurrentStep(steps.PICK_PROTEST);
     } else if (!getLocalStorage('1km_user_coordinates')) {
       // In case there are no cached coordinates, change to pick location step.
-      setCurrentStep(steps.PICK_LOCATION);
+      setCurrentStep(steps.PICK_PROTEST);
     }
   }, [closeProtests]);
+
+  useEffect(() => {
+    if (currentProtest) {
+      setCurrentStep(steps.SIGN_IN);
+    }
+  }, [currentProtest]);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -37,8 +44,9 @@ function CheckInModal({ setCoordinates, closeProtests }) {
       case steps.PICK_LOCATION:
         return <LocationButtons setCoordinates={setCoordinates} />;
       case steps.PICK_PROTEST:
-        return <ProtestListSelection />;
-
+        return <ProtestListSelection protests={closeProtests} setProtest={setProtest} />;
+      case steps.SIGN_IN:
+        return 'auth!';
       default:
         return 'test';
     }
