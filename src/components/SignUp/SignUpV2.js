@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../';
+import { Button, PageParagraph } from '../';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 
-function SignUpBeforeRedirect({ returnUrl }) {
+function SignUpBeforeRedirect({ returnUrl, onAnnonymousClick }) {
   return (
-    <PageContentWrapper>
+    <>
       <Button onClick={() => handleSignIn()} style={{ marginBottom: 10 }}>
         צ'ק-אין עם תמונת פייסבוק
       </Button>
-      <Button
-        style={{
-          background:
-            'radial-gradient(100.6% 793.82% at 9.54% -0.6%, rgb(166, 145, 145) 0%, rgb(119, 95, 95) 100%) repeat scroll 0% 0%',
-        }}
-      >
+      <Button onClick={() => onAnnonymousClick()} color="grey">
         צ'ק-אין אנונימי
       </Button>
-    </PageContentWrapper>
+    </>
   );
 }
 
@@ -27,7 +22,7 @@ const stages = {
   AFTER_FACEBOOK_AUTH: 'afterFacebookAuth',
 };
 
-export default function SignUp({ onAuth }) {
+export default function SignUp({ onAuth, onAnnonymousClick }) {
   const [stage, setStage] = useState(stages.UNKNOWN);
   const history = useHistory();
 
@@ -59,28 +54,18 @@ export default function SignUp({ onAuth }) {
 
   if (stage === stages.UNKNOWN) {
     return (
-      <PageWrapper>
+      <>
         <p>רק כמה שניות...</p>
         <img src="/icons/loading-spinner.svg" alt="" />
-      </PageWrapper>
+      </>
     );
   }
 
   if (stage === stages.BEFORE_FACEBOOK_AUTH) {
-    return (
-      <PageWrapper>
-        <SignUpBeforeRedirect />
-      </PageWrapper>
-    );
+    return <SignUpBeforeRedirect onAnnonymousClick={onAnnonymousClick} />;
   }
 
   if (stage === stages.AFTER_FACEBOOK_AUTH) {
-    return (
-      <PageWrapper>
-        <PageContentWrapper>
-          <PageParagraph>התחברת בהצלחה.</PageParagraph>
-        </PageContentWrapper>
-      </PageWrapper>
-    );
+    return <PageParagraph>התחברת בהצלחה.</PageParagraph>;
   }
 }

@@ -19,6 +19,8 @@ const ButtonWrapper = styled.button`
   justify-content: center;
   max-width: 100%;
   background: ${(props) => {
+    if (props.color?.grey)
+      return 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, rgb(166, 145, 145) 0%, rgb(119, 95, 95) 100%) repeat scroll 0% 0%';
     if (props.color) return props.color;
     if (props.type) return props.type.whatsapp ? '#1ED96E' : '#6AB2E4';
     return 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)';
