@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal, LocationButtons } from '../';
-import ProtestListSelection from './ProtestListSelection';
+import SignUp from '../SignUp/SignUpV2';
+import { useHistory } from 'react-router-dom';
+import { ProtestListSelection, CheckInForm } from './';
 import { getLocalStorage } from '../../localStorage';
 
 const steps = {
@@ -12,7 +14,8 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ setCoordinates, closeProtests }) {
+function CheckInModal({ setCoordinates, closeProtests, user }) {
+  const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_PROTEST);
   const [currentProtest, setProtest] = useState(null);
 
@@ -28,9 +31,28 @@ function CheckInModal({ setCoordinates, closeProtests }) {
 
   useEffect(() => {
     if (currentProtest) {
-      setCurrentStep(steps.SIGN_IN);
+      if (user?.uid) {
+        setCurrentStep(steps.CHECK_IN_FORM);
+        history.push('/check-in/form');
+      } else {
+        setCurrentStep(steps.SIGN_IN);
+        history.push('/check-in/auth');
+      }
     }
   }, [currentProtest]);
+
+  useEffect(() => {
+    const { pathname } = history.location;
+    if (pathname === '/check-in/auth') {
+      if (user?.uid) {
+        setCurrentStep(steps.CHECK_IN_FORM);
+        history.push('/check-in/form');
+      }
+      if (currentStep !== steps.SIGN_IN) {
+        setCurrentStep(steps.SIGN_IN);
+      }
+    }
+  }, [history, user]);
 
   const renderStep = () => {
     switch (currentStep) {
@@ -46,7 +68,9 @@ function CheckInModal({ setCoordinates, closeProtests }) {
       case steps.PICK_PROTEST:
         return <ProtestListSelection protests={closeProtests} setProtest={setProtest} />;
       case steps.SIGN_IN:
-        return 'auth!';
+        return <SignUp />;
+      case steps.CHECK_IN_FORM:
+        return <CheckInForm user={user} />;
       default:
         return 'test';
     }

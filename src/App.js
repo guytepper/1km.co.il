@@ -211,7 +211,7 @@ function App() {
             </NavItemsWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/', '/map']}>
+            <Route exact path={['/', '/check-in/*']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -254,9 +254,9 @@ function App() {
                   dispatch({ type: 'setMapPosition', payload: coords });
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
+                user={state.user}
               />
             </Route>
-
             <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} user={state.user} />
             </Route>

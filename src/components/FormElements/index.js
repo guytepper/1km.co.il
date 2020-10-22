@@ -17,3 +17,8 @@ export const TextInput = styled.input`
   border: 1px solid #d2d2d2;
   -webkit-appearance: none;
 `;
+
+export const InputMessage = styled.span`
+  font-size: 14px;
+  font-weight: 100;
+`;
