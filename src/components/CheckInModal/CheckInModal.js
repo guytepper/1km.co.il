@@ -86,7 +86,7 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
         firstName,
         lastName,
         userMessage,
-        picture_url: user?.picture_url,
+        picture_url: user?.picture_url || '',
         ...protestInfo,
       });
 
