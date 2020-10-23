@@ -141,13 +141,12 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                   </Date>
                 ))
               ) : (
-                  <Date>
-                    <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
-                  </Date>
+                <Date>
+                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
+                </Date>
               )}
-
             </Dates>
-            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
           </SectionContainer>
 
           {/* Social */}
@@ -169,7 +168,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             ) : (
               <p>להפגנה זו אין ערוצי תקשורת.</p>
             )}
-            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
           </SocialContainer>
         </DatesAndSocial>
       </ProtestContainer>
