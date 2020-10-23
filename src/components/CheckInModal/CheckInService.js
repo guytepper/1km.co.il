@@ -1,5 +1,5 @@
 import firebase, { firestore, realtimeDB } from '../../firebase';
-import { setLocalStorage, getLocalStorage } from '../../localStorage';
+import { setLocalStorage } from '../../localStorage';
 
 export async function createCheckIn(checkInData) {
   const checkIn = realtimeDB.ref('24-10-20_check_ins').push();

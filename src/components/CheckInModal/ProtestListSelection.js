@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Button } from '../elements';
 import styled from 'styled-components/macro';
 
-import protestsDev from './ProtestListSelectionMockData.json';
+// import protestsDev from './ProtestListSelectionMockData.json';
 
 function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
   return (
@@ -22,15 +22,10 @@ function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
         })}
       </ProtestSelectionList>
       <div>
-        <p style={{ margin: '0 auto 10px' }}>
-          ההפגנה לא ברשימה?
-          <br />
-          נסו לעדכן מיקום או הוסיפו הפגנה חסרה
-        </p>
+        <p style={{ margin: '0 auto 10px' }}>ההפגנה לא ברשימה? נסו לעדכן מיקום</p>
         <Button style={{ width: '100%', marginBottom: 10 }} onClick={() => setCurrentStep('pickLocation')}>
           עדכון מיקום
         </Button>
-        <Button style={{ width: '100%' }}>הוספת הפגנה</Button>
       </div>
     </ProtestSelectionWrapper>
   );

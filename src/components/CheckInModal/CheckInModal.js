@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, LocationButtons } from '../';
 import SignUp from '../SignUp/SignUpV2';
 import { useHistory } from 'react-router-dom';
@@ -54,6 +54,8 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
     } else {
       if (cachedProtest) setProtest(cachedProtest);
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProtest]);
 
   useEffect(() => {
@@ -72,6 +74,8 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
         setCurrentStep(steps.SIGN_IN);
       }
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, user]);
 
   const onCheckIn = async ({ firstName, lastName = '', userMessage = '' }) => {
@@ -82,7 +86,7 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
         protestStreetAddress: currentProtest.streetAddress,
       };
 
-      const checkIn = await createCheckIn({
+      await createCheckIn({
         firstName,
         lastName,
         userMessage,
