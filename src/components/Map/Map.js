@@ -3,6 +3,7 @@ import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
 import L from 'leaflet';
+import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
   new L.Icon({
@@ -21,7 +22,7 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ coordinates, displayName, marker, hovered }) => {
+const PopupMarker = ({ coordinates, marker, hovered, ...props }) => {
   const iconUrl = hovered ? '/icons/protesting.svg' : '/icons/fist.svg';
 
   // Use a speical marker from the protest object / the default fist.
@@ -34,13 +35,15 @@ const PopupMarker = ({ coordinates, displayName, marker, hovered }) => {
 
   return (
     <Marker position={[coordinates.latitude, coordinates.longitude]} icon={protestPoint(markerInfo)}>
-      <Popup>{displayName}</Popup>
+      <Popup closeButton={false}>
+        <ProtestCard protestInfo={props} style={{ margin: 0 }} />
+      </Popup>
     </Marker>
   );
 };
 
 const MarkersList = ({ markers, hoveredProtest }) => {
-  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} hovered={hoveredProtest?.id === id} />);
+  const items = markers.map((props) => <PopupMarker key={props.id} {...props} hovered={hoveredProtest?.id === props.id} />);
   return <>{items}</>;
 };
 
