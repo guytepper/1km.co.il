@@ -60,6 +60,7 @@ function CheckInModal({ setCoordinates, closeProtests, user }) {
       if (user?.uid) {
         setCurrentStep(steps.CHECK_IN_FORM);
         history.push('/check-in/form');
+        return;
       }
       if (currentStep !== steps.SIGN_IN) {
         setCurrentStep(steps.SIGN_IN);
@@ -69,14 +70,18 @@ function CheckInModal({ setCoordinates, closeProtests, user }) {
 
   const onCheckIn = async ({ firstName, lastName = '', userMessage = '' }) => {
     try {
+      const protestInfo = {
+        protestId: currentProtest.id,
+        protestDisplayName: currentProtest.displayName,
+        protestStreetAddress: currentProtest.streetAddress,
+      };
+
       const checkIn = await createCheckIn({
         firstName,
         lastName,
         userMessage,
         picture_url: user?.picture_url,
-        protestId: currentProtest.id,
-        protestDisplayName: currentProtest.displayName,
-        protestStreetAddress: currentProtest.streetAddress,
+        ...protestInfo,
       });
 
       if (user?.uid) {

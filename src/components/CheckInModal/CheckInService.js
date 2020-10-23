@@ -1,9 +1,9 @@
 import firebase, { firestore, realtimeDB } from '../../firebase';
 import { setLocalStorage, getLocalStorage } from '../../localStorage';
 
-export async function createCheckIn({ picture_url = '', firstName, lastName = '', userMessage = '' }) {
+export async function createCheckIn(checkInData) {
   const checkIn = realtimeDB.ref('24-10-20_check_ins').push();
-  await checkIn.set({ firstName, lastName, userMessage, picture_url, createdAt: firebase.database.ServerValue.TIMESTAMP });
+  await checkIn.set({ ...checkInData, createdAt: firebase.database.ServerValue.TIMESTAMP });
   realtimeDB.ref('24-10-20_check_in_count').set(firebase.database.ServerValue.increment(1));
   setLocalStorage('24-10-20_check_in', true);
   return checkIn;
