@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSpring, animated } from 'react-spring';
+import React from 'react';
+import { useSpring } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 
 function CheckInList({ checkIns }) {
