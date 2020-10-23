@@ -29,7 +29,7 @@ function renderView({ currentView, currentProtest, checkIns }) {
 function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
-  const [currentView, setCurrentView] = useState(VIEWS.withMe);
+  const [currentView, setCurrentView] = useState(VIEWS.feed);
   const [checkIns, setCheckIns] = useState([]);
   const [hasCheckedIn, setCheckedIn] = useState(false);
   const wrapper = useRef(null);
@@ -105,6 +105,12 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
             מפגינים איתי
           </LiveEventHeader.Button>
         </LiveEventHeader>
+
+        {!hasCheckedIn && (
+          <Button onClick={() => setModalOpen(true)} style={{ width: '100%' }}>
+            צ'ק אין להפגנה
+          </Button>
+        )}
 
         <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
         <LiveCurrentView>{renderView({ currentView, checkIns, currentProtest })}</LiveCurrentView>
