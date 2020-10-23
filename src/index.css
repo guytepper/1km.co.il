@@ -168,3 +168,81 @@ li {
     transform: translateY(60px);
   }
 }
+
+/** React Hamburger Menu **/
+
+/* Position and sizing of burger button */
+.bm-burger-button {
+  width: 30px;
+  height: 30px;
+}
+
+#react-burger-menu-btn {
+  width: inherit !important;
+  left: unset !important;
+}
+
+/* Position and sizing of clickable cross button */
+.bm-cross-button {
+  height: 24px;
+  width: 24px;
+}
+
+/* Color/shape of close button cross */
+.bm-cross {
+  background: #bdc3c7;
+}
+
+/*
+Sidebar wrapper styles
+Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
+*/
+.bm-menu-wrap {
+  position: fixed;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+/* General sidebar styles */
+.bm-menu {
+  padding: 20px 5px;
+  background: #6e7dff;
+  font-size: 30px;
+}
+
+/* Morph shape necessary with bubble or elastic */
+.bm-morph-shape {
+  fill: #373a47;
+}
+
+/* Wrapper for item list */
+.bm-item-list {
+  color: #b8b7ad;
+  padding: 0.8em;
+}
+
+/* Individual item */
+.bm-item {
+  display: block;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 10px;
+}
+
+/* Styling of overlay */
+.bm-overlay {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3) none repeat scroll 0% 0%;
+  opacity: 1;
+  transition: opacity 0.3s ease 0s;
+}
+
+.bm-upper-section {
+  display: flex;
+}

@@ -1,5 +1,6 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
+import Menu from 'react-burger-menu/lib/menus/slide';
 import { Map, ProtestList, Footer, IntroModal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, LiveEvent, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
@@ -22,6 +23,7 @@ const initialState = {
   mapPosition: [],
   mapPositionHistory: [],
   isModalOpen: true,
+  menuOpen: false,
   hoveredProtest: null,
   loading: false,
   user: undefined,
@@ -68,6 +70,8 @@ function reducer(state, action) {
       };
     case 'setUser':
       return { ...state, user: action.payload };
+    case 'setMenuState':
+      return { ...state, menuOpen: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -83,6 +87,10 @@ function App() {
 
     return [...state.protests.close, ...state.protests.far].find((protest) => protest.id === state.hoveredProtestId);
   }, [state.hoveredProtestId, state.protests.close, state.protests.far]);
+
+  const updateMenuState = (state) => {
+    dispatch({ type: 'setMenuState', payload: state });
+  };
 
   // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
   useEffect(() => {
@@ -186,27 +194,55 @@ function App() {
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
+
             <NavItemsWrapper>
               <NavProfileWrapper>
                 {isAuthenticated(state.user) ? (
                   <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                    {/* <NavProfilePicture src="/icons/guard.svg" alt="" />
-                    <NavItem to="/profile/">הפגנות מורשות לעדכון</NavItem> */}
                     {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
                   </span>
                 ) : null}
-                <GuestNavItems>
-                  {/* <Link to="/">
-                    <NavItemLive style={{ display: 'flex', flexDirection: 'row-reverse' }}>
-                      <NavProfilePicture src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-                      LIVE
-                    </NavItemLive>
-                  </Link> */}
-                  <NavItem to="/support-the-project/">☆ תמיכה בפרוייקט</NavItem>
-                  <NavItem to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}>
-                    + הוספת הפגנה
-                  </NavItem>
-                </GuestNavItems>
+
+                <Menu
+                  isOpen={state.menuOpen}
+                  onStateChange={(state) => updateMenuState(state.isOpen)}
+                  customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}
+                  disableAutoFocus
+                >
+                  <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                    LIVE
+                  </Link>
+                  <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
+                    מפת הפגנות
+                  </Link>
+                  <Link
+                    to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}
+                    onClick={() => updateMenuState(false)}
+                    className="bm-item"
+                  >
+                    הוספת הפגנה
+                  </Link>
+                  <hr />
+                  <Link to="/about" onClick={() => updateMenuState(false)}>
+                    על הפרוייקט
+                  </Link>
+                  <Link to="/about" onClick={() => updateMenuState(false)}>
+                    תרומה
+                  </Link>
+                  <hr />
+                  <a href="https://www.facebook.com/1km.co.il" target="_blank" rel="noreferrer noopener">
+                    פייסבוק
+                  </a>
+                  <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer noopener">
+                    טוויטר
+                  </a>
+                  <a href="https://www.instagram.com/1km.co.il/" target="_blank" rel="noreferrer noopener">
+                    אינסטגרם
+                  </a>
+                  <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
+                    קוד פתוח
+                  </a>
+                </Menu>
               </NavProfileWrapper>
             </NavItemsWrapper>
           </Header>
