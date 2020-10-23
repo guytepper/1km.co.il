@@ -18,8 +18,8 @@ function CheckInList({ checkIns }) {
     <CheckInListWrapper>
       {checkIns?.length > 0 &&
         checkIns.slice(1).map((checkIn, i) => (
-          <CheckIn key={checkIn.id} style={i == 0 ? newItem : oldItem}>
-            <CheckIn.Avatar src={checkIn.picture_url === '' ? './anonymousPofile.png' : checkIn.picture_url} />
+          <CheckIn key={checkIn.id} style={i === 0 ? newItem : oldItem}>
+            <UserAvatar src={checkIn.picture_url === '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckIn.Info>
               <CheckIn.Name>{checkIn.firstName}</CheckIn.Name>
               <CheckIn.Location>מפגין במזכרת בתיה</CheckIn.Location>
