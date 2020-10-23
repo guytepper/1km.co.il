@@ -43,7 +43,7 @@ const PopupMarker = ({ coordinates, displayName, marker, hovered, ...props }) =>
 };
 
 const MarkersList = ({ markers, hoveredProtest }) => {
-  const items = markers.map(({ id, ...props }) => <PopupMarker key={id} {...props} hovered={hoveredProtest?.id === id} />);
+  const items = markers.map((props) => <PopupMarker key={props.id} {...props} hovered={hoveredProtest?.id === props.id} />);
   return <>{items}</>;
 };
 
