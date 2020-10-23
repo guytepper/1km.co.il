@@ -79,7 +79,12 @@ li {
 
 /** Leaflet protest card popup resets **/
 
+.leaflet-popup-content-wrapper {
+  padding: 0;
+}
+
 .leaflet-popup-content {
+  margin: 0;
   font-family: Simpler, sans-serif;
   text-align: right;
 }

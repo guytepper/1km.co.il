@@ -35,8 +35,8 @@ const PopupMarker = ({ coordinates, marker, hovered, ...props }) => {
 
   return (
     <Marker position={[coordinates.latitude, coordinates.longitude]} icon={protestPoint(markerInfo)}>
-      <Popup>
-        <ProtestCard protestInfo={props} />
+      <Popup closeButton={false}>
+        <ProtestCard protestInfo={props} style={{ margin: 0 }} />
       </Popup>
     </Marker>
   );
