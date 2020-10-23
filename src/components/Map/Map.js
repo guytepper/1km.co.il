@@ -22,7 +22,7 @@ const positionPoint = new L.Icon({
   iconSize: [35, 40],
 });
 
-const PopupMarker = ({ coordinates, displayName, marker, hovered, ...props }) => {
+const PopupMarker = ({ coordinates, marker, hovered, ...props }) => {
   const iconUrl = hovered ? '/icons/protesting.svg' : '/icons/fist.svg';
 
   // Use a speical marker from the protest object / the default fist.
