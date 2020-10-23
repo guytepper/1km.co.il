@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
+import firebase, { realtimeDB } from '../../firebase';
 
 function NationWideCheckIns({}) {
+  const [checkIns, setCheckIns] = useState([]);
+  useEffect(() => {
+    /* get check-ins + listen changes from DB on mount*/
+    const checkIns = realtimeDB.ref('24-10-20_check_ins').orderByChild('createdAt').limitToLast(70);
+    checkIns.on('child_added', (data) => {
+      const { firstName, userMessage, picture_url, createdAt } = data.val();
+      setCheckIns((prevState) => [{ firstName, userMessage, picture_url, createdAt, display: 'none' }, ...prevState]);
+    });
+  }, []);
   return (
     <CheckInsWrapper>
       <CheckInsList>
