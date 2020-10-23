@@ -26,6 +26,8 @@ const CheckInsWrapper = styled.div`
 `;
 
 const CheckInsList = styled.div`
+  justify-items: center;
+  align-items: center;
   display: grid;
   grid-auto-rows: 60px;
   height: 500px;
