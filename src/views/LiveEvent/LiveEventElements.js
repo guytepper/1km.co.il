@@ -12,6 +12,7 @@ export const LiveEventHeader = styled.div`
   grid-template-columns: repeat(3, 1fr);
   box-shadow: 0 0 0px 1px #e4e6eb;
   font-size: 12px;
+  z-index: 10;
 
   @media (min-width: 390px) {
     font-size: 13px;
