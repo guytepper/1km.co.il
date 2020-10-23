@@ -1,3 +1,4 @@
+import { animated } from 'react-spring';
 import styled from 'styled-components/macro';
 
 export const LiveEventWrapper = styled.div`
@@ -75,7 +76,7 @@ export const CheckIn = styled.div`
   }
 `;
 
-export const UserAvatar = styled.img`
+export const UserAvatar = styled(animated.img)`
   width: 45px;
   height: 45px;
   margin-left: 10px;
