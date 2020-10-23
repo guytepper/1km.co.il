@@ -10,7 +10,8 @@ function CheckInForm({ onCheckIn }) {
   return (
     <div>
       <FormLabel>
-        שם פרטי <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} placeholder="מה שמכם?" autoFocus />
+        שם פרטי / כינוי
+        <TextInput onChange={(e) => setFirstName(e.target.value)} value={firstName} placeholder="מה שמכם?" autoFocus />
       </FormLabel>
       <FormLabel>
         שם משפחה <TextInput onChange={(e) => setLastName(e.target.value)} placeholder="לא חובה." value={lastName} />
