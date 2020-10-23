@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { CheckInListWrapper, CheckIn } from './LiveEventElements';
 import { useSpring, animated } from 'react-spring';
+import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 
 function CheckInList({ checkIns }) {
   const newItem = useSpring({
@@ -23,8 +23,9 @@ function CheckInList({ checkIns }) {
             <CheckIn.Info>
               <CheckIn.Name>{checkIn.firstName}</CheckIn.Name>
               <CheckIn.Location>מפגין במזכרת בתיה</CheckIn.Location>
-              {checkIn.userMessage && <CheckIn.Comment>{checkIn.userMessage}</CheckIn.Comment>}
             </CheckIn.Info>
+            {checkIn.userMessage && <CheckIn.Comment>{checkIn.userMessage}</CheckIn.Comment>}
+            <CheckIn.TimeAgo>לפני 10 דקות</CheckIn.TimeAgo>
           </CheckIn>
         ))}
     </CheckInListWrapper>
