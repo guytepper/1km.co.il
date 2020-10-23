@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { realtimeDB } from '../../firebase';
 import CheckInModal from '../../components/CheckInModal';
-import { LiveEventWrapper, LiveEventHeader, LiveEventMessage } from './LiveEventElements';
+import { CheckInList } from './';
+
+import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
 
 const VIEWS = {
   feed: 'liveFeed',
@@ -9,9 +12,24 @@ const VIEWS = {
   withMe: 'withMeFeed',
 };
 
+function renderView({ currentView, checkIns }) {
+  switch (currentView) {
+    case VIEWS.feed:
+      return <CheckInList checkIns={checkIns} />;
+    case VIEWS.pictures:
+      return <CheckInList>Pictures!</CheckInList>;
+    case VIEWS.withMe:
+      return <p>WithMe!</p>;
+
+    default:
+      return 'hi!';
+  }
+}
+
 function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentView, setCurrentView] = useState(VIEWS.feed);
+  const [checkIns, setCheckIns] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -23,6 +41,23 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
+
+  useEffect(() => {
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(10);
+    checkIns.on('child_added', (data) => {
+      setCheckIns((prevState) => {
+        return [{ ...data.val(), id: data.key }, ...prevState];
+      });
+    });
+
+    // checkIns.once('value', () => {
+    //   setLoading(false);
+    // });
+
+    return () => {
+      checkIns.off();
+    };
+  }, []);
 
   return (
     <>
@@ -42,6 +77,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
           </LiveEventHeader.Button>
         </LiveEventHeader>
         <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
+        <LiveCurrentView>{renderView({ currentView, checkIns })}</LiveCurrentView>
       </LiveEventWrapper>
       {isModalOpen && (
         <CheckInModal

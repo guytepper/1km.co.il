@@ -47,3 +47,62 @@ LiveEventHeader.Button.Icon = styled.img`
 export const LiveEventMessage = styled.h3`
   text-align: center;
 `;
+
+export const LiveCurrentView = styled.div`
+  padding: 0 20px;
+`;
+
+export const CheckInListWrapper = styled.div`
+  display: grid;
+  grid-auto-rows: minmax(90px, max-content);
+  height: 500px;
+`;
+
+export const CheckIn = styled.div`
+  display: grid;
+  grid-template-columns: 60px 1fr 40px;
+  min-width: 300px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 0 20px;
+  background: #fff;
+  box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+
+  @media (min-width: 600px) {
+    max-width: 400px;
+  }
+`;
+
+CheckIn.Avatar = styled.img`
+  width: 36px;
+  height: 36px;
+  margin-left: 10px;
+  margin-bottom: 5px;
+  flex-shrink: 0;
+  border-radius: 50px;
+  user-select: none;
+`;
+
+CheckIn.Info = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+CheckIn.Name = styled.span`
+  font-weight: 600;
+  font-size: 17px;
+  margin-bottom: 2px;
+`;
+
+CheckIn.Location = styled.span`
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 4px;
+`;
+
+CheckIn.Comment = styled.span`
+  font-size: 15px;
+  font-weight: 100;
+  margin-bottom: 4px;
+`;
