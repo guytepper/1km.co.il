@@ -15,10 +15,16 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ setCoordinates, closeProtests, user }) {
+function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_LOCATION);
   const [currentProtest, setProtest] = useState(null);
+
+  useEffect(() => {
+    if (loading === true) {
+      setCurrentStep(steps.LOADING);
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (closeProtests.length > 0) {

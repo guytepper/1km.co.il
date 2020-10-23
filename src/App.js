@@ -255,6 +255,7 @@ function App() {
                   dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
                 user={state.user}
+                loading={state.loading}
               />
             </Route>
             <Route exact path="/add-protest">
