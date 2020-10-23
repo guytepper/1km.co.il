@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import CheckInModal from '../../components/CheckInModal';
-import { LiveEventWrapper, LiveEventHeader } from './LiveEventElements';
+import { LiveEventWrapper, LiveEventHeader, LiveEventMessage } from './LiveEventElements';
 
 const VIEWS = {
   feed: 'liveFeed',
@@ -38,9 +38,10 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
           </LiveEventHeader.Button>
           <LiveEventHeader.Button selected={currentView === VIEWS.withMe} onClick={() => setCurrentView(VIEWS.withMe)}>
             <LiveEventHeader.Button.Icon src="/icons/strike.svg" />
-            מי מפגין איתי
+            מפגינים איתי
           </LiveEventHeader.Button>
         </LiveEventHeader>
+        <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
       </LiveEventWrapper>
       {isModalOpen && (
         <CheckInModal
