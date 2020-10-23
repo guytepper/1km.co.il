@@ -104,7 +104,7 @@ function CheckInModal({ setCoordinates, closeProtests, user }) {
       case steps.PICK_LOCATION:
         return <LocationButtons setCoordinates={setCoordinates} />;
       case steps.PICK_PROTEST:
-        return <ProtestListSelection protests={closeProtests} setProtest={setProtest} />;
+        return <ProtestListSelection protests={closeProtests} setProtest={setProtest} setCurrentStep={setCurrentStep} />;
       case steps.SIGN_IN:
         return <SignUp onAnnonymousClick={() => setCurrentStep(steps.CHECK_IN_FORM)} />;
       case steps.CHECK_IN_FORM:

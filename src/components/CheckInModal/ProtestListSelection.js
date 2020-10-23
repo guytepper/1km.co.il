@@ -4,7 +4,7 @@ import styled from 'styled-components/macro';
 
 import protestsDev from './ProtestListSelectionMockData.json';
 
-function ProtestListSelection({ protests, setProtest }) {
+function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
   return (
     <ProtestSelectionWrapper>
       <h3>איפה אתם מפגינים?</h3>
@@ -27,7 +27,9 @@ function ProtestListSelection({ protests, setProtest }) {
           <br />
           נסו לעדכן מיקום או הוסיפו הפגנה חסרה
         </p>
-        <Button style={{ width: '100%', marginBottom: 10 }}>עדכון מיקום</Button>
+        <Button style={{ width: '100%', marginBottom: 10 }} onClick={() => setCurrentStep('pickLocation')}>
+          עדכון מיקום
+        </Button>
         <Button style={{ width: '100%' }}>הוספת הפגנה</Button>
       </div>
     </ProtestSelectionWrapper>
