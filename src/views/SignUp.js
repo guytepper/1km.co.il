@@ -1,19 +1,45 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../api';
 
 import queryString from 'query-string';
 
-function SignUpBeforeRedirect() {
+function SignUpBeforeRedirect({ returnUrl }) {
   return (
     <PageContentWrapper>
-      <p>היי! כדי לערוך עמוד הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק. </p>
-      <div></div>
+      {returnUrl === '/add-protest' ? (
+        <>
+          <p style={{ marginBottom: 10 }}>על מנת ליצור הפגנה יש להזדהות דרך פייסבוק. </p>
+          <p style={{ marginTop: 0 }}>ניתן ליצור הפגנה ללא הזדהות, אך היא תתווסף למפה לאחר אישור הנהלת האתר. </p>
+        </>
+      ) : (
+        <p>היי! כדי ליצור או לערוך הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק.</p>
+      )}
 
-      <Button onClick={() => handleSignIn()}>התחברות דרך פייסבוק</Button>
+      <Button onClick={() => handleSignIn()} style={{ marginBottom: 10 }}>
+        התחברות דרך פייסבוק
+      </Button>
+      {returnUrl === '/add-protest' && (
+        <Link to="/add-protest">
+          <>
+            <Button
+              style={{
+                background:
+                  'radial-gradient(100.6% 793.82% at 9.54% -0.6%, rgb(166, 145, 145) 0%, rgb(119, 95, 95) 100%) repeat scroll 0% 0%',
+              }}
+            >
+              יצירת הפגנה אנונימית
+            </Button>
+          </>
+        </Link>
+      )}
     </PageContentWrapper>
   );
+}
+
+function getReturnUrl(path) {
+  return queryString.parse(path).returnUrl;
 }
 
 const stages = {
@@ -38,7 +64,7 @@ export default function SignUp(props) {
         setStage(stages.AFTER_FACEBOOK_AUTH);
 
         saveUserInFirestore(userData).then(() => {
-          const { returnUrl } = queryString.parse(window.location.search);
+          const returnUrl = getReturnUrl(window.location.search);
 
           if (returnUrl) {
             history.push(returnUrl);
@@ -67,7 +93,7 @@ export default function SignUp(props) {
   if (stage === stages.BEFORE_FACEBOOK_AUTH) {
     return (
       <PageWrapper>
-        <SignUpBeforeRedirect />
+        <SignUpBeforeRedirect returnUrl={getReturnUrl(window.location.search)} />
       </PageWrapper>
     );
   }

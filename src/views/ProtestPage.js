@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest, getProtestsForLeader } from '../api';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-import { ProtestForm } from '../components';
+import { ProtestForm, ProtectedRoute } from '../components';
 import { Switch, Route } from 'react-router-dom';
 import {
   ProtestCardInfo,
@@ -23,7 +23,6 @@ import {
   calculateDistance,
   formatDistance,
 } from '../utils';
-import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const mobile = `@media (max-width: 768px)`;
 
@@ -87,7 +86,6 @@ function useFetchProtest() {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
   const socialLinks = getSocialLinks(protest);
 
@@ -122,7 +120,6 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
           </Details>
-          <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
         </Info>
 
         <DatesAndSocial>
@@ -149,6 +146,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                 </Date>
               )}
             </Dates>
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
           </SectionContainer>
 
           {/* Social */}
@@ -170,6 +168,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             ) : (
               <p>להפגנה זו אין ערוצי תקשורת.</p>
             )}
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
           </SocialContainer>
         </DatesAndSocial>
       </ProtestContainer>
@@ -184,12 +183,11 @@ export default function ProtestPage({ user, userCoordinates }) {
 
   if (!protest) {
     // TODO: loading state
-    return <div>Loading...</div>;
+    return <div>טוען...</div>;
   }
 
-  const { coordinates, id } = protest;
-
-  const canEdit = !!user; //isAdmin(user) || isLeader(user, protest);
+  const { coordinates, id: protestId } = protest;
+  const canEdit = !isVisitor(user);
 
   return (
     <Switch>
@@ -198,17 +196,27 @@ export default function ProtestPage({ user, userCoordinates }) {
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
-              const response = await updateProtest(id, params);
-              // refetch the protest once update is complete
-              _fetchProtest(id, setProtest);
+              // If the user is not a leader for this protest, check if they've reached the amount of protests limit.
+              if (!protest.roles?.leader.includes(user.uid) && !isAdmin(user)) {
+                const userProtests = await getProtestsForLeader(user.uid);
 
-              if (!isAdmin(user)) {
-                sendProtestLeaderRequest(user, null, id);
-                makeUserProtestLeader(id, user.uid);
+                if (userProtests.length > 4) {
+                  alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
+                  throw new Error('Reached the max amount of protests a user can lead');
+                }
+
+                await sendProtestLeaderRequest(user, null, protestId);
+                await makeUserProtestLeader(protestId, user.uid);
               }
+
+              const response = await updateProtest({ protestId, params, userId: user.uid });
+
+              // Refetch the protest once update is complete
+              _fetchProtest(protestId, setProtest);
+
               return response;
             }}
-            afterSubmitCallback={() => history.push(`/protest/${id}`)}
+            afterSubmitCallback={() => history.push(`/protest/${protestId}`)}
             defaultValues={protest}
             editMode={true}
             isAdmin={isAdmin(user)}
@@ -362,12 +370,12 @@ const DatesAndSocial = styled.div`
 `;
 
 const Dates = styled.ul`
-  max-width: 420px;
-  width: 420px;
+  width: 100%;
   padding: 0;
-  margin: 0;
-  ${mobile} {
-    width: 100%;
+  margin: 0 0 20px;
+
+  @media (min-width: 768px) {
+    max-width: 420px;
   }
 `;
 

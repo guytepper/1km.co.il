@@ -1,77 +1,51 @@
-import firebase, { firestore } from '../firebase';
+import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
+import { nanoid } from 'nanoid';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-// async function verifyRecaptcha(token) {
-//   try {
-//     const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
-//     const response = await request.json();
-//     return response;
-//   } catch (err) {
-//     throw err;
-//   }
-// }
-
-export async function createPendingProtest(params) {
-  const {
-    // recaptchaToken,
-    displayName,
-    streetAddress,
-    telegramLink,
-    whatsAppLink,
-    dateTimeList,
-    notes,
-    coords,
-    approveContact,
-  } = params;
-
-  try {
-    // Skip protest approval during development
-    const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
-
-    // const verification = await verifyRecaptcha(recaptchaToken);
-
-    // if (verification.success) {
-    const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection(tableName);
-
-    const request = geocollection.add({
-      displayName,
-      streetAddress,
-      whatsAppLink,
-      telegramLink,
-      notes,
-      dateTimeList,
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-      approveContact,
-      archived: false,
-    });
-
-    return request;
-    // } else {
-    //   throw new Error('Recaptcha error');
-    // }
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
-}
-
-export function createProtest(params) {
-  const { coords, ...restParams } = params;
+/**
+ * Creates a new protest document.
+ * - If the visitor is authenticated - add the protest to the public protests & pending protests collection.
+ *   The protest will exist in the pending protests only for tracking it's validity.
+ * - If the visitor is a guest - add the protest only to the pending protests collection.
+ * @param {object} params - The protest object parameters.
+ * @param {boolean} fromPending - Is the protest being created from a pending protest.
+ * @returns {object} The new protest.
+ */
+export async function createProtest(params, fromPending = false) {
+  const { coords, user, ...restParams } = params;
   const [lat, lng] = coords;
-  const geocollection = GeoFirestore.collection('protests');
-  const request = geocollection.add({
+  console.log(user);
+
+  const protestsCollection = GeoFirestore.collection('protests');
+  const pendingCollection = GeoFirestore.collection('pending_protests');
+
+  const protestParams = {
     ...restParams,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-  });
+  };
 
+  // If an authed user created  the protest, add them as a leader.
+  // Protests created from pending should not have a user attached to them initially.
+  if (user?.uid && fromPending === false) {
+    protestParams.roles = { leader: [user.uid] };
+  }
+
+  if (user?.uid || fromPending === true) {
+    const protestDoc = await protestsCollection.add(protestParams);
+    protestParams.protestRef = protestDoc.id;
+  }
+
+  // Set archived field for pending protests verifcations.
+  protestParams.archived = false;
+
+  // Add protest to `pending_protests` collection
+  const request = await pendingCollection.add(protestParams);
   return request;
 }
 
-export async function updateProtest(protestId, params) {
+export async function updateProtest({ protestId, params }) {
   const [lat, lng] = params.coords;
   await firestore
     .collection('protests')
@@ -193,9 +167,33 @@ export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
 
   if ((await userRef.get()).exists) {
-    await userRef.update(userData);
+    return userRef.get();
   } else {
-    await userRef.set(userData);
+    const { picture_url } = userData;
+    const filename = `${nanoid()}.jpeg`;
+    const profilePicsRef = storage.child('profile_pics/' + filename);
+
+    return fetch(picture_url)
+      .then((res) => {
+        return res.blob();
+      })
+      .then((blob) => {
+        //uploading blob to firebase storage
+        return profilePicsRef
+          .put(blob)
+          .then(function (snapshot) {
+            const url = snapshot.ref.getDownloadURL();
+            return url;
+          })
+          .then((url) => {
+            console.log('Firebase storage image uploaded : ', url);
+            const result = { ...userData, picture_url: url };
+            return userRef.set(result).then(() => result);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 
@@ -305,3 +303,5 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
   // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
 }
+
+export async function protestCheckIn({ userId, protestId }) {}
