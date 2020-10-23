@@ -15,15 +15,9 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtests, setModalOpen, user, loading }) {
+function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtests, setModalOpen, user }) {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_LOCATION);
-
-  useEffect(() => {
-    if (loading === true) {
-      setCurrentStep(steps.LOADING);
-    }
-  }, [loading]);
 
   useEffect(() => {
     if (closeProtests.length > 0) {
@@ -39,7 +33,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
     if (user?.uid) {
       setCurrentStep(steps.CHECK_IN_FORM);
       history.push('/live/check-in/form');
-    } else {
+    } else if (currentProtest) {
       setCurrentStep(steps.SIGN_IN);
       history.push('/live/check-in/auth');
     }
@@ -76,11 +70,11 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
       };
 
       await createCheckIn({
+        ...protestInfo,
         firstName,
         lastName,
         userMessage,
         picture_url: user?.picture_url || '',
-        ...protestInfo,
       });
 
       if (user?.uid) {

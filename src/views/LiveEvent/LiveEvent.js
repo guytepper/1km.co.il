@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { realtimeDB } from '../../firebase';
-import CheckInModal from '../../components/CheckInModal';
+import { CheckInModal, Button } from '../../components';
 import { CheckInList, WithMeList } from './';
 import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
@@ -26,11 +26,13 @@ function renderView({ currentView, currentProtest, checkIns }) {
   }
 }
 
-function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }) {
+function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
   const [currentView, setCurrentView] = useState(VIEWS.withMe);
   const [checkIns, setCheckIns] = useState([]);
+  const [hasCheckedIn, setCheckedIn] = useState(false);
+  const wrapper = useRef(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -59,7 +61,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
   }, [currentProtest]);
 
   useEffect(() => {
-    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(10);
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(200);
     checkIns.on('child_added', (data) => {
       setCheckIns((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
@@ -75,9 +77,20 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
     };
   }, []);
 
+  useEffect(() => {
+    const checkedIn = getLocalStorage('24-10-20_check_in');
+    if (checkedIn) {
+      setCheckedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    wrapper.current.scrollTop = 0;
+  });
+
   return (
     <>
-      <LiveEventWrapper>
+      <LiveEventWrapper ref={wrapper}>
         <LiveEventHeader>
           <LiveEventHeader.Button selected={currentView === VIEWS.feed} onClick={() => setCurrentView(VIEWS.feed)}>
             <LiveEventHeader.Button.Icon invert={currentView === VIEWS.feed} src="/icons/israel-map.svg" />
@@ -92,6 +105,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
             מפגינים איתי
           </LiveEventHeader.Button>
         </LiveEventHeader>
+
         <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
         <LiveCurrentView>{renderView({ currentView, checkIns, currentProtest })}</LiveCurrentView>
       </LiveEventWrapper>
@@ -105,7 +119,6 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
           coordinates={coordinates}
           setCoordinates={setCoordinates}
           user={user}
-          loading={loading}
         />
       )}
     </>

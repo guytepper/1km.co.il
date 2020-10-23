@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CheckInListWrapper, CheckIn } from './LiveEventElements';
+import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 
 function CheckInList({ checkIns }) {
   return (
@@ -7,7 +7,7 @@ function CheckInList({ checkIns }) {
       {checkIns?.length > 0 &&
         checkIns.map((checkIn, index) => (
           <CheckIn key={checkIn.id}>
-            <CheckIn.Avatar src={checkIn.picture_url === '' ? './anonymousPofile.png' : checkIn.picture_url} />
+            <UserAvatar src={checkIn.picture_url === '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckIn.Info>
               <CheckIn.Name>{checkIn.firstName}</CheckIn.Name>
               <CheckIn.Location>מפגין במזכרת בתיה</CheckIn.Location>
