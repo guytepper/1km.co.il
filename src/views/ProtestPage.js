@@ -120,7 +120,6 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
           </Details>
-          <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
         </Info>
 
         <DatesAndSocial>
@@ -147,6 +146,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                 </Date>
               )}
             </Dates>
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
           </SectionContainer>
 
           {/* Social */}
@@ -168,6 +168,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             ) : (
               <p>להפגנה זו אין ערוצי תקשורת.</p>
             )}
+            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
           </SocialContainer>
         </DatesAndSocial>
       </ProtestContainer>
@@ -369,12 +370,12 @@ const DatesAndSocial = styled.div`
 `;
 
 const Dates = styled.ul`
-  max-width: 420px;
-  width: 420px;
+  width: 100%;
   padding: 0;
-  margin: 0;
-  ${mobile} {
-    width: 100%;
+  margin: 0 0 20px;
+
+  @media (min-width: 768px) {
+    max-width: 420px;
   }
 `;
 
