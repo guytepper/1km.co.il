@@ -54,17 +54,17 @@ export const LiveCurrentView = styled.div`
 
 export const CheckInListWrapper = styled.div`
   display: grid;
-  grid-auto-rows: minmax(90px, max-content);
+  grid-auto-rows: minmax(min-content, max-content);
   height: 500px;
 `;
 
 export const CheckIn = styled.div`
   display: grid;
-  grid-template-columns: 60px 1fr 40px;
-  min-width: 300px;
+  grid-template-columns: 60px 1fr 80px;
+  grid-template-rows: auto auto;
   align-items: center;
   margin-bottom: 14px;
-  padding: 0 20px;
+  padding: 12.5px 15px;
   background: #fff;
   box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
@@ -75,8 +75,8 @@ export const CheckIn = styled.div`
 `;
 
 CheckIn.Avatar = styled.img`
-  width: 36px;
-  height: 36px;
+  width: 45px;
+  height: 45px;
   margin-left: 10px;
   margin-bottom: 5px;
   flex-shrink: 0;
@@ -92,17 +92,32 @@ CheckIn.Info = styled.div`
 CheckIn.Name = styled.span`
   font-weight: 600;
   font-size: 17px;
+  margin-top: -2px;
   margin-bottom: 2px;
 `;
 
 CheckIn.Location = styled.span`
   font-weight: 500;
-  font-size: 15px;
+  font-size: 16px;
   margin-bottom: 4px;
 `;
 
 CheckIn.Comment = styled.span`
+  display: block;
   font-size: 15px;
   font-weight: 100;
   margin-bottom: 4px;
+  grid-column: 2 / -1;
+  grid-row: 2 / -1;
+`;
+
+CheckIn.TimeAgo = styled.span`
+  align-self: start;
+  font-size: 12px;
+  color: #4d4d4d;
+  text-align: left;
+
+  @media (min-width: 390px) {
+    font-size: 13px;
+  }
 `;

@@ -11,8 +11,9 @@ function CheckInList({ checkIns }) {
             <CheckIn.Info>
               <CheckIn.Name>{checkIn.firstName}</CheckIn.Name>
               <CheckIn.Location>מפגין במזכרת בתיה</CheckIn.Location>
-              {checkIn.userMessage && <CheckIn.Comment>{checkIn.userMessage}</CheckIn.Comment>}
             </CheckIn.Info>
+            {checkIn.userMessage && <CheckIn.Comment>{checkIn.userMessage}</CheckIn.Comment>}
+            <CheckIn.TimeAgo>לפני 10 דקות</CheckIn.TimeAgo>
           </CheckIn>
         ))}
     </CheckInListWrapper>
