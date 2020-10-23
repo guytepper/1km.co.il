@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import queryString from 'query-string';
 import { Button } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
@@ -155,7 +154,7 @@ export default function BalfurModal({ user, setUser }) {
             <TextInput onChange={(e) => setUserMessage(e.target.value)} value={userMessage} maxLength="80" />
           </FormLabel>
           <Button
-            disabled={firstName == ''}
+            disabled={firstName === ''}
             onClick={() => {
               setStage(stages.UNKNOWN);
               console.log(user);

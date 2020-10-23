@@ -6,5 +6,6 @@ export { default as SignUp } from './SignUp';
 export { default as LeaderRequest } from './LeaderRequest';
 export { default as LeaderRequestSubmitted } from './LeaderRequestSubmitted';
 export { default as Balfur } from './Balfur';
+export { default as LiveEvent } from './LiveEvent';
 export { default as Profile } from './Profile';
 export { default as FourOhFour } from './FourOhFour';

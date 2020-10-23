@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 
 function BalfurCheckIns({ checkIns }) {
   const [animations, setAnimations] = useState([]);
-  const [animateDone, setAnimateDone] = useState(true);
+
   const slideDown = (index) => {
     animations[index] = 'slide-bottom';
     setTimeout(() => {
@@ -12,8 +12,7 @@ function BalfurCheckIns({ checkIns }) {
   };
 
   useEffect(() => {
-    setAnimateDone(false);
-    if (checkIns[0] != undefined) {
+    if (checkIns[0] !== undefined) {
       animations[0] = '';
       setAnimations(animations);
       setTimeout(() => {
@@ -30,7 +29,6 @@ function BalfurCheckIns({ checkIns }) {
 
     setTimeout(() => {
       setAnimations(animations);
-      setAnimateDone(true);
     }, 500);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -41,7 +39,7 @@ function BalfurCheckIns({ checkIns }) {
       <CheckInsList>
         {checkIns.map((checkIn, index) => (
           <CheckInEntry key={checkIn.createdAt} style={{ display: checkIn.display }} className={animations[index]}>
-            <CheckInAvatar src={checkIn.picture_url == '' ? './anonymousPofile.png' : checkIn.picture_url} />
+            <CheckInAvatar src={checkIn.picture_url === '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckInInfo>
               <CheckInName>{checkIn.firstName}</CheckInName>
               {checkIn.userMessage && <CheckInComment>{checkIn.userMessage}</CheckInComment>}

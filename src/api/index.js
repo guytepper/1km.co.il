@@ -165,7 +165,7 @@ export function createLeaderRequestId(userId, protestId) {
 
 export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
-
+  console.log(userData);
   if ((await userRef.get()).exists) {
     return userRef.get();
   } else {
@@ -178,7 +178,7 @@ export async function saveUserInFirestore(userData) {
         return res.blob();
       })
       .then((blob) => {
-        //uploading blob to firebase storage
+        // Upload blob to firebase storage
         return profilePicsRef
           .put(blob)
           .then(function (snapshot) {
@@ -186,8 +186,7 @@ export async function saveUserInFirestore(userData) {
             return url;
           })
           .then((url) => {
-            console.log('Firebase storage image uploaded : ', url);
-            const result = { ...userData, picture_url: url };
+            const result = { ...userData, picture_url: url, created_at: firebase.firestore.FieldValue.serverTimestamp() };
             return userRef.set(result).then(() => result);
           });
       })

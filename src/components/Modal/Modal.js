@@ -13,16 +13,18 @@ function Modal(props) {
 }
 
 const ModalWrapper = styled(ReactModal)`
-  z-index: 20;
   position: fixed;
   display: inline-block;
-  padding: 20px 25px;
   height: 100vh;
+  width: 100%;
+  padding: 20px 25px;
   overflow-y: auto;
   border: 1px solid #d2d2d2;
   background-color: #fff;
+  z-index: 20;
 
   @media (min-width: 360px) {
+    width: initial;
     top: 30px;
     left: 7.5vw;
     right: 7.5vw;

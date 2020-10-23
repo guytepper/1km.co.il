@@ -13,19 +13,21 @@ export default function Button(props) {
 
 const ButtonWrapper = styled.button`
   display: flex;
-  width: 300px;
-  height: 50px;
+  width: ${(props) => (props.type === 'small' ? '100px' : '300px')};
+  height: ${(props) => (props.type === 'small' ? '40px' : '50px')};
   align-items: center;
   justify-content: center;
   max-width: 100%;
   background: ${(props) => {
+    if (props.color?.grey)
+      return 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, rgb(166, 145, 145) 0%, rgb(119, 95, 95) 100%) repeat scroll 0% 0%';
     if (props.color) return props.color;
     if (props.type) return props.type.whatsapp ? '#1ED96E' : '#6AB2E4';
     return 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)';
   }};
   color: #fff;
   font-family: Simpler, sans-serif;
-  font-size: 20px;
+  font-size: ${(props) => (props.type === 'small' ? '18px' : '20px')};
   font-weight: 600;
   padding: 6px 20px;
   border: none;

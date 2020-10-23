@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, useHistory } from 'react-router-dom';
-import { Button } from '../../components';
-import firebase, { realtimeDB } from '../../firebase';
+import { useHistory } from 'react-router-dom';
+import { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
-import { BalfurModal, BalfurCheckIns, BalfurPictures } from './';
-import { isVisitor } from '../../utils';
+import { BalfurModal, BalfurCheckIns } from './';
 import { ProgressBar, SimpleProgress } from './ProgressBar';
 
 export default function Balfur({ user, setUser }) {
@@ -30,7 +28,7 @@ export default function Balfur({ user, setUser }) {
       }, timeout);
       /*Make first 6 rows appear with 1sec delay 
       after 6 secondes timeout=0*/
-      timeout = timeout >= numberOfRowsToSlide * delayRowsApear ? 0 : timeout != 0 ? timeout + delayRowsApear : 0;
+      timeout = timeout >= numberOfRowsToSlide * delayRowsApear ? 0 : timeout !== 0 ? timeout + delayRowsApear : 0;
     });
 
     realtimeDB.ref('balfur_count').on('value', (snapshot) => {

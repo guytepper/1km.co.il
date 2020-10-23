@@ -11,7 +11,6 @@ import {
   ProtestCardIcon,
   ProtestCardGroupButton,
 } from '../components/ProtestCard/ProtestCardStyles';
-import * as texts from './ProtestPageTexts.json';
 import {
   dateToDayOfWeek,
   formatDate,
@@ -19,7 +18,6 @@ import {
   sortDateTimeList,
   isAuthenticated,
   isVisitor,
-  getCurrentPosition,
   calculateDistance,
   formatDistance,
 } from '../utils';
@@ -274,11 +272,6 @@ const Info = styled.div`
   }
 `;
 
-const ProfilePic = styled.img`
-  width: 163px;
-  object-fit: cover;
-`;
-
 const Title = styled.h1`
   font-weight: bold;
   font-size: 28px;
@@ -286,25 +279,6 @@ const Title = styled.h1`
   color: #000000;
   margin-bottom: 8px;
 `;
-
-const DetailItem = styled.h2`
-  font-size: 24px;
-  line-height: 28px;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
-  img {
-    margin-left: 11px;
-  }
-`;
-
-const Notes = styled.div`
-  margin-top: 27px;
-  font-size: 16px;
-  line-height: 19px;
-`;
-
-const FlagIcon = styled.img``;
 
 const MapWrapper = styled(Map)`
   width: 100%;
@@ -401,8 +375,4 @@ const SocialContainer = styled(SectionContainer)`
   ${mobile} {
     margin-top: 20px;
   }
-`;
-
-const SocialButtonWrapper = styled.span`
-  margin: 0px 10px 10px 10px;
 `;

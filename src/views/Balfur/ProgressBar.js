@@ -6,9 +6,7 @@ export const SimpleProgress = function SimpleProgress({ checkInsCount, MaxCheckI
 
   useEffect(() => {
     setCountPercentage((checkInsCount * 100) / MaxCheckIns);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, [checkInsCount, MaxCheckIns]);
 
   return <Bar className="progress-bar" length={countPercentage}></Bar>;
 };
@@ -18,9 +16,7 @@ export const ProgressBar = function ProgressBar({ checkInsCount, MaxCheckIns }) 
 
   useEffect(() => {
     setCountPercentage((checkInsCount * 100) / MaxCheckIns);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  });
+  }, [checkInsCount, MaxCheckIns]);
 
   return (
     <Box>

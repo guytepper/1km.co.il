@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
 import { Map, ProtestList, Footer, IntroModal, Button } from './components';
-import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, Balfur, FourOhFour } from './views';
+import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, LiveEvent, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
-import styled, { keyframes } from 'styled-components/macro';
+import styled from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
@@ -211,7 +211,7 @@ function App() {
             </NavItemsWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/', '/map']}>
+            <Route exact path={['/', '/check-in/*']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -246,7 +246,6 @@ function App() {
                 }}
               />
             </Route>
-
             <Route exact path="/add-protest">
               <AddProtest initialCoords={state.userCoordinates} user={state.user} />
             </Route>
@@ -265,11 +264,24 @@ function App() {
             <Route exact path="/profile">
               <Profile user={state.user} />
             </Route>
+            <Route exact path={['/live', '/live/check-in', '/live/check-in/*']}>
+              <LiveEvent
+                closeProtests={state.protests.close}
+                setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
+                coordinates={state.userCoordinates}
+                setCoordinates={(coords) => {
+                  dispatch({ type: 'setMapPosition', payload: coords });
+                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                }}
+                user={state.user}
+                loading={state.loading}
+              />
+            </Route>
             <Route exact path="/balfur">
-              <Balfur user={state.user} setUser={(user) => dispatch({ type: 'setUser', payload: user })} />
+              <Redirect to="/live" />
             </Route>
             <Route exact path="/balfur/qr">
-              <Redirect to="/balfur" />
+              <Redirect to="/live" />
             </Route>
 
             <Route exact path="/support-the-project/">
@@ -347,25 +359,25 @@ const NavItem = styled(Link)`
   }
 `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0.5;
-  }
+// const fadeIn = keyframes`
+//   from {
+//     opacity: 0.5;
+//   }
 
-  to {
-    opacity: 1;
-  }
-`;
+//   to {
+//     opacity: 1;
+//   }
+// `;
 
-const NavItemLive = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  color: tomato;
-  font-weight: bold;
-  font-size: 18px;
-  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-`;
+// const NavItemLive = styled.div`
+//   display: flex;
+//   flex-direction: row-reverse;
+//   align-items: center;
+//   color: tomato;
+//   font-weight: bold;
+//   font-size: 18px;
+//   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+// `;
 
 const NavProfileWrapper = styled.div`
   display: flex;
@@ -373,11 +385,11 @@ const NavProfileWrapper = styled.div`
   align-items: center;
 `;
 
-const NavProfilePicture = styled.img`
-  width: 20px;
-  border-radius: 50px;
-  margin-left: 5px;
-`;
+// const NavProfilePicture = styled.img`
+//   width: 20px;
+//   border-radius: 50px;
+//   margin-left: 5px;
+// `;
 
 const HomepageWrapper = styled.div`
   height: 100%;
