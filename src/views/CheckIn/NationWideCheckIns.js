@@ -9,7 +9,7 @@ function NationWideCheckIns({}) {
     const checkIns = realtimeDB.ref('24-10-20_check_ins').orderByChild('createdAt').limitToLast(70);
     checkIns.on('child_added', (data) => {
       const { firstName, userMessage, picture_url, createdAt } = data.val();
-      setCheckIns((prevState) => [{ firstName, userMessage, picture_url, createdAt, display: 'none' }, ...prevState]);
+      setCheckIns((prevState) => [{ firstName, userMessage, picture_url, createdAt }, ...prevState]);
     });
   }, []);
   return (
