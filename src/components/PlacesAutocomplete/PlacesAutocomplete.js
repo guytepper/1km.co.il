@@ -66,7 +66,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
   };
 
   return (
-    <Combobox onSelect={handleSelect} aria-labelledby="demo">
+    <Combobox onSelect={handleSelect} style={{ width: '100%' }} aria-label="הזנת כתובת ידנית" s>
       <ComboboxInputWrapper
         value={value}
         name="streetAddress"
