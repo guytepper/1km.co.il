@@ -1,4 +1,5 @@
 import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
 
 export const LiveEventWrapper = styled.div`
   /* background: #f4f6fa; */
@@ -58,7 +59,7 @@ export const CheckInListWrapper = styled.div`
   height: 500px;
 `;
 
-export const CheckIn = styled.div`
+export const CheckIn = styled(animated.div)`
   display: grid;
   grid-template-columns: 60px 1fr 40px;
   min-width: 300px;
