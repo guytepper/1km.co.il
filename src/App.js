@@ -9,6 +9,7 @@ import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
 import { setLocalStorage, getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
+import NationWideCheckIns from './views/CheckIn/NationWideCheckIns';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
@@ -268,10 +269,12 @@ function App() {
             <Route exact path="/balfur">
               <Balfur user={state.user} setUser={(user) => dispatch({ type: 'setUser', payload: user })} />
             </Route>
+            <Route exact path="/checkIns/NationWide">
+              <NationWideCheckIns />
+            </Route>
             <Route exact path="/balfur/qr">
               <Redirect to="/balfur" />
             </Route>
-
             <Route exact path="/support-the-project/">
               <PostView overrideSlug="support-the-project" />
             </Route>
