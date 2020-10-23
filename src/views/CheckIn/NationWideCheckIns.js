@@ -65,6 +65,7 @@ const CheckInInfo = styled.div`
 
 const CheckInName = styled.span`
   font-size: 15px;
+  font-weight: 600;
 `;
 
 const CheckInComment = styled.span`
