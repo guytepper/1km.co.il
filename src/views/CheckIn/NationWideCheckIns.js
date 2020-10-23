@@ -35,10 +35,14 @@ const CheckInsList = styled.div`
 
 const CheckInEntry = styled.div`
   display: flex;
-  max-width: 320px;
+  width: 320px;
   align-items: center;
   margin: 0 12.5px;
-
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background: #ffffff;
   @media (min-width: 600px) {
     max-width: 400px;
   }
