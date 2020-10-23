@@ -370,12 +370,12 @@ const DatesAndSocial = styled.div`
 `;
 
 const Dates = styled.ul`
-  max-width: 420px;
-  width: 420px;
+  width: 100%;
   padding: 0;
-  margin: 0;
-  ${mobile} {
-    width: 100%;
+  margin: 0 0 20px;
+
+  @media (min-width: 768px) {
+    max-width: 420px;
   }
 `;
 
