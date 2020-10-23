@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { realtimeDB } from '../../firebase';
-import CheckInModal from '../../components/CheckInModal';
-import { CheckInList } from './';
-
+import { CheckInModal, Button } from '../../components';
+import { CheckInList, WithMeList } from './';
+import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
 
 const VIEWS = {
@@ -12,24 +12,27 @@ const VIEWS = {
   withMe: 'withMeFeed',
 };
 
-function renderView({ currentView, checkIns }) {
+function renderView({ currentView, currentProtest, checkIns }) {
   switch (currentView) {
     case VIEWS.feed:
       return <CheckInList checkIns={checkIns} />;
     case VIEWS.pictures:
       return <CheckInList>Pictures!</CheckInList>;
     case VIEWS.withMe:
-      return <p>WithMe!</p>;
+      return <WithMeList currentProtest={currentProtest} />;
 
     default:
       return 'hi!';
   }
 }
 
-function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }) {
+function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [currentView, setCurrentView] = useState(VIEWS.feed);
+  const [currentProtest, setProtest] = useState(null);
+  const [currentView, setCurrentView] = useState(VIEWS.withMe);
   const [checkIns, setCheckIns] = useState([]);
+  const [hasCheckedIn, setCheckedIn] = useState(false);
+  const wrapper = useRef(null);
   const history = useHistory();
 
   useEffect(() => {
@@ -43,7 +46,22 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
   }, [history]);
 
   useEffect(() => {
-    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(10);
+    // Check if exists in localStorage
+    const cachedProtest = getLocalStorage('check_in_selected_protest');
+
+    if (currentProtest) {
+      if (cachedProtest?.id !== currentProtest.id) {
+        setLocalStorage('check_in_selected_protest', currentProtest);
+      }
+    } else {
+      if (cachedProtest) setProtest(cachedProtest);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProtest]);
+
+  useEffect(() => {
+    const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(200);
     checkIns.on('child_added', (data) => {
       setCheckIns((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
@@ -59,9 +77,20 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
     };
   }, []);
 
+  useEffect(() => {
+    const checkedIn = getLocalStorage('24-10-20_check_in');
+    if (checkedIn) {
+      setCheckedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    wrapper.current.scrollTop = 0;
+  });
+
   return (
     <>
-      <LiveEventWrapper>
+      <LiveEventWrapper ref={wrapper}>
         <LiveEventHeader>
           <LiveEventHeader.Button selected={currentView === VIEWS.feed} onClick={() => setCurrentView(VIEWS.feed)}>
             <LiveEventHeader.Button.Icon invert={currentView === VIEWS.feed} src="/icons/israel-map.svg" />
@@ -76,18 +105,20 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
             מפגינים איתי
           </LiveEventHeader.Button>
         </LiveEventHeader>
+
         <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
-        <LiveCurrentView>{renderView({ currentView, checkIns })}</LiveCurrentView>
+        <LiveCurrentView>{renderView({ currentView, checkIns, currentProtest })}</LiveCurrentView>
       </LiveEventWrapper>
       {isModalOpen && (
         <CheckInModal
           isOpen={isModalOpen}
+          currentProtest={currentProtest}
+          setProtest={setProtest}
           setModalOpen={setModalOpen}
           closeProtests={closeProtests}
           coordinates={coordinates}
           setCoordinates={setCoordinates}
           user={user}
-          loading={loading}
         />
       )}
     </>

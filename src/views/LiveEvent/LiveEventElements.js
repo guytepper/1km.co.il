@@ -5,9 +5,11 @@ export const LiveEventWrapper = styled.div`
 `;
 
 export const LiveEventHeader = styled.div`
+  position: sticky;
+  top: 60px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  border-bottom: 1px solid #e4e6eb;
+  box-shadow: 0 0 0px 1px #e4e6eb;
   font-size: 12px;
 
   @media (min-width: 390px) {
@@ -48,14 +50,13 @@ export const LiveEventMessage = styled.h3`
   text-align: center;
 `;
 
-export const LiveCurrentView = styled.div`
-  padding: 0 20px;
-`;
+export const LiveCurrentView = styled.div``;
 
 export const CheckInListWrapper = styled.div`
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
   height: 500px;
+  padding: 0 20px;
 `;
 
 export const CheckIn = styled.div`
@@ -74,7 +75,7 @@ export const CheckIn = styled.div`
   }
 `;
 
-CheckIn.Avatar = styled.img`
+export const UserAvatar = styled.img`
   width: 45px;
   height: 45px;
   margin-left: 10px;
@@ -121,3 +122,22 @@ CheckIn.TimeAgo = styled.span`
     font-size: 13px;
   }
 `;
+
+//*** With Me View ***//
+
+export const WithMe = styled.div`
+  padding: 10px 25px;
+  background-color: #fff;
+`;
+
+WithMe.ProtestInfo = styled.div``;
+
+WithMe.ProtestInfo.Title = styled.h3`
+  margin: 0;
+`;
+WithMe.ProtestInfo.Counter = styled.h3`
+  font-weight: 400;
+  margin-top: 0;
+`;
+
+WithMe.Avatars = styled.div``;
