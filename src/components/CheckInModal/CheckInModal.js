@@ -15,7 +15,7 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
+function CheckInModal({ setCoordinates, closeProtests, setModalOpen, user, loading }) {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_LOCATION);
   const [currentProtest, setProtest] = useState(null);
@@ -97,6 +97,10 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
       if (user?.uid) {
         await updateUserName({ userId: user.uid, firstName, lastName });
       }
+
+      alert("צ'ק אין בוצע בהצלחה!");
+      history.push('/live');
+      setModalOpen(false);
     } catch (err) {
       console.error(err);
     }

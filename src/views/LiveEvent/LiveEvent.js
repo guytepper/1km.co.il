@@ -22,6 +22,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
       {isModalOpen && (
         <CheckInModal
           isOpen={isModalOpen}
+          setModalOpen={setModalOpen}
           closeProtests={closeProtests}
           coordinates={coordinates}
           setCoordinates={setCoordinates}

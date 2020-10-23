@@ -264,7 +264,7 @@ function App() {
             <Route exact path="/profile">
               <Profile user={state.user} />
             </Route>
-            <Route exact path={['/live', '/live/check-in/*']}>
+            <Route exact path={['/live', '/live/check-in', '/live/check-in/*']}>
               <LiveEvent
                 closeProtests={state.protests.close}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
