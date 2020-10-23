@@ -15,13 +15,15 @@ function NationWideCheckIns({}) {
   return (
     <CheckInsWrapper>
       <CheckInsList>
-        <CheckInEntry>
-          <CheckInAvatar src="./anonymousPofile.png" />
-          <CheckInInfo>
-            <CheckInName>Guy</CheckInName>
-            <CheckInComment>Hello</CheckInComment>
-          </CheckInInfo>
-        </CheckInEntry>
+        {checkIns.map((checkIn) => (
+          <CheckInEntry>
+            <CheckInAvatar src="./anonymousPofile.png" />
+            <CheckInInfo>
+              <CheckInName>גיא</CheckInName>
+              <CheckInComment>שלום</CheckInComment>
+            </CheckInInfo>
+          </CheckInEntry>
+        ))}
       </CheckInsList>
     </CheckInsWrapper>
   );
