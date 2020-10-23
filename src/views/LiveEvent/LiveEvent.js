@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { realtimeDB } from '../../firebase';
 import CheckInModal from '../../components/CheckInModal';
-import { CheckInList } from './';
+import { CheckInList, WithMeList } from './';
 
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
 
@@ -19,7 +19,7 @@ function renderView({ currentView, checkIns }) {
     case VIEWS.pictures:
       return <CheckInList>Pictures!</CheckInList>;
     case VIEWS.withMe:
-      return <p>WithMe!</p>;
+      return <WithMeList />;
 
     default:
       return 'hi!';
