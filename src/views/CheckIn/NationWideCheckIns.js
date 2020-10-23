@@ -2,7 +2,19 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 
 function NationWideCheckIns({}) {
-  return <></>;
+  return (
+    <CheckInsWrapper>
+      <CheckInsList>
+        <CheckInEntry>
+          <CheckInAvatar src="./anonymousPofile.png" />
+          <CheckInInfo>
+            <CheckInName>Guy</CheckInName>
+            <CheckInComment>Hello</CheckInComment>
+          </CheckInInfo>
+        </CheckInEntry>
+      </CheckInsList>
+    </CheckInsWrapper>
+  );
 }
 export default NationWideCheckIns;
 
