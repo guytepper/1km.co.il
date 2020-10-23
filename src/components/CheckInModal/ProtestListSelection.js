@@ -10,7 +10,7 @@ function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
       <h3>איפה אתם מפגינים?</h3>
 
       <ProtestSelectionList>
-        {protestsDev?.map((protest) => {
+        {protests?.map((protest) => {
           return (
             <ProtestSelectionCard onClick={() => setProtest(protest)} key={protest.id} tabIndex={0}>
               <ProtestSelectionCard.Details>
