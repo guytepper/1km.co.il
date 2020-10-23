@@ -3,7 +3,7 @@ import { Modal, LocationButtons } from '../';
 import SignUp from '../SignUp/SignUpV2';
 import { useHistory } from 'react-router-dom';
 import { ProtestListSelection, CheckInForm } from './';
-import { getLocalStorage, setLocalStorage } from '../../localStorage';
+import { getLocalStorage } from '../../localStorage';
 import { createCheckIn, updateUserName } from './CheckInService';
 
 const steps = {
@@ -15,10 +15,9 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ setCoordinates, closeProtests, setModalOpen, user, loading }) {
+function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtests, setModalOpen, user, loading }) {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_LOCATION);
-  const [currentProtest, setProtest] = useState(null);
 
   useEffect(() => {
     if (loading === true) {
@@ -37,22 +36,12 @@ function CheckInModal({ setCoordinates, closeProtests, setModalOpen, user, loadi
   }, [closeProtests]);
 
   useEffect(() => {
-    // Check if exists in localStorage
-    const cachedProtest = getLocalStorage('check_in_selected_protest');
-
-    if (currentProtest) {
-      if (cachedProtest?.id !== currentProtest.id) {
-        setLocalStorage('check_in_selected_protest', currentProtest);
-      }
-      if (user?.uid) {
-        setCurrentStep(steps.CHECK_IN_FORM);
-        history.push('/live/check-in/form');
-      } else {
-        setCurrentStep(steps.SIGN_IN);
-        history.push('/live/check-in/auth');
-      }
+    if (user?.uid) {
+      setCurrentStep(steps.CHECK_IN_FORM);
+      history.push('/live/check-in/form');
     } else {
-      if (cachedProtest) setProtest(cachedProtest);
+      setCurrentStep(steps.SIGN_IN);
+      history.push('/live/check-in/auth');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

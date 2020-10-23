@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { realtimeDB } from '../../firebase';
 import CheckInModal from '../../components/CheckInModal';
 import { CheckInList, WithMeList } from './';
-
+import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
 
 const VIEWS = {
@@ -12,14 +12,14 @@ const VIEWS = {
   withMe: 'withMeFeed',
 };
 
-function renderView({ currentView, checkIns }) {
+function renderView({ currentView, currentProtest, checkIns }) {
   switch (currentView) {
     case VIEWS.feed:
       return <CheckInList checkIns={checkIns} />;
     case VIEWS.pictures:
       return <CheckInList>Pictures!</CheckInList>;
     case VIEWS.withMe:
-      return <WithMeList />;
+      return <WithMeList currentProtest={currentProtest} />;
 
     default:
       return 'hi!';
@@ -28,7 +28,8 @@ function renderView({ currentView, checkIns }) {
 
 function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }) {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [currentView, setCurrentView] = useState(VIEWS.feed);
+  const [currentProtest, setProtest] = useState(null);
+  const [currentView, setCurrentView] = useState(VIEWS.withMe);
   const [checkIns, setCheckIns] = useState([]);
   const history = useHistory();
 
@@ -41,6 +42,21 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
+
+  useEffect(() => {
+    // Check if exists in localStorage
+    const cachedProtest = getLocalStorage('check_in_selected_protest');
+
+    if (currentProtest) {
+      if (cachedProtest?.id !== currentProtest.id) {
+        setLocalStorage('check_in_selected_protest', currentProtest);
+      }
+    } else {
+      if (cachedProtest) setProtest(cachedProtest);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentProtest]);
 
   useEffect(() => {
     const checkIns = realtimeDB.ref('balfur_check_ins').orderByChild('createdAt').limitToLast(10);
@@ -77,11 +93,13 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates, loading }
           </LiveEventHeader.Button>
         </LiveEventHeader>
         <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage>
-        <LiveCurrentView>{renderView({ currentView, checkIns })}</LiveCurrentView>
+        <LiveCurrentView>{renderView({ currentView, checkIns, currentProtest })}</LiveCurrentView>
       </LiveEventWrapper>
       {isModalOpen && (
         <CheckInModal
           isOpen={isModalOpen}
+          currentProtest={currentProtest}
+          setProtest={setProtest}
           setModalOpen={setModalOpen}
           closeProtests={closeProtests}
           coordinates={coordinates}
