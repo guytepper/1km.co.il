@@ -17,10 +17,10 @@ function NationWideCheckIns({}) {
       <CheckInsList>
         {checkIns.map((checkIn) => (
           <CheckInEntry>
-            <CheckInAvatar src="./anonymousPofile.png" />
+            <CheckInAvatar src={checkIn.picture_url == '' ? './anonymousPofile.png' : checkIn.picture_url} />
             <CheckInInfo>
-              <CheckInName>גיא</CheckInName>
-              <CheckInComment>שלום</CheckInComment>
+              <CheckInName>{checkIn.firstName}</CheckInName>
+              <CheckInComment>{checkIn.userMessage}</CheckInComment>
             </CheckInInfo>
           </CheckInEntry>
         ))}
