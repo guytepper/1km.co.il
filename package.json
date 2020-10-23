@@ -14,6 +14,7 @@
     "query-string": "^6.13.5",
     "react": "^16.13.1",
     "react-aws-s3": "^1.3.0",
+    "react-burger-menu": "^2.9.0",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.8.6",
     "react-leaflet": "^2.7.0",
