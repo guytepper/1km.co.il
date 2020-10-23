@@ -46,10 +46,10 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
       }
       if (user?.uid) {
         setCurrentStep(steps.CHECK_IN_FORM);
-        history.push('/check-in/form');
+        history.push('/live/check-in/form');
       } else {
         setCurrentStep(steps.SIGN_IN);
-        history.push('/check-in/auth');
+        history.push('/live/check-in/auth');
       }
     } else {
       if (cachedProtest) setProtest(cachedProtest);
@@ -60,14 +60,14 @@ function CheckInModal({ setCoordinates, closeProtests, user, loading }) {
 
   useEffect(() => {
     const { pathname } = history.location;
-    if (pathname === '/check-in/auth') {
+    if (pathname === '/live/check-in/auth') {
       if (!currentProtest) {
         setCurrentStep(steps.PICK_LOCATION);
-        history.push('/check-in/select-protest');
+        history.push('/live/check-in/select-protest');
       }
       if (user?.uid) {
         setCurrentStep(steps.CHECK_IN_FORM);
-        history.push('/check-in/form');
+        history.push('/live/check-in/form');
         return;
       }
       if (currentStep !== steps.SIGN_IN) {
