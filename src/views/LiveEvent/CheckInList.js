@@ -2,6 +2,11 @@ import React from 'react';
 import { useTransition, config } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 import styled from 'styled-components/macro';
+import TimeAgo from 'timeago-react';
+import * as timeago from 'timeago.js';
+
+import he from 'timeago.js/lib/lang/he';
+timeago.register('he', he);
 
 function CheckInList({ checkIns }) {
   const transitions = useTransition(checkIns, (item) => item?.id, {
@@ -24,21 +29,19 @@ function CheckInList({ checkIns }) {
               <CheckIn.Location>{item.protestCityName || item.protestStreetAddress}</CheckIn.Location>
             </CheckIn.Info>
             {item.userMessage && <CheckIn.Comment>{item.userMessage}</CheckIn.Comment>}
-            {/* <CheckIn.TimeAgo>לפני 10 דקות</CheckIn.TimeAgo> */}
+            <CheckIn.TimeAgo>
+              <TimeAgo datetime={item.createdAt} locale="he" />
+            </CheckIn.TimeAgo>
           </CheckIn>
         ))
       ) : (
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
           <span>טוען...</span>
-          <LoadingIcon style={{ marginTop: 15 }} src="/icons/loading-spinner.svg" alt="" />
+          <img style={{ marginTop: 15 }} src="/icons/loading-spinner.svg" alt="" />
         </div>
       )}
     </CheckInListWrapper>
   );
 }
-const LoadingIcon = styled.img`
-  display: flex;
-  margin: 40px auto;
-`;
 
 export default CheckInList;
