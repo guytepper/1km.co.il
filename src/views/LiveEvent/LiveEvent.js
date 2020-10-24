@@ -17,7 +17,7 @@ function renderView({ currentView, currentProtest, checkIns }) {
     case VIEWS.feed:
       return <CheckInList checkIns={checkIns} />;
     case VIEWS.pictures:
-      return <CheckInList>Pictures!</CheckInList>;
+      return <p>Pictures!</p>;
     case VIEWS.withMe:
       return <WithMeList currentProtest={currentProtest} />;
 
