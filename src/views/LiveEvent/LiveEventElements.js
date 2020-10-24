@@ -1,3 +1,4 @@
+import { animated } from 'react-spring';
 import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
 
@@ -57,6 +58,7 @@ export const LiveCurrentView = styled.div``;
 export const CheckInListWrapper = styled.div`
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
+  justify-content: center;
   height: 500px;
   padding: 0 20px;
 `;
@@ -77,7 +79,7 @@ export const CheckIn = styled(animated.div)`
   }
 `;
 
-export const UserAvatar = styled.img`
+export const UserAvatar = styled(animated.img)`
   width: 45px;
   height: 45px;
   margin-left: 10px;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTransition } from 'react-spring';
 import { WithMe, UserAvatar } from './LiveEventElements';
 import { realtimeDB } from '../../firebase';
 
@@ -6,6 +7,12 @@ function WithMeList({ currentProtest }) {
   const [withMeUsers, setWithMeUsers] = useState([]);
   const [avatars, setAvatars] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const avatarsFadeIn = useTransition(avatars, (avatar) => avatar.id, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    config: { duration: 350 },
+  });
 
   useEffect(() => {
     if (currentProtest?.id) {
@@ -58,13 +65,8 @@ function WithMeList({ currentProtest }) {
         <WithMe.ProtestInfo.Counter>{withMeUsers.length} מפגינות ומפגינים באתר</WithMe.ProtestInfo.Counter>
       </WithMe.ProtestInfo>
       <WithMe.Avatars>
-        {avatars.map((avatar) => (
-          <>
-            <UserAvatar src={avatar.url} key={avatar.id} />
-            <UserAvatar src={avatar.url} key={avatar.id} />
-            <UserAvatar src={avatar.url} key={avatar.id} />
-            <UserAvatar src={avatar.url} key={avatar.id} />
-          </>
+        {avatarsFadeIn.map(({ item, props, key }) => (
+          <UserAvatar style={props} src={item.url} key={key} />
         ))}
       </WithMe.Avatars>
     </WithMe>
