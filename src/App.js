@@ -384,35 +384,35 @@ const Header = styled.header`
 //   }
 // `;
 
-const NavItem = styled(Link)`
-  font-size: 16px;
-  margin-left: 15px;
-  margin-bottom: 2px;
+// const NavItem = styled(Link)`
+//   font-size: 16px;
+//   margin-left: 15px;
+//   margin-bottom: 2px;
 
-  &:hover {
-    color: #3498db;
-  }
-`;
+//   &:hover {
+//     color: #3498db;
+//   }
+// `;
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0.75;
-  }
+// const fadeIn = keyframes`
+//   from {
+//     opacity: 0.75;
+//   }
 
-  to {
-    opacity: 1;
-  }
-`;
+//   to {
+//     opacity: 1;
+//   }
+// `;
 
-const NavItemLive = styled(Link)`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  color: tomato;
-  font-weight: bold;
-  font-size: 18px;
-  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-`;
+// const NavItemLive = styled(Link)`
+//   display: flex;
+//   flex-direction: row-reverse;
+//   align-items: center;
+//   color: tomato;
+//   font-weight: bold;
+//   font-size: 18px;
+//   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+// `;
 
 const NavProfileWrapper = styled.div`
   display: flex;
