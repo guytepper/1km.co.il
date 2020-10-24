@@ -66,6 +66,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
       setCheckIns((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
       });
+      console.log(checkIns);
     });
 
     // checkIns.once('value', () => {
