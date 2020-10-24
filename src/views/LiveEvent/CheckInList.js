@@ -26,8 +26,20 @@ function CheckInList({ checkIns }) {
             <CheckIn.TimeAgo>לפני 10 דקות</CheckIn.TimeAgo>
           </CheckIn>
         ))}
+      {checkIns?.length == 0 ? (
+        <div style={{ textAlign: 'center' }}>
+          <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
+          <p>טוענים צ'ק אינים...</p>
+        </div>
+      ) : (
+        ''
+      )}
     </CheckInListWrapper>
   );
 }
+const LoadingIcon = styled.img`
+  display: flex;
+  margin: 40px auto;
+`;
 
 export default CheckInList;
