@@ -25,6 +25,7 @@
     "react-scripts": "4.0.0",
     "react-spring": "^8.0.27",
     "styled-components": "^5.2.0",
+    "timeago-react": "^3.0.1",
     "use-places-autocomplete": "^1.5.0"
   },
   "scripts": {

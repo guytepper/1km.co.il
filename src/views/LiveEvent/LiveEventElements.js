@@ -1,5 +1,5 @@
-import { animated } from 'react-spring';
 import styled from 'styled-components/macro';
+import { animated } from 'react-spring';
 
 export const LiveEventWrapper = styled.div`
   /* background: #f4f6fa; */
@@ -12,6 +12,7 @@ export const LiveEventHeader = styled.div`
   grid-template-columns: repeat(3, 1fr);
   box-shadow: 0 0 0px 1px #e4e6eb;
   font-size: 12px;
+  z-index: 2;
 
   @media (min-width: 390px) {
     font-size: 13px;
@@ -61,7 +62,7 @@ export const CheckInListWrapper = styled.div`
   padding: 0 20px;
 `;
 
-export const CheckIn = styled.div`
+export const CheckIn = styled(animated.div)`
   display: grid;
   grid-template-columns: 60px 1fr 80px;
   grid-template-rows: auto auto;

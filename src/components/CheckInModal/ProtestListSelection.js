@@ -7,7 +7,7 @@ import styled from 'styled-components/macro';
 function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
   return (
     <ProtestSelectionWrapper>
-      <h3>איפה אתם מפגינים?</h3>
+      <h3>איפה את/ה עכשיו?</h3>
 
       <ProtestSelectionList>
         {protests?.map((protest) => {

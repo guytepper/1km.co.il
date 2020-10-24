@@ -191,9 +191,9 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            {/* <NavItemLive to="/live"> */}
-            <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10, opacity: 0 }} />
-            {/* </NavItemLive> */}
+            <NavItemLive to="/live">
+              <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+            </NavItemLive>
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
@@ -201,13 +201,13 @@ function App() {
               <Menu
                 isOpen={state.menuOpen}
                 onStateChange={(state) => updateMenuState(state.isOpen)}
-                customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}
+                customBurgerIcon={<img src="/icons/hamburger.svg" alt="תפריט" />}
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   LIVE
-                </Link> */}
+                </Link>
                 <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -384,15 +384,15 @@ const Header = styled.header`
 //   }
 // `;
 
-const NavItem = styled(Link)`
-  font-size: 16px;
-  margin-left: 15px;
-  margin-bottom: 2px;
+// const NavItem = styled(Link)`
+//   font-size: 16px;
+//   margin-left: 15px;
+//   margin-bottom: 2px;
 
-  &:hover {
-    color: #3498db;
-  }
-`;
+//   &:hover {
+//     color: #3498db;
+//   }
+// `;
 
 const fadeIn = keyframes`
   from {
