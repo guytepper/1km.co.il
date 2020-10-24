@@ -191,19 +191,13 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            <NavItemLive to="/live">
-              <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-            </NavItemLive>
+            {/* <NavItemLive to="/live"> */}
+            <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10, opacity: 0 }} />
+            {/* </NavItemLive> */}
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
             <NavProfileWrapper>
-              {isAuthenticated(state.user) ? (
-                <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                  {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
-                </span>
-              ) : null}
-
               <Menu
                 isOpen={state.menuOpen}
                 onStateChange={(state) => updateMenuState(state.isOpen)}
@@ -211,9 +205,9 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   LIVE
-                </Link>
+                </Link> */}
                 <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -244,6 +238,7 @@ function App() {
                 <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
                   קוד פתוח
                 </a>
+                {isAdmin(state.user) && <Link to="/admin">ניהול</Link>}
               </Menu>
             </NavProfileWrapper>
           </Header>
