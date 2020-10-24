@@ -33,7 +33,13 @@ function renderView({ currentView, currentProtest, checkIns }) {
             }}
           >
             <h2 style={{ color: '#fff' }}>פיד התמונות יהיה זמין בשבוע הבא</h2>
-            <h3 style={{ color: '#fff' }}>עקבו אחרינו בפייסבוק לעדכונים</h3>
+            <Button
+              style={{ marginBottom: 10 }}
+              color={'#3859a2'}
+              onClick={() => window.open('https://www.facebook.com/1km.co.il/', '_blank')}
+            >
+              עקבו בפייסבוק לעדכונים
+            </Button>
           </div>
           <img style={{ position: 'relative', top: -360, zIndex: 0 }} alt="" src="/images/pictures-blurred-temp.jpg" />
         </div>
