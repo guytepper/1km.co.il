@@ -56,6 +56,7 @@ export const LiveCurrentView = styled.div``;
 export const CheckInListWrapper = styled.div`
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
+  justify-content: center;
   height: 500px;
   padding: 0 20px;
 `;
