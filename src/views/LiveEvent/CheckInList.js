@@ -20,7 +20,7 @@ function CheckInList({ checkIns }) {
             <UserAvatar src={item.picture_url === '' ? './anonymousPofile.png' : item.picture_url} />
             <CheckIn.Info>
               <CheckIn.Name>{item.firstName}</CheckIn.Name>
-              <CheckIn.Location>מפגין במזכרת בתיה</CheckIn.Location>
+              <CheckIn.Location>{item.protestCityName || item.protestStreetAddress}</CheckIn.Location>
             </CheckIn.Info>
             {item.userMessage && <CheckIn.Comment>{item.userMessage}</CheckIn.Comment>}
             <CheckIn.TimeAgo>לפני 10 דקות</CheckIn.TimeAgo>
