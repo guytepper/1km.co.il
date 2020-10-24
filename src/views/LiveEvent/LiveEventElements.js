@@ -1,4 +1,3 @@
-import { animated } from 'react-spring';
 import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
 
