@@ -182,17 +182,6 @@ li {
   left: unset !important;
 }
 
-/* Position and sizing of clickable cross button */
-.bm-cross-button {
-  height: 24px;
-  width: 24px;
-}
-
-/* Color/shape of close button cross */
-.bm-cross {
-  background: #bdc3c7;
-}
-
 /*
 Sidebar wrapper styles
 Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
@@ -200,15 +189,25 @@ Note: Beware of modifying this element as it can break the animations - you shou
 .bm-menu-wrap {
   position: fixed;
   height: 100%;
+  width: 260px !important;
   top: 0;
   left: 0;
 }
 
 /* General sidebar styles */
 .bm-menu {
-  padding: 20px 5px;
   background: #6e7dff;
-  font-size: 30px;
+  font-size: 26px;
+}
+
+@media (min-width: 360px) {
+  .bm-menu-wrap {
+    width: 300px !important;
+  }
+
+  .bm-menu {
+    font-size: 30px;
+  }
 }
 
 /* Morph shape necessary with bubble or elastic */

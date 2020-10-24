@@ -4,7 +4,7 @@ import Menu from 'react-burger-menu/lib/menus/slide';
 import { Map, ProtestList, Footer, IntroModal, Button } from './components';
 import { Admin, SignUp, ProtestPage, AddProtest, Profile, LeaderRequest, PostView, LiveEvent, FourOhFour } from './views';
 import { pointWithinRadius, validateLatLng, calculateDistance, isAuthenticated, isAdmin } from './utils';
-import styled from 'styled-components/macro';
+import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
@@ -191,60 +191,62 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
+            <NavItemLive to="/live">
+              <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+            </NavItemLive>
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
+            <NavProfileWrapper>
+              {isAuthenticated(state.user) ? (
+                <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
+                  {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
+                </span>
+              ) : null}
 
-            <NavItemsWrapper>
-              <NavProfileWrapper>
-                {isAuthenticated(state.user) ? (
-                  <span style={{ display: 'flex', alignItems: 'center', marginRight: '5px' }}>
-                    {isAdmin(state.user) && <NavItem to="/admin">ניהול</NavItem>}
-                  </span>
-                ) : null}
-
-                <Menu
-                  isOpen={state.menuOpen}
-                  onStateChange={(state) => updateMenuState(state.isOpen)}
-                  customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}
-                  disableAutoFocus
+              <Menu
+                id="site-menu"
+                isOpen={state.menuOpen}
+                onStateChange={(state) => updateMenuState(state.isOpen)}
+                customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}
+                customCrossIcon={false}
+                disableAutoFocus
+              >
+                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                  LIVE
+                </Link>
+                <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
+                  מפת הפגנות
+                </Link>
+                <Link
+                  to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}
+                  onClick={() => updateMenuState(false)}
+                  className="bm-item"
                 >
-                  <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                    LIVE
-                  </Link>
-                  <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
-                    מפת הפגנות
-                  </Link>
-                  <Link
-                    to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}
-                    onClick={() => updateMenuState(false)}
-                    className="bm-item"
-                  >
-                    הוספת הפגנה
-                  </Link>
-                  <hr />
-                  <Link to="/about" onClick={() => updateMenuState(false)}>
-                    על הפרוייקט
-                  </Link>
-                  <Link to="/about" onClick={() => updateMenuState(false)}>
-                    תרומה
-                  </Link>
-                  <hr />
-                  <a href="https://www.facebook.com/1km.co.il" target="_blank" rel="noreferrer noopener">
-                    פייסבוק
-                  </a>
-                  <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer noopener">
-                    טוויטר
-                  </a>
-                  <a href="https://www.instagram.com/1km.co.il/" target="_blank" rel="noreferrer noopener">
-                    אינסטגרם
-                  </a>
-                  <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
-                    קוד פתוח
-                  </a>
-                </Menu>
-              </NavProfileWrapper>
-            </NavItemsWrapper>
+                  הוספת הפגנה
+                </Link>
+                <hr />
+                <Link to="/about" onClick={() => updateMenuState(false)}>
+                  על הפרוייקט
+                </Link>
+                <Link to="/about" onClick={() => updateMenuState(false)}>
+                  תרומה
+                </Link>
+                <hr />
+                <a href="https://www.facebook.com/1km.co.il" target="_blank" rel="noreferrer noopener">
+                  פייסבוק
+                </a>
+                <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer noopener">
+                  טוויטר
+                </a>
+                <a href="https://www.instagram.com/1km.co.il/" target="_blank" rel="noreferrer noopener">
+                  אינסטגרם
+                </a>
+                <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
+                  קוד פתוח
+                </a>
+              </Menu>
+            </NavProfileWrapper>
           </Header>
           <Switch>
             <Route exact path={['/', '/check-in/*']}>
@@ -353,37 +355,37 @@ const Header = styled.header`
   top: 0;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 25px;
+  padding: 5px 8px 5px 20px;
   grid-row: 1;
   background-color: #fff;
   box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
 
-const NavItemsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+// const NavItemsWrapper = styled.div`
+//   display: flex;
+//   flex-direction: column;
 
-  @media (min-width: 585px) {
-    flex-direction: row-reverse;
-    align-items: center;
-  }
+//   @media (min-width: 585px) {
+//     flex-direction: row-reverse;
+//     align-items: center;
+//   }
 
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
-`;
+//   @media (min-width: 768px) {
+//     flex-direction: row;
+//   }
+// `;
 
-const GuestNavItems = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex-shrink: 0;
+// const GuestNavItems = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   flex-shrink: 0;
 
-  @media (min-width: 585px) {
-    flex-direction: row;
-    align-items: center;
-  }
-`;
+//   @media (min-width: 585px) {
+//     flex-direction: row;
+//     align-items: center;
+//   }
+// `;
 
 const NavItem = styled(Link)`
   font-size: 16px;
@@ -395,25 +397,25 @@ const NavItem = styled(Link)`
   }
 `;
 
-// const fadeIn = keyframes`
-//   from {
-//     opacity: 0.5;
-//   }
+const fadeIn = keyframes`
+  from {
+    opacity: 0.75;
+  }
 
-//   to {
-//     opacity: 1;
-//   }
-// `;
+  to {
+    opacity: 1;
+  }
+`;
 
-// const NavItemLive = styled.div`
-//   display: flex;
-//   flex-direction: row-reverse;
-//   align-items: center;
-//   color: tomato;
-//   font-weight: bold;
-//   font-size: 18px;
-//   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-// `;
+const NavItemLive = styled(Link)`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  color: tomato;
+  font-weight: bold;
+  font-size: 18px;
+  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+`;
 
 const NavProfileWrapper = styled.div`
   display: flex;
@@ -421,11 +423,11 @@ const NavProfileWrapper = styled.div`
   align-items: center;
 `;
 
-// const NavProfilePicture = styled.img`
-//   width: 20px;
-//   border-radius: 50px;
-//   margin-left: 5px;
-// `;
+const LiveIcon = styled.img`
+  width: 27px;
+  border-radius: 50px;
+  margin-left: 5px;
+`;
 
 const HomepageWrapper = styled.div`
   height: 100%;
