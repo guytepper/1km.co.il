@@ -228,7 +228,7 @@ function App() {
                 <Link to="/about" onClick={() => updateMenuState(false)}>
                   על הפרוייקט
                 </Link>
-                <Link to="/about" onClick={() => updateMenuState(false)}>
+                <Link to="/donate" onClick={() => updateMenuState(false)}>
                   תרומה
                 </Link>
                 <hr />
@@ -321,8 +321,11 @@ function App() {
               <Redirect to="/live" />
             </Route>
 
-            <Route exact path="/support-the-project/">
-              <PostView overrideSlug="support-the-project" />
+            <Route exact path={['/support-the-project/', '/about']}>
+              <PostView overrideSlug="about" />
+            </Route>
+            <Route exact path={['/donate']}>
+              <PostView overrideSlug="donate" />
             </Route>
             <Route exact path="/legal-notice">
               <PostView overrideSlug="legal-notice" />
