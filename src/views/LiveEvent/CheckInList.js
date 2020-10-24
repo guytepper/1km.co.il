@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTransition, config } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
-import styled from 'styled-components/macro';
 import TimeAgo from 'timeago-react';
 import * as timeago from 'timeago.js';
 

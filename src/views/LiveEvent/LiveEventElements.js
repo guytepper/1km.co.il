@@ -67,15 +67,12 @@ export const CheckIn = styled(animated.div)`
   grid-template-columns: 60px 1fr 80px;
   grid-template-rows: auto auto;
   align-items: center;
+  min-width: 320px;
   margin-bottom: 14px;
   padding: 12.5px 15px;
   background: #fff;
   box-shadow: 0px 2px 5px -1px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-
-  @media (min-width: 600px) {
-    max-width: 400px;
-  }
 `;
 
 export const UserAvatar = styled(animated.img)`
