@@ -429,6 +429,7 @@ const LiveIcon = styled.img`
   width: 27px;
   border-radius: 50px;
   margin-left: 5px;
+  user-select: none;
 `;
 
 const HomepageWrapper = styled.div`
