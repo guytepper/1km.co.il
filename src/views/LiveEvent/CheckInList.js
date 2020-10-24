@@ -1,6 +1,5 @@
 import React from 'react';
-import { useState, useEffect, set } from 'react';
-import { useSpring, useTransition, config, animated } from 'react-spring';
+import { useTransition, config } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 import styled from 'styled-components/macro';
 
