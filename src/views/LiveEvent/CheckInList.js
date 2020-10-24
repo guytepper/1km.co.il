@@ -4,7 +4,7 @@ import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 import styled from 'styled-components/macro';
 
 function CheckInList({ checkIns }) {
-  const transitions = useTransition(checkIns, (item) => item.id, {
+  const transitions = useTransition(checkIns, (item) => item?.id, {
     config: config.gentle,
     from: { opacity: 0, transform: 'translate3d(25%, 0%, 0px)' },
     enter: { opacity: 1, transform: 'translate3d(0%, 0px, 0px)' },
