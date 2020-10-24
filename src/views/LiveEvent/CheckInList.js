@@ -16,8 +16,8 @@ function CheckInList({ checkIns }) {
     <CheckInListWrapper>
       {checkIns?.length > 0 &&
         transitions.map(({ item, props, key }, i) => (
-          <CheckIn key={key} style={i == 0 ? props : {}}>
-            <UserAvatar src={item.picture_url === '' ? './anonymousPofile.png' : item.picture_url} />
+          <CheckIn key={key} style={i === 0 ? props : {}}>
+            <UserAvatar src={item.picture_url === '' ? '/anonymousPofile.png' : item.picture_url} />
             <CheckIn.Info>
               <CheckIn.Name>
                 {item.firstName} {item.lastName}
