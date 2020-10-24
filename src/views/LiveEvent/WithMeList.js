@@ -20,7 +20,7 @@ function WithMeList({ currentProtest }) {
         .ref('24-10-20_check_ins')
         .orderByChild('protestId')
         .equalTo(currentProtest.id)
-        .limitToLast(10);
+        .limitToLast(35);
 
       withMeData.on('child_added', (data) => {
         const user = data.val();
