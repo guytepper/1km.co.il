@@ -30,12 +30,15 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
   }, [closeProtests]);
 
   useEffect(() => {
-    if (user?.uid) {
+    if (user?.uid && currentProtest) {
       setCurrentStep(steps.CHECK_IN_FORM);
       history.push('/live/check-in/form');
     } else if (currentProtest) {
       setCurrentStep(steps.SIGN_IN);
       history.push('/live/check-in/auth');
+    } else if (!currentProtest) {
+      setCurrentStep(steps.PICK_LOCATION);
+      history.push('/live/check-in/select-protest');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,11 +51,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
         setCurrentStep(steps.PICK_LOCATION);
         history.push('/live/check-in/select-protest');
       }
-      if (user?.uid) {
-        setCurrentStep(steps.CHECK_IN_FORM);
-        history.push('/live/check-in/form');
-        return;
-      }
+
       if (currentStep !== steps.SIGN_IN) {
         setCurrentStep(steps.SIGN_IN);
       }
@@ -67,7 +66,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
         protestId: currentProtest.id,
         protestDisplayName: currentProtest.displayName,
         protestStreetAddress: currentProtest.streetAddress,
-        protestCityName: currentProtest.cityName,
+        protestCityName: currentProtest.cityName || '',
       };
 
       await createCheckIn({
