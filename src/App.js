@@ -201,7 +201,7 @@ function App() {
               <Menu
                 isOpen={state.menuOpen}
                 onStateChange={(state) => updateMenuState(state.isOpen)}
-                customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}
+                customBurgerIcon={<img src="/icons/hamburger.svg" alt="תפריט" />}
                 customCrossIcon={false}
                 disableAutoFocus
               >
