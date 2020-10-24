@@ -54,7 +54,7 @@ export function formatDistance(distance) {
 
 export function formatDate(dateStr) {
   const date = new Date(dateStr);
-  return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+  return `${date.getDate()}.${date.getMonth() + 1}`;
 }
 
 export function dateToDayOfWeek(dateStr) {

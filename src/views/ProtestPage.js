@@ -39,20 +39,6 @@ function getEditButtonLink(user, protest) {
   throw new Error(`couldn't find route`);
 }
 
-function getSocialLinks(protest) {
-  const items = [];
-  const { whatsAppLink, telegramLink } = protest;
-
-  if (whatsAppLink) {
-    items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
-  }
-  if (telegramLink) {
-    items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
-  }
-
-  return items;
-}
-
 async function _fetchProtest(id, setProtest) {
   const protest = await fetchProtest(id);
 
@@ -85,7 +71,6 @@ function useFetchProtest() {
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
-  const socialLinks = getSocialLinks(protest);
 
   return (
     <ProtestPageContainer>
@@ -153,19 +138,19 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
               ערוצי תקשורת
             </SectionTitle>
-            {socialLinks.length > 0 ? (
-              <>
-                <SocialButtons>
-                  {socialLinks.map(({ url, type, text }) => (
-                    <ProtestCardGroupButton key={type} type={type} href={url} target="_blank">
-                      {text}
-                    </ProtestCardGroupButton>
-                  ))}
-                </SocialButtons>
-              </>
-            ) : (
-              <p>להפגנה זו אין ערוצי תקשורת.</p>
-            )}
+            <SocialButtons>
+              {protest.whatsAppLink && (
+                <ProtestCardGroupButton type="whatsapp" href={protest.whatsAppLink} target="_blank">
+                  הצטרפות לקבוצת הוואטסאפ
+                </ProtestCardGroupButton>
+              )}
+              {protest.telegramLink && (
+                <ProtestCardGroupButton type="telegram" href={protest.telegramLink} target="_blank">
+                  הצטרפות לקבוצת הטלגרם
+                </ProtestCardGroupButton>
+              )}
+              {!protest.whatsAppLink && !protest.telegramLink && <p>להפגנה זו אין דרכי תקשורת.</p>}
+            </SocialButtons>
             <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
           </SocialContainer>
         </DatesAndSocial>

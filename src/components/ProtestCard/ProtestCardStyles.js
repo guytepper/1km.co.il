@@ -36,7 +36,7 @@ export const ProtestCardIcon = styled.img`
 export const ProtestCardGroupButton = styled.a`
   display: block;
   max-width: 100%;
-  margin-top: 10px;
+  margin: 10px 0;
   padding: 4px 16px;
   background: ${(props) => (props.type ? (props.type === 'whatsapp' ? '#00c647' : '#6AB2E4') : 'blue')};
   color: #fff;

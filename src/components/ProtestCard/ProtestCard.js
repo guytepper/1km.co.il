@@ -9,7 +9,7 @@ function getFormattedDate(date) {
     return null;
   }
 
-  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} - ${date.time}`;
+  return `יום ${dateToDayOfWeek(date.date)} ${formatDate(date.date)} בשעה ${date.time}`;
 }
 
 function ProtestCard({ protestInfo, showAction = false, style }) {
@@ -70,21 +70,6 @@ function ProtestCard({ protestInfo, showAction = false, style }) {
           </ProtestCardDetail>
         )}
       </ProtestCardInfo>
-      {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
-      {telegramLink || whatsAppLink ? (
-        <>
-          {whatsAppLink && (
-            <ProtestCardGroupButton type="whatsapp" href={whatsAppLink} target="_blank">
-              קבוצת וואטסאפ
-            </ProtestCardGroupButton>
-          )}
-          {telegramLink && (
-            <ProtestCardGroupButton type="telegram" href={telegramLink} target="_blank">
-              קבוצת טלגרם
-            </ProtestCardGroupButton>
-          )}
-        </>
-      ) : null}
     </ProtestCardWrapper>
   );
 }
