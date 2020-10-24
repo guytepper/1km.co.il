@@ -19,7 +19,9 @@ function CheckInList({ checkIns }) {
           <CheckIn key={key} style={i == 0 ? props : {}}>
             <UserAvatar src={item.picture_url === '' ? './anonymousPofile.png' : item.picture_url} />
             <CheckIn.Info>
-              <CheckIn.Name>{item.firstName}</CheckIn.Name>
+              <CheckIn.Name>
+                {item.firstName} {item.lastName}
+              </CheckIn.Name>
               <CheckIn.Location>{item.protestCityName || item.protestStreetAddress}</CheckIn.Location>
             </CheckIn.Info>
             {item.userMessage && <CheckIn.Comment>{item.userMessage}</CheckIn.Comment>}
