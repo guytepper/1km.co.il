@@ -205,7 +205,6 @@ function App() {
               ) : null}
 
               <Menu
-                id="site-menu"
                 isOpen={state.menuOpen}
                 onStateChange={(state) => updateMenuState(state.isOpen)}
                 customBurgerIcon={<img src="icons/hamburger.svg" alt="תפריט" />}

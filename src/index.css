@@ -2,7 +2,7 @@
   font-family: 'Simpler';
   font-weight: 200;
   font-display: fallback;
-  src: local('Simpler Light'), url('/fonts/Simpler-Light.woff') format('woff');
+  src: local('Simpler Light'), url('./assets/fonts/Simpler-Light.woff') format('woff');
 }
 
 @font-face {
@@ -10,20 +10,20 @@
   font-style: normal;
   font-weight: 400;
   font-display: fallback;
-  src: local('Simpler Regular'), url('/fonts/Simpler-Regular.woff') format('woff');
+  src: local('Simpler Regular'), url('./assets/fonts/Simpler-Regular.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Simpler';
   font-weight: 600;
   font-display: fallback;
-  src: local('Simpler Bold'), url('/fonts/Simpler-Bold.woff') format('woff');
+  src: local('Simpler Bold'), url('./assets/fonts/Simpler-Bold.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Simpler';
   font-weight: 800;
-  src: local('Simpler Black'), url('/fonts/Simpler-Black.woff') format('woff');
+  src: local('Simpler Black'), url('./assets/fonts/Simpler-Black.woff') format('woff');
 }
 
 html {
