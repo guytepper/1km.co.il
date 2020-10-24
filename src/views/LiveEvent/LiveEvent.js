@@ -17,12 +17,32 @@ function renderView({ currentView, currentProtest, checkIns }) {
     case VIEWS.feed:
       return <CheckInList checkIns={checkIns} />;
     case VIEWS.pictures:
-      return <p>Pictures!</p>;
+      return (
+        <div style={{ position: 'absolute' }}>
+          <div
+            style={{
+              width: 280,
+              height: 300,
+              margin: '0 auto',
+              position: 'relative',
+              top: -5,
+              backgroundColor: '#6e7dffde',
+              zIndex: 1,
+              textAlign: 'center',
+              padding: '7.5px 10px',
+            }}
+          >
+            <h2 style={{ color: '#fff' }}>פיד התמונות יהיה זמין בשבוע הבא</h2>
+            <h3 style={{ color: '#fff' }}>עקבו אחרינו בפייסבוק לעדכונים</h3>
+          </div>
+          <img style={{ position: 'relative', top: -360, zIndex: 0 }} alt="" src="/images/pictures-blurred-temp.jpg" />
+        </div>
+      );
     case VIEWS.withMe:
       return <WithMeList currentProtest={currentProtest} />;
 
     default:
-      return 'hi!';
+      return '...';
   }
 }
 
