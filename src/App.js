@@ -160,7 +160,7 @@ function App() {
           dispatch({
             type: 'setLoadData',
             payload: {
-              close: protests.filter((p) => p.distance <= 1250).sort((p1, p2) => p1.distance - p2.distance),
+              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
               far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
               markers: filteredMarkers,
               mapPosition: state.mapPosition,
@@ -243,7 +243,7 @@ function App() {
             </NavProfileWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/map']}>
+            <Route exact path={['/', '/map']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -296,7 +296,7 @@ function App() {
             <Route exact path="/profile">
               <Profile user={state.user} />
             </Route>
-            <Route exact path={['/', '/live', '/live/check-in', '/live/check-in/*']}>
+            <Route exact path={['/live', '/live/check-in', '/live/check-in/*']}>
               <LiveEvent
                 closeProtests={state.protests.close}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
