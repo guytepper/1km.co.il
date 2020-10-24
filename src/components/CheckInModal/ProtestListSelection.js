@@ -15,7 +15,7 @@ function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
             <ProtestSelectionCard
               onClick={() => {
                 setProtest(protest);
-                window.sa_event(`check_in_protest_index_${index + 1}`);
+                window.sa_event && window.sa_event(`check_in_protest_index_${index + 1}`);
               }}
               key={protest.id}
               tabIndex={0}

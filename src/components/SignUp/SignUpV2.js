@@ -40,9 +40,7 @@ export default function SignUp({ onAuth, onAnnonymousClick }) {
 
         saveUserInFirestore(userData).then(() => {
           console.log('Authed successfuly.');
-          // setTimeout(() => {
-          //   onAuth();
-          // }, 2020);
+          onAuth();
         });
       })
       .catch((error) => {

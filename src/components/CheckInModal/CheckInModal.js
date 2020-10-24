@@ -33,16 +33,16 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
     if (user?.uid && currentProtest) {
       setCurrentStep(steps.CHECK_IN_FORM);
       history.push('/live/check-in/form');
-    } else if (currentProtest) {
-      setCurrentStep(steps.SIGN_IN);
-      history.push('/live/check-in/auth');
     } else if (!currentProtest) {
       setCurrentStep(steps.PICK_LOCATION);
       history.push('/live/check-in/select-protest');
+    } else {
+      setCurrentStep(steps.SIGN_IN);
+      history.push('/live/check-in/auth');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentProtest]);
+  }, [currentProtest, user]);
 
   useEffect(() => {
     const { pathname } = history.location;
@@ -50,6 +50,10 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
       if (!currentProtest) {
         setCurrentStep(steps.PICK_LOCATION);
         history.push('/live/check-in/select-protest');
+      }
+
+      if (user?.uid) {
+        setCurrentStep(steps.CHECK_IN_FORM);
       }
 
       if (currentStep !== steps.SIGN_IN) {
@@ -90,6 +94,10 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
     }
   };
 
+  const onAuth = () => {
+    setCurrentStep(steps.CHECK_IN_FORM);
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case steps.LOADING:
@@ -109,7 +117,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
       case steps.PICK_PROTEST:
         return <ProtestListSelection protests={closeProtests} setProtest={setProtest} setCurrentStep={setCurrentStep} />;
       case steps.SIGN_IN:
-        return <SignUp onAnnonymousClick={() => setCurrentStep(steps.CHECK_IN_FORM)} />;
+        return <SignUp onAuth={onAuth} onAnnonymousClick={() => setCurrentStep(steps.CHECK_IN_FORM)} />;
       case steps.CHECK_IN_FORM:
         return <CheckInForm onCheckIn={onCheckIn} />;
       default:

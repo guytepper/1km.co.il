@@ -59,9 +59,7 @@ function WithMeList({ currentProtest }) {
   return (
     <WithMe>
       <WithMe.ProtestInfo>
-        <WithMe.ProtestInfo.Title>
-          {currentProtest.displayName}, {currentProtest.streetAddress}
-        </WithMe.ProtestInfo.Title>
+        <WithMe.ProtestInfo.Title>{currentProtest.displayName}</WithMe.ProtestInfo.Title>
         <WithMe.ProtestInfo.Counter>{withMeUsers.length} מפגינות ומפגינים באתר</WithMe.ProtestInfo.Counter>
       </WithMe.ProtestInfo>
       <WithMe.Avatars>

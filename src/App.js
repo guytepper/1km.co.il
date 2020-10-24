@@ -160,7 +160,7 @@ function App() {
           dispatch({
             type: 'setLoadData',
             payload: {
-              close: protests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance),
+              close: protests.filter((p) => p.distance <= 1250).sort((p1, p2) => p1.distance - p2.distance),
               far: protests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance),
               markers: filteredMarkers,
               mapPosition: state.mapPosition,
@@ -208,7 +208,7 @@ function App() {
                 <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   LIVE
                 </Link>
-                <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
+                <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
                 <Link
@@ -243,7 +243,7 @@ function App() {
             </NavProfileWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/', '/check-in/*']}>
+            <Route exact path={['/map']}>
               <HomepageWrapper>
                 <ProtestListWrapper>
                   <ProtestListHead>
@@ -296,7 +296,7 @@ function App() {
             <Route exact path="/profile">
               <Profile user={state.user} />
             </Route>
-            <Route exact path={['/live', '/live/check-in', '/live/check-in/*']}>
+            <Route exact path={['/', '/live', '/live/check-in', '/live/check-in/*']}>
               <LiveEvent
                 closeProtests={state.protests.close}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
@@ -313,7 +313,7 @@ function App() {
               <Redirect to="/live" />
             </Route>
             <Route exact path="/balfur/qr">
-              <Redirect to="/live" />
+              <Redirect to="/live/check-in/" />
             </Route>
 
             <Route exact path={['/support-the-project/', '/about']}>

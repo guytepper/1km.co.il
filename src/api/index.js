@@ -165,9 +165,10 @@ export function createLeaderRequestId(userId, protestId) {
 
 export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
-  console.log(userData);
-  if ((await userRef.get()).exists) {
-    return userRef.get();
+  const userDoc = await userRef.get();
+
+  if (userDoc.exists) {
+    return userDoc;
   } else {
     const { picture_url } = userData;
     const filename = `${nanoid()}.jpeg`;

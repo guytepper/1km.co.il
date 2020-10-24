@@ -68,12 +68,12 @@ const CheckInsList = styled.div`
 
 const CheckInEntry = styled.div`
   display: flex;
-  max-width: 320px;
+  min-width: 340px;
   align-items: center;
   margin: 0 12.5px;
 
   @media (min-width: 600px) {
-    max-width: 400px;
+    max-width: 420px;
   }
 `;
 
