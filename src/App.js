@@ -191,9 +191,9 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            {/* <NavItemLive to="/live"> */}
-            <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10, opacity: 0 }} />
-            {/* </NavItemLive> */}
+            <NavItemLive to="/live">
+              <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
+            </NavItemLive>
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
@@ -205,9 +205,9 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   LIVE
-                </Link> */}
+                </Link>
                 <Link to="/" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -394,25 +394,25 @@ const Header = styled.header`
 //   }
 // `;
 
-// const fadeIn = keyframes`
-//   from {
-//     opacity: 0.75;
-//   }
+const fadeIn = keyframes`
+  from {
+    opacity: 0.75;
+  }
 
-//   to {
-//     opacity: 1;
-//   }
-// `;
+  to {
+    opacity: 1;
+  }
+`;
 
-// const NavItemLive = styled(Link)`
-//   display: flex;
-//   flex-direction: row-reverse;
-//   align-items: center;
-//   color: tomato;
-//   font-weight: bold;
-//   font-size: 18px;
-//   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-// `;
+const NavItemLive = styled(Link)`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  color: tomato;
+  font-weight: bold;
+  font-size: 18px;
+  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+`;
 
 const NavProfileWrapper = styled.div`
   display: flex;
