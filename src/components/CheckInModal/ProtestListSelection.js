@@ -10,9 +10,16 @@ function ProtestListSelection({ protests, setProtest, setCurrentStep }) {
       <h3>איפה את/ה עכשיו?</h3>
 
       <ProtestSelectionList>
-        {protests?.map((protest) => {
+        {protests?.map((protest, index) => {
           return (
-            <ProtestSelectionCard onClick={() => setProtest(protest)} key={protest.id} tabIndex={0}>
+            <ProtestSelectionCard
+              onClick={() => {
+                setProtest(protest);
+                window.sa_event(`check_in_protest_index_${index}`);
+              }}
+              key={protest.id}
+              tabIndex={0}
+            >
               <ProtestSelectionCard.Details>
                 <ProtestSelectionCard.Title>{protest.displayName}</ProtestSelectionCard.Title>
                 <ProtestSelectionCard.Address>{protest.streetAddress}</ProtestSelectionCard.Address>
