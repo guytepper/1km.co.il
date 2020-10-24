@@ -16,17 +16,7 @@ function ProtestCard({ protestInfo, showAction = false, style }) {
   const dispatch = useContext(DispatchContext);
   const history = useHistory();
 
-  const {
-    displayName,
-    streetAddress,
-    distance,
-    whatsAppLink,
-    telegramLink,
-    meeting_time: meetingTime,
-    dateTimeList,
-    notes,
-    id,
-  } = protestInfo;
+  const { displayName, streetAddress, distance, meeting_time: meetingTime, dateTimeList, id } = protestInfo;
 
   const upcomingDate = getUpcomingDate(dateTimeList);
   const formattedDate = getFormattedDate(upcomingDate);
