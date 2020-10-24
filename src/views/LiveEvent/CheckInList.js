@@ -26,7 +26,7 @@ function CheckInList({ checkIns }) {
               <CheckIn.Name>
                 {item.firstName} {item.lastName}
               </CheckIn.Name>
-              <CheckIn.Location>{item.protestCityName || item.protestStreetAddress}</CheckIn.Location>
+              <CheckIn.Location>ב{item.protestCityName || item.protestStreetAddress}</CheckIn.Location>
             </CheckIn.Info>
             {item.userMessage && <CheckIn.Comment>{item.userMessage}</CheckIn.Comment>}
             <CheckIn.TimeAgo>
