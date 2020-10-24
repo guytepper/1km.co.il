@@ -125,6 +125,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
           closeProtests={closeProtests}
           coordinates={coordinates}
           setCoordinates={setCoordinates}
+          setCheckedIn={setCheckedIn}
           user={user}
         />
       )}

@@ -15,7 +15,7 @@ const steps = {
   CHECK_IN_FINISHED: 'checkInFinished',
 };
 
-function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtests, setModalOpen, user }) {
+function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn, closeProtests, setModalOpen, user }) {
   const history = useHistory();
   const [currentStep, setCurrentStep] = useState(steps.PICK_LOCATION);
 
@@ -67,6 +67,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
         protestId: currentProtest.id,
         protestDisplayName: currentProtest.displayName,
         protestStreetAddress: currentProtest.streetAddress,
+        protestCityName: currentProtest.cityName,
       };
 
       await createCheckIn({
@@ -84,6 +85,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
       alert("צ'ק אין בוצע בהצלחה!");
       history.push('/live');
       setModalOpen(false);
+      setCheckedIn(true);
     } catch (err) {
       console.error(err);
     }
@@ -99,7 +101,12 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
           </>
         );
       case steps.PICK_LOCATION:
-        return <LocationButtons setCoordinates={setCoordinates} />;
+        return (
+          <>
+            <p>עשו Check In להפגנה כדי להראות כמה כח יש לנו יחד.</p>
+            <LocationButtons setCoordinates={setCoordinates} />
+          </>
+        );
       case steps.PICK_PROTEST:
         return <ProtestListSelection protests={closeProtests} setProtest={setProtest} setCurrentStep={setCurrentStep} />;
       case steps.SIGN_IN:
@@ -113,7 +120,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, closeProtest
 
   return (
     <Modal isOpen={true}>
-      <h2>צ'ק אין</h2>
+      <h2 style={{ marginBottom: 5 }}>ביחד ננצח!</h2>
 
       {renderStep()}
     </Modal>
