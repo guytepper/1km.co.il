@@ -61,7 +61,7 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
   }, [currentProtest]);
 
   useEffect(() => {
-    const checkIns = realtimeDB.ref('24-10-20_check_ins').orderByChild('createdAt').limitToLast(200);
+    const checkIns = realtimeDB.ref('24-10-20_check_ins').orderByChild('createdAt').limitToLast(20);
     checkIns.on('child_added', (data) => {
       setCheckIns((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
