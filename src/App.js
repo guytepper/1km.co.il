@@ -284,7 +284,7 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage user={state.user} userCoordinates={store.userCoordinates} />
+              <ProtestPage user={state.user} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
