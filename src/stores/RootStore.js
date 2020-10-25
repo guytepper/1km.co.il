@@ -1,5 +1,5 @@
 import { makeAutoObservable } from 'mobx';
-import { setLocalStorage } from '../localStorage';
+import { setLocalStorage, getLocalStorage } from '../localStorage';
 
 class RootStore {
   userCoordinates = [];
@@ -7,6 +7,14 @@ class RootStore {
 
   constructor() {
     makeAutoObservable(this);
+    this.checkCache();
+  }
+
+  checkCache() {
+    const cachedCoordinates = getLocalStorage('1km_user_coordinates');
+    if (cachedCoordinates) {
+      this.setCoordinates(cachedCoordinates);
+    }
   }
 
   /**

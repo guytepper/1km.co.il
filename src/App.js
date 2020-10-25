@@ -10,7 +10,6 @@ import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
-import { getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
@@ -87,17 +86,6 @@ function App() {
   const updateMenuState = (state) => {
     dispatch({ type: 'setMenuState', payload: state });
   };
-
-  // Check on mount if we have coordinates in local storage and if so, use them and don't show modal
-  useEffect(() => {
-    const cachedCoordinates = getLocalStorage('1km_user_coordinates');
-    if (cachedCoordinates) {
-      store.setCoordinates(cachedCoordinates);
-      dispatch({ type: 'setInitialData' });
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
