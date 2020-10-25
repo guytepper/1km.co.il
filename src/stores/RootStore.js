@@ -1,4 +1,5 @@
 import { makeAutoObservable } from 'mobx';
+import { setLocalStorage } from '../localStorage';
 
 class RootStore {
   userCoordinates = [];
@@ -12,7 +13,8 @@ class RootStore {
    * Updates the current user coordinates.
    * @param {array} coordinates - Array of [lat, lng]
    */
-  updateCoordinates(coordinates) {
+  setCoordinates(coordinates) {
+    setLocalStorage('1km_user_coordinates', coordinates);
     this.userCoordinates = coordinates;
   }
 }

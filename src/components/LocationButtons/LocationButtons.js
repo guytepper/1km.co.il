@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useStore } from '../../stores';
 import { PlacesAutocomplete, Button } from '../';
 import { getCurrentPosition } from '../../utils';
 
-function LocationButtons({ setCoordinates }) {
+function LocationButtons() {
   const [addressInputDisplay, setAddressInputDisplay] = useState(false);
   const [manualAddress, setManualAddress] = useState(null);
+  const store = useStore();
   const addressInputRef = useRef();
 
   const getUserPosition = async () => {
     try {
       const position = await getCurrentPosition();
-      setCoordinates(position);
+      store.setCoordinates(position);
     } catch (err) {
       alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
     }
@@ -60,7 +62,7 @@ function LocationButtons({ setCoordinates }) {
             <Button
               disabled={!manualAddress}
               onClick={() => {
-                setCoordinates(manualAddress);
+                store.setCoordinates(manualAddress);
                 resetModal();
               }}
               color="radial-gradient(100.6% 793.82% at 9.54% -0.6%,#00ace4 0%,#02779e 100%)"

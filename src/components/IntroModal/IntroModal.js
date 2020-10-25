@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Modal, LocationButtons } from '../';
 
-export default function IntroModal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
+export default function IntroModal({ isOpen, setIsOpen, coordinates }) {
   useEffect(() => {
     if (coordinates.length === 2) {
       setIsOpen(false);
@@ -27,7 +27,7 @@ export default function IntroModal({ isOpen, setIsOpen, coordinates, setCoordina
         לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
       </h3>
       <Modal.ButtonsWrapper>
-        <LocationButtons setCoordinates={setCoordinates} />
+        <LocationButtons />
       </Modal.ButtonsWrapper>
     </Modal>
   );

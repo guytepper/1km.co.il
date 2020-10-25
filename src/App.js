@@ -1,4 +1,6 @@
 import React, { useReducer, useEffect, useMemo } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from './stores';
 import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
 import Menu from 'react-burger-menu/lib/menus/slide';
 import { Map, ProtestList, Footer, IntroModal, Button } from './components';
@@ -8,7 +10,7 @@ import styled, { keyframes } from 'styled-components/macro';
 import firebase, { firestore } from './firebase';
 import * as geofirestore from 'geofirestore';
 import { DispatchContext } from './context';
-import { setLocalStorage, getLocalStorage } from './localStorage';
+import { getLocalStorage } from './localStorage';
 import { getFullUserData } from './api';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
@@ -45,10 +47,6 @@ function reducer(state, action) {
       return { ...state, mapPositionHistory: action.payload };
     case 'setModalState':
       return { ...state, isModalOpen: action.payload };
-    case 'setUserCoordinates':
-      // Save the user coordinates in order to reuse them on the next user session
-      setLocalStorage('1km_user_coordinates', action.payload);
-      return { ...state, userCoordinates: action.payload, loading: true };
     case 'setLoading':
       return { ...state, loading: action.payload };
     case 'setHoveredProtest':
@@ -64,7 +62,6 @@ function reducer(state, action) {
     case 'setInitialData':
       return {
         ...state,
-        userCoordinates: action.payload,
         isModalOpen: false,
         loading: true,
       };
@@ -79,7 +76,7 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
+  const store = useStore();
   const hoveredProtest = useMemo(() => {
     if (!state.hoveredProtestId) {
       return null;
@@ -96,8 +93,11 @@ function App() {
   useEffect(() => {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
     if (cachedCoordinates) {
-      dispatch({ type: 'setInitialData', payload: cachedCoordinates });
+      store.setCoordinates(cachedCoordinates);
+      dispatch({ type: 'setInitialData' });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ function App() {
           const protestLatlng = [latitude, longitude];
           return {
             id: doc.id,
-            distance: calculateDistance(state.userCoordinates, protestLatlng),
+            distance: calculateDistance(store.userCoordinates, protestLatlng),
             ...doc.data(),
           };
         });
@@ -184,7 +184,7 @@ function App() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.userCoordinates, state.mapPosition]);
+  }, [store.userCoordinates, state.mapPosition]);
 
   return (
     <DispatchContext.Provider value={dispatch}>
@@ -192,6 +192,7 @@ function App() {
         <Router>
           <Header>
             <NavItemLive to="/live">
+              {store.userCoordinates.length > 0 && store.userCoordinates[0]}
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
             </NavItemLive>
             <Link to="/">
@@ -260,7 +261,6 @@ function App() {
                 </ProtestListWrapper>
 
                 <Map
-                  coordinates={state.userCoordinates}
                   setMapPosition={(position) => {
                     dispatch({ type: 'setMapPosition', payload: position });
                   }}
@@ -271,21 +271,20 @@ function App() {
               <IntroModal
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-                coordinates={state.userCoordinates}
+                coordinates={store.userCoordinates}
                 setCoordinates={(coords) => {
                   dispatch({ type: 'setMapPosition', payload: coords });
-                  dispatch({ type: 'setUserCoordinates', payload: coords });
                 }}
               />
             </Route>
             <Route exact path="/add-protest">
-              <AddProtest initialCoords={state.userCoordinates} user={state.user} />
+              <AddProtest initialCoords={store.userCoordinates} user={state.user} />
             </Route>
             <Route path="/admin">
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
-              <ProtestPage user={state.user} userCoordinates={state.userCoordinates} />
+              <ProtestPage user={state.user} userCoordinates={store.userCoordinates} />
             </Route>
             <Route exact path="/sign-up">
               <SignUp />
@@ -300,10 +299,10 @@ function App() {
               <LiveEvent
                 closeProtests={state.protests.close}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-                coordinates={state.userCoordinates}
+                coordinates={store.userCoordinates}
                 setCoordinates={(coords) => {
                   dispatch({ type: 'setMapPosition', payload: coords });
-                  dispatch({ type: 'setUserCoordinates', payload: coords });
+                  store.setCoordinates(coords);
                 }}
                 user={state.user}
                 loading={state.loading}
@@ -358,41 +357,6 @@ const Header = styled.header`
   box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
-
-// const NavItemsWrapper = styled.div`
-//   display: flex;
-//   flex-direction: column;
-
-//   @media (min-width: 585px) {
-//     flex-direction: row-reverse;
-//     align-items: center;
-//   }
-
-//   @media (min-width: 768px) {
-//     flex-direction: row;
-//   }
-// `;
-
-// const GuestNavItems = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   flex-shrink: 0;
-
-//   @media (min-width: 585px) {
-//     flex-direction: row;
-//     align-items: center;
-//   }
-// `;
-
-// const NavItem = styled(Link)`
-//   font-size: 16px;
-//   margin-left: 15px;
-//   margin-bottom: 2px;
-
-//   &:hover {
-//     color: #3498db;
-//   }
-// `;
 
 const fadeIn = keyframes`
   from {
@@ -469,4 +433,4 @@ const ProtestListHead = styled.div`
   margin-bottom: 8px;
 `;
 
-export default App;
+export default observer(App);

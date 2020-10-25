@@ -1,4 +1,5 @@
 import React from 'react';
+import { useStore } from '../../stores';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
@@ -50,7 +51,10 @@ const MarkersList = ({ markers, hoveredProtest }) => {
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, hoveredProtest }) {
+function AppMap({ markers, setMapPosition, hoveredProtest }) {
+  const store = useStore();
+  const { userCoordinates: coordinates } = store;
+
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
