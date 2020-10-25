@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest, getProtestsForLeader } from '../api';
-import { Map, TileLayer, Marker } from 'react-leaflet';
-import { ProtestForm, ProtectedRoute } from '../components';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
+import { fetchProtest, getProtestsForLeader, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import { ProtectedRoute, ProtestForm } from '../components';
 import {
-  ProtestCardInfo,
   ProtestCardDetail,
-  ProtestCardIcon,
   ProtestCardGroupButton,
+  ProtestCardIcon,
+  ProtestCardInfo,
 } from '../components/ProtestCard/ProtestCardStyles';
 import {
+  calculateDistance,
   dateToDayOfWeek,
   formatDate,
+  formatDistance,
   isAdmin,
-  sortDateTimeList,
   isAuthenticated,
   isVisitor,
-  calculateDistance,
-  formatDistance,
+  sortDateTimeList,
 } from '../utils';
 
 const mobile = `@media (max-width: 768px)`;
@@ -68,6 +67,10 @@ function useFetchProtest() {
   };
 }
 
+function getFutureDates(dateTimeList) {
+  return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+}
+
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
   const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
@@ -114,19 +117,19 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             </SectionTitle>
 
             <Dates>
-              {dateTimeList ? (
-                dateTimeList.map((dateTime) => (
-                  <Date key={dateTime.id}>
+              {getFutureDates(dateTimeList).length !== 0 ? (
+                getFutureDates(dateTimeList).map((dateTime) => (
+                  <DateCard key={dateTime.id}>
                     <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
                     <DateText>
                       יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
                     </DateText>
-                  </Date>
+                  </DateCard>
                 ))
               ) : (
-                <Date>
-                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
-                </Date>
+                <DateCard>
+                  <BoldDateText> לא דווחו הפגנות עדכניות!</BoldDateText>
+                </DateCard>
               )}
             </Dates>
             <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
@@ -338,7 +341,7 @@ const Dates = styled.ul`
   }
 `;
 
-const Date = styled.li`
+const DateCard = styled.li`
   list-style: none;
 `;
 
