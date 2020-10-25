@@ -16,7 +16,6 @@ import { getFullUserData } from './api';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 const initialState = {
-  userCoordinates: [],
   protests: {
     close: [],
     far: [],
@@ -271,14 +270,10 @@ function App() {
               <IntroModal
                 isOpen={state.isModalOpen}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-                coordinates={store.userCoordinates}
-                setCoordinates={(coords) => {
-                  dispatch({ type: 'setMapPosition', payload: coords });
-                }}
               />
             </Route>
             <Route exact path="/add-protest">
-              <AddProtest initialCoords={store.userCoordinates} user={state.user} />
+              <AddProtest user={state.user} />
             </Route>
             <Route path="/admin">
               <Admin user={state.user} />
@@ -299,11 +294,6 @@ function App() {
               <LiveEvent
                 closeProtests={state.protests.close}
                 setIsOpen={(isOpen) => dispatch({ type: 'setModalState', payload: isOpen })}
-                coordinates={store.userCoordinates}
-                setCoordinates={(coords) => {
-                  dispatch({ type: 'setMapPosition', payload: coords });
-                  store.setCoordinates(coords);
-                }}
                 user={state.user}
                 loading={state.loading}
               />
