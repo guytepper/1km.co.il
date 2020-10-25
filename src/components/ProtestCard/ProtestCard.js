@@ -112,24 +112,4 @@ const ProtestCardIcon = styled.img`
   user-select: none;
 `;
 
-const ProtestCardGroupButton = styled.a`
-  display: block;
-  max-width: 100%;
-  margin-top: 10px;
-  padding: 4px 16px;
-  background: ${(props) =>
-    props.type
-      ? props.type === 'whatsapp'
-        ? '#00c647'
-        : '#6AB2E4'
-      : 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)'};
-  color: #fff;
-  font-family: Simpler, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-  border: none;
-  border-radius: 3px;
-`;
-
 export default ProtestCard;
