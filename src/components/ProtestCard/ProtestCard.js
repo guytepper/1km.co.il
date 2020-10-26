@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { DispatchContext } from '../../context';
+import { useStore } from '../../stores';
 import { useHistory } from 'react-router-dom';
 import { formatDistance, dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
@@ -13,7 +13,7 @@ function getFormattedDate(date) {
 }
 
 function ProtestCard({ protestInfo, showAction = false, style }) {
-  const dispatch = useContext(DispatchContext);
+  const store = useStore();
   const history = useHistory();
 
   const { displayName, streetAddress, distance, meeting_time: meetingTime, dateTimeList, id } = protestInfo;
@@ -25,8 +25,8 @@ function ProtestCard({ protestInfo, showAction = false, style }) {
     <ProtestCardWrapper
       tabIndex="0"
       style={style}
-      onMouseOver={() => dispatch({ type: 'setHoveredProtest', payload: id })}
-      onMouseOut={() => dispatch({ type: 'setHoveredProtest', payload: null })}
+      onMouseOver={() => store.mapStore.setHoveredProtestId(protestInfo.id)}
+      onMouseOut={() => store.mapStore.setHoveredProtestId(null)}
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
@@ -110,26 +110,6 @@ const ProtestCardIcon = styled.img`
   width: 17.5px;
   margin-inline-end: 5px;
   user-select: none;
-`;
-
-const ProtestCardGroupButton = styled.a`
-  display: block;
-  max-width: 100%;
-  margin-top: 10px;
-  padding: 4px 16px;
-  background: ${(props) =>
-    props.type
-      ? props.type === 'whatsapp'
-        ? '#00c647'
-        : '#6AB2E4'
-      : 'radial-gradient(100.6% 793.82% at 9.54% -0.6%, #6C7BFD 0%, #2938B7 100%)'};
-  color: #fff;
-  font-family: Simpler, sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  text-align: center;
-  border: none;
-  border-radius: 3px;
 `;
 
 export default ProtestCard;

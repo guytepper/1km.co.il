@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores';
 import { Modal, LocationButtons } from '../';
 
-export default function IntroModal({ isOpen, setIsOpen, coordinates, setCoordinates }) {
+function IntroModal({ isOpen, setIsOpen }) {
+  const store = useStore();
+
   useEffect(() => {
-    if (coordinates.length === 2) {
+    if (store.userCoordinates.length === 2) {
       setIsOpen(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [coordinates]);
+  }, [store.userCoordinates]);
 
   return (
     <Modal isOpen={isOpen}>
@@ -27,8 +31,10 @@ export default function IntroModal({ isOpen, setIsOpen, coordinates, setCoordina
         לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
       </h3>
       <Modal.ButtonsWrapper>
-        <LocationButtons setCoordinates={setCoordinates} />
+        <LocationButtons />
       </Modal.ButtonsWrapper>
     </Modal>
   );
 }
+
+export default observer(IntroModal);

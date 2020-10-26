@@ -1,11 +1,15 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../stores';
 import { createProtest } from '../api';
 import { ProtestForm } from '../components';
 
-export default function AddProtest({ initialCoords, user }) {
+function AddProtest({ user }) {
+  const store = useStore();
+
   return (
     <ProtestForm
-      initialCoords={initialCoords}
+      initialCoords={store.userCoordinates}
       submitCallback={async (params) => {
         const result = await createProtest({ ...params, user });
         return result;
@@ -13,3 +17,5 @@ export default function AddProtest({ initialCoords, user }) {
     />
   );
 }
+
+export default observer(AddProtest);

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores';
 import { useHistory } from 'react-router-dom';
 import { realtimeDB } from '../../firebase';
 import { CheckInModal, Button } from '../../components';
@@ -50,12 +52,13 @@ function renderView({ currentView, currentProtest, checkIns }) {
   }
 }
 
-function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
+function LiveEvent({ user, closeProtests }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
   const [currentView, setCurrentView] = useState(VIEWS.feed);
   const [checkIns, setCheckIns] = useState([]);
   const [hasCheckedIn, setCheckedIn] = useState(false);
+  const store = useStore();
   const wrapper = useRef(null);
   const history = useHistory();
 
@@ -146,8 +149,8 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
           setProtest={setProtest}
           setModalOpen={setModalOpen}
           closeProtests={closeProtests}
-          coordinates={coordinates}
-          setCoordinates={setCoordinates}
+          coordinates={store.userCoordinates}
+          setCoordinates={store.setCoordinates}
           setCheckedIn={setCheckedIn}
           user={user}
         />
@@ -156,4 +159,4 @@ function LiveEvent({ user, closeProtests, coordinates, setCoordinates }) {
   );
 }
 
-export default LiveEvent;
+export default observer(LiveEvent);
