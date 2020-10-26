@@ -1,19 +1,24 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { setLocalStorage, getLocalStorage } from '../localStorage';
+import ProtestStore from './ProtestStore';
+import MapStore from './MapStore';
 
 class RootStore {
   userCoordinates = [];
-  counter = 1;
 
   constructor() {
     makeAutoObservable(this);
+    this.protestStore = new ProtestStore(this);
+    this.mapStore = new MapStore(this);
     this.checkCache();
   }
 
   checkCache() {
     const cachedCoordinates = getLocalStorage('1km_user_coordinates');
     if (cachedCoordinates) {
-      this.setCoordinates(cachedCoordinates);
+      runInAction(() => {
+        this.userCoordinates = cachedCoordinates;
+      });
     }
   }
 

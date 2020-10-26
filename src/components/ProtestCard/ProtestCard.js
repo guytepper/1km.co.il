@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components/macro';
-import { DispatchContext } from '../../context';
+import { useStore } from '../../stores';
 import { useHistory } from 'react-router-dom';
 import { formatDistance, dateToDayOfWeek, formatDate, getUpcomingDate } from '../../utils';
 
@@ -13,7 +13,7 @@ function getFormattedDate(date) {
 }
 
 function ProtestCard({ protestInfo, showAction = false, style }) {
-  const dispatch = useContext(DispatchContext);
+  const store = useStore();
   const history = useHistory();
 
   const { displayName, streetAddress, distance, meeting_time: meetingTime, dateTimeList, id } = protestInfo;
@@ -25,8 +25,8 @@ function ProtestCard({ protestInfo, showAction = false, style }) {
     <ProtestCardWrapper
       tabIndex="0"
       style={style}
-      onMouseOver={() => dispatch({ type: 'setHoveredProtest', payload: id })}
-      onMouseOut={() => dispatch({ type: 'setHoveredProtest', payload: null })}
+      onMouseOver={() => store.mapStore.setHoveredProtestId(protestInfo.id)}
+      onMouseOut={() => store.mapStore.setHoveredProtestId(null)}
       onClick={() => {
         history.push(`/protest/${id}`);
       }}
