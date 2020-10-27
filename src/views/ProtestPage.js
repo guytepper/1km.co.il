@@ -120,9 +120,9 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               {getFutureDates(dateTimeList).length !== 0 ? (
                 getFutureDates(dateTimeList).map((dateTime) => (
                   <DateCard key={dateTime.id}>
-                    <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
                     <DateText>
-                      יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                      <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
+                      {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
                     </DateText>
                   </DateCard>
                 ))
@@ -167,7 +167,6 @@ export default function ProtestPage({ user, userCoordinates }) {
   const { protest, setProtest } = useFetchProtest();
   const history = useHistory();
   // const { onFileUpload } = useFileUpload(false);
-
   if (!protest) {
     // TODO: loading state
     return <div>טוען...</div>;
@@ -347,15 +346,9 @@ const DateCard = styled.li`
 `;
 
 const DateText = styled.span`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  letter-spacing: 0em;
-`;
-
-const BoldDateText = styled(DateText)`
-  font-weight: 700;
-  margin-left: 17.5px;
 `;
 
 const SocialButtons = styled.div``;
