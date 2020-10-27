@@ -2,26 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../stores';
 import styled from 'styled-components/macro';
-import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest, getProtestsForLeader } from '../api';
-import { Map, TileLayer, Marker } from 'react-leaflet';
-import { ProtestForm, ProtectedRoute } from '../components';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams } from 'react-router-dom';
+import { fetchProtest, getProtestsForLeader, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { Map, Marker, TileLayer } from 'react-leaflet';
+import { ProtectedRoute, ProtestForm } from '../components';
 import {
-  ProtestCardInfo,
   ProtestCardDetail,
-  ProtestCardIcon,
   ProtestCardGroupButton,
+  ProtestCardIcon,
+  ProtestCardInfo,
 } from '../components/ProtestCard/ProtestCardStyles';
 import {
+  calculateDistance,
   dateToDayOfWeek,
   formatDate,
+  formatDistance,
   isAdmin,
-  sortDateTimeList,
   isAuthenticated,
   isVisitor,
-  calculateDistance,
-  formatDistance,
+  sortDateTimeList,
 } from '../utils';
 
 const mobile = `@media (max-width: 768px)`;
@@ -70,9 +69,13 @@ function useFetchProtest() {
   };
 }
 
+function getFutureDates(dateTimeList) {
+  return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+}
+
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
 
   return (
     <ProtestPageContainer>
@@ -116,19 +119,20 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             </SectionTitle>
 
             <Dates>
-              {dateTimeList ? (
-                dateTimeList.map((dateTime) => (
-                  <Date key={dateTime.id}>
-                    <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
+              {futureDates.length > 0 ? (
+                futureDates.map((dateTime) => (
+                  <DateCard key={dateTime.id}>
                     <DateText>
-                      יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                      <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
+                      {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
                     </DateText>
-                  </Date>
+                  </DateCard>
                 ))
               ) : (
-                <Date>
-                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
-                </Date>
+                <DateCard>
+                  <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
+                  <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
+                </DateCard>
               )}
             </Dates>
             <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
@@ -167,7 +171,6 @@ function ProtestPage({ user }) {
   const history = useHistory();
 
   // const { onFileUpload } = useFileUpload(false);
-
   if (!protest) {
     // TODO: loading state
     return <div>טוען...</div>;
@@ -344,20 +347,14 @@ const Dates = styled.ul`
   }
 `;
 
-const Date = styled.li`
+const DateCard = styled.li`
   list-style: none;
 `;
 
 const DateText = styled.span`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  letter-spacing: 0em;
-`;
-
-const BoldDateText = styled(DateText)`
-  font-weight: 700;
-  margin-left: 17.5px;
 `;
 
 const SocialButtons = styled.div``;
