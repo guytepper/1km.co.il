@@ -1,6 +1,7 @@
 import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
 import { nanoid } from 'nanoid';
+import { calculateDistance } from '../utils';
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 /**
@@ -112,20 +113,25 @@ export async function uploadFile(params) {
 
 export async function fetchNearbyProtests(position) {
   const geocollection = GeoFirestore.collection('protests');
+
   const query = geocollection.near({
     center: new firebase.firestore.GeoPoint(position[0], position[1]),
-    radius: 2,
+    radius: 20,
   });
-  const snapshot = await query.limit(10).get();
+
+  const snapshot = await query.limit(35).get();
+
   const protests = snapshot.docs.map((doc) => {
     const { latitude, longitude } = doc.data().g.geopoint;
     const protestLatlng = [latitude, longitude];
     return {
       id: doc.id,
       latlng: protestLatlng,
+      distance: calculateDistance(position, protestLatlng),
       ...doc.data(),
     };
   });
+
   return protests;
 }
 

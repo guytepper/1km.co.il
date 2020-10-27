@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../stores';
 import styled from 'styled-components/macro';
 import { Route, Switch, useHistory, useParams } from 'react-router-dom';
 import { fetchProtest, getProtestsForLeader, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
@@ -163,9 +165,11 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   );
 }
 
-export default function ProtestPage({ user, userCoordinates }) {
+function ProtestPage({ user }) {
   const { protest, setProtest } = useFetchProtest();
+  const store = useStore();
   const history = useHistory();
+
   // const { onFileUpload } = useFileUpload(false);
   if (!protest) {
     // TODO: loading state
@@ -210,11 +214,13 @@ export default function ProtestPage({ user, userCoordinates }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} userCoordinates={userCoordinates} user={user} />
+        <ProtestPageContent protest={protest} userCoordinates={store.userCoordinates} user={user} />
       </Route>
     </Switch>
   );
 }
+
+export default observer(ProtestPage);
 
 //----------------- Styles -------------------------//
 

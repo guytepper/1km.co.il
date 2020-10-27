@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores';
+import { pointWithinRadius } from '../../utils';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
@@ -43,19 +46,46 @@ const PopupMarker = ({ coordinates, marker, hovered, ...props }) => {
 };
 
 const MarkersList = ({ markers, hoveredProtest }) => {
-  const items = markers.map((props) => <PopupMarker key={props.id} {...props} hovered={hoveredProtest?.id === props.id} />);
+  let items = [];
+
+  // TODO: useMemo for items
+  if (markers.length > 0) {
+    items = markers.map((props) => <PopupMarker key={props.id} {...props} hovered={hoveredProtest?.id === props.id} />);
+  }
+  console.log('items: ', items);
   return <>{items}</>;
 };
 
 // Initial map value, before the user provide their coordinates.
 const balfur = [31.7749837, 35.219797];
 
-function AppMap({ markers, coordinates, setMapPosition, hoveredProtest }) {
+function AppMap({ hoveredProtest }) {
+  const store = useStore();
+  const { mapStore, protestStore, userCoordinates: coordinates } = store;
+
+  const updateMap = (currentMapPosition) => {
+    // The following if condition is a 'hack' to check if the userCoordinates have just updated their position
+    // If they did, update the protest list with the fetched nearby protests (by setting the onlyMarkers parameter to false)
+    // TODO: Check if the user has just updated their position & update nearby protests list in a more elegant way.
+    if (currentMapPosition[0] === coordinates[0]) {
+      protestStore.fetchProtests({ onlyMarkers: false, position: currentMapPosition });
+    } else {
+      // Check if the protests in the current map position were requested already.
+      const alreadyRequested = mapStore.mapPositionHistory.some((pos) => pointWithinRadius(pos, currentMapPosition, 3000));
+
+      if (!alreadyRequested) {
+        protestStore.fetchProtests({ onlyMarkers: true, position: currentMapPosition });
+      }
+    }
+
+    mapStore.setMapPosition(currentMapPosition);
+  };
+
   return (
     <MapWrapper
       center={coordinates.length > 0 ? coordinates : balfur}
-      onMoveEnd={(t) => {
-        setMapPosition([t.target.getCenter().lat, t.target.getCenter().lng]);
+      onMoveEnd={({ target }) => {
+        updateMap([target.getCenter().lat, target.getCenter().lng]);
       }}
       zoom={14}
     >
@@ -63,10 +93,10 @@ function AppMap({ markers, coordinates, setMapPosition, hoveredProtest }) {
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {coordinates.length === 2 && (
+      {coordinates.length > 0 && (
         <>
           <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={markers} hoveredProtest={hoveredProtest} />
+          <MarkersList markers={mapStore.markers} hoveredProtest={hoveredProtest} />
           {MKs.map((mk) => (
             <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
               <Popup>{mk.name}</Popup>
@@ -91,4 +121,4 @@ const MapWrapper = styled(Map)`
   }
 `;
 
-export default AppMap;
+export default observer(AppMap);
