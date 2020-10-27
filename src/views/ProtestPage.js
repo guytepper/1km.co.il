@@ -77,6 +77,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
 
+  const futureDates = getFutureDates(dateTimeList);
+
   return (
     <ProtestPageContainer>
       <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
