@@ -117,8 +117,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
             </SectionTitle>
 
             <Dates>
-              {getFutureDates(dateTimeList).length !== 0 ? (
-                getFutureDates(dateTimeList).map((dateTime) => (
+              {futureDates.length > 0 ? (
+                futureDates.map((dateTime) => (
                   <DateCard key={dateTime.id}>
                     <DateText>
                       <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
