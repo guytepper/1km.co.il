@@ -128,7 +128,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                 ))
               ) : (
                 <DateCard>
-                  <BoldDateText> לא דווחו הפגנות עדכניות!</BoldDateText>
+                  <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
+                  <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
                 </DateCard>
               )}
             </Dates>
