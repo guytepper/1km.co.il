@@ -7,6 +7,7 @@ import { CheckInModal, Button } from '../../components';
 import { CheckInList, WithMeList } from './';
 import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
+import { EVENT_DATE } from './event_data';
 
 const VIEWS = {
   feed: 'liveFeed',
@@ -88,7 +89,7 @@ function LiveEvent({ user, closeProtests }) {
   }, [currentProtest]);
 
   useEffect(() => {
-    const checkIns = realtimeDB.ref('24-10-20_check_ins').orderByChild('createdAt').limitToLast(15);
+    const checkIns = realtimeDB.ref(`${EVENT_DATE}_check_ins`).orderByChild('createdAt').limitToLast(15);
     checkIns.on('child_added', (data) => {
       setCheckIns((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
@@ -105,7 +106,7 @@ function LiveEvent({ user, closeProtests }) {
   }, []);
 
   useEffect(() => {
-    const checkedIn = getLocalStorage('24-10-20_check_in');
+    const checkedIn = getLocalStorage(`${EVENT_DATE}_check_in`);
     if (checkedIn) {
       setCheckedIn(true);
     }
