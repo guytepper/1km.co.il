@@ -24,6 +24,8 @@ function ProtestMap() {
     if (protestStore.nearbyProtests.length === 0 && protestStore.state === 'pending') {
       protestStore.fetchProtests({ onlyMarkers: false });
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

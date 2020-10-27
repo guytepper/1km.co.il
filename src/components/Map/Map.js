@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { pointWithinRadius } from '../../utils';

@@ -1,4 +1,4 @@
-import { runInAction, makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 class MapStore {
   rootStore = null;

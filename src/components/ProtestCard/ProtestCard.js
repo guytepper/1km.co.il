@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
 import { useStore } from '../../stores';
 import { useHistory } from 'react-router-dom';
