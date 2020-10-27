@@ -73,7 +73,7 @@ function getFutureDates(dateTimeList) {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
-  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
+  const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
 
   return (
     <ProtestPageContainer>
