@@ -20,6 +20,13 @@ export const realtimeDB = firebase.database();
 export const storage = firebase.app().storage(process.env.REACT_APP_FIREBASE_CUSTOM_STORAGE).ref();
 export const auth = firebase.auth();
 
+if (process.env.NODE_ENV === 'development') {
+  firestore.settings({
+    host: 'localhost:6001',
+    ssl: false,
+  });
+}
+
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
 export const signOut = () => auth.signOut();

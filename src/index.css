@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 @font-face {
   font-family: 'Simpler';
   font-weight: 200;
@@ -240,4 +242,8 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 .bm-upper-section {
   display: flex;
+}
+
+.ant-upload.ant-upload-select {
+  display: block;
 }

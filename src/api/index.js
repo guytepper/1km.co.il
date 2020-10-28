@@ -309,5 +309,3 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
   // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
 }
-
-export async function protestCheckIn({ userId, protestId }) {}
