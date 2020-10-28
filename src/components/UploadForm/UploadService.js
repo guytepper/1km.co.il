@@ -1,4 +1,5 @@
-import firebase, { firestore } from '../../firebase';
+import firebase, { firestore, realtimeDB } from '../../firebase';
+import { EVENT_DATE } from '../../views/LiveEvent/event_data';
 
 export async function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -26,7 +27,7 @@ export async function uploadImage(base64File) {
   }
 }
 
-export async function savePictureToFirestore({ imageUrl, protestId, userId }) {
+export async function savePictureToFirestore({ imageUrl, protestId, userId, annonymousUpload }) {
   const pictureParams = {
     url: imageUrl,
     protestId,
@@ -36,4 +37,10 @@ export async function savePictureToFirestore({ imageUrl, protestId, userId }) {
 
   const pictureDoc = await firestore.collection('pictures').add(pictureParams);
   return pictureDoc;
+}
+
+export async function savePictureToLiveFeed(livePictureData) {
+  const livePicture = realtimeDB.ref(`${EVENT_DATE}_pictures`).push();
+  await livePicture.set({ ...livePictureData, createdAt: firebase.database.ServerValue.TIMESTAMP });
+  return livePicture;
 }
