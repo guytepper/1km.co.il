@@ -85,6 +85,16 @@ a:hover {
   display: block;
 }
 
+.ant-btn:enabled.bg-success {
+  background-color: #70c040;
+  border-color: #70c040;
+}
+
+.ant-btn:enabled.bg-success:hover {
+  background-color: #7bc84f;
+  border-color: #7bc84f;
+}
+
 /** React Modal Overrides **/
 
 .ReactModal__Overlay {

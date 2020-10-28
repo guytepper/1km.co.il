@@ -2,7 +2,10 @@ import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
 
 export const LiveEventWrapper = styled.div`
-  /* background: #f4f6fa; */
+  @media (min-width: 600px) {
+    width: 600px;
+    margin: 0 auto;
+  }
 `;
 
 export const LiveEventHeader = styled.div`
