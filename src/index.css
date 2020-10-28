@@ -75,6 +75,18 @@ li {
   margin-bottom: 5px;
 }
 
+/** Ant Design Overrites **/
+
+a:hover {
+  color: unset;
+}
+
+.ant-upload.ant-upload-select {
+  display: block;
+}
+
+/** React Modal Overrides **/
+
 .ReactModal__Overlay {
   z-index: 20;
 }
@@ -227,6 +239,10 @@ Note: Beware of modifying this element as it can break the animations - you shou
   margin-bottom: 10px;
 }
 
+.bm-item:hover {
+  color: #f6dcff;
+}
+
 /* Styling of overlay */
 .bm-overlay {
   position: fixed;
@@ -242,8 +258,4 @@ Note: Beware of modifying this element as it can break the animations - you shou
 
 .bm-upper-section {
   display: flex;
-}
-
-.ant-upload.ant-upload-select {
-  display: block;
 }
