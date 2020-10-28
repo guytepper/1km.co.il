@@ -5,7 +5,7 @@ import { getFullUserData, fetchProtest } from '../api';
 class UserStore {
   rootStore = null;
   user = null;
-  userCurrentProtest = null;
+  userCurrentProtest = '5McvqMWM5jpUXIKdN2Jo';
 
   constructor(rootStore) {
     makeAutoObservable(this, { rootStore: false });
@@ -24,8 +24,21 @@ class UserStore {
     });
   }
 
-  setUserProtest = (protestId) => {
-    this.userCurrentProtest = protestId;
+  setUserProtest = async (protestId) => {
+    let protest = null;
+    if (this.rootStore.protestStore.nearbyProtests.length > 0) {
+      protest = this.rootStore.protestStore.nearbyProtests.find((p) => p.id === protestId);
+    }
+
+    if (!protest) {
+      protest = await fetchProtest(protestId);
+    }
+
+    if (protest) {
+      this.userCurrentProtest = protest;
+    } else {
+      console.error('An erorr occured: Could not find protest.');
+    }
   };
 }
 
