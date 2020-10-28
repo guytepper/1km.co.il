@@ -23,7 +23,7 @@ function UploadForm({ afterUpload }) {
 
   return (
     <>
-      <Upload showUploadList={false} action={'http://localhost:5001/one-kol/us-central1/uploadImage'} beforeUpload={setFile}>
+      <Upload showUploadList={false} beforeUpload={setFile}>
         <div style={{ width: '100%', height: 280, marginBottom: 10 }}>
           <ImagePreview
             src={

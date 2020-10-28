@@ -31,8 +31,9 @@ export async function savePictureToFirestore({ imageUrl, protestId, userId }) {
     url: imageUrl,
     protestId,
     userId,
-    timestamp: firebase.database.ServerValue.TIMESTAMP,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
-  await firestore.collection('pictures').add(pictureParams);
+  const pictureDoc = await firestore.collection('pictures').add(pictureParams);
+  return pictureDoc;
 }
