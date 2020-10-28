@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import styled from 'styled-components/macro';
-import { Upload, Button } from 'antd';
+import { Upload, Button, Modal } from 'antd';
 import { UploadOutlined, PictureOutlined } from '@ant-design/icons';
+import { ProtestListSelection } from '../CheckInModal';
 import { Checkbox } from '../elements';
 import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
 import { uploadImage, fileToBase64 } from './UploadService';
 
 function UploadForm({ afterUpload }) {
   const [currentFile, setCurrentFile] = useState(null);
+  const [isAnnonymous, setAnnonymous] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const handleUpload = async () => {
     setUploading(true);
     const result = await uploadImage(currentFile);
+    console.log('resultt: ', result);
     setUploading(false);
-    afterUpload(result);
+    afterUpload(result, isAnnonymous);
   };
 
   const setFile = async (file) => {
@@ -43,12 +46,9 @@ function UploadForm({ afterUpload }) {
         >
           <span style={{ marginRight: 7, marginBottom: 3 }}>מציאה אוטומטית לפי מיקום</span>
         </Button>
-        <Button size="large" style={{ width: '100%' }}>
-          <span style={{ marginRight: 7, marginBottom: 3 }}>בחירה ידנית</span>
-        </Button>
       </UploadFormSection>
       <label>
-        <Checkbox> העלאה אנונימית (שמכם לא יוצג באתר) </Checkbox>
+        <Checkbox onChange={(checked) => setAnnonymous(checked)}> העלאה אנונימית (שמכם לא יוצג באתר) </Checkbox>
       </label>
       <Button
         type="primary"
@@ -72,7 +72,7 @@ export default observer(UploadForm);
 const UploadFormWrapper = styled.div`
   max-width: 375px;
   margin: 0 auto;
-  padding: 10px;
+  padding: 25px 10px;
 `;
 
 const UploadFormSection = styled.div`
