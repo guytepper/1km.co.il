@@ -5,9 +5,10 @@ function Checkbox({ children, onChange, disabled, style }) {
   const [checked, setChecked] = useState(false);
 
   const onCheck = (isChecked) => {
-    setChecked(!isChecked);
+    const checkedUpdated = !checked;
+    setChecked(checkedUpdated);
     if (onChange) {
-      onChange();
+      onChange(checkedUpdated);
     }
   };
 
