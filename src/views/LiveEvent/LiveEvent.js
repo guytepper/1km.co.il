@@ -33,8 +33,8 @@ function LiveEvent({ user, closeProtests }) {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
   const [currentView, setCurrentView] = useState(VIEWS.pictures);
-  const [checkIns, setCheckIns] = useState([]);
-  const [hasCheckedIn, setCheckedIn] = useState(false);
+  // const [checkIns, setCheckIns] = useState([]);
+  // const [hasCheckedIn, setCheckedIn] = useState(false);
   const store = useStore();
   const wrapper = useRef(null);
   const history = useHistory();
@@ -64,25 +64,26 @@ function LiveEvent({ user, closeProtests }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentProtest]);
 
-  useEffect(() => {
-    const checkIns = realtimeDB.ref(`${EVENT_DATE}_check_ins`).orderByChild('createdAt').limitToLast(15);
-    checkIns.on('child_added', (data) => {
-      setCheckIns((prevState) => {
-        return [{ ...data.val(), id: data.key }, ...prevState];
-      });
-    });
+  // useEffect(() => {
+  //   const checkIns = realtimeDB.ref(`24-10-20_check_ins`).orderByChild('createdAt').limitToLast(15);
+  //   checkIns.on('child_added', (data) => {
+  //     console.log(data);
+  //     setCheckIns((prevState) => {
+  //       return [{ ...data.val(), id: data.key }, ...prevState];
+  //     });
+  //   });
 
-    return () => {
-      checkIns.off();
-    };
-  }, []);
+  //   return () => {
+  //     checkIns.off();
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    const checkedIn = getLocalStorage(`${EVENT_DATE}_check_in`);
-    if (checkedIn) {
-      setCheckedIn(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const checkedIn = getLocalStorage(`${EVENT_DATE}_check_in`);
+  //   if (checkedIn) {
+  //     setCheckedIn(true);
+  //   }
+  // }, []);
 
   useEffect(() => {
     wrapper.current.scrollTop = 0;
@@ -95,13 +96,13 @@ function LiveEvent({ user, closeProtests }) {
           <LiveEventHeader.Button.Icon src="/icons/image-gallery.svg" />
           פיד תמונות
         </LiveEventHeader.Button>
-        <LiveEventHeader.Button selected={currentView === VIEWS.withMe} onClick={() => setCurrentView(VIEWS.withMe)}>
+        {/* <LiveEventHeader.Button selected={currentView === VIEWS.withMe} onClick={() => setCurrentView(VIEWS.withMe)}>
           <LiveEventHeader.Button.Icon src="/icons/strike.svg" />
           מפגינים איתי
-        </LiveEventHeader.Button>
+        </LiveEventHeader.Button> */}
       </LiveEventHeader>
       {/* <LiveEventMessage>המידע מתעדכן בזמן אמת</LiveEventMessage> */}
-      <LiveCurrentView>{renderView({ currentView, checkIns, currentProtest })}</LiveCurrentView>
+      <LiveCurrentView>{renderView({ currentView, currentProtest })}</LiveCurrentView>
     </LiveEventWrapper>
   );
 }

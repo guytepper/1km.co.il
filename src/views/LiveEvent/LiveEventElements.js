@@ -9,10 +9,11 @@ export const LiveEventWrapper = styled.div`
 `;
 
 export const LiveEventHeader = styled.div`
-  position: sticky;
-  top: 60px;
+  /* position: sticky;
+  top: 60px; */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: 1fr;
   box-shadow: 0 0 0px 1px #e4e6eb;
   font-size: 12px;
   z-index: 2;
