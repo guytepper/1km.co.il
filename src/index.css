@@ -95,6 +95,19 @@ a:hover {
   border-color: #7bc84f;
 }
 
+.ant-modal-confirm-body {
+  display: flex;
+}
+
+.ant-modal-confirm-body .anticon-check-circle {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  float: left;
+}
+
 /** React Modal Overrides **/
 
 .ReactModal__Overlay {

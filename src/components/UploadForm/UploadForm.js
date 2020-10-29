@@ -1,29 +1,87 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
-import { Upload, Button, Modal } from 'antd';
+import { Upload, Button, Modal, Typography } from 'antd';
 import { UploadOutlined, PictureOutlined } from '@ant-design/icons';
-import { ProtestListSelection } from '../CheckInModal';
+import ProtestSelection from '../ProtestSelection';
 import { Checkbox } from '../elements';
 import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
-import { uploadImage, fileToBase64 } from './UploadService';
+import { uploadImage, fileToBase64, savePictureToFirestore, savePictureToLiveFeed } from './UploadService';
+import queryString from 'query-string';
+
+const { Title } = Typography;
 
 function UploadForm({ afterUpload }) {
   const [currentFile, setCurrentFile] = useState(null);
+  const [protestModalState, setProtestModalState] = useState(false);
   const [isAnnonymous, setAnnonymous] = useState(false);
   const [uploading, setUploading] = useState(false);
 
+  const store = useStore();
+  const history = useHistory();
+
+  const { userStore } = store;
+
   const handleUpload = async () => {
+    const { userCurrentProtest, user } = userStore;
+
+    if (!userCurrentProtest) {
+      alert('העלאה נכשלה: התמונה לא משוייכת להפגנה.');
+      return;
+    }
+
+    if (!user?.uid) {
+      alert('העלאה נכשלה: אינך מחובר/ת.');
+      return;
+    }
+
     setUploading(true);
+
     const result = await uploadImage(currentFile);
-    console.log('resultt: ', result);
+    if (!result) {
+      alert('לא הצלחנו להעלות את התמונה.\nאם הבעיה ממשיכה להתרחש, אנא צרו איתנו קשר.');
+      return;
+    }
+
+    const imageUrl = result.secure_url;
+
+    const pictureData = { imageUrl, protestId: userCurrentProtest.id };
+
+    if (!isAnnonymous) {
+      pictureData.userId = user.uid;
+    }
+
+    await savePictureToFirestore(pictureData);
+    // TODO: Save to annonymous collection
+
+    pictureData.protestName = userCurrentProtest.displayName;
+    pictureData.uploaderName = `${user.firstName || user.first_name} ${user.lastName || user.last_name}`;
+
+    await savePictureToLiveFeed(pictureData);
+
     setUploading(false);
-    afterUpload(result, isAnnonymous);
+
+    Modal.success({
+      title: 'התמונה הועלתה בהצלחה!',
+      onOk: () => {
+        const { returnUrl } = queryString.parse(window.location.search);
+        if (returnUrl) {
+          history.push(returnUrl);
+        }
+      },
+    });
   };
 
   const setFile = async (file) => {
     const base64File = await fileToBase64(file);
     setCurrentFile(base64File);
+  };
+
+  const handleProtestSelection = (protest) => {
+    userStore.setUserProtest(protest);
+    setProtestModalState(false);
   };
 
   return (
@@ -37,14 +95,25 @@ function UploadForm({ afterUpload }) {
       </UploadFormSection>
       <UploadFormSection>
         <UploadFormSection.Header>שיוך תמונה להפגנה</UploadFormSection.Header>
-        <p>נמצאים בהפגנה עכשיו? לחצו על הכפתור ונאתר את ההפגנה אוטומטית. </p>
-        <Button
-          type="primary"
-          size="large"
-          style={{ width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          icon={<GPSIcon width="16" height="16" />}
-        >
-          <span style={{ marginRight: 7, marginBottom: 3 }}>מציאה אוטומטית לפי מיקום</span>
+        {userStore.userCurrentProtest ? (
+          <Title level={3} style={{ textAlign: 'center' }}>
+            {userStore.userCurrentProtest.displayName}
+          </Title>
+        ) : (
+          <p>
+            <p>נמצאים בהפגנה עכשיו? לחצו על הכפתור ונאתר את ההפגנה אוטומטית. </p>
+            <Button
+              type="primary"
+              size="large"
+              style={{ width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              icon={<GPSIcon width="16" height="16" />}
+            >
+              <span style={{ marginRight: 7, marginBottom: 3 }}>מציאה אוטומטית לפי מיקום</span>
+            </Button>
+          </p>
+        )}
+        <Button onClick={() => setProtestModalState(true)} size="large" style={{ width: '100%' }}>
+          בחירת הפגנה ידנית
         </Button>
       </UploadFormSection>
       <label>
@@ -56,13 +125,16 @@ function UploadForm({ afterUpload }) {
         icon={<UploadOutlined />}
         shape="round"
         onClick={handleUpload}
-        disabled={!currentFile}
+        disabled={!currentFile || !userStore.userCurrentProtest}
         loading={uploading}
         style={{ marginTop: 16, width: '100%' }}
         className="bg-success"
       >
         {uploading ? 'שולח תמונה..' : 'העלאת תמונה'}
       </Button>
+      <Modal visible={protestModalState} onCancel={() => setProtestModalState(false)} footer={null} closable={false}>
+        <ProtestSelection onProtestSelection={handleProtestSelection} />
+      </Modal>
     </UploadFormWrapper>
   );
 }

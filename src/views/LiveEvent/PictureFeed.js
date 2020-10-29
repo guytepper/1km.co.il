@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { Avatar, Image, Affix } from 'antd';
 import { useHistory } from 'react-router-dom';
+import { Avatar, Image, Affix } from 'antd';
+import styled from 'styled-components/macro';
 import { UploadForm } from '../../components';
 import ActionButton from '../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../firebase';
-import { savePictureToFirestore, savePictureToLiveFeed } from '../../components/UploadForm/UploadService';
-import styled from 'styled-components/macro';
 import { EVENT_DATE } from './event_data';
 import TimeAgo from 'timeago-react';
 
@@ -22,36 +21,6 @@ function PictureFeed() {
   const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
-
-  // TODO: MOVE OUT
-  store.userStore.setUserProtest('5McvqMWM5jpUXIKdN2Jo');
-
-  const afterUpload = async (file, isAnnonymous) => {
-    const imageUrl = file.secure_url;
-    const { userCurrentProtest, user } = store.userStore;
-    if (!store.userStore.userCurrentProtest) {
-      alert('העלאה נכשלה: התמונה לא משוייכת להפגנה.');
-      return;
-    }
-
-    if (!user?.uid) {
-      alert('העלאה נכשלה: אינך מחובר/ת.');
-      return;
-    }
-
-    const pictureData = { imageUrl, protestId: userCurrentProtest.id };
-
-    if (!isAnnonymous) {
-      pictureData.userId = user.uid;
-    }
-
-    await savePictureToFirestore(pictureData);
-
-    pictureData.protestName = userCurrentProtest.displayName;
-    pictureData.uploaderName = `${user.firstName || user.first_name} ${user.lastName || user.last_name}`;
-
-    await savePictureToLiveFeed(pictureData);
-  };
 
   useEffect(() => {
     const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(15);
