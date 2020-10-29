@@ -15,6 +15,7 @@ import {
   LiveEvent,
   FourOhFour,
 } from './views';
+import { UploadForm } from './components';
 import { isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
@@ -157,8 +158,11 @@ function App() {
             <Route exact path="/balfur">
               <Redirect to="/live" />
             </Route>
-            <Route exact path="/balfur/qr">
-              <Redirect to="/live/check-in/" />
+            <Route exact path="/live/qr">
+              <Redirect to="/live/" />
+            </Route>
+            <Route exact path="/upload-image">
+              <UploadForm />
             </Route>
 
             <Route exact path={['/support-the-project/', '/about']}>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { Avatar, Image, Affix } from 'antd';
+import { useHistory } from 'react-router-dom';
 import { UploadForm } from '../../components';
 import ActionButton from '../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../assets/icons/gallery.svg';
@@ -20,6 +21,7 @@ function PictureFeed() {
   const store = useStore();
   const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(true);
+  const history = useHistory();
 
   // TODO: MOVE OUT
   store.userStore.setUserProtest('5McvqMWM5jpUXIKdN2Jo');
@@ -110,7 +112,7 @@ function PictureFeed() {
         />
       </Card>
       <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
-        <ActionButton onClick={() => alert(1)} icon={GalleryIcon}>
+        <ActionButton onClick={() => history.push('/upload-image?returnUrl=/live')} icon={GalleryIcon}>
           העלאת תמונה
         </ActionButton>
       </div>
