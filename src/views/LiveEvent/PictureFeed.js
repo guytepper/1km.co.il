@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { Avatar, Image } from 'antd';
+import { Avatar, Image, Affix } from 'antd';
 import { UploadForm } from '../../components';
+import ActionButton from '../../components/elements/Button/ActionButton';
+import GalleryIcon from '../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../firebase';
 import { savePictureToFirestore, savePictureToLiveFeed } from '../../components/UploadForm/UploadService';
 import styled from 'styled-components/macro';
@@ -107,6 +109,11 @@ function PictureFeed() {
           alt=""
         />
       </Card>
+      <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
+        <ActionButton onClick={() => alert(1)} icon={GalleryIcon}>
+          העלאת תמונה
+        </ActionButton>
+      </div>
     </div>
   );
 }
