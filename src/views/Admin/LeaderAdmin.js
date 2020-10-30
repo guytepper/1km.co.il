@@ -71,7 +71,10 @@ const LeaderAdmin = ({ user }) => {
       <FormWrapper>
         {state.currentLeaderRequest ? (
           <LeaderCard>
-            <LeaderPhoto style={{ width: '120px', height: '120px' }} src={state.currentLeaderRequest.user.picture_url} />
+            <LeaderPhoto
+              style={{ width: '120px', height: '120px' }}
+              src={state.currentLeaderRequest.user.pictureUrl || '/anonymousPofile.png'}
+            />
             <div>
               <Field name="שם" value={state.currentLeaderRequest.user.displayName} />
               <Field name="מספר טלפון" value={state.currentLeaderRequest.user.phoneNumber} />

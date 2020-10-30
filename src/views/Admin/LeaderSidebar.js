@@ -37,7 +37,7 @@ const LeaderSidebar = ({ state, dispatch }) => {
               {new Date(request.created_at.seconds * 1000).toLocaleTimeString('he-IL')}{' '}
               {new Date(request.created_at.seconds * 1000).toLocaleDateString('he-IL')}
             </div>
-            <LeaderPhoto src={request.user.picture_url} />
+            <LeaderPhoto src={request.user.pictureUrl || '/anonymousPofile.png'} />
             <div>
               <Field name="שם" value={request.user.displayName} />
               <Field name="מספר טלפון" value={request.user.phoneNumber} />

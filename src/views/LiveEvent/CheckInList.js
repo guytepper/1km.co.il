@@ -20,7 +20,7 @@ function CheckInList({ checkIns }) {
       {checkIns?.length > 0 ? (
         transitions.map(({ item, props, key }, i) => (
           <CheckIn key={key} style={i === 0 ? props : {}}>
-            <UserAvatar src={item.picture_url === '' ? '/anonymousPofile.png' : item.picture_url} />
+            <UserAvatar src={item.pictureUrl === '' ? '/anonymousPofile.png' : item.pictureUrl} />
             <CheckIn.Info>
               <CheckIn.Name>
                 {item.firstName} {item.lastName}

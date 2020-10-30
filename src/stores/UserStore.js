@@ -51,7 +51,7 @@ class UserStore {
   };
 
   setUserPicture = (pictureUrl = '') => {
-    this.user.picture_url = pictureUrl;
+    this.user.pictureUrl = pictureUrl;
   };
 }
 

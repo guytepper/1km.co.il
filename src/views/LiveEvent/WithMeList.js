@@ -28,9 +28,9 @@ function WithMeList({ currentProtest }) {
           return [{ ...user, id: data.key }, ...prevState];
         });
 
-        if (user.picture_url) {
+        if (user.pictureUrl) {
           setAvatars((prevState) => {
-            return [...prevState, { url: user.picture_url, id: data.key }];
+            return [...prevState, { url: user.pictureUrl, id: data.key }];
           });
         }
       });

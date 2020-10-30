@@ -42,7 +42,7 @@ function UploadForm({ afterUpload }) {
       return;
     }
 
-    if (!user?.uid) {
+    if (!user) {
       alert('העלאה נכשלה: אינך מחובר/ת.');
       return;
     }
@@ -62,7 +62,7 @@ function UploadForm({ afterUpload }) {
     if (!isAnnonymous) {
       pictureData.userId = user.uid;
       pictureData.uploaderName = `${user.firstName || ''} ${user.lastName || ''}`;
-      pictureData.userAvatar = user.picture_url;
+      pictureData.userAvatar = user.pictureUrl || '';
     }
 
     const savedPicture = await savePictureToFirestore(pictureData);

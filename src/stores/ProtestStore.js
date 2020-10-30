@@ -12,11 +12,11 @@ class ProtestStore {
   }
 
   get closeProtests() {
-    return this.nearbyProtests.filter((p) => p.distance <= 1000).sort((p1, p2) => p1.distance - p2.distance) || [];
+    return this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance) || [];
   }
 
   get farProtests() {
-    return this.nearbyProtests.filter((p) => p.distance > 1000).sort((p1, p2) => p1.distance - p2.distance);
+    return this.nearbyProtests.filter((p) => p.distance >= 2000).sort((p1, p2) => p1.distance - p2.distance);
   }
 
   async fetchProtests({ onlyMarkers, position }) {

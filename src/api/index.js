@@ -166,11 +166,11 @@ export async function saveUserInFirestore(userData) {
   if (userDoc.exists) {
     return { ...userDoc, exists: true };
   } else {
-    const { picture_url } = userData;
+    const { pictureUrl } = userData;
     const filename = `${nanoid()}.jpeg`;
     const profilePicsRef = storage.child('profile_pics/' + filename);
 
-    return fetch(picture_url)
+    return fetch(pictureUrl)
       .then((res) => {
         return res.blob();
       })
@@ -182,14 +182,15 @@ export async function saveUserInFirestore(userData) {
             const url = snapshot.ref.getDownloadURL();
             return url;
           })
-          .then((url) => {
-            const { first_name: initialFirst, last_name: initialLast, displayName } = userData;
+          .then((pictureUrl) => {
+            const { uid, first_name: initialFirst, last_name: initialLast, displayName } = userData;
             const updatedUserObject = {
+              uid,
               initialFirst,
               initialLast,
               displayName,
-              picture_url: url,
-              created_at: firebase.firestore.FieldValue.serverTimestamp(),
+              pictureUrl,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             };
             return userRef.set(updatedUserObject).then(() => updatedUserObject);
           });
@@ -248,17 +249,16 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 }
 
 export function extractUserData(result) {
-  const { uid, displayName, email } = result.user;
+  const { uid, displayName } = result.user;
   const { first_name, last_name, picture } = result.additionalUserInfo.profile;
-  const picture_url = picture.data.url;
+  const pictureUrl = picture.data.url;
 
   const userData = {
     uid,
-    email,
     first_name,
     last_name,
     displayName,
-    picture_url,
+    pictureUrl,
   };
 
   return userData;

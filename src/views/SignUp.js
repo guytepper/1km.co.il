@@ -103,7 +103,7 @@ export default function SignUp(props) {
         saveUserInFirestore(userData).then((userDoc) => {
           setStage(stages.AFTER_FACEBOOK_AUTH);
           userId = userDoc.uid;
-          pictureUrl = userDoc.picture_url;
+          pictureUrl = userDoc.pictureUrl;
         });
       })
       .catch((error) => {
