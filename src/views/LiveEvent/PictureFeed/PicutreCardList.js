@@ -28,7 +28,7 @@ function PictureCardList({ pictures }) {
                 {picture.uploaderName}
               </Card.Info.Subtitle>
             )}
-            <Card.Description>המהפכה מתקרבת! יא הו !</Card.Description>
+            {picture.description && <Card.Description>{picture.description}</Card.Description>}
             <Card.Info.Timestamp>
               <TimeAgo datetime={picture.createdAt} locale="he" />
             </Card.Info.Timestamp>
@@ -65,7 +65,7 @@ Card.Image = styled(Image)`
 Card.Info = styled.div`
   display: grid;
   grid-template-columns: 1fr 90px;
-  padding: 18px 24px 24px;
+  padding: 18px 24px;
 `;
 
 Card.Info.Title = styled.h3`

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
-import { Upload, Button, Modal, Typography } from 'antd';
+import { Upload, Input, Button, Modal, Typography } from 'antd';
 import { UploadOutlined, PictureOutlined } from '@ant-design/icons';
 import ProtestSelection from '../ProtestSelection';
 import { Checkbox } from '../elements';
@@ -22,6 +22,7 @@ const { Title } = Typography;
 
 function UploadForm({ afterUpload }) {
   const [currentFile, setCurrentFile] = useState(null);
+  const [description, setDescription] = useState('');
   const [protestModalState, setProtestModalState] = useState(false);
   const [manualAddressSelection, setManualAddressSelection] = useState(false);
   const [loadingProtests, setLoadingProtests] = useState(false);
@@ -56,7 +57,7 @@ function UploadForm({ afterUpload }) {
 
     const imageUrl = result.secure_url;
     const { id: protestId, displayName: protestName } = userCurrentProtest;
-    const pictureData = { imageUrl, protestId, protestName };
+    const pictureData = { imageUrl, protestId, protestName, description };
 
     if (!isAnnonymous) {
       pictureData.userId = user.uid;
@@ -102,6 +103,7 @@ function UploadForm({ afterUpload }) {
   const setFile = async (file) => {
     const base64File = await fileToBase64(file);
     setCurrentFile(base64File);
+    return false;
   };
 
   const handleProtestSelection = (protest) => {
@@ -113,13 +115,18 @@ function UploadForm({ afterUpload }) {
     <UploadFormWrapper>
       <UploadFormSection.Header style={{ textAlign: 'center', fontWeight: 600 }}>העלאת תמונה</UploadFormSection.Header>
       <UploadFormSection>
-        <Upload showUploadList={false} beforeUpload={setFile}>
+        <Upload showUploadList={false} beforeUpload={setFile} accept="image/*">
           <UploadButton icon={<PictureOutlined />}>{currentFile ? ' שינוי תמונה' : 'בחירת תמונה'}</UploadButton>
           <ImagePreview src={currentFile || '/images/picture-placeholder.svg'} alt="" />
         </Upload>
+        <UploadFormSection>
+          <Input onChange={(e) => setDescription(e.target.value)} placeholder="הוסיפו תיאור לתמונה..." />
+        </UploadFormSection>
       </UploadFormSection>
       <UploadFormSection>
-        <UploadFormSection.Header>שיוך תמונה להפגנה</UploadFormSection.Header>
+        <UploadFormSection.Header>
+          <span style={{ color: 'red', marginLeft: 4 }}>*</span>שיוך תמונה להפגנה
+        </UploadFormSection.Header>
         {userStore.userCurrentProtest ? (
           <Title level={3} style={{ textAlign: 'center' }}>
             {userStore.userCurrentProtest.displayName}

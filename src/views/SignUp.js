@@ -96,7 +96,6 @@ export default function SignUp(props) {
         const userData = extractUserData(result);
 
         saveUserInFirestore(userData).then((userDoc) => {
-          debugger;
           if (userDoc.exists) {
             redirectToReturnURL();
             return;

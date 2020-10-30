@@ -10,7 +10,6 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   // const [protests, setProtests] = useState([])
 
   const handleAddressSelection = (position) => {
-    console.log(position);
     store.setCoordinates(position);
     store.protestStore.fetchProtests({ onlyMarkers: false, position });
   };
