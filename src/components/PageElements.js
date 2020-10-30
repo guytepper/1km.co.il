@@ -17,6 +17,7 @@ export const PageContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   max-width: 350px;
+  margin-top: 20px;
 `;
 
 export const PageParagraph = styled.p`

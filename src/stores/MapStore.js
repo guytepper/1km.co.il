@@ -30,8 +30,6 @@ class MapStore {
     const filteredMarkers = protests.filter((a) => !this.markers.find((b) => b.id === a.id));
     const updatedMarkers = [...this.markers, ...filteredMarkers];
     this.markers = updatedMarkers;
-
-    console.log('Markers updated!', this.markers);
   }
 }
 

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
+import { useStore } from '../stores';
 import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
-import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../api';
-
+import { Modal, Button as AntButton, Form, Input, Typography } from 'antd';
+import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore, updateUserName } from '../api';
+import styled from 'styled-components/macro';
 import queryString from 'query-string';
+
+const { Title } = Typography;
 
 function SignUpBeforeRedirect({ returnUrl }) {
   return (
@@ -14,7 +18,7 @@ function SignUpBeforeRedirect({ returnUrl }) {
           <p style={{ marginTop: 0 }}>ניתן ליצור הפגנה ללא הזדהות, אך היא תתווסף למפה לאחר אישור הנהלת האתר. </p>
         </>
       ) : (
-        <p>היי! כדי ליצור או לערוך הפגנה ולקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק.</p>
+        <p>היי! כדי לקחת חלק בפעילות האתר יש להתחבר באמצעות פייסבוק.</p>
       )}
 
       <Button onClick={() => handleSignIn()} style={{ marginBottom: 10 }}>
@@ -48,9 +52,38 @@ const stages = {
   AFTER_FACEBOOK_AUTH: 'afterFacebookAuth',
 };
 
+let userId = '';
+let pictureUrl = '';
+
 export default function SignUp(props) {
   const [stage, setStage] = useState(stages.UNKNOWN);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const history = useHistory();
+  const store = useStore();
+
+  const redirectToReturnURL = () => {
+    const { returnUrl } = queryString.parse(window.location.search);
+    if (returnUrl) {
+      history.push(returnUrl);
+    } else {
+      history.push('/');
+    }
+  };
+
+  const onSignUpSubmit = async () => {
+    store.userStore.setUserName(firstName, lastName);
+    store.userStore.setUserPicture(pictureUrl);
+    await updateUserName({ userId, firstName, lastName });
+
+    Modal.success({
+      title: 'נרשמת בהצלחה!',
+      okText: 'המשך',
+      onOk: () => {
+        redirectToReturnURL();
+      },
+    });
+  };
 
   useEffect(() => {
     getUserFromRedirect()
@@ -61,19 +94,16 @@ export default function SignUp(props) {
         }
 
         const userData = extractUserData(result);
-        setStage(stages.AFTER_FACEBOOK_AUTH);
 
-        saveUserInFirestore(userData).then(() => {
-          const returnUrl = getReturnUrl(window.location.search);
-
-          if (returnUrl) {
-            history.push(returnUrl);
-          } else {
-            // Redirect to homepage.
-            setTimeout(() => {
-              history.push('/');
-            }, 2020);
+        saveUserInFirestore(userData).then((userDoc) => {
+          if (userDoc.exists) {
+            redirectToReturnURL();
+            return;
           }
+
+          setStage(stages.AFTER_FACEBOOK_AUTH);
+          userId = userDoc.uid;
+          pictureUrl = userDoc.picture_url;
         });
       })
       .catch((error) => {
@@ -84,7 +114,7 @@ export default function SignUp(props) {
   if (stage === stages.UNKNOWN) {
     return (
       <PageWrapper>
-        <p>רק כמה שניות...</p>
+        <p style={{ marginTop: 25 }}>רק כמה שניות...</p>
         <img src="/icons/loading-spinner.svg" alt="" />
       </PageWrapper>
     );
@@ -102,9 +132,33 @@ export default function SignUp(props) {
     return (
       <PageWrapper>
         <PageContentWrapper>
-          <PageParagraph>התחברת בהצלחה.</PageParagraph>
+          <Title level={3}>התחברת בהצלחה!</Title>
+          <p style={{ fontSize: 16 }}>יש להזין את שמכם על מנת לסיים את ההרשמה.</p>
+          <SignUpFormItem label="שם פרטי / כינוי" required style={{ flexDirection: 'column', marginBottom: 10 }}>
+            <Input autoFocus value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+          </SignUpFormItem>
+          <SignUpFormItem label="שם משפחה " style={{ flexDirection: 'column' }}>
+            <Input value={lastName} onChange={(e) => setLastName(e.target.value)} />
+          </SignUpFormItem>
+          <SignUpFormItem>
+            <AntButton
+              disabled={firstName.length < 2}
+              className="bg-success"
+              type="primary"
+              size="large"
+              style={{ width: 300 }}
+              onClick={() => onSignUpSubmit()}
+            >
+              סיום הרשמה
+            </AntButton>
+          </SignUpFormItem>
         </PageContentWrapper>
       </PageWrapper>
     );
   }
 }
+
+const SignUpFormItem = styled(Form.Item)`
+  min-width: 100%;
+  max-width: 290px;
+`;

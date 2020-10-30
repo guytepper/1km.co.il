@@ -2,14 +2,18 @@ import styled from 'styled-components/macro';
 import { animated } from 'react-spring';
 
 export const LiveEventWrapper = styled.div`
-  /* background: #f4f6fa; */
+  @media (min-width: 600px) {
+    width: 600px;
+    margin: 0 auto;
+  }
 `;
 
 export const LiveEventHeader = styled.div`
-  position: sticky;
-  top: 60px;
+  /* position: sticky;
+  top: 60px; */
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* grid-template-columns: repeat(3, 1fr); */
+  grid-template-columns: 1fr;
   box-shadow: 0 0 0px 1px #e4e6eb;
   font-size: 12px;
   z-index: 2;
@@ -52,14 +56,15 @@ export const LiveEventMessage = styled.h3`
   text-align: center;
 `;
 
-export const LiveCurrentView = styled.div``;
+export const LiveCurrentView = styled.div`
+  padding: 0 20px;
+`;
 
 export const CheckInListWrapper = styled.div`
   display: grid;
   grid-auto-rows: minmax(min-content, max-content);
   justify-content: center;
   height: 500px;
-  padding: 0 20px;
 `;
 
 export const CheckIn = styled(animated.div)`

@@ -15,6 +15,7 @@ import {
   LiveEvent,
   FourOhFour,
 } from './views';
+import { UploadForm, ProtectedRoute } from './components';
 import { isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
@@ -78,9 +79,9 @@ function App() {
       <AppWrapper>
         <Router>
           <Header>
-            <NavItemLive to="/live">
+            {/* <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-            </NavItemLive>
+            </NavItemLive> */}
             <Link to="/">
               <img src="/logo.svg" alt=" קילומטר אחד" />
             </Link>
@@ -92,9 +93,9 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   LIVE
-                </Link>
+                </Link> */}
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -157,9 +158,12 @@ function App() {
             <Route exact path="/balfur">
               <Redirect to="/live" />
             </Route>
-            <Route exact path="/balfur/qr">
-              <Redirect to="/live/check-in/" />
+            <Route exact path="/live/qr">
+              <Redirect to="/live/" />
             </Route>
+            <ProtectedRoute authorized={store.userStore.user} exact path="/upload-image">
+              <UploadForm />
+            </ProtectedRoute>
 
             <Route exact path={['/support-the-project/', '/about']}>
               <PostView overrideSlug="about" />
@@ -197,7 +201,8 @@ const Header = styled.header`
   top: 0;
   justify-content: space-between;
   align-items: center;
-  padding: 5px 8px 5px 20px;
+  /* padding: 5px 8px 5px 20px; */ // Uncomment when going live
+  padding: 5px 20px 5px;
   grid-row: 1;
   background-color: #fff;
   box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;

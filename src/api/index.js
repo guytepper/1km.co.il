@@ -2,6 +2,7 @@ import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
 import { nanoid } from 'nanoid';
 import { calculateDistance } from '../utils';
+
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 /**
@@ -100,17 +101,6 @@ export async function fetchProtest(protestId) {
   }
 }
 
-export async function uploadFile(params) {
-  const request = await fetch('http://localhost:5001/onekm-50c7f/us-central1/uploadImage', {
-    method: 'post',
-    body: params,
-  });
-  const response = await request.json();
-
-  console.log(response);
-  // TODO: assign s3 url to protest
-}
-
 export async function fetchNearbyProtests(position) {
   const geocollection = GeoFirestore.collection('protests');
 
@@ -174,7 +164,7 @@ export async function saveUserInFirestore(userData) {
   const userDoc = await userRef.get();
 
   if (userDoc.exists) {
-    return userDoc;
+    return { ...userDoc, exists: true };
   } else {
     const { picture_url } = userData;
     const filename = `${nanoid()}.jpeg`;
@@ -193,8 +183,15 @@ export async function saveUserInFirestore(userData) {
             return url;
           })
           .then((url) => {
-            const result = { ...userData, picture_url: url, created_at: firebase.firestore.FieldValue.serverTimestamp() };
-            return userRef.set(result).then(() => result);
+            const { first_name: initialFirst, last_name: initialLast, displayName } = userData;
+            const updatedUserObject = {
+              initialFirst,
+              initialLast,
+              displayName,
+              picture_url: url,
+              created_at: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            return userRef.set(updatedUserObject).then(() => updatedUserObject);
           });
       })
       .catch((error) => {
@@ -310,4 +307,9 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
 }
 
-export async function protestCheckIn({ userId, protestId }) {}
+export async function updateUserName({ userId, firstName, lastName = '' }) {
+  const userRef = firestore.collection('users').doc(userId);
+
+  const updatedUser = await userRef.update({ firstName, lastName });
+  return updatedUser;
+}

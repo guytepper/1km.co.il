@@ -52,7 +52,7 @@ const MarkersList = ({ markers, hoveredProtest }) => {
   if (markers.length > 0) {
     items = markers.map((props) => <PopupMarker key={props.id} {...props} hovered={hoveredProtest?.id === props.id} />);
   }
-  console.log('items: ', items);
+
   return <>{items}</>;
 };
 

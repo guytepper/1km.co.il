@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 @font-face {
   font-family: 'Simpler';
   font-weight: 200;
@@ -43,6 +45,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f4f6fa;
+  line-height: 1.35;
 }
 
 a {
@@ -72,6 +75,51 @@ input {
 li {
   margin-bottom: 5px;
 }
+
+/** Ant Design Overrites **/
+
+a:hover {
+  color: unset;
+}
+
+.ant-upload.ant-upload-select {
+  display: block;
+}
+
+.ant-btn:enabled.bg-success {
+  background-color: #70c040;
+  border-color: #70c040;
+}
+
+.ant-btn:enabled.bg-success:hover {
+  background-color: #7bc84f;
+  border-color: #7bc84f;
+}
+
+.ant-modal-confirm-body {
+  display: flex;
+}
+
+.ant-modal-confirm-body .anticon-check-circle {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.ant-modal-confirm .ant-modal-confirm-btns {
+  float: left;
+}
+
+.ant-form-item-label {
+  align-self: flex-start;
+  padding: 0 !important;
+}
+
+.ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+  margin-right: 0;
+  margin-left: 4px;
+}
+
+/** React Modal Overrides **/
 
 .ReactModal__Overlay {
   z-index: 20;
@@ -223,6 +271,10 @@ Note: Beware of modifying this element as it can break the animations - you shou
   font-weight: 600;
   color: white;
   margin-bottom: 10px;
+}
+
+.bm-item:hover {
+  color: #f6dcff;
 }
 
 /* Styling of overlay */
