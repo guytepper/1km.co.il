@@ -9,6 +9,13 @@ import ProtestSelection from '../ProtestSelection';
 import { Checkbox } from '../elements';
 import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
 import { uploadImage, fileToBase64, savePictureToFirestore, savePictureToLiveFeed } from './UploadService';
+import {
+  uploadImage,
+  fileToBase64,
+  savePictureToFirestore,
+  savePictureToLiveFeed,
+  keepAnnonymousReference,
+} from './UploadService';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
 
@@ -60,6 +67,9 @@ function UploadForm({ afterUpload }) {
 
     const savedPicture = await savePictureToFirestore(pictureData);
 
+    if (isAnnonymous) {
+      keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
+    }
     await savePictureToLiveFeed(pictureData);
 
     setUploading(false);
