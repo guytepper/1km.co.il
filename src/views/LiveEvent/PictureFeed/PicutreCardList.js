@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, Image } from 'antd';
 import styled from 'styled-components/macro';
+import { useTransition, animated, config } from 'react-spring';
 import TimeAgo from 'timeago-react';
 import * as timeago from 'timeago.js';
 import he from 'timeago.js/lib/lang/he';
@@ -8,10 +9,17 @@ import he from 'timeago.js/lib/lang/he';
 timeago.register('he', he);
 
 function PictureCardList({ pictures }) {
+  const transitions = useTransition(pictures, (picture) => picture?.id, {
+    config: config.gentle,
+    from: { opacity: 0, transform: 'translate3d(25%, 0%, 0px)' },
+    enter: { opacity: 1, transform: 'translate3d(0%, 0px, 0px)' },
+    leave: { opacity: 0, height: 0, transform: 'translate3d(-25%, 0px, 0px)' },
+  });
+
   return (
     <>
-      {pictures.map((picture) => (
-        <Card key={picture.id}>
+      {transitions.map(({ item: picture, props, key }, i) => (
+        <Card key={key} style={props}>
           <Card.Info>
             <Card.Info.Title>{picture.protestName}</Card.Info.Title>
             <Card.Info.Subtitle>
@@ -32,7 +40,7 @@ function PictureCardList({ pictures }) {
 
 export default PictureCardList;
 
-const Card = styled.div`
+const Card = styled(animated.div)`
   width: 100%;
   background: #fff;
   margin: 10px 0;
