@@ -161,9 +161,9 @@ function App() {
             <Route exact path="/live/qr">
               <Redirect to="/live/" />
             </Route>
-            <ProtectedRoute authorized={store.userStore.user} exact path="/upload-image">
+            <Route exact path="/upload-image">
               <UploadForm />
-            </ProtectedRoute>
+            </Route>
 
             <Route exact path={['/support-the-project/', '/about']}>
               <PostView overrideSlug="about" />
