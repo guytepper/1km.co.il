@@ -2,6 +2,7 @@ import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
 import { nanoid } from 'nanoid';
 import { calculateDistance } from '../utils';
+
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
 /**
@@ -193,8 +194,15 @@ export async function saveUserInFirestore(userData) {
             return url;
           })
           .then((url) => {
-            const result = { ...userData, picture_url: url, created_at: firebase.firestore.FieldValue.serverTimestamp() };
-            return userRef.set(result).then(() => result);
+            const { first_name: initialFirst, last_name: initialLast, displayName } = userData;
+            const updatedUserObject = {
+              initialFirst,
+              initialLast,
+              displayName,
+              picture_url: url,
+              created_at: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            return userRef.set(updatedUserObject).then(() => updatedUserObject);
           });
       })
       .catch((error) => {
