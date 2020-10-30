@@ -89,6 +89,6 @@ Card.Info.Timestamp = styled.span`
 `;
 
 Card.Description = styled.p`
-  grid-column: 1 / 2;
+  grid-column: 1 / 3;
   margin-bottom: 0;
 `;
