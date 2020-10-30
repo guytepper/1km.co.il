@@ -8,7 +8,6 @@ import { UploadOutlined, PictureOutlined } from '@ant-design/icons';
 import ProtestSelection from '../ProtestSelection';
 import { Checkbox } from '../elements';
 import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
-import { uploadImage, fileToBase64, savePictureToFirestore, savePictureToLiveFeed } from './UploadService';
 import {
   uploadImage,
   fileToBase64,
