@@ -70,7 +70,10 @@ function useFetchProtest() {
 }
 
 function getFutureDates(dateTimeList) {
-  return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+  if (dateTimeList?.length) {
+    return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+  }
+  return [];
 }
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
