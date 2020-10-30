@@ -11,6 +11,39 @@ export async function fileToBase64(file) {
   });
 }
 
+export async function createImageFromFile(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = file;
+  });
+
+  //   const reader = new FileReader();
+
+  // //Read the contents of Image File.
+  // reader.readAsDataURL(file);
+  // reader.onload = function (e) {
+
+  // //Initiate the JavaScript Image object.
+  // const image = new Image();
+
+  // //Set the Base64 string return from FileReader as source.
+  // image.src = e.target.result;
+
+  // //Validate the File Height and Width.
+  // image.onload = function () {
+  //   var height = this.height;
+  //   var width = this.width;
+  //   if (height > 100 || width > 100) {
+  //     alert("Height and Width must not exceed 100px.");
+  //     return false;
+  //   }
+  //   alert("Uploaded image has valid Height and Width.");
+  //   return true;
+  // };
+}
+
 export async function uploadImage(base64File) {
   try {
     const formData = new FormData();

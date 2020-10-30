@@ -27,9 +27,7 @@ const ProtestSelectionWrapper = styled.div`
   width: 100%;
 `;
 
-const ProtestSelectionList = styled.div`
-  /* margin: 0 -40px; */
-`;
+const ProtestSelectionList = styled.div``;
 
 const ProtestSelectionCard = styled.div`
   display: flex;
@@ -51,7 +49,7 @@ ProtestSelectionCard.Details = styled.div`
 ProtestSelectionCard.Title = styled.span`
   margin: 0;
   font-size: 18px;
-  font-weight: 900;
+  font-weight: 600;
 `;
 ProtestSelectionCard.Address = styled.span`
   margin: 0;

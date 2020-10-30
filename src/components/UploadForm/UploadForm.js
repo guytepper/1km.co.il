@@ -14,9 +14,12 @@ import {
   savePictureToFirestore,
   savePictureToLiveFeed,
   keepAnnonymousReference,
+  createImageFromFile,
 } from './UploadService';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
+import Pica from 'pica';
+import { Canvas } from 'leaflet';
 
 const { Title } = Typography;
 
@@ -65,7 +68,7 @@ function UploadForm({ afterUpload }) {
       pictureData.userAvatar = user.pictureUrl || '';
     }
 
-    const savedPicture = await savePictureToFirestore(pictureData);
+    const savedPicture = await savePictureToFirestore({ pictureData });
 
     if (isAnnonymous) {
       keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
@@ -101,8 +104,26 @@ function UploadForm({ afterUpload }) {
   };
 
   const setFile = async (file) => {
+    console.log(file);
+
     const base64File = await fileToBase64(file);
-    setCurrentFile(base64File);
+    console.log(base64File);
+    const image = await createImageFromFile(base64File);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = image.width;
+    canvas.height = image.height;
+
+    const pica = new Pica();
+    pica
+      .resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6, unsharpThreshold: 2 })
+      .then((result) => {
+        console.log(result.toDataURL());
+        pica.toBlob(result, 'image/jpeg', 0.9);
+      })
+      .then((blob) => console.log(blob, 'resized to canvas & created blob!'));
+
+    // setCurrentFile(base64File);
     return false;
   };
 
