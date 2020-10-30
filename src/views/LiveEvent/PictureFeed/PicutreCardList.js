@@ -1,53 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { observer } from 'mobx-react-lite';
-import { useStore } from '../../stores';
-import { useHistory } from 'react-router-dom';
-import { Avatar, Image, Affix } from 'antd';
+import React from 'react';
+import { Avatar, Image } from 'antd';
 import styled from 'styled-components/macro';
-import { UploadForm } from '../../components';
-import ActionButton from '../../components/elements/Button/ActionButton';
-import GalleryIcon from '../../assets/icons/gallery.svg';
-import { realtimeDB } from '../../firebase';
-import { EVENT_DATE } from './event_data';
 import TimeAgo from 'timeago-react';
-
 import * as timeago from 'timeago.js';
 import he from 'timeago.js/lib/lang/he';
 
 timeago.register('he', he);
 
-function PictureFeed() {
-  const store = useStore();
-  const [pictures, setPictures] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const history = useHistory();
-
-  useEffect(() => {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(2);
-
-    livePictures.on('child_added', (data) => {
-      setPictures((prevState) => {
-        return [{ ...data.val(), id: data.key }, ...prevState];
-      });
-    });
-
-    livePictures.once('value', () => {
-      setLoading(false);
-    });
-
-    return () => {
-      livePictures.off();
-    };
-  }, []);
-
+function PictureCardList({ pictures }) {
   return (
-    <div>
-      {loading && (
-        <>
-          <p>טוען תמונות...</p>
-          <img src="/icons/loading-spinner.svg" alt="" />
-        </>
-      )}
+    <>
       {pictures.map((picture) => (
         <Card key={picture.id}>
           <Card.Info>
@@ -64,24 +26,11 @@ function PictureFeed() {
           <Card.Image src={picture.imageUrl} alt="" />
         </Card>
       ))}
-
-      <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
-        <ActionButton
-          onClick={() =>
-            history.push(
-              store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`
-            )
-          }
-          icon={GalleryIcon}
-        >
-          העלאת תמונה
-        </ActionButton>
-      </div>
-    </div>
+    </>
   );
 }
 
-export default observer(PictureFeed);
+export default PictureCardList;
 
 const Card = styled.div`
   width: 100%;
