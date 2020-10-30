@@ -11,7 +11,6 @@ import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
 import { uploadImage, fileToBase64, savePictureToFirestore, savePictureToLiveFeed } from './UploadService';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
-import ProtestStore from '../../stores/ProtestStore';
 
 const { Title } = Typography;
 
@@ -50,19 +49,16 @@ function UploadForm({ afterUpload }) {
     }
 
     const imageUrl = result.secure_url;
-
-    const pictureData = { imageUrl, protestId: userCurrentProtest.id };
+    const { id: protestId, displayName: protestName } = userCurrentProtest;
+    const pictureData = { imageUrl, protestId, protestName };
 
     if (!isAnnonymous) {
       pictureData.userId = user.uid;
+      pictureData.uploaderName = `${user.firstName || ''} ${user.lastName || ''}`;
+      pictureData.userAvatar = user.picture_url;
     }
 
-    await savePictureToFirestore(pictureData);
-    // TODO: Save to annonymous collection
-
-    pictureData.protestName = userCurrentProtest.displayName;
-    pictureData.uploaderName = `${user.firstName || user.first_name} ${user.lastName || user.last_name}`;
-    pictureData.userAvatar = user.picture_url;
+    const savedPicture = await savePictureToFirestore(pictureData);
 
     await savePictureToLiveFeed(pictureData);
 
@@ -168,13 +164,12 @@ function UploadForm({ afterUpload }) {
 export default observer(UploadForm);
 
 const UploadFormWrapper = styled.div`
-  min-width: 310px;
-  max-width: 420px;
+  width: 310px;
   margin: 0 auto;
   padding: 25px 10px;
 
   @media (min-width: 400px) {
-    min-width: 345px;
+    width: 400px;
   }
 `;
 

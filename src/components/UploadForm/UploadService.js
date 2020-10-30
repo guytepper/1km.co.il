@@ -13,25 +13,23 @@ export async function fileToBase64(file) {
 
 export async function uploadImage(base64File) {
   try {
-    const response = await fetch('http://localhost:5001/one-kol/us-central1/uploadImage', {
-      method: 'POST',
-      body: JSON.stringify({ data: base64File }),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const formData = new FormData();
+    formData.append('upload_preset', 'public_upload');
+    formData.append('file', base64File);
+    const response = await fetch('https://api.cloudinary.com/v1_1/onekm/upload', { method: 'POST', body: formData });
 
     const data = await response.json();
-
+    console.log(data);
     return data;
   } catch (err) {
     console.error(err);
   }
 }
 
-export async function savePictureToFirestore({ imageUrl, protestId, userId, annonymousUpload }) {
+export async function savePictureToFirestore({ pictureData }) {
   const pictureParams = {
-    url: imageUrl,
-    protestId,
-    userId,
+    ...pictureData,
+    archived: false,
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
@@ -43,4 +41,9 @@ export async function savePictureToLiveFeed(livePictureData) {
   const livePicture = realtimeDB.ref(`${EVENT_DATE}_pictures`).push();
   await livePicture.set({ ...livePictureData, createdAt: firebase.database.ServerValue.TIMESTAMP });
   return livePicture;
+}
+
+export async function keepAnnonymousReference({ userId, pictureId }) {
+  const anonData = await firestore.collection('annonymous_uploads_data').doc(pictureId).set({ userId });
+  return anonData;
 }
