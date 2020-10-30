@@ -44,6 +44,15 @@ class UserStore {
   setUserProtest = (protest) => {
     this.userCurrentProtest = protest;
   };
+
+  setUserName = (firstName = '', lastName = '') => {
+    this.user.firstName = firstName;
+    this.user.lastName = lastName;
+  };
+
+  setUserPicture = (pictureUrl = '') => {
+    this.user.picture_url = pictureUrl;
+  };
 }
 
 export default UserStore;

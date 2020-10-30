@@ -58,6 +58,7 @@ function UploadForm({ afterUpload }) {
 
     pictureData.protestName = userCurrentProtest.displayName;
     pictureData.uploaderName = `${user.firstName || user.first_name} ${user.lastName || user.last_name}`;
+    pictureData.userAvatar = user.picture_url;
 
     await savePictureToLiveFeed(pictureData);
 

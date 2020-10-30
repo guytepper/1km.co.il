@@ -15,7 +15,7 @@ import {
   LiveEvent,
   FourOhFour,
 } from './views';
-import { UploadForm } from './components';
+import { UploadForm, ProtectedRoute } from './components';
 import { isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
@@ -161,9 +161,9 @@ function App() {
             <Route exact path="/live/qr">
               <Redirect to="/live/" />
             </Route>
-            <Route exact path="/upload-image">
+            <ProtectedRoute authorized={store.userStore.user} exact path="/upload-image">
               <UploadForm />
-            </Route>
+            </ProtectedRoute>
 
             <Route exact path={['/support-the-project/', '/about']}>
               <PostView overrideSlug="about" />

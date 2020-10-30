@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components/macro';
 
 function ProtestListSelection({ protests, setProtest }) {
-  console.log('Protest length: ', protests.length);
   return (
     <ProtestSelectionWrapper>
       <ProtestSelectionList>

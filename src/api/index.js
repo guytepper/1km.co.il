@@ -174,7 +174,7 @@ export async function saveUserInFirestore(userData) {
   const userDoc = await userRef.get();
 
   if (userDoc.exists) {
-    return userDoc;
+    return { ...userDoc, exists: true };
   } else {
     const { picture_url } = userData;
     const filename = `${nanoid()}.jpeg`;
@@ -308,4 +308,11 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
 
   // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
+}
+
+export async function updateUserName({ userId, firstName, lastName = '' }) {
+  const userRef = firestore.collection('users').doc(userId);
+
+  const updatedUser = await userRef.update({ firstName, lastName });
+  return updatedUser;
 }

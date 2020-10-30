@@ -23,7 +23,7 @@ function PictureFeed() {
   const history = useHistory();
 
   useEffect(() => {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(15);
+    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(2);
 
     livePictures.on('child_added', (data) => {
       setPictures((prevState) => {
@@ -53,7 +53,7 @@ function PictureFeed() {
           <Card.Info>
             <Card.Info.Title>{picture.protestName}</Card.Info.Title>
             <Card.Info.Subtitle>
-              <Avatar size={19} src="https://1km.co.il/anonymousPofile.png" style={{ marginLeft: 7.5 }} />
+              <Avatar size={21} src={picture.userAvatar || 'https://1km.co.il/anonymousPofile.png'} style={{ marginLeft: 6 }} />
               {picture.uploaderName}
             </Card.Info.Subtitle>
             <Card.Description>המהפכה מתקרבת! יא הו !</Card.Description>
@@ -65,23 +65,15 @@ function PictureFeed() {
         </Card>
       ))}
 
-      <Card>
-        <Card.Info>
-          <Card.Info.Title>צומת פת, ירושלים</Card.Info.Title>
-          <Card.Info.Subtitle>
-            <Avatar size={19} src="https://1km.co.il/anonymousPofile.png" style={{ marginLeft: 7.5 }} />
-            גיא טפר
-          </Card.Info.Subtitle>
-          <Card.Description>המהפכה מתקרבת! יא הו !</Card.Description>
-          <Card.Info.Timestamp>לפני 2 דקות</Card.Info.Timestamp>
-        </Card.Info>
-        <Card.Image
-          src="https://img.haarets.co.il/img/1.9269511/2624696559.jpg?precrop=1918,1436,x171,y32&height=462&width=600"
-          alt=""
-        />
-      </Card>
       <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
-        <ActionButton onClick={() => history.push('/upload-image?returnUrl=/live')} icon={GalleryIcon}>
+        <ActionButton
+          onClick={() =>
+            history.push(
+              store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`
+            )
+          }
+          icon={GalleryIcon}
+        >
           העלאת תמונה
         </ActionButton>
       </div>
@@ -96,16 +88,18 @@ const Card = styled.div`
   background: #fff;
   margin: 10px 0;
   border-radius: 2px;
+  border: 1px solid #e3e3e3;
 `;
 
 Card.Image = styled(Image)`
   width: 100%;
   height: 320px;
-  border-radius: 0 0 2px 2px;
+  cursor: pointer;
 
   .ant-image-img {
     height: 100%;
     object-fit: cover;
+    border-radius: 0 0 2px 2px;
   }
 `;
 
@@ -116,14 +110,14 @@ Card.Info = styled.div`
 `;
 
 Card.Info.Title = styled.h3`
-  margin-bottom: 0;
-  font-size: 20px;
+  margin-bottom: 2.5px;
+  font-size: 22px;
   font-weight: 600;
   grid-column: 1/2;
 `;
 
 Card.Info.Subtitle = styled.h4`
-  font-size: 16px;
+  font-size: 17px;
   grid-column: 1/2;
 `;
 
