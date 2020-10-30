@@ -21,7 +21,10 @@ function PictureCardList({ pictures }) {
       {transitions.map(({ item: picture, props, key }, i) => (
         <Card key={key} style={props}>
           <Card.Info>
-            <Card.Info.Title>{picture.protestName}</Card.Info.Title>
+            <Card.Info.Title>
+              {picture.protestName}
+              {picture.cityName && `, ${picture.cityName}`}
+            </Card.Info.Title>
             {picture.uploaderName && (
               <Card.Info.Subtitle>
                 <Avatar size={21} src={picture.userAvatar || 'https://1km.co.il/anonymousPofile.png'} style={{ marginLeft: 6 }} />
@@ -67,24 +70,28 @@ Card.Info = styled.div`
   display: grid;
   grid-template-columns: 1fr 90px;
   padding: 18px 24px;
+  align-items: baseline;
 `;
 
 Card.Info.Title = styled.h3`
-  margin-bottom: 2.5px;
-  font-size: 22px;
+  margin-bottom: 7.5px;
+  font-size: 17px;
   font-weight: 600;
   grid-column: 1/2;
+
+  @media (min-width: 402px) {
+    font-size: 18px;
+  }
 `;
 
 Card.Info.Subtitle = styled.h4`
-  font-size: 17px;
+  font-size: 15px;
   grid-column: 1/2;
 `;
 
 Card.Info.Timestamp = styled.span`
   grid-column: 2/-1;
   grid-row: 1;
-  align-self: center;
   text-align: left;
   font-size: 13px;
 `;
@@ -92,4 +99,5 @@ Card.Info.Timestamp = styled.span`
 Card.Description = styled.p`
   grid-column: 1 / 3;
   margin-bottom: 0;
+  font-size: 14px;
 `;

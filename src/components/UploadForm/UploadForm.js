@@ -56,8 +56,8 @@ function UploadForm({ afterUpload }) {
     }
 
     const imageUrl = result.secure_url;
-    const { id: protestId, displayName: protestName } = userCurrentProtest;
-    const pictureData = { imageUrl, protestId, protestName, description };
+    const { id: protestId, displayName: protestName, cityName } = userCurrentProtest;
+    const pictureData = { imageUrl, description, protestId, protestName, cityName };
 
     if (!isAnnonymous) {
       pictureData.userId = user.uid;
