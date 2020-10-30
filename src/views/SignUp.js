@@ -93,14 +93,14 @@ export default function SignUp(props) {
           return;
         }
 
+        if (!result.additionalUserInfo.isNewUser) {
+          redirectToReturnURL();
+          return;
+        }
+
         const userData = extractUserData(result);
 
         saveUserInFirestore(userData).then((userDoc) => {
-          if (userDoc.exists) {
-            redirectToReturnURL();
-            return;
-          }
-
           setStage(stages.AFTER_FACEBOOK_AUTH);
           userId = userDoc.uid;
           pictureUrl = userDoc.picture_url;
@@ -109,7 +109,7 @@ export default function SignUp(props) {
       .catch((error) => {
         console.log(error);
       });
-  }, [history]);
+  }, [history.pathname]);
 
   if (stage === stages.UNKNOWN) {
     return (
