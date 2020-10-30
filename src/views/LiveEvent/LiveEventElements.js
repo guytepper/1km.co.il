@@ -57,7 +57,7 @@ export const LiveEventMessage = styled.h3`
 `;
 
 export const LiveCurrentView = styled.div`
-  padding: 0 20px;
+  padding: 20px;
 `;
 
 export const CheckInListWrapper = styled.div`
