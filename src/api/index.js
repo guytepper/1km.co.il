@@ -101,17 +101,6 @@ export async function fetchProtest(protestId) {
   }
 }
 
-export async function uploadFile(params) {
-  const request = await fetch('http://localhost:5001/onekm-50c7f/us-central1/uploadImage', {
-    method: 'post',
-    body: params,
-  });
-  const response = await request.json();
-
-  console.log(response);
-  // TODO: assign s3 url to protest
-}
-
 export async function fetchNearbyProtests(position) {
   const geocollection = GeoFirestore.collection('protests');
 
