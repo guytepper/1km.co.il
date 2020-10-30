@@ -5,7 +5,7 @@ import styled from 'styled-components/macro';
 import { PlacesAutocomplete } from '../';
 import ProtestListSelection from './ProtestListSelection';
 
-function ProtestSelection({ onProtestSelection }) {
+function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   const store = useStore();
   // const [protests, setProtests] = useState([])
 
@@ -17,9 +17,12 @@ function ProtestSelection({ onProtestSelection }) {
 
   return (
     <ProtestSelectionWrapper>
-      <h2 style={{ textAlign: 'center', fontWeight: 600 }}>חיפוש הפגנה</h2>
-      <PlacesAutocomplete setManualAddress={(coords) => handleAddressSelection(coords)} />
-      <ProtestListSelection protests={store.protestStore.closeProtests} setProtest={(protest) => onProtestSelection(protest)} />
+      <h2 style={{ textAlign: 'center', fontWeight: 600 }}>בחירת הפגנה</h2>
+      {manualAddress && <PlacesAutocomplete setManualAddress={(coords) => handleAddressSelection(coords)} />}
+      <ProtestListSelection
+        protests={store.protestStore.closeProtests.slice(0, 5)}
+        setProtest={(protest) => onProtestSelection(protest)}
+      />
     </ProtestSelectionWrapper>
   );
 }

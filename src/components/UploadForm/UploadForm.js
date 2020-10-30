@@ -9,20 +9,24 @@ import ProtestSelection from '../ProtestSelection';
 import { Checkbox } from '../elements';
 import { ReactComponent as GPSIcon } from '../../assets/icons/gps.svg';
 import { uploadImage, fileToBase64, savePictureToFirestore, savePictureToLiveFeed } from './UploadService';
+import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
+import ProtestStore from '../../stores/ProtestStore';
 
 const { Title } = Typography;
 
 function UploadForm({ afterUpload }) {
   const [currentFile, setCurrentFile] = useState(null);
   const [protestModalState, setProtestModalState] = useState(false);
+  const [manualAddressSelection, setManualAddressSelection] = useState(false);
+  const [loadingProtests, setLoadingProtests] = useState(false);
   const [isAnnonymous, setAnnonymous] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const store = useStore();
   const history = useHistory();
 
-  const { userStore } = store;
+  const { protestStore, userStore } = store;
 
   const handleUpload = async () => {
     const { userCurrentProtest, user } = userStore;
@@ -75,6 +79,21 @@ function UploadForm({ afterUpload }) {
     });
   };
 
+  const openNearbyProtestsModal = async () => {
+    try {
+      const position = await getCurrentPosition();
+      setManualAddressSelection(false);
+      setLoadingProtests(true);
+      store.setCoordinates(position);
+      await protestStore.fetchProtests({ position, onlyMarkers: false });
+      setProtestModalState(true);
+      setLoadingProtests(false);
+    } catch (err) {
+      console.log(err);
+      alert('לא הצלחנו לאתר את המיקום.\nניתן לבחור מיקום הפגנה ידנית :)');
+    }
+  };
+
   const setFile = async (file) => {
     const base64File = await fileToBase64(file);
     setCurrentFile(base64File);
@@ -101,19 +120,25 @@ function UploadForm({ afterUpload }) {
             {userStore.userCurrentProtest.displayName}
           </Title>
         ) : (
-          <p>
-            <p>נמצאים בהפגנה עכשיו? לחצו על הכפתור ונאתר את ההפגנה אוטומטית. </p>
-            <Button
-              type="primary"
-              size="large"
-              style={{ width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              icon={<GPSIcon width="16" height="16" />}
-            >
-              <span style={{ marginRight: 7, marginBottom: 3 }}>מציאה אוטומטית לפי מיקום</span>
-            </Button>
-          </p>
+          <Button
+            type="primary"
+            size="large"
+            style={{ width: '100%', marginBottom: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            icon={<GPSIcon width="16" height="16" />}
+            loading={loadingProtests}
+            onClick={() => openNearbyProtestsModal()}
+          >
+            <span style={{ marginRight: 7, marginBottom: 3 }}>מציאה לפי מיקום</span>
+          </Button>
         )}
-        <Button onClick={() => setProtestModalState(true)} size="large" style={{ width: '100%' }}>
+        <Button
+          onClick={() => {
+            setManualAddressSelection(true);
+            setProtestModalState(true);
+          }}
+          size="large"
+          style={{ width: '100%' }}
+        >
           בחירת הפגנה ידנית
         </Button>
       </UploadFormSection>
@@ -134,7 +159,7 @@ function UploadForm({ afterUpload }) {
         {uploading ? 'שולח תמונה..' : 'העלאת תמונה'}
       </Button>
       <Modal visible={protestModalState} onCancel={() => setProtestModalState(false)} footer={null} closable={false}>
-        <ProtestSelection onProtestSelection={handleProtestSelection} />
+        <ProtestSelection onProtestSelection={handleProtestSelection} manualAddress={manualAddressSelection} />
       </Modal>
     </UploadFormWrapper>
   );
@@ -143,9 +168,14 @@ function UploadForm({ afterUpload }) {
 export default observer(UploadForm);
 
 const UploadFormWrapper = styled.div`
-  max-width: 375px;
+  min-width: 310px;
+  max-width: 420px;
   margin: 0 auto;
   padding: 25px 10px;
+
+  @media (min-width: 400px) {
+    min-width: 345px;
+  }
 `;
 
 const UploadFormSection = styled.div`
@@ -153,7 +183,7 @@ const UploadFormSection = styled.div`
 `;
 
 UploadFormSection.Header = styled.h3`
-  font-size: 22px;
+  font-size: 18px;
 `;
 
 const ImagePreview = styled.img`
