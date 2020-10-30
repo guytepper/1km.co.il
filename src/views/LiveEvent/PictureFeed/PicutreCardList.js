@@ -22,10 +22,12 @@ function PictureCardList({ pictures }) {
         <Card key={key} style={props}>
           <Card.Info>
             <Card.Info.Title>{picture.protestName}</Card.Info.Title>
-            <Card.Info.Subtitle>
-              <Avatar size={21} src={picture.userAvatar || 'https://1km.co.il/anonymousPofile.png'} style={{ marginLeft: 6 }} />
-              {picture.uploaderName}
-            </Card.Info.Subtitle>
+            {picture.uploaderName && (
+              <Card.Info.Subtitle>
+                <Avatar size={21} src={picture.userAvatar || 'https://1km.co.il/anonymousPofile.png'} style={{ marginLeft: 6 }} />
+                {picture.uploaderName}
+              </Card.Info.Subtitle>
+            )}
             <Card.Description>המהפכה מתקרבת! יא הו !</Card.Description>
             <Card.Info.Timestamp>
               <TimeAgo datetime={picture.createdAt} locale="he" />
