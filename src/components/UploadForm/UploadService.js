@@ -37,7 +37,7 @@ export async function savePictureToFirestore({ pictureData, fileId }) {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
-  const pictureDoc = await firestore.collection('pictures_TEST').doc(fileId).set(pictureParams);
+  const pictureDoc = await firestore.collection('pictures').doc(fileId).set(pictureParams);
   return pictureDoc;
 }
 
@@ -48,6 +48,6 @@ export async function savePictureToLiveFeed(livePictureData) {
 }
 
 export async function keepAnnonymousReference({ userId, pictureId }) {
-  const anonData = await firestore.collection('annonymous_uploads_data_TEST').doc(pictureId).set({ userId });
+  const anonData = await firestore.collection('annonymous_uploads_data').doc(pictureId).set({ userId });
   return anonData;
 }

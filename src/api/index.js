@@ -316,7 +316,7 @@ export async function updateUserName({ userId, firstName, lastName = '' }) {
 
 export async function getLatestProtestPictures(protestId) {
   const latestSnapshot = await firestore
-    .collection('pictures_TEST')
+    .collection('pictures')
     .where('protestId', '==', protestId)
     .orderBy('createdAt', 'desc')
     .limit(6)
@@ -328,7 +328,7 @@ export async function getLatestProtestPictures(protestId) {
 
 export async function getPicturesForEvent({ protestId, date }) {
   const eventPictures = await firestore
-    .collection('pictures_TEST')
+    .collection('pictures')
     .where('protestId', '==', protestId)
     .where('eventDate', '==', date)
     .orderBy('createdAt')

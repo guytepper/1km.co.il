@@ -43,6 +43,7 @@ function PictureFeed() {
         </div>
       ) : (
         <>
+          <h2 style={{ textAlign: 'center', fontWeight: 600 }}>התמונות מתעדכנות בזמן אמת</h2>
           <PictureCardList pictures={pictures} />
           <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
             <ActionButton

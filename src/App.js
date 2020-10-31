@@ -94,9 +94,9 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                  LIVE
-                </Link> */}
+                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                  פיד תמונות
+                </Link>
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -230,7 +230,6 @@ const NavItemLive = styled(Link)`
   font-weight: bold;
   font-size: 18px;
   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-  visibility: hidden; // Remove when going live */
 `;
 
 const NavProfileWrapper = styled.div`
