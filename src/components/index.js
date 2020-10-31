@@ -7,6 +7,7 @@ export { default as CheckInModal } from './CheckInModal';
 export { default as UploadForm } from './UploadForm';
 export { default as LocationButtons } from './LocationButtons';
 export { default as PlacesAutocomplete } from './PlacesAutocomplete';
+export { default as PictureGallery } from './PictureGallery';
 export { default as ProtestCard } from './ProtestCard';
 export { default as ProtestList } from './ProtestList';
 export { default as ProtectedRoute } from './ProtectedRoute';

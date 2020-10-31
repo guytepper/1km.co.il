@@ -65,7 +65,7 @@ function UploadForm({ afterUpload }) {
       pictureData.userAvatar = user.pictureUrl || '';
     }
 
-    const savedPicture = await savePictureToFirestore(pictureData);
+    const savedPicture = await savePictureToFirestore({ pictureData });
 
     if (isAnnonymous) {
       keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
