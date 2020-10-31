@@ -87,7 +87,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
   const [latestPictures, setLatestPictures] = useState([]);
   const galleryMatch = useRouteMatch('/protest/:id/gallery');
-  console.log(history);
+  const store = useStore();
+
   useEffect(() => {
     async function getLatestPictures() {
       const pictures = await getLatestProtestPictures(protest.id);
@@ -142,12 +143,34 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                 תמונות אחרונות מההפגנה
               </SectionTitle>
 
-              <LatestPicturesWrapper>
-                {latestPictures.length > 0
-                  ? latestPictures.map((picture) => <PictureThumbnail src={picture.imageUrl} alt="" key={picture.id} />)
-                  : null}
-              </LatestPicturesWrapper>
-              <EditButton onClick={() => history.push(`${history.location.pathname}/gallery`)}>לצפייה בגלריית ההפגנה</EditButton>
+              {latestPictures.length > 0 ? (
+                <>
+                  <LatestPicturesWrapper>
+                    {latestPictures.map((picture) => (
+                      <PictureThumbnail src={picture.imageUrl} alt="" key={picture.id} />
+                    ))}
+                  </LatestPicturesWrapper>
+                  <EditButton onClick={() => history.push(`${history.location.pathname}/gallery`)}>
+                    לצפייה בגלריית ההפגנה
+                  </EditButton>
+                </>
+              ) : (
+                <>
+                  <p>עדיין לא העלו תמונות להפגנה הזו.</p>
+                  <EditButton
+                    onClick={() => {
+                      store.userStore.setUserProtest(protest);
+                      history.push(
+                        store.userStore.user
+                          ? `/upload-image?returnUrl=${history.location.pathname}`
+                          : `/sign-up?returnUrl=/upload-image?returnUrl=${history.location.pathname}`
+                      );
+                    }}
+                  >
+                    היו ראשונים להעלות תמונה!
+                  </EditButton>
+                </>
+              )}
             </SectionContainer>
             <DatesAndSocial>
               <SectionContainer>
@@ -268,14 +291,7 @@ const EditViewContainer = styled.div`
   margin: 0 auto;
 `;
 
-const ProtestPageContainer = styled.div`
-  color: #000000;
-  padding-bottom: 150px;
-  h1,
-  h1 {
-    margin: 0;
-  }
-`;
+const ProtestPageContainer = styled.div``;
 
 const ProtestContainer = styled.div`
   margin: 0 auto;
@@ -319,7 +335,7 @@ const MapWrapper = styled(Map)`
 
 const EditButton = styled.button`
   width: 100%;
-  height: 32px;
+  height: auto;
   color: #1251f3;
   border: 1px solid #1251f3;
   box-sizing: border-box;

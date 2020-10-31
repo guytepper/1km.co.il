@@ -1,5 +1,6 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import { auth } from '../firebase';
+import { setLocalStorage, getLocalStorage } from '../localStorage';
 import { getFullUserData, fetchProtest } from '../api';
 
 class UserStore {
@@ -22,6 +23,17 @@ class UserStore {
         this.user = userData;
       }
     });
+
+    this.checkCache();
+  }
+
+  checkCache() {
+    const userProtest = getLocalStorage('1km_current_protest');
+    if (userProtest) {
+      runInAction(() => {
+        this.userCurrentProtest = userProtest;
+      });
+    }
   }
 
   setUserProtestById = async (protestId) => {
@@ -36,6 +48,7 @@ class UserStore {
 
     if (protest) {
       this.userCurrentProtest = protest;
+      setLocalStorage('1km_current_protest', protest);
     } else {
       console.error('An erorr occured: Could not find protest.');
     }
@@ -43,6 +56,7 @@ class UserStore {
 
   setUserProtest = (protest) => {
     this.userCurrentProtest = protest;
+    setLocalStorage('1km_current_protest', protest);
   };
 
   setUserName = (firstName = '', lastName = '') => {
