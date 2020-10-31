@@ -26,7 +26,6 @@ class ProtestStore {
   }
 
   async fetchProtests({ onlyMarkers, position }) {
-    if (!position) return;
     this.state = 'pending';
 
     try {
