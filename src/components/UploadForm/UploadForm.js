@@ -16,6 +16,7 @@ import {
   keepAnnonymousReference,
   createImageFromFile,
 } from './UploadService';
+import reducer from 'image-blob-reduce';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
 import Pica from 'pica';
@@ -104,26 +105,12 @@ function UploadForm({ afterUpload }) {
   };
 
   const setFile = async (file) => {
-    console.log(file);
+    const blob = await reducer().toBlob(file, {
+      max: 1920,
+    });
 
-    const base64File = await fileToBase64(file);
-    console.log(base64File);
-    const image = await createImageFromFile(base64File);
-
-    const canvas = document.createElement('canvas');
-    canvas.width = image.width;
-    canvas.height = image.height;
-
-    const pica = new Pica();
-    pica
-      .resize(image, canvas, { unsharpAmount: 80, unsharpRadius: 0.6, unsharpThreshold: 2 })
-      .then((result) => {
-        console.log(result.toDataURL());
-        pica.toBlob(result, 'image/jpeg', 0.9);
-      })
-      .then((blob) => console.log(blob, 'resized to canvas & created blob!'));
-
-    // setCurrentFile(base64File);
+    const base64File = await fileToBase64(blob);
+    setCurrentFile(base64File);
     return false;
   };
 
