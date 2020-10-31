@@ -14,9 +14,13 @@ import {
   savePictureToFirestore,
   savePictureToLiveFeed,
   keepAnnonymousReference,
+  createImageFromFile,
 } from './UploadService';
+import reducer from 'image-blob-reduce';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
+import Pica from 'pica';
+import { Canvas } from 'leaflet';
 
 const { Title } = Typography;
 
@@ -103,7 +107,11 @@ function UploadForm({ afterUpload, protest }) {
   };
 
   const setFile = async (file) => {
-    const base64File = await fileToBase64(file);
+    const blob = await reducer().toBlob(file, {
+      max: 1920,
+    });
+
+    const base64File = await fileToBase64(blob);
     setCurrentFile(base64File);
     return false;
   };
