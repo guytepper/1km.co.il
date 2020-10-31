@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Avatar, Image } from 'antd';
 import styled from 'styled-components/macro';
 import { useTransition, animated, config } from 'react-spring';
@@ -21,10 +22,12 @@ function PictureCardList({ pictures }) {
       {transitions.map(({ item: picture, props, key }, i) => (
         <Card key={key} style={props}>
           <Card.Info>
-            <Card.Info.Title>
-              {picture.protestName}
-              {picture.cityName && `, ${picture.cityName}`}
-            </Card.Info.Title>
+            <Link to={`/protest/${picture.protestId}`}>
+              <Card.Info.Title>
+                {picture.protestName}
+                {picture.cityName && `, ${picture.cityName}`}
+              </Card.Info.Title>
+            </Link>
             {picture.uploaderName && (
               <Card.Info.Subtitle>
                 <Avatar size={21} src={picture.userAvatar || 'https://1km.co.il/anonymousPofile.png'} style={{ marginLeft: 6 }} />
@@ -78,6 +81,10 @@ Card.Info.Title = styled.h3`
   font-size: 17px;
   font-weight: 600;
   grid-column: 1/2;
+  color: #27235a;
+  text-decoration: underline;
+  text-decoration-color: #27235a38;
+  text-underline-offset: 4px;
 
   @media (min-width: 402px) {
     font-size: 18px;
