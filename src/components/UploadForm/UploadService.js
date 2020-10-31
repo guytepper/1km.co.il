@@ -1,5 +1,6 @@
 import firebase, { firestore, realtimeDB } from '../../firebase';
 import { EVENT_DATE } from '../../views/LiveEvent/event_data';
+import { nanoid } from 'nanoid';
 
 export async function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -11,22 +12,24 @@ export async function fileToBase64(file) {
   });
 }
 
-export async function uploadImage(base64File) {
+export async function uploadImage({ base64File, protestId, date }) {
   try {
+    const fileId = nanoid();
     const formData = new FormData();
     formData.append('upload_preset', 'public_upload');
     formData.append('file', base64File);
+    formData.append('public_id', `${protestId}/${date}/${fileId}`);
     const response = await fetch('https://api.cloudinary.com/v1_1/onekm/upload', { method: 'POST', body: formData });
 
     const data = await response.json();
     console.log(data);
-    return data;
+    return { ...data, fileId };
   } catch (err) {
     console.error(err);
   }
 }
 
-export async function savePictureToFirestore({ pictureData }) {
+export async function savePictureToFirestore({ pictureData, fileId }) {
   const pictureParams = {
     ...pictureData,
     eventDate: '2020-10-31',
@@ -34,7 +37,7 @@ export async function savePictureToFirestore({ pictureData }) {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
-  const pictureDoc = await firestore.collection('pictures_TEST').add(pictureParams);
+  const pictureDoc = await firestore.collection('pictures_TEST').doc(fileId).set(pictureParams);
   return pictureDoc;
 }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
@@ -20,7 +20,7 @@ import queryString from 'query-string';
 
 const { Title } = Typography;
 
-function UploadForm({ afterUpload }) {
+function UploadForm({ afterUpload, protest }) {
   const [currentFile, setCurrentFile] = useState(null);
   const [description, setDescription] = useState('');
   const [protestModalState, setProtestModalState] = useState(false);
@@ -49,15 +49,15 @@ function UploadForm({ afterUpload }) {
 
     setUploading(true);
 
-    const result = await uploadImage(currentFile);
+    const result = await uploadImage({ base64File: currentFile, protestId: userCurrentProtest.id, date: '2020-31-10' });
     if (!result) {
       alert('לא הצלחנו להעלות את התמונה.\nאם הבעיה ממשיכה להתרחש, אנא צרו איתנו קשר.');
       return;
     }
 
-    const imageUrl = result.secure_url;
+    const { secure_url: imageUrl, fileId } = result;
     const { id: protestId, displayName: protestName, cityName } = userCurrentProtest;
-    const pictureData = { imageUrl, description, protestId, protestName, cityName };
+    const pictureData = { imageUrl, description, protestId, protestName, cityName: cityName || '' };
 
     if (!isAnnonymous) {
       pictureData.userId = user.uid;
@@ -65,7 +65,7 @@ function UploadForm({ afterUpload }) {
       pictureData.userAvatar = user.pictureUrl || '';
     }
 
-    const savedPicture = await savePictureToFirestore({ pictureData });
+    const savedPicture = await savePictureToFirestore({ pictureData, fileId });
 
     if (isAnnonymous) {
       keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
