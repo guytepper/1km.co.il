@@ -313,3 +313,27 @@ export async function updateUserName({ userId, firstName, lastName = '' }) {
   const updatedUser = await userRef.update({ firstName, lastName });
   return updatedUser;
 }
+
+export async function getLatestProtestPictures(protestId) {
+  const latestSnapshot = await firestore
+    .collection('pictures')
+    .where('protestId', '==', protestId)
+    .orderBy('createdAt', 'desc')
+    .limit(6)
+    .get();
+
+  const pictureList = latestSnapshot.docs.map((picture) => ({ ...picture.data(), id: picture.id }));
+  return pictureList;
+}
+
+export async function getPicturesForEvent({ protestId, date }) {
+  const eventPictures = await firestore
+    .collection('pictures')
+    .where('protestId', '==', protestId)
+    .where('eventDate', '==', date)
+    .orderBy('createdAt')
+    .get();
+
+  const pictureList = eventPictures.docs.map((picture) => ({ ...picture.data(), id: picture.id }));
+  return pictureList;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
@@ -24,7 +24,7 @@ import { Canvas } from 'leaflet';
 
 const { Title } = Typography;
 
-function UploadForm({ afterUpload }) {
+function UploadForm({ afterUpload, protest }) {
   const [currentFile, setCurrentFile] = useState(null);
   const [description, setDescription] = useState('');
   const [protestModalState, setProtestModalState] = useState(false);
@@ -53,27 +53,29 @@ function UploadForm({ afterUpload }) {
 
     setUploading(true);
 
-    const result = await uploadImage(currentFile);
+    const result = await uploadImage({ base64File: currentFile, protestId: userCurrentProtest.id, date: '2020-31-10' });
     if (!result) {
       alert('לא הצלחנו להעלות את התמונה.\nאם הבעיה ממשיכה להתרחש, אנא צרו איתנו קשר.');
       return;
     }
 
-    const imageUrl = result.secure_url;
-    const { id: protestId, displayName: protestName } = userCurrentProtest;
-    const pictureData = { imageUrl, protestId, protestName, description };
+    const { secure_url: imageUrl, fileId } = result;
+    const { id: protestId, displayName: protestName, cityName } = userCurrentProtest;
+    const pictureData = { imageUrl, description, protestId, protestName, cityName: cityName || '' };
 
-    if (!isAnnonymous) {
+    if (isAnnonymous === false) {
       pictureData.userId = user.uid;
       pictureData.uploaderName = `${user.firstName || ''} ${user.lastName || ''}`;
       pictureData.userAvatar = user.pictureUrl || '';
     }
 
-    const savedPicture = await savePictureToFirestore({ pictureData });
+    // Returns undefined once saved
+    await savePictureToFirestore({ pictureData, fileId });
 
     if (isAnnonymous) {
-      keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
+      keepAnnonymousReference({ pictureId: fileId, userId: user.uid });
     }
+
     await savePictureToLiveFeed(pictureData);
 
     setUploading(false);

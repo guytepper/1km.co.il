@@ -15,7 +15,7 @@ import {
   LiveEvent,
   FourOhFour,
 } from './views';
-import { UploadForm, ProtectedRoute } from './components';
+import { UploadForm, ScrollToTop } from './components';
 import { isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
@@ -78,6 +78,7 @@ function App() {
     <DispatchContext.Provider value={dispatch}>
       <AppWrapper>
         <Router>
+          <ScrollToTop />
           <Header>
             <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
@@ -93,9 +94,9 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
-                {/* <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                  LIVE
-                </Link> */}
+                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
+                  פיד תמונות
+                </Link>
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
                 </Link>
@@ -141,6 +142,9 @@ function App() {
               <Admin user={state.user} />
             </Route>
             <Route path="/protest/:id">
+              <ProtestPage user={state.user} />
+            </Route>
+            <Route path="/protest/:id/gallery">
               <ProtestPage user={state.user} />
             </Route>
             <Route exact path="/sign-up">
@@ -226,7 +230,6 @@ const NavItemLive = styled(Link)`
   font-weight: bold;
   font-size: 18px;
   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-  visibility: hidden; // Remove when going live */
 `;
 
 const NavProfileWrapper = styled.div`

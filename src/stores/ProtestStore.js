@@ -12,11 +12,17 @@ class ProtestStore {
   }
 
   get closeProtests() {
-    return this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance) || [];
+    if (this.nearbyProtests.length > 0) {
+      return this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance);
+    }
+    return [];
   }
 
   get farProtests() {
-    return this.nearbyProtests.filter((p) => p.distance >= 2000).sort((p1, p2) => p1.distance - p2.distance);
+    if (this.nearbyProtests.length > 0) {
+      return this.nearbyProtests.filter((p) => p.distance >= 2000).sort((p1, p2) => p1.distance - p2.distance);
+    }
+    return [];
   }
 
   async fetchProtests({ onlyMarkers, position }) {

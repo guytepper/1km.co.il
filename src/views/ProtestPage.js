@@ -2,10 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../stores';
 import styled from 'styled-components/macro';
-import { Route, Switch, useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, getProtestsForLeader, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
+import { Route, Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import {
+  fetchProtest,
+  getProtestsForLeader,
+  makeUserProtestLeader,
+  sendProtestLeaderRequest,
+  updateProtest,
+  getLatestProtestPictures,
+} from '../api';
 import { Map, Marker, TileLayer } from 'react-leaflet';
-import { ProtectedRoute, ProtestForm } from '../components';
+import { ProtectedRoute, ProtestForm, PictureGallery } from '../components';
 import {
   ProtestCardDetail,
   ProtestCardGroupButton,
@@ -22,8 +29,7 @@ import {
   isVisitor,
   sortDateTimeList,
 } from '../utils';
-
-const mobile = `@media (max-width: 768px)`;
+import { Image } from 'antd';
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
@@ -70,12 +76,27 @@ function useFetchProtest() {
 }
 
 function getFutureDates(dateTimeList) {
-  return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+  if (dateTimeList?.length) {
+    return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+  }
+  return [];
 }
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
+  const [latestPictures, setLatestPictures] = useState([]);
+  const galleryMatch = useRouteMatch('/protest/:id/gallery');
+  const store = useStore();
+
+  useEffect(() => {
+    async function getLatestPictures() {
+      const pictures = await getLatestProtestPictures(protest.id);
+      setLatestPictures(pictures);
+    }
+
+    getLatestPictures();
+  }, [protest]);
 
   const futureDates = getFutureDates(dateTimeList);
 
@@ -112,56 +133,93 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
           </Details>
         </Info>
 
-        <DatesAndSocial>
-          {/* Dates */}
-          <SectionContainer>
-            <SectionTitle>
-              <img src="/icons/clock.svg" alt="clock icon" />
-              מועדי הפגנה קרובים
-            </SectionTitle>
+        {galleryMatch?.isExact ? (
+          <PictureGallery protestId={protest.id} date={'2020-10-31'} />
+        ) : (
+          <>
+            <SectionContainer style={{ marginTop: 20 }}>
+              <SectionTitle>
+                <img src="/icons/photo-gallery-blueish.svg" alt="" />
+                תמונות אחרונות מההפגנה
+              </SectionTitle>
 
-            <Dates>
-              {futureDates.length > 0 ? (
-                futureDates.map((dateTime) => (
-                  <DateCard key={dateTime.id}>
-                    <DateText>
-                      <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
-                      {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
-                    </DateText>
-                  </DateCard>
-                ))
+              {latestPictures.length > 0 ? (
+                <>
+                  <LatestPicturesWrapper>
+                    {latestPictures.map((picture) => (
+                      <PictureThumbnail src={picture.imageUrl} alt="" key={picture.id} />
+                    ))}
+                  </LatestPicturesWrapper>
+                  <EditButton onClick={() => history.push(`${history.location.pathname}/gallery`)}>
+                    לצפייה בגלריית ההפגנה
+                  </EditButton>
+                </>
               ) : (
-                <DateCard>
-                  <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
-                  <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
-                </DateCard>
+                <>
+                  <p>עדיין לא העלו תמונות להפגנה הזו.</p>
+                  <EditButton
+                    onClick={() => {
+                      store.userStore.setUserProtest(protest);
+                      history.push(
+                        store.userStore.user
+                          ? `/upload-image?returnUrl=${history.location.pathname}`
+                          : `/sign-up?returnUrl=/upload-image?returnUrl=${history.location.pathname}`
+                      );
+                    }}
+                  >
+                    היו ראשונים להעלות תמונה!
+                  </EditButton>
+                </>
               )}
-            </Dates>
-            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
-          </SectionContainer>
+            </SectionContainer>
+            <DatesAndSocial>
+              <SectionContainer>
+                <SectionTitle>
+                  <img src="/icons/clock.svg" alt="" />
+                  מועדי הפגנה קרובים
+                </SectionTitle>
 
-          {/* Social */}
-          <SocialContainer>
-            <SectionTitle>
-              <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
-              ערוצי תקשורת
-            </SectionTitle>
-            <SocialButtons>
-              {protest.whatsAppLink && (
-                <ProtestCardGroupButton type="whatsapp" href={protest.whatsAppLink} target="_blank">
-                  הצטרפות לקבוצת הוואטסאפ
-                </ProtestCardGroupButton>
-              )}
-              {protest.telegramLink && (
-                <ProtestCardGroupButton type="telegram" href={protest.telegramLink} target="_blank">
-                  הצטרפות לקבוצת הטלגרם
-                </ProtestCardGroupButton>
-              )}
-              {!protest.whatsAppLink && !protest.telegramLink && <p>להפגנה זו אין דרכי תקשורת.</p>}
-            </SocialButtons>
-            <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
-          </SocialContainer>
-        </DatesAndSocial>
+                <Dates>
+                  {futureDates.length > 0 ? (
+                    futureDates.map((dateTime) => (
+                      <DateCard key={dateTime.id}>
+                        <DateText>
+                          <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
+                          {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                        </DateText>
+                      </DateCard>
+                    ))
+                  ) : (
+                    <DateCard>
+                      <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
+                      <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
+                    </DateCard>
+                  )}
+                </Dates>
+                <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
+              </SectionContainer>
+
+              <SectionContainer>
+                <SectionTitle>
+                  <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
+                  ערוצי תקשורת
+                </SectionTitle>
+                {protest.whatsAppLink && (
+                  <ProtestCardGroupButton type="whatsapp" href={protest.whatsAppLink} target="_blank">
+                    הצטרפות לקבוצת הוואטסאפ
+                  </ProtestCardGroupButton>
+                )}
+                {protest.telegramLink && (
+                  <ProtestCardGroupButton type="telegram" href={protest.telegramLink} target="_blank">
+                    הצטרפות לקבוצת הטלגרם
+                  </ProtestCardGroupButton>
+                )}
+                {!protest.whatsAppLink && !protest.telegramLink && <p>להפגנה זו אין דרכי תקשורת.</p>}
+                <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
+              </SectionContainer>
+            </DatesAndSocial>
+          </>
+        )}
       </ProtestContainer>
     </ProtestPageContainer>
   );
@@ -233,14 +291,7 @@ const EditViewContainer = styled.div`
   margin: 0 auto;
 `;
 
-const ProtestPageContainer = styled.div`
-  color: #000000;
-  padding-bottom: 150px;
-  h1,
-  h1 {
-    margin: 0;
-  }
-`;
+const ProtestPageContainer = styled.div``;
 
 const ProtestContainer = styled.div`
   margin: 0 auto;
@@ -284,7 +335,7 @@ const MapWrapper = styled(Map)`
 
 const EditButton = styled.button`
   width: 100%;
-  height: 32px;
+  height: auto;
   color: #1251f3;
   border: 1px solid #1251f3;
   box-sizing: border-box;
@@ -308,9 +359,14 @@ const EditButton = styled.button`
 
 const SectionContainer = styled.div`
   width: 100%;
-  padding: 40px 40px 34px 40px;
+  padding: 35px 30px;
+  margin-bottom: 20px;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   background-color: white;
+
+  @media (min-width: 1024px) {
+    margin: 0;
+  }
 `;
 
 const SectionTitle = styled.div`
@@ -359,10 +415,27 @@ const DateText = styled.span`
   line-height: 28px;
 `;
 
-const SocialButtons = styled.div``;
+const LatestPicturesWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 12.5px;
 
-const SocialContainer = styled(SectionContainer)`
-  ${mobile} {
-    margin-top: 20px;
+  @media (min-width: 580px) {
+    gap: 10px;
+  }
+`;
+
+const PictureThumbnail = styled(Image)`
+  width: 100%;
+  cursor: pointer;
+
+  img {
+    height: 120px;
+    object-fit: cover;
+
+    @media (min-width: 580px) {
+      height: 220px;
+    }
   }
 `;

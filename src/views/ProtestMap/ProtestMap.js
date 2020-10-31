@@ -19,14 +19,14 @@ function ProtestMap() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapStore.hoveredProtestId]);
 
-  // Fetch protests they haven't been loaded yet
+  // Fetch protests initially
   useEffect(() => {
     if (protestStore.nearbyProtests.length === 0 && protestStore.state === 'pending') {
       protestStore.fetchProtests({ onlyMarkers: false });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [store.userCoordinates]);
 
   return (
     <>
