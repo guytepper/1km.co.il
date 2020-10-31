@@ -59,17 +59,19 @@ function UploadForm({ afterUpload, protest }) {
     const { id: protestId, displayName: protestName, cityName } = userCurrentProtest;
     const pictureData = { imageUrl, description, protestId, protestName, cityName: cityName || '' };
 
-    if (!isAnnonymous) {
+    if (isAnnonymous === false) {
       pictureData.userId = user.uid;
       pictureData.uploaderName = `${user.firstName || ''} ${user.lastName || ''}`;
       pictureData.userAvatar = user.pictureUrl || '';
     }
 
-    const savedPicture = await savePictureToFirestore({ pictureData, fileId });
+    // Returns undefined once saved
+    await savePictureToFirestore({ pictureData, fileId });
 
     if (isAnnonymous) {
-      keepAnnonymousReference({ pictureId: savedPicture.id, userId: user.uid });
+      keepAnnonymousReference({ pictureId: fileId, userId: user.uid });
     }
+
     await savePictureToLiveFeed(pictureData);
 
     setUploading(false);
