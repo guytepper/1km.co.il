@@ -15,7 +15,7 @@ import {
   LiveEvent,
   FourOhFour,
 } from './views';
-import { UploadForm, ProtectedRoute } from './components';
+import { UploadForm, ScrollToTop } from './components';
 import { isAuthenticated, isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
@@ -78,6 +78,7 @@ function App() {
     <DispatchContext.Provider value={dispatch}>
       <AppWrapper>
         <Router>
+          <ScrollToTop />
           <Header>
             <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
