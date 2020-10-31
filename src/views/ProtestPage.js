@@ -29,8 +29,7 @@ import {
   isVisitor,
   sortDateTimeList,
 } from '../utils';
-
-const mobile = `@media (max-width: 768px)`;
+import { Image } from 'antd';
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
@@ -411,13 +410,16 @@ const LatestPicturesWrapper = styled.div`
   }
 `;
 
-const PictureThumbnail = styled.img`
+const PictureThumbnail = styled(Image)`
   width: 100%;
-  height: 120px;
-  object-fit: cover;
-  background-color: grey;
+  cursor: pointer;
 
-  @media (min-width: 580px) {
-    height: 220px;
+  img {
+    height: 120px;
+    object-fit: cover;
+
+    @media (min-width: 580px) {
+      height: 220px;
+    }
   }
 `;
