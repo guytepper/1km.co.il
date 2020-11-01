@@ -14,13 +14,10 @@ import {
   savePictureToFirestore,
   savePictureToLiveFeed,
   keepAnnonymousReference,
-  createImageFromFile,
 } from './UploadService';
 import reducer from 'image-blob-reduce';
 import { getCurrentPosition } from '../../utils';
 import queryString from 'query-string';
-import Pica from 'pica';
-import { Canvas } from 'leaflet';
 
 const { Title } = Typography;
 
@@ -76,7 +73,7 @@ function UploadForm({ afterUpload, protest }) {
       keepAnnonymousReference({ pictureId: fileId, userId: user.uid });
     }
 
-    await savePictureToLiveFeed(pictureData);
+    // await savePictureToLiveFeed(pictureData);
 
     setUploading(false);
 
@@ -180,6 +177,9 @@ function UploadForm({ afterUpload, protest }) {
       >
         {uploading ? 'שולח תמונה..' : 'העלאת תמונה'}
       </Button>
+      <p style={{ textAlign: 'center', fontSize: 12, fontWeight: 100, margin: '8px 50px' }}>
+        בכך שאני מעלה את התמונה אני מאשר שיש לי את הזכות לפרסם אותה ואת אישור המופיעים בתמונה
+      </p>
       <Modal visible={protestModalState} onCancel={() => setProtestModalState(false)} footer={null} closable={false}>
         <ProtestSelection onProtestSelection={handleProtestSelection} manualAddress={manualAddressSelection} />
       </Modal>
