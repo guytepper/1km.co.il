@@ -73,7 +73,7 @@ function UploadForm({ afterUpload, protest }) {
       keepAnnonymousReference({ pictureId: fileId, userId: user.uid });
     }
 
-    // await savePictureToLiveFeed(pictureData);
+    await savePictureToLiveFeed(pictureData);
 
     setUploading(false);
 
