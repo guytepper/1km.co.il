@@ -294,7 +294,7 @@ const EditViewContainer = styled.div`
 const ProtestPageContainer = styled.div``;
 
 const ProtestContainer = styled.div`
-  margin: 0 auto;
+  margin: 0 auto 30px;
   max-width: 700px;
   padding: 0 15px;
   z-index: 1;
@@ -423,6 +423,10 @@ const LatestPicturesWrapper = styled.div`
 
   @media (min-width: 580px) {
     gap: 10px;
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
