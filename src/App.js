@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './stores';
-import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link, Switch, useHistory } from 'react-router-dom';
 import Menu from 'react-burger-menu/lib/menus/slide';
 import {
   Admin,
@@ -14,6 +14,7 @@ import {
   PostView,
   LiveEvent,
   FourOhFour,
+  ProtestPictures,
 } from './views';
 import { UploadForm, ScrollToTop } from './components';
 import { isAuthenticated, isAdmin } from './utils';
@@ -45,6 +46,7 @@ function reducer(state, action) {
 }
 
 function App() {
+  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   const store = useStore();
 
@@ -79,7 +81,7 @@ function App() {
       <AppWrapper>
         <Router>
           <ScrollToTop />
-          <Header>
+          <Header path={window.location.pathname}>
             <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
             </NavItemLive>
@@ -134,6 +136,9 @@ function App() {
           <Switch>
             <Route exact path={['/', '/map']}>
               <ProtestMap />
+            </Route>
+            <Route exact path="/protest-pictures">
+              <ProtestPictures />
             </Route>
             <Route exact path="/add-protest">
               <AddProtest user={state.user} />
@@ -201,14 +206,16 @@ const AppWrapper = styled.div`
 
 const Header = styled.header`
   display: flex;
-  position: sticky;
-  top: 0;
+  /* position: sticky;
+  top: 0; */
   justify-content: space-between;
   align-items: center;
   padding: 5px 8px 5px 20px;
   grid-row: 1;
-  background-color: #fff;
-  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
+  box-shadow: ${(props) => {
+    if (props.path === '/protest-pictures') return null;
+    return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
+  }};
   z-index: 10;
 `;
 
@@ -230,6 +237,7 @@ const NavItemLive = styled(Link)`
   font-weight: bold;
   font-size: 18px;
   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+  visibility: hidden;
 `;
 
 const NavProfileWrapper = styled.div`

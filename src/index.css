@@ -28,6 +28,12 @@
   src: local('Simpler Black'), url('./assets/fonts/Simpler-Black.woff') format('woff');
 }
 
+@font-face {
+  font-family: 'Caravan';
+  font-weight: 400;
+  src: local('Caravan DL 2.0 AAA'), url('./assets/fonts/caravan-90-aaa.woff2') format('woff2');
+}
+
 html {
   box-sizing: border-box;
 }
@@ -45,6 +51,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f4f6fa;
+  font-size: 16px;
   line-height: 1.35;
 }
 

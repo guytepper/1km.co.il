@@ -1,6 +1,7 @@
 export { default as Admin } from './Admin/index.js';
 export { default as ProtestMap } from './ProtestMap';
 export { default as ProtestPage } from './ProtestPage';
+export { default as ProtestPictures } from './ProtestPictures';
 export { default as PostView } from './PostView';
 export { default as AddProtest } from './AddProtest';
 export { default as SignUp } from './SignUp';
