@@ -83,6 +83,10 @@
     grid-column: 2 / 4;
   }
 
+  #nationwide-section p:nth-of-type(2) {
+    display: none;
+  }
+
   #seeyou-section-text {
     margin-top: -20px;
     padding: 30px 40px;
