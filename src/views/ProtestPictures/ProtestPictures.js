@@ -173,8 +173,8 @@ function ProtestPictures() {
         </ProtestImage>
         <ProtestImage
           id=""
-          style={{ maxHeight: 210 }}
-          imgStyle={{ objectPosition: '50%', maxHeight: '100%' }}
+          style={{ maxHeight: 260 }}
+          imgStyle={{ objectPosition: '50%' }}
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604163581/protest_pictures/OASal66GwOGQlFqKvqWA/2020-31-10/EGE0sTjAy5pRWcRTfO_ae.jpg"
         >
           <ProtestImage.Description>
