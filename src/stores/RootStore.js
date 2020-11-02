@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { setLocalStorage, getLocalStorage } from '../localStorage';
 import ProtestStore from './ProtestStore';
 import MapStore from './MapStore';
+import LiveStore from './LiveStore';
 import userStore from './UserStore';
 
 class RootStore {
@@ -12,6 +13,7 @@ class RootStore {
     this.userStore = new userStore(this);
     this.protestStore = new ProtestStore(this);
     this.mapStore = new MapStore(this);
+    this.liveStore = new LiveStore(this);
     this.checkCache();
   }
 

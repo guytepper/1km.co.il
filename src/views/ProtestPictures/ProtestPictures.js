@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
+import { Avatar } from 'antd';
 import {
   ProtestPicturesWrapper,
   ProtestPicturesHeader,
@@ -11,28 +14,43 @@ import {
   ProtestImage,
   ImageLocation,
   ImageCredit,
+  CompactLiveFeed,
 } from './ProtestPicturesElements';
 import './ProtestPictures.css';
 
+import TimeAgo from 'timeago-react';
+import * as timeago from 'timeago.js';
+import he from 'timeago.js/lib/lang/he';
+
+timeago.register('he', he);
+
 function ProtestPictures() {
+  const store = useStore();
+  const liveStore = store.liveStore;
+
+  useEffect(() => {
+    liveStore.fetchEntries({ offset: 0 });
+  }, []);
+
   return (
     <ProtestPicturesWrapper>
       <HeroImage>
         <HeroImage.TextWrapper>
-          <HeroImage.Title>תמונות מחאה</HeroImage.Title>
+          <HeroImage.Title>יומן מחאה</HeroImage.Title>
           <HeroImage.Subtitle>29-31.10.20</HeroImage.Subtitle>
         </HeroImage.TextWrapper>
       </HeroImage>
-      <ProtestPictureSection imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604253080/weekend_pictures/31-10-2020/first-bg_uozjrt.jpg">
+      <ProtestPictureSection
+        id="intro-section"
+        imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604253080/weekend_pictures/31-10-2020/first-bg_uozjrt.jpg"
+      >
         <InfoBox id="info-box">
-          <p>בסוף השבוע האחרון התחלנו לאפשר העלאת תמונות לאתר קילומטר אחד.</p>
+          <p style={{ fontWeight: 600 }}> ברוכים הבאים ליומן המחאה העממי של ישראל.</p>
+          <p>גלי המחאה שוטפים את ישראל ב-5 החודשים האחרונים, והגיע הזמן לרכז את כל אירועי השבוע במקום אחד.</p>
+          <p>כל תחילת שבוע האתר יעודכן ברתחשויות המחאה בשבוע שחלף. </p>
           <p>
-            עשרות תמונות נשלחו, ורצינו ליצור מקום שייתן במה לתמונות נבחרות מדי שבוע - בנוסף לעמודי ההפגנות באתר שם אפשר לצפות
-            בתמונות מכל הפגנה.
+            אנחנו מזמינים אתכם <Link to="">לשלוח אלינו דיווחים ותמונות</Link> במהלך השבוע, וכמובן בערב המחאה בשבת.
           </p>
-          <p> העמוד הזה יעודכן בכל יום ראשון עם תמונות חדשות מסוף השבוע.</p>
-          <p>אפשר להעלות תמונות במהלך השבוע, ובעיקר בכל יום שבת.</p>
-          <p>עקבו אחרינו בפייסבוק לקבלת עדכונים!</p>
         </InfoBox>
         <ProtestImage
           id="gesher"
@@ -41,20 +59,16 @@ function ProtestPictures() {
         <ProtestImage
           id="pinkfront"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604256862/weekend_pictures/31-10-2020/pinkfront.jpg"
+        ></ProtestImage>
+        <ProtestImage
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/e_auto_brightness,h_700/v1604326693/weekend_pictures/31-10-2020/pinkyhope.jpg"
+          imgStyle={{ objectPosition: 'top' }}
         >
-          <ProtestImage.Description>
-            <p>
-              חיילות צבא הדמוקרטיה בבלפור. <br />
-              <a href="https://www.facebook.com/PinkFrontIL" target="_blank" rel="noreferrer">
-                פינקפרונט - החזית הורודה
-              </a>{' '}
-            </p>
-          </ProtestImage.Description>
+          <ImageCredit>צילום: אסף דרורי</ImageCredit>
         </ProtestImage>
-        <ProtestImage imageUrl="https://res.cloudinary.com/onekm/image/upload/c_scale,q_auto:low,w_740/v1604261694/weekend_pictures/31-10-2020/IMG_1559_qfhq7k.jpg"></ProtestImage>
         <ProtestImage
           id="roey-peleg-arrest"
-          imageUrl="https://res.cloudinary.com/onekm/image/upload/c_fill,g_auto,h_700,w_570/v1604257020/weekend_pictures/31-10-2020/submaringate-wrong-person-arrested.jpg"
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/c_fill,g_auto,h_700/v1604257020/weekend_pictures/31-10-2020/submaringate-wrong-person-arrested.jpg"
         >
           <ProtestImage.Description>
             <p>
@@ -71,12 +85,12 @@ function ProtestPictures() {
         </ProtestImage>
       </ProtestPictureSection>
       <ProtestPictureSection
-        style={{ backgroundPosition: 'top' }}
+        id="rabin-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604264028/weekend_pictures/31-10-2020/rabin-sqaure_pmcyeu.jpg"
       >
         <div style={{ gridColumn: '1 / 3' }}>
           <ProtestPicturesHeader>זוכרים את הרצח</ProtestPicturesHeader>
-          <ProtestPicturesSubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/30/20</ProtestPicturesSubheader>
+          <ProtestPicturesSubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/10/20</ProtestPicturesSubheader>
           <ProtestPicturesText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</ProtestPicturesText>
           <ProtestPicturesText>
             בימים אלו, כשראש ממשלה מכהן מסית כנגד חלק ניכר מהעם, חשוב לזכור את נקודת הקצה שמדינת ישראל הגיעה אליה לפני 25 שנה
@@ -102,19 +116,25 @@ function ProtestPictures() {
           id="clock-square-rabin"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604266088/weekend_pictures/31-10-2020/clock-square-rabin_u5wwtg.jpg"
         >
-          <ImageLocation>כיכר השעון, יפו</ImageLocation>
+          <ProtestImage.Description>
+            <p>כיכר השעון, יפו </p>
+          </ProtestImage.Description>
         </ProtestImage>
         <ProtestImage
           id="zion-square-rabin"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604266150/weekend_pictures/31-10-2020/zion_square_egjtwi.jpg"
         >
-          <ImageLocation>כיכר ציון, ירושלים</ImageLocation>
+          <ProtestImage.Description>
+            <p>כיכר ציון, ירושלים </p>
+          </ProtestImage.Description>
         </ProtestImage>
         <ProtestImage
           id=""
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604266437/weekend_pictures/31-10-2020/givaat_amal_rabin_ykvd6p.jpg"
         >
-          <ImageLocation>טקס זכרון, גבעת עמל</ImageLocation>
+          <ProtestImage.Description>
+            <p>טקס זכרון, גבעת עמל </p>
+          </ProtestImage.Description>
         </ProtestImage>
       </ProtestPictureSection>
       <ProtestPictureSection style={{ background: '#d83039' }} id="nationwide-section">
@@ -154,7 +174,7 @@ function ProtestPictures() {
         <ProtestImage
           id=""
           style={{ maxHeight: 210 }}
-          imgStyle={{ objectPosition: 'top' }}
+          imgStyle={{ objectPosition: '50%', maxHeight: '100%' }}
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604163581/protest_pictures/OASal66GwOGQlFqKvqWA/2020-31-10/EGE0sTjAy5pRWcRTfO_ae.jpg"
         >
           <ProtestImage.Description>
@@ -204,11 +224,7 @@ function ProtestPictures() {
         <ProtestImage
           id=""
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604300825/weekend_pictures/31-10-2020/zomet_oh.jpg"
-        >
-          <ProtestImage.Description>
-            <p>גשר כפר ביאליק</p>
-          </ProtestImage.Description>
-        </ProtestImage>
+        ></ProtestImage>
       </ProtestPictureSection>
       <ProtestPictureSection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604302235/weekend_pictures/31-10-2020/balfur-bg_mvjzov.jpg"
@@ -217,7 +233,7 @@ function ProtestPictures() {
         <div id="balfur-section-text">
           <ProtestPicturesHeader>מהנעשה בבלפור</ProtestPicturesHeader>
           <ProtestPicturesText>
-            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
+            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז בה הפגינו כ-20 אלף אנשים אל מול מעון
             ראש הממשלה.
           </ProtestPicturesText>
           <ProtestPicturesText>
@@ -232,19 +248,28 @@ function ProtestPictures() {
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604302954/weekend_pictures/31-10-2020/balfur_mm.jpg"
-          ></ProtestImage>
+          >
+            <ImageCredit>צילום: אורן זיו</ImageCredit>
+          </ProtestImage>
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304228/weekend_pictures/31-10-2020/balfur-signn_pu31xw.jpg"
-          ></ProtestImage>
+          >
+            {' '}
+            <ImageCredit>צילום: אורן זיו</ImageCredit>
+          </ProtestImage>
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304193/weekend_pictures/31-10-2020/balfur-acab_x3gvb7.jpg"
-          ></ProtestImage>
+          >
+            <ImageCredit>צילום: אורן זיו</ImageCredit>
+          </ProtestImage>
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604177195/protest_pictures/voTcndBEKWlMmvvife42/2020-31-10/hAgyZlFralFZpoHBBWHGR.jpg"
-          ></ProtestImage>
+          >
+            <ImageCredit>צילום: רוי שתיים</ImageCredit>
+          </ProtestImage>
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304497/protest_pictures/voTcndBEKWlMmvvife42/2020-31-10/J3CmZ9TcEPBIlrqw5V-X4.jpg"
@@ -252,10 +277,48 @@ function ProtestPictures() {
         </div>
       </ProtestPictureSection>
       <ProtestPictureSection
+        style={{ backgroundPosition: 'center', minHeight: '70vh' }}
+        imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
+      >
+        <div style={{ gridColumn: '1 / 3' }}>
+          <ProtestPicturesHeader>פיד מחאה</ProtestPicturesHeader>
+          <ProtestPicturesText style={{ fontWeight: 700, backgroundPosition: 'center' }}>
+            כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.
+          </ProtestPicturesText>
+          <CompactLiveFeed>
+            {liveStore.entries.length > 0 &&
+              liveStore.entries.map((entry) => (
+                <CompactLiveFeed.Card>
+                  <CompactLiveFeed.Card.Image src={entry.imageUrl} />
+                  <CompactLiveFeed.Card.Title>
+                    <TimeAgo datetime={entry.createdAt} locale="he" />
+                    {' ב'}
+                    {entry.protestName}
+                    {entry.cityName && `, ${entry.cityName}`}{' '}
+                  </CompactLiveFeed.Card.Title>
+                  <CompactLiveFeed.Card.Subtitle>
+                    {entry.uploaderName?.length > 1 && (
+                      <>
+                        <Avatar
+                          size={21}
+                          src={entry.userAvatar || 'https://1km.co.il/anonymousPofile.png'}
+                          style={{ marginLeft: 6 }}
+                        />
+                        {entry.uploaderName}
+                      </>
+                    )}
+                  </CompactLiveFeed.Card.Subtitle>
+                </CompactLiveFeed.Card>
+              ))}
+            <div style={{ width: 25 }}></div>
+          </CompactLiveFeed>
+        </div>
+      </ProtestPictureSection>
+      <ProtestPictureSection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160754/protest_pictures/FueqajqQRbwyMMIaF5S3/2020-31-10/89kkGsmuFVVIkZdG5BSyO.jpg"
         id="seeyou-section"
       >
-        <div id="balfur-section-text" style={{ alignSelf: 'start' }}>
+        <div id="seeyou-section-text" style={{ alignSelf: 'start' }}>
           <ProtestPicturesHeader>נתראה בשבוע הבא!</ProtestPicturesHeader>
           <ProtestPicturesText>
             המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
@@ -270,8 +333,21 @@ function ProtestPictures() {
           </ProtestPicturesText>
         </div>
       </ProtestPictureSection>
+      <footer className="weekly-footer">
+        <p>
+          תודה ל-
+          <a href="https://alefalefalef.co.il/" target="_blank" rel="noreferrer">
+            <img
+              className="alef-logo"
+              src="https://res.cloudinary.com/onekm/image/upload/v1604340884/weekend_pictures/alefalefalef.png"
+              alt="אלףאלףאלף"
+            />
+          </a>
+          על פונט קרוואן
+        </p>
+      </footer>
     </ProtestPicturesWrapper>
   );
 }
 
-export default ProtestPictures;
+export default observer(ProtestPictures);

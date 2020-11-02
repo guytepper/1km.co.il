@@ -1,3 +1,18 @@
+#info-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#roey-peleg-arrest {
+  max-height: 350px;
+}
+
+#rabin-section {
+  background-size: unset !important;
+  background-position: 50% 0% !important;
+}
+
 #balfur-section-content {
   display: grid;
   gap: 12.5px;
@@ -5,9 +20,21 @@
 
 #seeyou-section {
   min-height: 325px;
+  background-position: 40%;
+}
+
+#seeyou-section-text {
+  text-align: center;
+  background: #000000a1;
+  border-radius: 10px;
+  padding: 28px;
 }
 
 @media (min-width: 1024px) {
+  #intro-section {
+    grid-template-rows: 235px 430px;
+  }
+
   #info-box {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
@@ -26,11 +53,17 @@
   #roey-peleg-arrest {
     grid-column: 3 / -1;
     grid-row: 2;
+    max-height: unset;
+  }
+
+  #rabin-section {
+    background-size: cover !important;
+    background-position: 50% 15% !important;
   }
 
   #rabin-square-picures {
     grid-template-columns: 1fr 0.5fr 0.5fr 1fr;
-    grid-template-rows: 380px 300px;
+    grid-template-rows: 330px 300px;
   }
 
   #candles {
@@ -50,7 +83,13 @@
     grid-column: 2 / 4;
   }
 
-  #balfur-section-text {
+  #seeyou-section-text {
+    margin-top: -20px;
+    padding: 30px 40px;
+  }
+
+  #balfur-section-text,
+  #seeyou-section-text {
     justify-self: center;
     align-self: center;
     text-align: center;
@@ -98,4 +137,21 @@
     min-height: 600px !important;
     background-position: center 0;
   }
+}
+
+.weekly-footer {
+  padding: 10px;
+  background-color: #000;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+}
+
+.weekly-footer p {
+  margin: 0;
+}
+
+.alef-logo {
+  width: 25px;
+  margin: 0 5px;
 }

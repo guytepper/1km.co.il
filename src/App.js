@@ -96,18 +96,17 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
+                <Link to="/weekly" onClick={() => updateMenuState(false)} className="bm-item">
+                  יומן
+                </Link>
                 <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                  פיד תמונות
+                  פיד מחאה
+                </Link>
+                <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
+                  העלאת תמונה
                 </Link>
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
-                </Link>
-                <Link
-                  to={isAuthenticated(state.user) ? '/add-protest' : '/sign-up?returnUrl=/add-protest'}
-                  onClick={() => updateMenuState(false)}
-                  className="bm-item"
-                >
-                  הוספת הפגנה
                 </Link>
                 <hr />
                 <Link to="/about" onClick={() => updateMenuState(false)}>
@@ -137,7 +136,7 @@ function App() {
             <Route exact path={['/', '/map']}>
               <ProtestMap />
             </Route>
-            <Route exact path="/protest-pictures">
+            <Route exact path="/weekly">
               <ProtestPictures />
             </Route>
             <Route exact path="/add-protest">
@@ -213,7 +212,7 @@ const Header = styled.header`
   padding: 5px 8px 5px 20px;
   grid-row: 1;
   box-shadow: ${(props) => {
-    if (props.path === '/protest-pictures') return null;
+    if (props.path === '/weekly') return null;
     return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
   }};
   z-index: 10;

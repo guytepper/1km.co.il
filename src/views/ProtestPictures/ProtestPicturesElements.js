@@ -1,4 +1,5 @@
 import React from 'react';
+import { Image } from 'antd';
 import styled from 'styled-components/macro';
 
 export const ProtestPicturesWrapper = styled.div`
@@ -58,6 +59,10 @@ export const HeroImage = styled.div`
   background-repeat: no-repeat;
   background-position: 52%;
   background-size: cover;
+
+  @media (min-width: 1024px) {
+    height: 100vh;
+  }
 `;
 
 HeroImage.TextWrapper = styled.div`
@@ -73,8 +78,7 @@ HeroImage.Title = styled.h2`
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 
   @media (min-width: 1024px) {
-    font-size: 42px;
-    letter-spacing: 12.5px;
+    font-size: 60px;
   }
 `;
 
@@ -82,6 +86,10 @@ HeroImage.Subtitle = styled.h3`
   font-size: 25px;
   letter-spacing: 4.5px;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+
+  @media (min-width: 1024px) {
+    font-size: 32px;
+  }
 `;
 
 export const ProtestPictureSection = styled.div`
@@ -114,20 +122,30 @@ export const InfoBox = styled.div`
   @media (min-width: 1024px) {
     padding: 30px;
   }
+
+  a {
+    color: #0090ff;
+    text-decoration: underline;
+    text-decoration-color: #0090ff8c;
+    text-underline-offset: 4px;
+    font-weight: 600;
+    transition: all 0.25s;
+  }
+  a:hover {
+    color: #37a8ff;
+  }
 `;
 
 export const ProtestImage = ({ children, className, imageUrl, style, imgStyle, id }) => {
   return (
     <ProtestImageWrapper style={style} id={id} className={className}>
-      <ProtestImageElement src={imageUrl} alt="" style={{ imgStyle }} />
+      <ProtestImageElement src={imageUrl} alt="" style={imgStyle} />
       {children}
     </ProtestImageWrapper>
   );
 };
 
 const ProtestImageWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
 `;
 
@@ -141,10 +159,15 @@ ProtestImage.Description = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  min-height: 50px;
+  height: auto;
   padding: 12.5px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
+  transform: translateY(-99%);
+
+  p {
+    margin: 0;
+  }
 `;
 
 export const ImageLocation = styled.p`
@@ -155,9 +178,67 @@ export const ImageLocation = styled.p`
 `;
 
 export const ImageCredit = styled.p`
-  margin: -30px 10px;
-  font-size: 14px;
+  margin: -25px 10px;
+  font-size: 12px;
   color: white;
   text-align: left;
   text-shadow: 0 0 2px #000;
 `;
+
+export const CompactLiveFeed = styled.div`
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 20px;
+
+  width: 100vw;
+  margin: 0 -25px;
+  padding: 20px;
+
+  background: rgba(255, 255, 255, 0.85);
+  overflow-x: scroll;
+
+  scrollbar-color: #5f6ffa #dde0ff;
+  scrollbar-width: thin;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #dde0ff;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #5f6ffa;
+    border-radius: 10px;
+  }
+`;
+
+CompactLiveFeed.Card = styled.div`
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+`;
+
+CompactLiveFeed.Card.Image = styled(Image)`
+  width: 100%;
+  height: 112.5px;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+`;
+
+CompactLiveFeed.Card.Title = styled.h4`
+  font-size: 14px;
+`;
+CompactLiveFeed.Card.Subtitle = styled.h4`
+  font-size: 13px;
+`;
+
+CompactLiveFeed.Card.Avatar = ``;
