@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { Map, ProtestList, IntroModal, Button, Footer } from '../../components';
+import Helmet from 'react-helmet';
 import styled from 'styled-components/macro';
 
 function ProtestMap() {
@@ -30,6 +31,9 @@ function ProtestMap() {
 
   return (
     <>
+      <Helmet>
+        <title>מפת הפגנות</title>
+      </Helmet>
       <HomepageWrapper>
         <ProtestListWrapper>
           <ProtestListHead>
