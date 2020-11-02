@@ -17,8 +17,15 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-/* Detect android devies for device-specificissues
-const html = document.querySelector('body');
-if (navigator.userAgent.match(/android/i)) {
-  html.classList.add('android-device');
-}*/
+/* Detect Safari for browser specific issues */
+const isSafari =
+  navigator.vendor &&
+  navigator.vendor.indexOf('Apple') > -1 &&
+  navigator.userAgent &&
+  navigator.userAgent.indexOf('CriOS') === -1 &&
+  navigator.userAgent.indexOf('FxiOS') === -1;
+
+if (isSafari) {
+  const html = document.querySelector('body');
+  html.classList.add('safari');
+}
