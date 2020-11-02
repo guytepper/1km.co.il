@@ -7,6 +7,13 @@ export const ProtestPicturesWrapper = styled.div`
     font-family: Caravan, sans-serif;
     color: white;
   }
+
+  a {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: #e7e7e78c;
+    text-underline-offset: 4px;
+  }
 `;
 
 export const ProtestPicturesHeader = styled.h2`
@@ -82,7 +89,8 @@ export const ProtestPictureSection = styled.div`
   padding: 25px;
   min-height: 95vh;
   background-image: ${({ imageUrl }) => `url('${imageUrl}')`};
-
+  background-repeat: no-repeat;
+  background-size: cover;
   display: grid;
   grid-template-columns: 1fr;
   grid-auto-rows: max-content;
@@ -108,10 +116,10 @@ export const InfoBox = styled.div`
   }
 `;
 
-export const ProtestImage = ({ children, imageUrl, style, imgStyle, id }) => {
+export const ProtestImage = ({ children, className, imageUrl, style, imgStyle, id }) => {
   return (
-    <ProtestImageWrapper style={style} id={id}>
-      <img src={imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', ...imgStyle }} />
+    <ProtestImageWrapper style={style} id={id} className={className}>
+      <ProtestImageElement src={imageUrl} alt="" style={{ imgStyle }} />
       {children}
     </ProtestImageWrapper>
   );
@@ -123,6 +131,12 @@ const ProtestImageWrapper = styled.div`
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
 `;
 
+const ProtestImageElement = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
 ProtestImage.Description = styled.div`
   display: flex;
   flex-direction: column;
@@ -131,13 +145,6 @@ ProtestImage.Description = styled.div`
   padding: 12.5px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
-
-  a {
-    color: white;
-    text-decoration: underline;
-    text-decoration-color: #e7e7e78c;
-    text-underline-offset: 4px;
-  }
 `;
 
 export const ImageLocation = styled.p`

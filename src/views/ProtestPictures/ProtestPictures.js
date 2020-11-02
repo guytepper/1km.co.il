@@ -214,12 +214,59 @@ function ProtestPictures() {
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604302235/weekend_pictures/31-10-2020/balfur-bg_mvjzov.jpg"
         id="balfur-section"
       >
-        <div>
+        <div id="balfur-section-text">
           <ProtestPicturesHeader>מהנעשה בבלפור</ProtestPicturesHeader>
-
           <ProtestPicturesText>
             המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
             ראש הממשלה.
+          </ProtestPicturesText>
+          <ProtestPicturesText>
+            לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
+            <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
+              עמוד ההפגנה
+            </Link>
+            .
+          </ProtestPicturesText>
+        </div>
+        <div id="balfur-section-content">
+          <ProtestImage
+            className="balfur-section-image"
+            imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604302954/weekend_pictures/31-10-2020/balfur_mm.jpg"
+          ></ProtestImage>
+          <ProtestImage
+            className="balfur-section-image"
+            imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304228/weekend_pictures/31-10-2020/balfur-signn_pu31xw.jpg"
+          ></ProtestImage>
+          <ProtestImage
+            className="balfur-section-image"
+            imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304193/weekend_pictures/31-10-2020/balfur-acab_x3gvb7.jpg"
+          ></ProtestImage>
+          <ProtestImage
+            className="balfur-section-image"
+            imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604177195/protest_pictures/voTcndBEKWlMmvvife42/2020-31-10/hAgyZlFralFZpoHBBWHGR.jpg"
+          ></ProtestImage>
+          <ProtestImage
+            className="balfur-section-image"
+            imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304497/protest_pictures/voTcndBEKWlMmvvife42/2020-31-10/J3CmZ9TcEPBIlrqw5V-X4.jpg"
+          ></ProtestImage>
+        </div>
+      </ProtestPictureSection>
+      <ProtestPictureSection
+        imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160754/protest_pictures/FueqajqQRbwyMMIaF5S3/2020-31-10/89kkGsmuFVVIkZdG5BSyO.jpg"
+        id="seeyou-section"
+      >
+        <div id="balfur-section-text" style={{ alignSelf: 'start' }}>
+          <ProtestPicturesHeader>נתראה בשבוע הבא!</ProtestPicturesHeader>
+          <ProtestPicturesText>
+            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
+            ראש הממשלה.
+          </ProtestPicturesText>
+          <ProtestPicturesText>
+            לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
+            <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
+              עמוד ההפגנה
+            </Link>
+            .
           </ProtestPicturesText>
         </div>
       </ProtestPictureSection>
