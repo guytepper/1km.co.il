@@ -6,18 +6,26 @@ export const ProtestPicturesWrapper = styled.div`
   h3 {
     font-family: Caravan, sans-serif;
     color: white;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
   }
 `;
 
 export const ProtestPicturesHeader = styled.h2`
   margin: 0;
   font-size: 38px;
+  letter-spacing: 3px;
+
+  @media (min-width: 1024px) {
+    font-size: 50px;
+  }
 `;
 
 export const ProtestPicturesSubheader = styled.h2`
   font-size: 22px;
   font-family: Simpler, sans-serif !important;
+
+  @media (min-width: 1024px) {
+    font-size: 26px;
+  }
 `;
 
 export const ProtestPicturesText = styled.p`
@@ -26,6 +34,11 @@ export const ProtestPicturesText = styled.p`
   font-size: 17px;
   font-family: Simpler, sans-serif !important;
   color: #fff;
+
+  @media (min-width: 1024px) {
+    font-size: 18px;
+    max-width: 42vw;
+  }
 `;
 
 export const HeroImage = styled.div`
@@ -50,6 +63,7 @@ HeroImage.Title = styled.h2`
   margin-bottom: 0;
   font-size: 35px;
   letter-spacing: 9px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 
   @media (min-width: 1024px) {
     font-size: 42px;
@@ -60,6 +74,7 @@ HeroImage.Title = styled.h2`
 HeroImage.Subtitle = styled.h3`
   font-size: 25px;
   letter-spacing: 4.5px;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 `;
 
 export const ProtestPictureSection = styled.div`
@@ -70,7 +85,7 @@ export const ProtestPictureSection = styled.div`
 
   display: grid;
   grid-template-columns: 1fr;
-  grid-auto-rows: minmax(420px, max-content);
+  grid-auto-rows: max-content;
   gap: 20px;
 
   @media (min-width: 1024px) {
@@ -93,10 +108,10 @@ export const InfoBox = styled.div`
   }
 `;
 
-export const ProtestImage = ({ children, imageUrl, id }) => {
+export const ProtestImage = ({ children, imageUrl, style, imgStyle, id }) => {
   return (
-    <ProtestImageWrapper id={id}>
-      <img src={imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+    <ProtestImageWrapper style={style} id={id}>
+      <img src={imageUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', ...imgStyle }} />
       {children}
     </ProtestImageWrapper>
   );
@@ -112,10 +127,17 @@ ProtestImage.Description = styled.div`
   display: flex;
   flex-direction: column;
   align-items: start;
-  min-height: 60px;
+  min-height: 50px;
   padding: 12.5px;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
+
+  a {
+    color: white;
+    text-decoration: underline;
+    text-decoration-color: #e7e7e78c;
+    text-underline-offset: 4px;
+  }
 `;
 
 export const ImageLocation = styled.p`

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   ProtestPicturesWrapper,
   ProtestPicturesHeader,
@@ -40,7 +41,16 @@ function ProtestPictures() {
         <ProtestImage
           id="pinkfront"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604256862/weekend_pictures/31-10-2020/pinkfront.jpg"
-        />
+        >
+          <ProtestImage.Description>
+            <p>
+              חיילות צבא הדמוקרטיה בבלפור. <br />
+              <a href="https://www.facebook.com/PinkFrontIL" target="_blank" rel="noreferrer">
+                פינקפרונט - החזית הורודה
+              </a>{' '}
+            </p>
+          </ProtestImage.Description>
+        </ProtestImage>
         <ProtestImage imageUrl="https://res.cloudinary.com/onekm/image/upload/c_scale,q_auto:low,w_740/v1604261694/weekend_pictures/31-10-2020/IMG_1559_qfhq7k.jpg"></ProtestImage>
         <ProtestImage
           id="roey-peleg-arrest"
@@ -64,7 +74,7 @@ function ProtestPictures() {
         style={{ backgroundPosition: 'top' }}
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604264028/weekend_pictures/31-10-2020/rabin-sqaure_pmcyeu.jpg"
       >
-        <div>
+        <div style={{ gridColumn: '1 / 3' }}>
           <ProtestPicturesHeader>זוכרים את הרצח</ProtestPicturesHeader>
           <ProtestPicturesSubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/30/20</ProtestPicturesSubheader>
           <ProtestPicturesText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</ProtestPicturesText>
@@ -107,7 +117,112 @@ function ProtestPictures() {
           <ImageLocation>טקס זכרון, גבעת עמל</ImageLocation>
         </ProtestImage>
       </ProtestPictureSection>
-      <ProtestPictureSection style={{ background: '#d83039' }}></ProtestPictureSection>
+      <ProtestPictureSection style={{ background: '#d83039' }} id="nationwide-section">
+        <div>
+          <ProtestPicturesHeader>כל הארץ דגלים</ProtestPicturesHeader>
+          <ProtestPicturesText>
+            השבוע ה-19 למחאה הארצית: כ- 185,000 אזרחים ואזרחיות יצאו למחות ביותר מ-1000 נקודות ברחבי הארץ.{' '}
+          </ProtestPicturesText>
+          <ProtestPicturesText>לחצו על שם ההפגנה לצפייה בתמונות נוספות מהמיקום :) </ProtestPicturesText>
+        </div>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604213419/protest_pictures/HCH3gs3PFYzAXTx5ufRc/2020-31-10/-i50z_ySAjaONCUQ_aGYp.jpg"
+        >
+          <ProtestImage.Description>
+            <p>
+              <Link to="/protest/HCH3gs3PFYzAXTx5ufRc">ירושלים פינת אחוזה, רעננה</Link>
+            </p>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160398/protest_pictures/EW5fekCQwh75gdBqk29w/2020-31-10/rWdaGeQGQsdwhREO9XTid.jpg"
+        >
+          <ProtestImage.Description>
+            <Link to="/protest/EW5fekCQwh75gdBqk29w">כיכר לוחמות השואה, הרצליה</Link>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604167916/protest_pictures/4MaSQQmj6jGoFW0cmNkO/2020-31-10/wOXnS3OIXP28pE2Mt5QW5.jpg"
+        >
+          <ProtestImage.Description>
+            <Link to="/protest/4MaSQQmj6jGoFW0cmNkO">אחוזה/בן גוריון, רעננה</Link>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          style={{ maxHeight: 210 }}
+          imgStyle={{ objectPosition: 'top' }}
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604163581/protest_pictures/OASal66GwOGQlFqKvqWA/2020-31-10/EGE0sTjAy5pRWcRTfO_ae.jpg"
+        >
+          <ProtestImage.Description>
+            <Link to="/protest/OASal66GwOGQlFqKvqWA">צומת טופ דן, תל אביב</Link>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604166279/protest_pictures/NvsaAM3lMbs6VyvE5Nq3/2020-31-10/LSPWParvBMyE826S9q4KM.jpg"
+        >
+          <ProtestImage.Description>
+            <Link to="/protest/NvsaAM3lMbs6VyvE5Nq3">כיכר השעון, יפו</Link>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604220783/protest_pictures/rcru0d98x0zySthMmMUs/2020-31-10/_aisYQZqmUNW194VoMAFp.jpg"
+        >
+          <ProtestImage.Description>
+            <Link to="/protest/rcru0d98x0zySthMmMUs">צומת בית יהושוע</Link>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/c_scale,q_auto:low,w_1364/v1604299974/weekend_pictures/31-10-2020/ness_ziona_likud.jpg"
+        >
+          <ProtestImage.Description>
+            <p>קניון עופר, נס ציונה. צילום: ראובן להב</p>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604300401/weekend_pictures/31-10-2020/bnei_dror_gesher.jpg"
+        >
+          <ProtestImage.Description>
+            <p>צומת בני דרור</p>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604300790/weekend_pictures/31-10-2020/geshser_kfar_bialik.jpg"
+        >
+          <ProtestImage.Description>
+            <p>גשר כפר ביאליק</p>
+          </ProtestImage.Description>
+        </ProtestImage>
+        <ProtestImage
+          id=""
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604300825/weekend_pictures/31-10-2020/zomet_oh.jpg"
+        >
+          <ProtestImage.Description>
+            <p>גשר כפר ביאליק</p>
+          </ProtestImage.Description>
+        </ProtestImage>
+      </ProtestPictureSection>
+      <ProtestPictureSection
+        imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604302235/weekend_pictures/31-10-2020/balfur-bg_mvjzov.jpg"
+        id="balfur-section"
+      >
+        <div>
+          <ProtestPicturesHeader>מהנעשה בבלפור</ProtestPicturesHeader>
+
+          <ProtestPicturesText>
+            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
+            ראש הממשלה.
+          </ProtestPicturesText>
+        </div>
+      </ProtestPictureSection>
     </ProtestPicturesWrapper>
   );
 }
