@@ -39,7 +39,7 @@ export const ProtestPicturesSubheader = styled.h2`
 export const ProtestPicturesText = styled.p`
   max-width: 88vw;
   margin-bottom: 8px;
-  font-size: 17px;
+  font-size: 18px;
   font-family: Simpler, sans-serif !important;
   color: #fff;
 
@@ -77,7 +77,7 @@ HeroImage.TextWrapper = styled.div`
 
 HeroImage.Title = styled.h2`
   margin-bottom: 0;
-  font-size: 35px;
+  font-size: 40px;
   letter-spacing: 9px;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 
