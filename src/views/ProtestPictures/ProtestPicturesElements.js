@@ -59,7 +59,7 @@ export const HeroImage = styled.div`
   width: 100vw;
   height: 660px;
   margin-top: -60px;
-  background-image: url('https://res.cloudinary.com/onekm/image/upload/v1604163817/protest_pictures/72zivncvY8R8R6EkO8rb/2020-31-10/Brk6xmLDL7WZu_4UhD9Q1.jpg');
+  background-image: url('https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604163817/protest_pictures/72zivncvY8R8R6EkO8rb/2020-31-10/Brk6xmLDL7WZu_4UhD9Q1.jpg');
   background-repeat: no-repeat;
   background-position: 52%;
   background-size: cover;
