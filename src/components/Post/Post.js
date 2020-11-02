@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useLocation, useParams, useHistory } from 'react-router-dom';
 import { posts } from '../../views/Posts';
 import PostWrapper from './PostWrapper';
@@ -15,15 +15,6 @@ const Post = ({ overrideSlug = '404' }) => {
   if (postData.permalink && postData.permalink !== location.pathname) {
     history.replace(postData.permalink);
   }
-
-  useEffect(() => {
-    const currentTitle = document.title;
-    document.title = postData.title;
-
-    return () => {
-      document.title = currentTitle;
-    };
-  }, [postData.title]);
 
   return <PostWrapper>{postData.text}</PostWrapper>;
 };
