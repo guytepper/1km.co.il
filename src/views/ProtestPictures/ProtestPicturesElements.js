@@ -47,6 +47,10 @@ export const ProtestPicturesText = styled.p`
     font-size: 18px;
     max-width: 42vw;
   }
+
+  @media (min-width: 1280px) {
+    font-size: 20px;
+  }
 `;
 
 export const HeroImage = styled.div`
@@ -88,7 +92,7 @@ HeroImage.Subtitle = styled.h3`
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
 
   @media (min-width: 1024px) {
-    font-size: 32px;
+    font-size: 40px;
   }
 `;
 

@@ -88,6 +88,10 @@
     padding: 30px 40px;
   }
 
+  #balfur-section-text {
+    margin-top: -60px;
+  }
+
   #balfur-section-text,
   #seeyou-section-text {
     justify-self: center;
