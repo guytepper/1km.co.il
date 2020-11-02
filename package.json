@@ -73,11 +73,6 @@
     "husky": "^4.3.0",
     "lint-staged": "^10.4.0",
     "prettier": "^2.1.2",
-    "react-snap": "^1.23.0",
     "start-server-and-test": "^1.11.5"
-  },
-  "reactSnap": {
-    "inlineCss": true,
-    "skipThirdPartyRequests": true
   }
 }
