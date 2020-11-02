@@ -26,6 +26,8 @@ const PostWrapper = styled.div`
   }
 
   & h2 {
+    margin-top: 20px;
+    font-weight: 600;
     text-align: center;
   }
 `;

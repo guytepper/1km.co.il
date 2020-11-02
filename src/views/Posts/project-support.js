@@ -2,9 +2,14 @@
 import React from 'react';
 // eslint-disable-next-line
 import { Link } from 'react-router-dom';
+// eslint-disable-next-line
+import Helmet from 'react-helmet';
 import { mdx } from 'mdx.macro';
 
 const Content = mdx`
+<Helmet>
+  <title>אודות הפרוייקט</title>
+</Helmet>
 
 ## על הפרוייקט
 

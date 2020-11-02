@@ -38,7 +38,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "postbuild": "react-snap",
     "test:e2e": "start-server-and-test  start http://localhost:3000 cy:run",
     "cy:run": "cypress run",
     "eject": "react-scripts eject",
