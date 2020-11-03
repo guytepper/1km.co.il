@@ -254,10 +254,10 @@ function Weekly() {
         id="balfur-section"
       >
         <div id="balfur-section-text">
-          <Fade>
+          <Fade triggerOnce>
             <WeeklyHeader>מהנעשה בבלפור</WeeklyHeader>
           </Fade>
-          <Fade>
+          <Fade triggerOnce>
             <WeeklyText>
               המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז בה הפגינו כ-20 אלף אנשים אל מול מעון
               ראש הממשלה.
@@ -317,7 +317,7 @@ function Weekly() {
             liveStore.entries.map((entry) => (
               <CompactLiveFeed.Card>
                 <CompactLiveFeed.Card.Image src={entry.imageUrl} />
-                <CompactLiveFeed.Card.Title>
+                <CompactLiveFeed.Card.Title style={{ height: '37.8px' }}>
                   <TimeAgo datetime={entry.createdAt} locale="he" />
                   {' ב'}
                   {entry.protestName}
@@ -393,11 +393,7 @@ function Weekly() {
         <p>
           תודה ל-
           <a href="https://alefalefalef.co.il/" target="_blank" rel="noreferrer">
-            <img
-              className="alef-logo"
-              src="https://res.cloudinary.com/onekm/image/upload/v1604340884/weekend_pictures/alefalefalef.png"
-              alt="אלףאלףאלף"
-            />
+            <img className="alef-logo" src="/icons/alefalefalef.svg" alt="אאא" />
           </a>
           על פונט קרוואן
         </p>
