@@ -1,4 +1,5 @@
 import React, { useReducer, useEffect } from 'react';
+import Helmet from 'react-helmet';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './stores';
 import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
@@ -17,7 +18,7 @@ import {
   Weekly,
 } from './views';
 import { UploadForm, ScrollToTop } from './components';
-import { isAuthenticated, isAdmin } from './utils';
+import { isAdmin } from './utils';
 import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
 import { DispatchContext } from './context';
@@ -78,6 +79,7 @@ function App() {
   return (
     <DispatchContext.Provider value={dispatch}>
       <AppWrapper>
+        <Helmet titleTemplate="%s - קילומטר אחד" defaultTitle="קילומטר אחד"></Helmet>
         <Router>
           <ScrollToTop />
           <Header path={window.location.pathname}>

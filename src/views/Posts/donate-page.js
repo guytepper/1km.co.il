@@ -1,11 +1,15 @@
 // eslint-disable-next-line
 import React from 'react';
 // eslint-disable-next-line
+import Helmet from 'react-helmet';
 import { mdx } from 'mdx.macro';
 
 const Content = mdx`
+<Helmet>
+  <title>תרומה לפרוייקט</title>
+</Helmet>
 
-## תרומה לפרוייקט
+## תרומה לפרוייקט 
 
 <div style={{ textAlign: 'center' }}>
 "קילומטר אחד" הינו פרוייקט ללא מטרות רווח.  

@@ -31,7 +31,6 @@ export async function uploadImage({ base64File, protestId, date }) {
 export async function savePictureToFirestore({ pictureData, fileId }) {
   const pictureParams = {
     ...pictureData,
-    eventDate: '2020-10-31',
     archived: false,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
   };
