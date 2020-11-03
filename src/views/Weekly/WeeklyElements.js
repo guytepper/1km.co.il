@@ -229,11 +229,15 @@ CompactLiveFeed.Card.Image = styled(Image)`
   width: 100%;
   height: 112.5px;
   cursor: pointer;
+  transition: box-shadow 0.25s ease-in-out;
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  &:hover {
+    box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.25);
   }
 `;
 
