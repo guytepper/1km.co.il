@@ -19,7 +19,7 @@ function PictureCardList({ pictures }) {
 
   return (
     <>
-      {transitions.map(({ item: picture, props, key }, i) => (
+      {transitions.map(({ item: picture, props, key }) => (
         <Card key={key} style={props}>
           <Card.Info>
             <Link to={`/protest/${picture.protestId}`}>
