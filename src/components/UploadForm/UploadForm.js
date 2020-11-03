@@ -48,12 +48,13 @@ function UploadForm({ afterUpload, protest }) {
 
     if (!user) {
       alert('העלאה נכשלה: אינך מחובר/ת.');
+      history.push('/sign-up?returnUrl=/upload-image?returnUrl=/live');
       return;
     }
 
     setUploading(true);
 
-    const result = await uploadImage({ base64File: currentFile, protestId: userCurrentProtest.id, date: '2020-31-10' });
+    const result = await uploadImage({ base64File: currentFile, protestId: userCurrentProtest.id, date: eventDate });
     if (!result) {
       alert('לא הצלחנו להעלות את התמונה.\nאם הבעיה ממשיכה להתרחש, אנא צרו איתנו קשר.');
       return;
