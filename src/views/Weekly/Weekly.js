@@ -79,7 +79,9 @@ function Weekly() {
         <ProtestImage
           id="pinkfront"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604256862/weekend_pictures/31-10-2020/pinkfront.jpg"
-        ></ProtestImage>
+        >
+          <ImageCredit>צילום: אוהד צויגנברג</ImageCredit>
+        </ProtestImage>
         <ProtestImage
           imageUrl="https://res.cloudinary.com/onekm/image/upload/e_auto_brightness,h_700/v1604326693/weekend_pictures/31-10-2020/pinkyhope.jpg"
           imgStyle={{ objectPosition: 'top' }}
