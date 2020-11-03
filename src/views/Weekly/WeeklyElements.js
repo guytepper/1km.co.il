@@ -2,7 +2,7 @@ import React from 'react';
 import { Image } from 'antd';
 import styled from 'styled-components/macro';
 
-export const ProtestPicturesWrapper = styled.div`
+export const WeeklyWrapper = styled.div`
   h2,
   h3 {
     font-family: Caravan, sans-serif;
@@ -17,7 +17,7 @@ export const ProtestPicturesWrapper = styled.div`
   }
 `;
 
-export const ProtestPicturesHeader = styled.h2`
+export const WeeklyHeader = styled.h2`
   margin: 0;
   font-size: 38px;
   letter-spacing: 3px;
@@ -27,7 +27,7 @@ export const ProtestPicturesHeader = styled.h2`
   }
 `;
 
-export const ProtestPicturesSubheader = styled.h2`
+export const WeeklySubheader = styled.h2`
   font-size: 22px;
   font-family: Simpler, sans-serif !important;
 
@@ -36,7 +36,7 @@ export const ProtestPicturesSubheader = styled.h2`
   }
 `;
 
-export const ProtestPicturesText = styled.p`
+export const WeeklyText = styled.p`
   max-width: 88vw;
   margin-bottom: 8px;
   font-size: 18px;
@@ -96,7 +96,7 @@ HeroImage.Subtitle = styled.h3`
   }
 `;
 
-export const ProtestPictureSection = styled.div`
+export const WeeklySection = styled.div`
   width: 100vw;
   padding: 25px;
   min-height: 95vh;
@@ -172,13 +172,6 @@ ProtestImage.Description = styled.div`
   p {
     margin: 0;
   }
-`;
-
-export const ImageLocation = styled.p`
-  margin: -30px 10px;
-  text-align: right;
-  color: white;
-  text-shadow: 0 0 2px #000;
 `;
 
 export const ImageCredit = styled.p`

@@ -16,7 +16,7 @@ class LiveStore {
 
     livePictures.once('value', (dataSnapshot) => {
       runInAction(() => {
-        this.entries = Object.values(dataSnapshot.val());
+        this.entries = Object.values(dataSnapshot.val()).reverse();
       });
     });
   }

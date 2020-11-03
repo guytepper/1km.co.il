@@ -14,7 +14,7 @@ import {
   PostView,
   LiveEvent,
   FourOhFour,
-  ProtestPictures,
+  Weekly,
 } from './views';
 import { UploadForm, ScrollToTop } from './components';
 import { isAuthenticated, isAdmin } from './utils';
@@ -137,7 +137,7 @@ function App() {
               <ProtestMap />
             </Route>
             <Route exact path="/weekly">
-              <ProtestPictures />
+              <Weekly />
             </Route>
             <Route exact path="/add-protest">
               <AddProtest user={state.user} />

@@ -4,19 +4,18 @@ import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
 import { Avatar } from 'antd';
 import {
-  ProtestPicturesWrapper,
-  ProtestPicturesHeader,
-  ProtestPicturesSubheader,
-  ProtestPicturesText,
+  WeeklyWrapper,
+  WeeklyHeader,
+  WeeklySubheader,
+  WeeklyText,
   HeroImage,
-  ProtestPictureSection,
+  WeeklySection,
   InfoBox,
   ProtestImage,
-  ImageLocation,
   ImageCredit,
   CompactLiveFeed,
-} from './ProtestPicturesElements';
-import './ProtestPictures.css';
+} from './WeeklyElements';
+import './Weekly.css';
 
 import TimeAgo from 'timeago-react';
 import * as timeago from 'timeago.js';
@@ -24,7 +23,7 @@ import he from 'timeago.js/lib/lang/he';
 
 timeago.register('he', he);
 
-function ProtestPictures() {
+function Weekly() {
   const store = useStore();
   const liveStore = store.liveStore;
 
@@ -33,14 +32,14 @@ function ProtestPictures() {
   }, []);
 
   return (
-    <ProtestPicturesWrapper>
+    <WeeklyWrapper>
       <HeroImage>
         <HeroImage.TextWrapper>
           <HeroImage.Title>יומן מחאה</HeroImage.Title>
           <HeroImage.Subtitle>29-31.10.20</HeroImage.Subtitle>
         </HeroImage.TextWrapper>
       </HeroImage>
-      <ProtestPictureSection
+      <WeeklySection
         className="weekly-section"
         id="intro-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604253080/weekend_pictures/31-10-2020/first-bg_uozjrt.jpg"
@@ -84,24 +83,24 @@ function ProtestPictures() {
             </p>
           </ProtestImage.Description>
         </ProtestImage>
-      </ProtestPictureSection>
-      <ProtestPictureSection
+      </WeeklySection>
+      <WeeklySection
         className="weekly-section"
         id="rabin-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604264028/weekend_pictures/31-10-2020/rabin-sqaure_pmcyeu.jpg"
       >
         <div style={{ gridColumn: '1 / 3' }}>
-          <ProtestPicturesHeader>זוכרים את הרצח</ProtestPicturesHeader>
-          <ProtestPicturesSubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/10/20</ProtestPicturesSubheader>
-          <ProtestPicturesText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</ProtestPicturesText>
-          <ProtestPicturesText>
+          <WeeklyHeader>זוכרים את הרצח</WeeklyHeader>
+          <WeeklySubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/10/20</WeeklySubheader>
+          <WeeklyText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</WeeklyText>
+          <WeeklyText>
             בימים אלו, כשראש ממשלה מכהן מסית כנגד חלק ניכר מהעם, חשוב לזכור את נקודת הקצה שמדינת ישראל הגיעה אליה לפני 25 שנה
             ולהתנגד בכל הכח להסתה.
-          </ProtestPicturesText>
+          </WeeklyText>
           <p style={{ marginTop: 20, fontSize: 13, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
         </div>
-      </ProtestPictureSection>
-      <ProtestPictureSection style={{ background: '#000' }} className="weekly-section" id="rabin-square-picures">
+      </WeeklySection>
+      <WeeklySection style={{ background: '#000' }} className="weekly-section" id="rabin-square-picures">
         <ProtestImage
           id="candles"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604264691/weekend_pictures/31-10-2020/candles_gf8czy.jpg"
@@ -138,14 +137,12 @@ function ProtestPictures() {
             <p>יד לבנים, הרצליה </p>
           </ProtestImage.Description>
         </ProtestImage>
-      </ProtestPictureSection>
-      <ProtestPictureSection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
+      </WeeklySection>
+      <WeeklySection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
         <div>
-          <ProtestPicturesHeader>כל הארץ דגלים</ProtestPicturesHeader>
-          <ProtestPicturesText>
-            השבוע ה-19 למחאה הארצית: כ- 185,000 אזרחים ואזרחיות יצאו למחות ביותר מ-1000 נקודות ברחבי הארץ.{' '}
-          </ProtestPicturesText>
-          <ProtestPicturesText>לחצו על שם ההפגנה לצפייה בתמונות נוספות מהמיקום :) </ProtestPicturesText>
+          <WeeklyHeader>כל הארץ דגלים</WeeklyHeader>
+          <WeeklyText>השבוע ה-19 למחאה הארצית: כ- 185,000 אזרחים ואזרחיות יצאו למחות ביותר מ-1000 נקודות ברחבי הארץ. </WeeklyText>
+          <WeeklyText>לחצו על שם ההפגנה לצפייה בתמונות נוספות מהמיקום :) </WeeklyText>
         </div>
         <ProtestImage
           id=""
@@ -227,24 +224,24 @@ function ProtestPictures() {
           id=""
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604300825/weekend_pictures/31-10-2020/zomet_oh.jpg"
         ></ProtestImage>
-      </ProtestPictureSection>
-      <ProtestPictureSection
+      </WeeklySection>
+      <WeeklySection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604302235/weekend_pictures/31-10-2020/balfur-bg_mvjzov.jpg"
         id="balfur-section"
       >
         <div id="balfur-section-text">
-          <ProtestPicturesHeader>מהנעשה בבלפור</ProtestPicturesHeader>
-          <ProtestPicturesText>
+          <WeeklyHeader>מהנעשה בבלפור</WeeklyHeader>
+          <WeeklyText>
             המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז בה הפגינו כ-20 אלף אנשים אל מול מעון
             ראש הממשלה.
-          </ProtestPicturesText>
-          <ProtestPicturesText>
+          </WeeklyText>
+          <WeeklyText>
             לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
             <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
               עמוד ההפגנה
             </Link>
             .
-          </ProtestPicturesText>
+          </WeeklyText>
         </div>
         <div id="balfur-section-content" className="weekly-section">
           <ProtestImage
@@ -277,17 +274,17 @@ function ProtestPictures() {
             imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604304497/protest_pictures/voTcndBEKWlMmvvife42/2020-31-10/J3CmZ9TcEPBIlrqw5V-X4.jpg"
           ></ProtestImage>
         </div>
-      </ProtestPictureSection>
-      <ProtestPictureSection
+      </WeeklySection>
+      <WeeklySection
         style={{ backgroundPosition: 'center', minHeight: '70vh' }}
         className="weekly-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
       >
         <div style={{ gridColumn: '1 / 3' }}>
-          <ProtestPicturesHeader>פיד מחאה</ProtestPicturesHeader>
-          <ProtestPicturesText style={{ fontWeight: 700, backgroundPosition: 'center' }}>
+          <WeeklyHeader>פיד מחאה</WeeklyHeader>
+          <WeeklyText style={{ fontWeight: 700, backgroundPosition: 'center' }}>
             כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.
-          </ProtestPicturesText>
+          </WeeklyText>
           <CompactLiveFeed>
             {liveStore.entries.length > 0 &&
               liveStore.entries.map((entry) => (
@@ -316,27 +313,27 @@ function ProtestPictures() {
             <div style={{ width: 25 }}></div>
           </CompactLiveFeed>
         </div>
-      </ProtestPictureSection>
-      <ProtestPictureSection
+      </WeeklySection>
+      <WeeklySection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160754/protest_pictures/FueqajqQRbwyMMIaF5S3/2020-31-10/89kkGsmuFVVIkZdG5BSyO.jpg"
         className="weekly-section"
         id="seeyou-section"
       >
         <div id="seeyou-section-text" style={{ alignSelf: 'start' }}>
-          <ProtestPicturesHeader>נתראה בשבוע הבא!</ProtestPicturesHeader>
-          <ProtestPicturesText>
+          <WeeklyHeader>נתראה בשבוע הבא!</WeeklyHeader>
+          <WeeklyText>
             המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
             ראש הממשלה.
-          </ProtestPicturesText>
-          <ProtestPicturesText>
+          </WeeklyText>
+          <WeeklyText>
             לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
             <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
               עמוד ההפגנה
             </Link>
             .
-          </ProtestPicturesText>
+          </WeeklyText>
         </div>
-      </ProtestPictureSection>
+      </WeeklySection>
       <footer className="weekly-footer">
         <p>
           תודה ל-
@@ -350,8 +347,8 @@ function ProtestPictures() {
           על פונט קרוואן
         </p>
       </footer>
-    </ProtestPicturesWrapper>
+    </WeeklyWrapper>
   );
 }
 
-export default observer(ProtestPictures);
+export default observer(Weekly);
