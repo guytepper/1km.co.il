@@ -137,9 +137,9 @@ function App() {
           <Switch>
             <Route exact path={['/', '/weekly']}>
               <Weekly />
-              <Route exact path="/map">
-                <ProtestMap />
-              </Route>
+            </Route>
+            <Route exact path="/map">
+              <ProtestMap />
             </Route>
             <Route exact path="/add-protest">
               <AddProtest user={state.user} />
