@@ -7,7 +7,6 @@ import { CheckInModal, Button } from '../../components';
 import { PictureFeed, CheckInList, WithMeList } from './';
 import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
-import { EVENT_DATE } from './event_data';
 
 const VIEWS = {
   feed: 'liveFeed',

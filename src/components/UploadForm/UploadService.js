@@ -1,5 +1,4 @@
 import firebase, { firestore, realtimeDB } from '../../firebase';
-import { EVENT_DATE } from '../../views/LiveEvent/event_data';
 import { nanoid } from 'nanoid';
 
 export async function fileToBase64(file) {
@@ -41,7 +40,7 @@ export async function savePictureToFirestore({ pictureData, fileId }) {
 }
 
 export async function savePictureToLiveFeed(livePictureData) {
-  const livePicture = realtimeDB.ref(`${EVENT_DATE}_pictures`).push();
+  const livePicture = realtimeDB.ref('live_feed').push();
   await livePicture.set({ ...livePictureData, createdAt: firebase.database.ServerValue.TIMESTAMP });
   return livePicture;
 }

@@ -15,6 +15,7 @@ import {
   PostView,
   LiveEvent,
   FourOhFour,
+  Weekly,
 } from './views';
 import { UploadForm, ScrollToTop } from './components';
 import { isAdmin } from './utils';
@@ -81,7 +82,8 @@ function App() {
         <Helmet titleTemplate="%s - קילומטר אחד" defaultTitle="קילומטר אחד"></Helmet>
         <Router>
           <ScrollToTop />
-          <Header>
+          <Header path={window.location.pathname}>
+            {/* TODO: Use useLocation - need to move router out of this file */}
             <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
             </NavItemLive>
@@ -96,8 +98,14 @@ function App() {
                 customCrossIcon={false}
                 disableAutoFocus
               >
+                <Link to="/weekly" onClick={() => updateMenuState(false)} className="bm-item">
+                  יומן
+                </Link>
                 <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                  פיד תמונות
+                  פיד מחאה
+                </Link>
+                <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
+                  העלאת תמונה
                 </Link>
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
                   מפת הפגנות
@@ -127,8 +135,11 @@ function App() {
             </NavProfileWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/', '/map']}>
-              <ProtestMap />
+            <Route exact path={['/', '/weekly']}>
+              <Weekly />
+              <Route exact path="/map">
+                <ProtestMap />
+              </Route>
             </Route>
             <Route exact path="/add-protest">
               <AddProtest user={state.user} />
@@ -196,14 +207,16 @@ const AppWrapper = styled.div`
 
 const Header = styled.header`
   display: flex;
-  position: sticky;
-  top: 0;
+  /* position: sticky;
+  top: 0; */
   justify-content: space-between;
   align-items: center;
   padding: 5px 8px 5px 20px;
   grid-row: 1;
-  background-color: #fff;
-  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
+  box-shadow: ${(props) => {
+    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
+    return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
+  }};
   z-index: 10;
 `;
 
@@ -225,6 +238,7 @@ const NavItemLive = styled(Link)`
   font-weight: bold;
   font-size: 18px;
   animation: ${fadeIn} 1.2s linear 1s infinite alternate;
+  visibility: hidden;
 `;
 
 const NavProfileWrapper = styled.div`

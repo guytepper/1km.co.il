@@ -17,8 +17,26 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-/* Detect android devies for device-specificissues
+/* Detect browsers for specific issues fixes */
+const isSafari =
+  navigator.vendor &&
+  navigator.vendor.indexOf('Apple') > -1 &&
+  navigator.userAgent &&
+  navigator.userAgent.indexOf('CriOS') === -1 &&
+  navigator.userAgent.indexOf('FxiOS') === -1;
+
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+const isChromeAndroid = isAndroid && isChrome;
+
 const html = document.querySelector('body');
-if (navigator.userAgent.match(/android/i)) {
-  html.classList.add('android-device');
-}*/
+
+if (isSafari) {
+  html.classList.add('safari');
+  html.classList.add('grid-max-content-nosupport');
+}
+
+if (isChromeAndroid) {
+  html.classList.add('chrome-android');
+  html.classList.add('grid-max-content-nosupport');
+}

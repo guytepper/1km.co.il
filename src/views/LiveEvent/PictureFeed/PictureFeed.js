@@ -6,20 +6,22 @@ import PictureCardList from './PicutreCardList';
 import ActionButton from '../../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../../firebase';
-import { EVENT_DATE } from '../event_data';
+import { nanoid } from 'nanoid';
 
 function PictureFeed() {
   const store = useStore();
   const [pictures, setPictures] = useState([]);
+  // const [feedOffset, setFeedOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
   useEffect(() => {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(10);
+    const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(30);
 
     livePictures.on('child_added', (data) => {
+      // setFeedOffset((prevState) => prevState + 1);
       setPictures((prevState) => {
-        return [{ ...data.val(), id: data.key }, ...prevState];
+        return [{ ...data.val(), id: nanoid() }, ...prevState];
       });
     });
 
@@ -32,6 +34,14 @@ function PictureFeed() {
     };
   }, []);
 
+  // Doesn't work atm
+  // const fetchPictures = () => {
+  //   const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').startAt(20).limitToLast(20);
+  //   livePictures.once('value', (snapshot) => {
+  //     console.log(Object.values(snapshot.val()).reverse());
+  //   });
+  // };
+
   return (
     <div>
       {loading ? (
@@ -43,7 +53,6 @@ function PictureFeed() {
         </div>
       ) : (
         <>
-          {/* <h2 style={{ textAlign: 'center', fontWeight: 600 }}>ברוכים הבאים לפיד המחאה!</h2> */}
           <PictureCardList pictures={pictures} />
           <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
             <ActionButton

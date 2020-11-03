@@ -24,10 +24,10 @@ function IntroModal({ isOpen, setIsOpen }) {
         <Modal.ContentImage src="/welcome-illustration@1x.jpg" alt="" />
       </picture>
 
-      <h2 style={{ marginBottom: 0 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
+      <h2 style={{ margin: '10px 0', fontWeight: 600 }}>גם אלף מטרים לא יעצרו אותנו.</h2>
       <h3 style={{ fontWeight: 400, maxWidth: 355 }}>
-        חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת וואטסאפ וצאו לרחובות. <br />
-        <br />
+        חפשו הפגנה ברדיוס הקרוב אליכן, הצטרפו לקבוצת וואטסאפ וצאו לרחובות.
+        <br style={{ marginBottom: 5 }} />
         לא מצאנו? צרו הפגנה חדשה! אנחנו נחבר בינך לבין פעילים ופעילות בסביבה.
       </h3>
       <Modal.ButtonsWrapper>
