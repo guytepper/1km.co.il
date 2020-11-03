@@ -100,7 +100,18 @@
   }
 
   #nationwide-section {
+    grid-template-rows: 185px;
     grid-auto-rows: 240px;
+    padding-top: 50px;
+  }
+
+  .nationwide-section-text {
+    grid-column: 1 / -1;
+    text-align: center;
+  }
+
+  .nationwide-section-text p {
+    margin: 10px auto;
   }
 
   #nationwide-section p:nth-of-type(2) {

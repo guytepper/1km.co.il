@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
+import { Fade, Slide, Rotate } from 'react-awesome-reveal';
 import { Avatar } from 'antd';
+import { Button } from '../../components';
 import {
   WeeklyWrapper,
   WeeklyHeader,
@@ -15,7 +17,6 @@ import {
   ImageCredit,
   CompactLiveFeed,
 } from './WeeklyElements';
-import { Button } from '../../components';
 import './Weekly.css';
 
 import TimeAgo from 'timeago-react';
@@ -46,13 +47,16 @@ function Weekly() {
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604253080/weekend_pictures/31-10-2020/first-bg_uozjrt.jpg"
       >
         <InfoBox id="info-box">
-          <p style={{ fontWeight: 600 }}> ברוכים הבאים ליומן המחאה העממי של ישראל.</p>
-          <p>גלי המחאה שוטפים את ישראל ב-5 החודשים האחרונים, והגיע הזמן לרכז את כל אירועי השבוע במקום אחד.</p>
-          <p>כל תחילת שבוע האתר יעודכן בהתרחשויות המחאה בשבוע שחלף. </p>
-          <p>
-            אנחנו מזמינים אתכם <Link to="">לשלוח אלינו דיווחים ותמונות</Link> במהלך השבוע, וכמובן בערב המחאה בשבת.
-          </p>
+          <Fade triggerOnce>
+            <p style={{ fontWeight: 600 }}> ברוכים הבאים ליומן המחאה העממי של ישראל.</p>
+            <p>ההפגנות שוטפות את ישראל ב-5 החודשים האחרונים, והגיע הזמן לרכז את אירועי המחאה במקום אחד.</p>
+            <p>כל תחילת שבוע האתר יעודכן בהתרחשויות המחאה השונות בשבוע שחלף. </p>
+            <p>
+              אנחנו מזמינים אתכם <Link to="">לשלוח אלינו דיווחים ותמונות</Link> במהלך השבוע, וכמובן בערב המחאה בשבת.
+            </p>
+          </Fade>
         </InfoBox>
+
         <ProtestImage
           id="gesher"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604256316/weekend_pictures/31-10-2020/gesher01.jpg"
@@ -91,14 +95,18 @@ function Weekly() {
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604264028/weekend_pictures/31-10-2020/rabin-sqaure_pmcyeu.jpg"
       >
         <div style={{ gridColumn: '1 / 3' }}>
-          <WeeklyHeader>זוכרים את הרצח</WeeklyHeader>
-          <WeeklySubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/10/20</WeeklySubheader>
-          <WeeklyText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</WeeklyText>
-          <WeeklyText>
-            בימים אלו, כשראש ממשלה מכהן מסית כנגד חלק ניכר מהעם, חשוב לזכור את נקודת הקצה שמדינת ישראל הגיעה אליה לפני 25 שנה
-            ולהתנגד בכל הכח להסתה.
-          </WeeklyText>
-          <p style={{ marginTop: 20, fontSize: 13, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
+          <Fade triggerOnce>
+            <WeeklyHeader>זוכרים את הרצח</WeeklyHeader>
+          </Fade>
+          <Fade triggerOnce>
+            <WeeklySubheader style={{ marginBottom: 10 }}>כיכר רבין, 29/10/20</WeeklySubheader>
+            <WeeklyText>ברחבי הארץ צוין יום הזכרון לרצח ראש הממשלה יצחק רבין.</WeeklyText>
+            <WeeklyText>
+              בימים אלו, כשראש ממשלה מכהן מסית כנגד חלק ניכר מהעם, חשוב לזכור את נקודת הקצה שמדינת ישראל הגיעה אליה לפני 25 שנה
+              ולהתנגד בכל הכח להסתה.
+            </WeeklyText>
+            <p style={{ marginTop: 20, fontSize: 13, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
+          </Fade>
         </div>
       </WeeklySection>
       <WeeklySection style={{ background: '#000' }} className="weekly-section" id="rabin-square-picures">
@@ -140,10 +148,14 @@ function Weekly() {
         </ProtestImage>
       </WeeklySection>
       <WeeklySection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
-        <div>
-          <WeeklyHeader>כל הארץ דגלים</WeeklyHeader>
-          <WeeklyText>השבוע ה-19 למחאה הארצית: כ- 185,000 אזרחים ואזרחיות יצאו למחות ביותר מ-1000 נקודות ברחבי הארץ. </WeeklyText>
-          <WeeklyText>לחצו על שם ההפגנה לצפייה בתמונות נוספות מהמיקום :) </WeeklyText>
+        <div class="nationwide-section-text">
+          <Fade triggerOnce>
+            <WeeklyHeader>כל הארץ דגלים</WeeklyHeader>
+            <WeeklyText>
+              השבוע ה-19 למחאה הארצית: כ- 185,000 אזרחים ואזרחיות יצאו למחות ביותר מ-1000 נקודות ברחבי הארץ.{' '}
+            </WeeklyText>
+            <WeeklyText>לחצו על שם ההפגנה לצפייה בתמונות נוספות מהמיקום :) </WeeklyText>
+          </Fade>
         </div>
         <ProtestImage
           id=""
@@ -221,10 +233,6 @@ function Weekly() {
             <p>גשר כפר ביאליק</p>
           </ProtestImage.Description>
         </ProtestImage>
-        <ProtestImage
-          id=""
-          imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604300825/weekend_pictures/31-10-2020/zomet_oh.jpg"
-        ></ProtestImage>
       </WeeklySection>
       <WeeklySection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604302235/weekend_pictures/31-10-2020/balfur-bg_mvjzov.jpg"
@@ -328,20 +336,23 @@ function Weekly() {
       >
         <div id="seeyou-section-text" style={{ alignSelf: 'start' }}>
           <WeeklyHeader>נתראה בשבוע הבא!</WeeklyHeader>
+          <WeeklyText>אנחנו עובדים ללא הפסקה על "קילומטר אחד" כך שיהפוך לרשת המחאה שלכן.</WeeklyText>
           <WeeklyText>
-            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז שם הפגינו כ-20 אלף אנשים אל מול מעון
-            ראש הממשלה.
+            רשת שתעזור ליצירת קשרים, לאיחוד כוחות ולשיתף ידע. רשת שתעודד את מי שעוד מהסס לצאת לרחוב - לצעוד בראש מורם אל מוקד
+            המחאה הקרוב.{' '}
           </WeeklyText>
-          <WeeklyText>
-            לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
-            <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
-              עמוד ההפגנה
-            </Link>
-            .
-          </WeeklyText>
+          <WeeklyText>אנחנו מזמינים אתכם לעקוב אחרינו ברשתות החברתיות לעדכונים. </WeeklyText>
         </div>
       </WeeklySection>
       <footer className="weekly-footer">
+        <div style={{ fontSize: 17, marginBottom: 5 }}>
+          <p>
+            קילומטר אחד הוא פרוייקט ללא מטרות רווח. <Link to="/about">קראו עלינו עוד.</Link>
+          </p>
+          <p>
+            במידה ואתם מעוניינים לתרום לנו, <Link to="/donate">לחצו כאן.</Link>
+          </p>
+        </div>
         <p>
           תודה ל-
           <a href="https://alefalefalef.co.il/" target="_blank" rel="noreferrer">

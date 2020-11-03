@@ -111,7 +111,7 @@ export const WeeklySection = styled.div`
   @media (min-width: 1024px) {
     padding: 5% 10%;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 235px max-content;
+    grid-template-rows: 235px;
     grid-auto-rows: unset;
   }
 `;
@@ -124,7 +124,12 @@ export const InfoBox = styled.div`
   box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
 
   @media (min-width: 1024px) {
+    font-size: 18px;
     padding: 30px;
+  }
+
+  @media (min-width: 1280px) {
+    font-size: 19px;
   }
 
   a {
