@@ -183,14 +183,12 @@ export const ImageCredit = styled.p`
 `;
 
 export const CompactLiveFeed = styled.div`
-  position: absolute;
-  right: 0;
-
   display: grid;
   grid-template-columns: repeat(11, 1fr);
   gap: 20px;
 
   width: 100vw;
+  height: 225px;
   margin-top: 10px;
   padding: 20px;
 

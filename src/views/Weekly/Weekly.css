@@ -30,6 +30,23 @@
   padding: 28px;
 }
 
+.compact-feed-section {
+  padding: 0 !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 120px 235px 140px !important;
+}
+
+.compact-feed-section-text {
+  margin: 20px;
+  text-align: center;
+}
+
+.compact-feed-section-text p {
+  font-size: 17px;
+  font-weight: 600;
+  color: #fff;
+}
+
 @media (min-width: 1024px) {
   #intro-section {
     grid-template-rows: 235px 430px;

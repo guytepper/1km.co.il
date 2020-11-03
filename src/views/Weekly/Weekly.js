@@ -15,6 +15,7 @@ import {
   ImageCredit,
   CompactLiveFeed,
 } from './WeeklyElements';
+import { Button } from '../../components';
 import './Weekly.css';
 
 import TimeAgo from 'timeago-react';
@@ -277,41 +278,43 @@ function Weekly() {
       </WeeklySection>
       <WeeklySection
         style={{ backgroundPosition: 'center', minHeight: '70vh' }}
-        className="weekly-section"
+        className="weekly-section compact-feed-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
       >
-        <div style={{ gridColumn: '1 / 3' }}>
+        <div className="compact-feed-section-text">
           <WeeklyHeader>פיד מחאה</WeeklyHeader>
-          <WeeklyText style={{ fontWeight: 700, backgroundPosition: 'center' }}>
-            כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.
-          </WeeklyText>
-          <CompactLiveFeed>
-            {liveStore.entries.length > 0 &&
-              liveStore.entries.map((entry) => (
-                <CompactLiveFeed.Card>
-                  <CompactLiveFeed.Card.Image src={entry.imageUrl} />
-                  <CompactLiveFeed.Card.Title>
-                    <TimeAgo datetime={entry.createdAt} locale="he" />
-                    {' ב'}
-                    {entry.protestName}
-                    {entry.cityName && `, ${entry.cityName}`}{' '}
-                  </CompactLiveFeed.Card.Title>
-                  <CompactLiveFeed.Card.Subtitle>
-                    {entry.uploaderName?.length > 1 && (
-                      <>
-                        <Avatar
-                          size={21}
-                          src={entry.userAvatar || 'https://1km.co.il/anonymousPofile.png'}
-                          style={{ marginLeft: 6 }}
-                        />
-                        {entry.uploaderName}
-                      </>
-                    )}
-                  </CompactLiveFeed.Card.Subtitle>
-                </CompactLiveFeed.Card>
-              ))}
-            <div style={{ width: 25 }}></div>
-          </CompactLiveFeed>
+          <p>כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.</p>
+        </div>
+        <CompactLiveFeed>
+          {liveStore.entries.length > 0 &&
+            liveStore.entries.map((entry) => (
+              <CompactLiveFeed.Card>
+                <CompactLiveFeed.Card.Image src={entry.imageUrl} />
+                <CompactLiveFeed.Card.Title>
+                  <TimeAgo datetime={entry.createdAt} locale="he" />
+                  {' ב'}
+                  {entry.protestName}
+                  {entry.cityName && `, ${entry.cityName}`}{' '}
+                </CompactLiveFeed.Card.Title>
+                <CompactLiveFeed.Card.Subtitle>
+                  {entry.uploaderName?.length > 1 && (
+                    <>
+                      <Avatar
+                        size={21}
+                        src={entry.userAvatar || 'https://1km.co.il/anonymousPofile.png'}
+                        style={{ marginLeft: 6 }}
+                      />
+                      {entry.uploaderName}
+                    </>
+                  )}
+                </CompactLiveFeed.Card.Subtitle>
+              </CompactLiveFeed.Card>
+            ))}
+          <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
+        </CompactLiveFeed>
+        <div style={{ justifySelf: 'center' }}>
+          <Button style={{ marginBottom: 10 }}>הוספת תמונה לפיד</Button>
+          <Button>לצפייה בפיד המלא</Button>
         </div>
       </WeeklySection>
       <WeeklySection
