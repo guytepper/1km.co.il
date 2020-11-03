@@ -45,7 +45,7 @@ function PictureFeed() {
         <>
           <h2 style={{ textAlign: 'center', fontWeight: 600 }}>תמונות מחאה מיום שבת, 31.10.20</h2>
           <PictureCardList pictures={pictures} />
-          {/* <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
             <ActionButton
               onClick={() =>
                 history.push(
@@ -56,7 +56,7 @@ function PictureFeed() {
             >
               העלאת תמונה
             </ActionButton>
-          </div> */}
+          </div>
         </>
       )}
     </div>
