@@ -8,7 +8,7 @@ import styled from 'styled-components/macro';
 function ProtestMap() {
   const store = useStore();
   const { mapStore, protestStore } = store;
-  const [modalState, setModalState] = useState(true);
+  const [modalState, setModalState] = useState(false);
 
   const hoveredProtest = useMemo(() => {
     if (!mapStore.hoveredProtestId) {
