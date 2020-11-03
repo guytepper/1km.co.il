@@ -11,6 +11,7 @@ import { EVENT_DATE } from '../event_data';
 function PictureFeed() {
   const store = useStore();
   const [pictures, setPictures] = useState([]);
+  const [feedOffset, setFeedOffset] = useState(0);
   const [loading, setLoading] = useState(true);
   const history = useHistory();
 
@@ -18,6 +19,7 @@ function PictureFeed() {
     const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(80);
 
     livePictures.on('child_added', (data) => {
+      setFeedOffset((prevState) => prevState + 1);
       setPictures((prevState) => {
         return [{ ...data.val(), id: data.key }, ...prevState];
       });
@@ -32,6 +34,14 @@ function PictureFeed() {
     };
   }, []);
 
+  // Doesn't work atm
+  // const fetchPictures = () => {
+  //   const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').startAt(20).limitToLast(20);
+  //   livePictures.once('value', (snapshot) => {
+  //     console.log(Object.values(snapshot.val()).reverse());
+  //   });
+  // };
+
   return (
     <div>
       {loading ? (
@@ -45,7 +55,7 @@ function PictureFeed() {
         <>
           <h2 style={{ textAlign: 'center', fontWeight: 600 }}>תמונות מחאה מיום שבת, 31.10.20</h2>
           <PictureCardList pictures={pictures} />
-          {/* <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
             <ActionButton
               onClick={() =>
                 history.push(
@@ -56,7 +66,7 @@ function PictureFeed() {
             >
               העלאת תמונה
             </ActionButton>
-          </div> */}
+          </div>
         </>
       )}
     </div>
