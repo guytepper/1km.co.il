@@ -313,7 +313,11 @@ function Weekly() {
           <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
         </CompactLiveFeed>
         <div style={{ justifySelf: 'center' }}>
-          <Button style={{ marginBottom: 10 }}>הוספת תמונה לפיד</Button>
+          <Button
+            style={{ marginBottom: 10, backgroundImage: 'linear-gradient(to right, #76b852 0%, #8DC26F 51%, #76b852 100%)' }}
+          >
+            הוספת תמונה לפיד
+          </Button>
           <Button>לצפייה בפיד המלא</Button>
         </div>
       </WeeklySection>
