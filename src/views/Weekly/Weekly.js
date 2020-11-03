@@ -61,7 +61,13 @@ function Weekly() {
             <p>ההפגנות שוטפות את ישראל ב-5 החודשים האחרונים, והגיע הזמן לרכז את אירועי המחאה במקום אחד.</p>
             <p>כל תחילת שבוע האתר יעודכן בהתרחשויות המחאה השונות בשבוע שחלף. </p>
             <p>
-              אנחנו מזמינים אתכם <Link to="">לשלוח אלינו דיווחים ותמונות</Link> במהלך השבוע, וכמובן בערב המחאה בשבת.
+              אנחנו מזמינים אתכם{' '}
+              <Link
+                to={store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`}
+              >
+                לשלוח אלינו דיווחים ותמונות
+              </Link>{' '}
+              במהלך השבוע, וכמובן בערב המחאה בשבת.
             </p>
           </Fade>
         </InfoBox>
@@ -356,12 +362,8 @@ function Weekly() {
         id="seeyou-section"
       >
         <div id="seeyou-section-text" style={{ alignSelf: 'start' }}>
-          <WeeklyHeader>נתראה בשבוע הבא!</WeeklyHeader>
-          <WeeklyText>אנחנו עובדים ללא הפסקה על "קילומטר אחד" כך שיהפוך לרשת המחאה שלכן.</WeeklyText>
-          <WeeklyText>
-            רשת שתעזור ליצירת קשרים, לאיחוד כוחות ולשיתף ידע. רשת שתעודד את מי שעוד מהסס לצאת לרחוב - לצעוד בראש מורם אל מוקד
-            המחאה הקרוב.
-          </WeeklyText>
+          <WeeklyHeader style={{ marginBottom: 10 }}>נתראה בשבוע הבא!</WeeklyHeader>
+
           <WeeklyText>אנחנו מזמינים אתכם לעקוב אחרינו ברשתות החברתיות לעדכונים. </WeeklyText>
           <div className="seeyou-section-social">
             <a href="https://instagram.com/1km.co.il" target="_blank" rel="noreferrer">
