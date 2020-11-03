@@ -15,7 +15,7 @@ function PictureFeed() {
   const history = useHistory();
 
   useEffect(() => {
-    const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(80);
+    const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(50);
 
     livePictures.on('child_added', (data) => {
       setFeedOffset((prevState) => prevState + 1);
