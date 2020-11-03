@@ -41,6 +41,7 @@ function ProtestPictures() {
         </HeroImage.TextWrapper>
       </HeroImage>
       <ProtestPictureSection
+        className="weekly-section"
         id="intro-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604253080/weekend_pictures/31-10-2020/first-bg_uozjrt.jpg"
       >
@@ -85,6 +86,7 @@ function ProtestPictures() {
         </ProtestImage>
       </ProtestPictureSection>
       <ProtestPictureSection
+        className="weekly-section"
         id="rabin-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:eco/v1604264028/weekend_pictures/31-10-2020/rabin-sqaure_pmcyeu.jpg"
       >
@@ -99,7 +101,7 @@ function ProtestPictures() {
         </div>
         <p style={{ gridRow: 2, fontSize: 14, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
       </ProtestPictureSection>
-      <ProtestPictureSection style={{ background: '#000' }} id="rabin-square-picures">
+      <ProtestPictureSection style={{ background: '#000' }} className="weekly-section" id="rabin-square-picures">
         <ProtestImage
           id="candles"
           imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604264691/weekend_pictures/31-10-2020/candles_gf8czy.jpg"
@@ -130,14 +132,14 @@ function ProtestPictures() {
         </ProtestImage>
         <ProtestImage
           id=""
-          imageUrl="https://res.cloudinary.com/onekm/image/upload/q_auto:low/v1604266437/weekend_pictures/31-10-2020/givaat_amal_rabin_ykvd6p.jpg"
+          imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604364828/weekend_pictures/31-10-2020/rabin-mm_lgwghe.jpg"
         >
           <ProtestImage.Description>
-            <p>טקס זכרון, גבעת עמל </p>
+            <p>יד לבנים, הרצליה </p>
           </ProtestImage.Description>
         </ProtestImage>
       </ProtestPictureSection>
-      <ProtestPictureSection style={{ background: '#d83039' }} id="nationwide-section">
+      <ProtestPictureSection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
         <div>
           <ProtestPicturesHeader>כל הארץ דגלים</ProtestPicturesHeader>
           <ProtestPicturesText>
@@ -244,7 +246,7 @@ function ProtestPictures() {
             .
           </ProtestPicturesText>
         </div>
-        <div id="balfur-section-content">
+        <div id="balfur-section-content" className="weekly-section">
           <ProtestImage
             className="balfur-section-image"
             imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604302954/weekend_pictures/31-10-2020/balfur_mm.jpg"
@@ -278,6 +280,7 @@ function ProtestPictures() {
       </ProtestPictureSection>
       <ProtestPictureSection
         style={{ backgroundPosition: 'center', minHeight: '70vh' }}
+        className="weekly-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
       >
         <div style={{ gridColumn: '1 / 3' }}>
@@ -316,6 +319,7 @@ function ProtestPictures() {
       </ProtestPictureSection>
       <ProtestPictureSection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160754/protest_pictures/FueqajqQRbwyMMIaF5S3/2020-31-10/89kkGsmuFVVIkZdG5BSyO.jpg"
+        className="weekly-section"
         id="seeyou-section"
       >
         <div id="seeyou-section-text" style={{ alignSelf: 'start' }}>

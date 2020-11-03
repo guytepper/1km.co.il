@@ -167,3 +167,22 @@
   width: 25px;
   margin: 0 5px;
 }
+
+/** Safari Grid Layout Issues **/
+
+.safari .weekly-section {
+  grid-auto-rows: 260px;
+}
+
+.safari #intro-section #info-box {
+  padding: 40px 30px;
+  font-size: 15px;
+}
+
+.safari #nationwide-section h2:nth-of-type(1) {
+  margin-top: 10px;
+}
+
+.safari #nationwide-section p:nth-of-type(1) {
+  margin-top: 20px;
+}
