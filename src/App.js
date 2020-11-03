@@ -1,7 +1,7 @@
 import React, { useReducer, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from './stores';
-import { BrowserRouter as Router, Route, Redirect, Link, Switch, useHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
 import Menu from 'react-burger-menu/lib/menus/slide';
 import {
   Admin,
@@ -46,7 +46,6 @@ function reducer(state, action) {
 }
 
 function App() {
-  const history = useHistory();
   const [state, dispatch] = useReducer(reducer, initialState);
   const store = useStore();
 
@@ -82,6 +81,7 @@ function App() {
         <Router>
           <ScrollToTop />
           <Header path={window.location.pathname}>
+            {/* TODO: Use useLocation - need to move router out of this file */}
             <NavItemLive to="/live">
               <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
             </NavItemLive>
@@ -133,11 +133,11 @@ function App() {
             </NavProfileWrapper>
           </Header>
           <Switch>
-            <Route exact path={['/', '/map']}>
-              <ProtestMap />
-            </Route>
-            <Route exact path="/weekly">
+            <Route exact path={['/', '/weekly']}>
               <Weekly />
+              <Route exact path="/map">
+                <ProtestMap />
+              </Route>
             </Route>
             <Route exact path="/add-protest">
               <AddProtest user={state.user} />
@@ -212,7 +212,7 @@ const Header = styled.header`
   padding: 5px 8px 5px 20px;
   grid-row: 1;
   box-shadow: ${(props) => {
-    if (props.path === '/weekly') return null;
+    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
     return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
   }};
   z-index: 10;
