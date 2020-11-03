@@ -17,7 +17,7 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-/* Detect Safari for browser specific issues */
+/* Detect browsers for specific issues fixes */
 const isSafari =
   navigator.vendor &&
   navigator.vendor.indexOf('Apple') > -1 &&
@@ -25,7 +25,18 @@ const isSafari =
   navigator.userAgent.indexOf('CriOS') === -1 &&
   navigator.userAgent.indexOf('FxiOS') === -1;
 
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isChrome = navigator.userAgent.indexOf('Chrome') > -1;
+const isChromeAndroid = isAndroid && isChrome;
+
+const html = document.querySelector('body');
+
 if (isSafari) {
-  const html = document.querySelector('body');
   html.classList.add('safari');
+  html.classList.add('grid-max-content-nosupport');
+}
+
+if (isChromeAndroid) {
+  html.classList.add('chrome-android');
+  html.classList.add('grid-max-content-nosupport');
 }

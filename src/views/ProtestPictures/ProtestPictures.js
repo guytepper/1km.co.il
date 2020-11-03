@@ -98,8 +98,8 @@ function ProtestPictures() {
             בימים אלו, כשראש ממשלה מכהן מסית כנגד חלק ניכר מהעם, חשוב לזכור את נקודת הקצה שמדינת ישראל הגיעה אליה לפני 25 שנה
             ולהתנגד בכל הכח להסתה.
           </ProtestPicturesText>
+          <p style={{ marginTop: 20, fontSize: 13, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
         </div>
-        <p style={{ gridRow: 2, fontSize: 14, color: '#fff8f8db' }}>צילום: רונן טופלברג</p>
       </ProtestPictureSection>
       <ProtestPictureSection style={{ background: '#000' }} className="weekly-section" id="rabin-square-picures">
         <ProtestImage

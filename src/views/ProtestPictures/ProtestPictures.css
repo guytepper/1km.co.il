@@ -10,7 +10,7 @@
 
 #rabin-section {
   background-size: unset !important;
-  background-position: 50% 0% !important;
+  background-position: 50% 0 !important;
 }
 
 #balfur-section-content {
@@ -58,7 +58,6 @@
 
   #rabin-section {
     background-size: cover !important;
-    background-position: 50% 15% !important;
   }
 
   #rabin-square-picures {
@@ -170,19 +169,25 @@
 
 /** Safari Grid Layout Issues **/
 
-.safari .weekly-section {
-  grid-auto-rows: 260px;
+.grid-max-content-nosupport .weekly-section {
+  grid-auto-rows: 270px;
 }
 
-.safari #intro-section #info-box {
-  padding: 40px 30px;
+.grid-max-content-nosupport #intro-section #info-box {
+  padding: 45px 30px;
   font-size: 15px;
 }
 
-.safari #nationwide-section h2:nth-of-type(1) {
+@media (min-width: 1024px) {
+  .grid-max-content-nosupport #intro-section #info-box {
+    font-size: 17px;
+  }
+}
+
+.grid-max-content-nosupport #nationwide-section h2:nth-of-type(1) {
   margin-top: 10px;
 }
 
-.safari #nationwide-section p:nth-of-type(1) {
+.grid-max-content-nosupport #nationwide-section p:nth-of-type(1) {
   margin-top: 20px;
 }
