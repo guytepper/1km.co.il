@@ -1,6 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { realtimeDB } from '../firebase';
-import { EVENT_DATE } from '../views/LiveEvent/event_data';
 
 class LiveStore {
   rootStore = null;
@@ -12,7 +11,7 @@ class LiveStore {
   }
 
   fetchEntries({ offset }) {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(10);
+    const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(10);
 
     livePictures.once('value', (dataSnapshot) => {
       runInAction(() => {

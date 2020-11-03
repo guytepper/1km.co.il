@@ -6,7 +6,6 @@ import PictureCardList from './PicutreCardList';
 import ActionButton from '../../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../../firebase';
-import { EVENT_DATE } from '../event_data';
 
 function PictureFeed() {
   const store = useStore();
@@ -16,7 +15,7 @@ function PictureFeed() {
   const history = useHistory();
 
   useEffect(() => {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(80);
+    const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(80);
 
     livePictures.on('child_added', (data) => {
       setFeedOffset((prevState) => prevState + 1);

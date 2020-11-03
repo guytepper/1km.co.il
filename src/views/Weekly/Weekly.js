@@ -285,7 +285,7 @@ function Weekly() {
         </div>
       </WeeklySection>
       <WeeklySection
-        style={{ backgroundPosition: 'center', minHeight: '70vh' }}
+        style={{ backgroundPosition: 'center' }}
         className="weekly-section compact-feed-section"
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
       >
@@ -318,6 +318,8 @@ function Weekly() {
                 </CompactLiveFeed.Card.Subtitle>
               </CompactLiveFeed.Card>
             ))}
+          <Button style={{ width: 150, height: 112.5 }}>לצפייה בפיד המלא</Button>
+          {/* Empty div to add space in the end of the feed */}
           <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
         </CompactLiveFeed>
         <div style={{ justifySelf: 'center' }}>
@@ -326,7 +328,6 @@ function Weekly() {
           >
             הוספת תמונה לפיד
           </Button>
-          <Button>לצפייה בפיד המלא</Button>
         </div>
       </WeeklySection>
       <WeeklySection
@@ -339,9 +340,14 @@ function Weekly() {
           <WeeklyText>אנחנו עובדים ללא הפסקה על "קילומטר אחד" כך שיהפוך לרשת המחאה שלכן.</WeeklyText>
           <WeeklyText>
             רשת שתעזור ליצירת קשרים, לאיחוד כוחות ולשיתף ידע. רשת שתעודד את מי שעוד מהסס לצאת לרחוב - לצעוד בראש מורם אל מוקד
-            המחאה הקרוב.{' '}
+            המחאה הקרוב.
           </WeeklyText>
           <WeeklyText>אנחנו מזמינים אתכם לעקוב אחרינו ברשתות החברתיות לעדכונים. </WeeklyText>
+          <div>
+            <img src="/icons/facebook.svg" alt="" />
+            <img src="/icons/twitter.svg" alt="" />
+            <img src="/icons/instagram.svg" alt="" />
+          </div>
         </div>
       </WeeklySection>
       <footer className="weekly-footer">

@@ -31,9 +31,10 @@
 }
 
 .compact-feed-section {
+  min-height: unset !important;
   padding: 0 !important;
   grid-template-columns: 1fr !important;
-  grid-template-rows: 120px 235px 140px !important;
+  grid-template-rows: 120px 235px 70px !important;
 }
 
 .compact-feed-section-text {
