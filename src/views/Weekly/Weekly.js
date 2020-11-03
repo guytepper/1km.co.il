@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import Helmet from 'react-helmet';
 import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
 import { Fade, Slide } from 'react-awesome-reveal';
@@ -29,6 +30,7 @@ timeago.register('he', he);
 function Weekly() {
   const store = useStore();
   const history = useHistory();
+  const location = useLocation();
   const liveStore = store.liveStore;
 
   useEffect(() => {
@@ -37,6 +39,11 @@ function Weekly() {
 
   return (
     <WeeklyWrapper>
+      {location.pathname === '/weekly' && (
+        <Helmet>
+          <title>יומן מחאה</title>
+        </Helmet>
+      )}
       <HeroImage>
         <HeroImage.TextWrapper>
           <HeroImage.Title>יומן מחאה</HeroImage.Title>
