@@ -136,7 +136,13 @@ function UploadForm({ afterUpload, protest }) {
       <UploadFormSection>
         <UploadFormSection.Header>תאריך</UploadFormSection.Header>
 
-        <Input type="date" value={eventDate} max={todayDate} onChange={(e) => setEventDate(e.target.value)} />
+        <Input
+          type="date"
+          value={eventDate}
+          max={todayDate}
+          onChange={(e) => setEventDate(e.target.value)}
+          style={{ textAlign: ' right' }}
+        />
         {eventDate}
       </UploadFormSection>
 
