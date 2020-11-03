@@ -143,7 +143,6 @@ function UploadForm({ afterUpload, protest }) {
           onChange={(e) => setEventDate(e.target.value)}
           style={{ textAlign: ' right' }}
         />
-        {eventDate}
       </UploadFormSection>
 
       <UploadFormSection>

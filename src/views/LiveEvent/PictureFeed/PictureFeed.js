@@ -15,7 +15,7 @@ function PictureFeed() {
   const history = useHistory();
 
   useEffect(() => {
-    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(50);
+    const livePictures = realtimeDB.ref(`${EVENT_DATE}_pictures`).orderByChild('createdAt').limitToLast(10);
 
     livePictures.on('child_added', (data) => {
       setPictures((prevState) => {
@@ -43,7 +43,7 @@ function PictureFeed() {
         </div>
       ) : (
         <>
-          <h2 style={{ textAlign: 'center', fontWeight: 600 }}>תמונות מחאה מיום שבת, 31.10.20</h2>
+          {/* <h2 style={{ textAlign: 'center', fontWeight: 600 }}>ברוכים הבאים לפיד המחאה!</h2> */}
           <PictureCardList pictures={pictures} />
           <div style={{ position: 'sticky', bottom: 20, display: 'flex', justifyContent: 'flex-end' }}>
             <ActionButton
