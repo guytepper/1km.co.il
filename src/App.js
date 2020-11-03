@@ -104,7 +104,11 @@ function App() {
                 <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
                   פיד מחאה
                 </Link>
-                <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
+                <Link
+                  to={store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`}
+                  onClick={() => updateMenuState(false)}
+                  className="bm-item"
+                >
                   העלאת תמונה
                 </Link>
                 <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
