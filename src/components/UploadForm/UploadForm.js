@@ -16,10 +16,12 @@ import {
   keepAnnonymousReference,
 } from './UploadService';
 import reducer from 'image-blob-reduce';
-import { getCurrentPosition } from '../../utils';
+import { getCurrentPosition, getDateString } from '../../utils';
 import queryString from 'query-string';
 
 const { Title } = Typography;
+
+const todayDate = getDateString(new Date());
 
 function UploadForm({ afterUpload, protest }) {
   const [currentFile, setCurrentFile] = useState(null);
@@ -29,6 +31,7 @@ function UploadForm({ afterUpload, protest }) {
   const [loadingProtests, setLoadingProtests] = useState(false);
   const [isAnnonymous, setAnnonymous] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [eventDate, setEventDate] = useState(todayDate);
 
   const store = useStore();
   const history = useHistory();
@@ -58,7 +61,7 @@ function UploadForm({ afterUpload, protest }) {
 
     const { secure_url: imageUrl, fileId } = result;
     const { id: protestId, displayName: protestName, cityName } = userCurrentProtest;
-    const pictureData = { imageUrl, description, protestId, protestName, cityName: cityName || '' };
+    const pictureData = { imageUrl, description, eventDate, protestId, protestName, cityName: cityName || '' };
 
     if (isAnnonymous === false) {
       pictureData.userId = user.uid;
@@ -131,6 +134,13 @@ function UploadForm({ afterUpload, protest }) {
         </UploadFormSection>
       </UploadFormSection>
       <UploadFormSection>
+        <UploadFormSection.Header>תאריך</UploadFormSection.Header>
+
+        <Input type="date" value={eventDate} max={todayDate} onChange={(e) => setEventDate(e.target.value)} />
+        {eventDate}
+      </UploadFormSection>
+
+      <UploadFormSection>
         <UploadFormSection.Header>
           <span style={{ color: 'red', marginLeft: 4 }}>*</span>שיוך תמונה להפגנה
         </UploadFormSection.Header>
@@ -170,7 +180,7 @@ function UploadForm({ afterUpload, protest }) {
         icon={<UploadOutlined />}
         shape="round"
         onClick={handleUpload}
-        disabled={!currentFile || !userStore.userCurrentProtest}
+        disabled={!currentFile || !eventDate || !userStore.userCurrentProtest}
         loading={uploading}
         style={{ marginTop: 16, width: '100%' }}
         className="bg-success"

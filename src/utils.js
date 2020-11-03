@@ -52,6 +52,23 @@ export function formatDistance(distance) {
   }
 }
 
+/**
+ * Get a date string, fomratted as YYYY-MM-DD.
+ * @param {Date} date - The date object to format.
+ * @returns {string} The date formatted as YYYY-MM-DD string.
+ */
+export function getDateString(date) {
+  let d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 export function formatDate(dateStr) {
   const date = new Date(dateStr);
   return `${date.getDate()}.${date.getMonth() + 1}`;
