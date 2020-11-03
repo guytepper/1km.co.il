@@ -19,13 +19,14 @@
 }
 
 #seeyou-section {
+  display: block;
   min-height: 325px;
   background-position: 40%;
 }
 
 #seeyou-section-text {
   text-align: center;
-  background: #000000a1;
+  background: #000000c4;
   border-radius: 10px;
   padding: 28px;
 }
@@ -177,10 +178,15 @@
     min-height: 600px !important;
     background-position: center 0;
   }
+
+  #seeyou-section-text p {
+    max-width: 60%;
+    margin: 10px auto;
+  }
 }
 
 .weekly-footer {
-  padding: 10px;
+  padding: 25px 10px;
   background-color: #000;
   color: #fff;
   font-size: 14px;
@@ -189,6 +195,21 @@
 
 .weekly-footer p {
   margin: 0;
+}
+
+.seeyou-section-social {
+  margin-top: 25px;
+}
+
+.seeyou-section-social img {
+  width: 40px;
+  margin-right: 15px;
+  filter: invert(54%) sepia(35%) saturate(5510%) hue-rotate(213deg) brightness(99%) contrast(104%);
+  transition: filter 0.25s;
+}
+
+.seeyou-section-social a:hover img {
+  filter: invert(1);
 }
 
 .alef-logo {

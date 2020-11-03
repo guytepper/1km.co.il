@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
-import { Fade, Slide, Rotate } from 'react-awesome-reveal';
+import { Fade, Slide } from 'react-awesome-reveal';
 import { Avatar } from 'antd';
 import { Button } from '../../components';
 import {
@@ -27,6 +28,7 @@ timeago.register('he', he);
 
 function Weekly() {
   const store = useStore();
+  const history = useHistory();
   const liveStore = store.liveStore;
 
   useEffect(() => {
@@ -239,18 +241,22 @@ function Weekly() {
         id="balfur-section"
       >
         <div id="balfur-section-text">
-          <WeeklyHeader>מהנעשה בבלפור</WeeklyHeader>
-          <WeeklyText>
-            המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז בה הפגינו כ-20 אלף אנשים אל מול מעון
-            ראש הממשלה.
-          </WeeklyText>
-          <WeeklyText>
-            לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
-            <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
-              עמוד ההפגנה
-            </Link>
-            .
-          </WeeklyText>
+          <Fade>
+            <WeeklyHeader>מהנעשה בבלפור</WeeklyHeader>
+          </Fade>
+          <Fade>
+            <WeeklyText>
+              המחאה בירושלים התחילה בעצרת זכרון ליצחק רבין בכיכר ציון. משם צעדו אל כיכר פריז בה הפגינו כ-20 אלף אנשים אל מול מעון
+              ראש הממשלה.
+            </WeeklyText>
+            <WeeklyText>
+              לצפייה בכל התמונות מבלפור, הכנסו אל{' '}
+              <Link to="/protest/voTcndBEKWlMmvvife42" style={{ fontWeight: 600 }}>
+                עמוד ההפגנה
+              </Link>
+              .
+            </WeeklyText>
+          </Fade>
         </div>
         <div id="balfur-section-content" className="weekly-section">
           <ProtestImage
@@ -318,13 +324,20 @@ function Weekly() {
                 </CompactLiveFeed.Card.Subtitle>
               </CompactLiveFeed.Card>
             ))}
-          <Button style={{ width: 150, height: 112.5 }}>לצפייה בפיד המלא</Button>
+          <Button style={{ width: 150, height: 112.5 }} onClick={() => history.push('/live')}>
+            לצפייה בפיד המלא
+          </Button>
           {/* Empty div to add space in the end of the feed */}
           <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
         </CompactLiveFeed>
         <div style={{ justifySelf: 'center' }}>
           <Button
             style={{ marginBottom: 10, backgroundImage: 'linear-gradient(to right, #76b852 0%, #8DC26F 51%, #76b852 100%)' }}
+            onClick={() =>
+              history.push(
+                store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`
+              )
+            }
           >
             הוספת תמונה לפיד
           </Button>
@@ -343,20 +356,29 @@ function Weekly() {
             המחאה הקרוב.
           </WeeklyText>
           <WeeklyText>אנחנו מזמינים אתכם לעקוב אחרינו ברשתות החברתיות לעדכונים. </WeeklyText>
-          <div>
-            <img src="/icons/facebook.svg" alt="" />
-            <img src="/icons/twitter.svg" alt="" />
-            <img src="/icons/instagram.svg" alt="" />
+          <div className="seeyou-section-social">
+            <a href="https://instagram.com/1km.co.il" target="_blank" rel="noreferrer">
+              <img src="/icons/instagram.svg" style={{ width: 45 }} alt="" />
+            </a>
+            <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer">
+              <img src="/icons/twitter.svg" alt="" />
+            </a>
+            <a href="https://facebook.com/1km.co.il" target="_blank" rel="noreferrer">
+              <img src="/icons/facebook.svg" alt="" />
+            </a>
           </div>
         </div>
       </WeeklySection>
       <footer className="weekly-footer">
-        <div style={{ fontSize: 17, marginBottom: 5 }}>
-          <p>
-            קילומטר אחד הוא פרוייקט ללא מטרות רווח. <Link to="/about">קראו עלינו עוד.</Link>
-          </p>
+        <div style={{ fontSize: 17, marginBottom: 20 }}>
+          <p>קילומטר אחד הוא פרוייקט ללא מטרות רווח.</p>
           <p>
             במידה ואתם מעוניינים לתרום לנו, <Link to="/donate">לחצו כאן.</Link>
+          </p>
+          <p style={{ marginTop: 10 }}>
+            לפידבק ופניות בכל נושא שהוא ניתן לשלוח מייל אל
+            <br />
+            <a href="mailto:support@1km.zendesk.com">support@1km.zendesk.com</a>
           </p>
         </div>
         <p>
