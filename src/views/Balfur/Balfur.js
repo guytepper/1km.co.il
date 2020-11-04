@@ -4,7 +4,7 @@ import { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import { BalfurModal, BalfurCheckIns } from './';
 import { ProgressBar, SimpleProgress } from './ProgressBar';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { LoadingSpinner } from '../../components';
 
 export default function Balfur({ user, setUser }) {
   const history = useHistory();

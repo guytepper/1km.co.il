@@ -3,7 +3,7 @@ import { useTransition, config } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 import TimeAgo from 'timeago-react';
 import * as timeago from 'timeago.js';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import { LoadingSpinner } from '../../components';
 
 import he from 'timeago.js/lib/lang/he';
 timeago.register('he', he);

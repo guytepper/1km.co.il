@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
-import { PlacesAutocomplete } from '../';
+import { PlacesAutocomplete, LoadingSpinner } from '../';
 import ProtestListSelection from './ProtestListSelection';
-import LoadingSpinner from '../LoadingSpinner';
 
 function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   const store = useStore();

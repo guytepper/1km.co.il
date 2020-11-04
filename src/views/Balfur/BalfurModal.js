@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import { Button } from '../../components';
+import { Button, LoadingSpinner } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
 import { setLocalStorage, getLocalStorage } from '../../localStorage';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 import firebase, { realtimeDB } from '../../firebase';
 

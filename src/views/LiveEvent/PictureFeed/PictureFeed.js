@@ -7,7 +7,7 @@ import ActionButton from '../../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../../firebase';
 import { nanoid } from 'nanoid';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import { LoadingSpinner } from '../../../components';
 
 function PictureFeed() {
   const store = useStore();

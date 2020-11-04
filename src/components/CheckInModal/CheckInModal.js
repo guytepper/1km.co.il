@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, LocationButtons } from '../';
+import { Modal, LocationButtons, LoadingSpinner } from '../';
 import SignUp from '../SignUp/SignUpV2';
 import { useHistory } from 'react-router-dom';
 import { ProtestListSelection, CheckInForm } from './';
 import { getLocalStorage } from '../../localStorage';
 import { createCheckIn, updateUserName } from './CheckInService';
-import LoadingSpinner from '../LoadingSpinner';
 
 const steps = {
   LOADING: 'loading',
