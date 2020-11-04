@@ -205,6 +205,7 @@
   margin-right: 15px;
   filter: invert(54%) sepia(35%) saturate(5510%) hue-rotate(213deg) brightness(99%) contrast(104%);
   transition: filter 0.25s;
+  user-select: none;
 }
 
 .seeyou-section-social a:hover img {
