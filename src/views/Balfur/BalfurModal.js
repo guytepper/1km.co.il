@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useHistory } from 'react-router-dom';
 import ReactModal from 'react-modal';
-import { Button } from '../../components';
+import { Button, LoadingSpinner } from '../../components';
 import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
@@ -118,7 +118,7 @@ export default function BalfurModal({ user, setUser }) {
       <BalfurModalWrapper isOpen={true}>
         <BalfurModalContent>
           <p>רק כמה שניות...</p>
-          <img src="/icons/loading-spinner.svg" alt="" />
+          <LoadingSpinner />
         </BalfurModalContent>
       </BalfurModalWrapper>
     );

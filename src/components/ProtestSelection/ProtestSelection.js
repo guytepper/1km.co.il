@@ -1,17 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
-import { PlacesAutocomplete } from '../';
+import { PlacesAutocomplete, LoadingSpinner } from '../';
 import ProtestListSelection from './ProtestListSelection';
 
 function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   const store = useStore();
+  const [isLoadingProgress, setLoadingProtests] = useState(false);
   // const [protests, setProtests] = useState([])
 
-  const handleAddressSelection = (position) => {
-    store.setCoordinates(position);
-    store.protestStore.fetchProtests({ onlyMarkers: false, position });
+  const handleAddressSelection = async (position) => {
+    try {
+      setLoadingProtests(true);
+      store.setCoordinates(position);
+      await store.protestStore.fetchProtests({ onlyMarkers: false, position });
+      setLoadingProtests(false);
+    } catch (e) {
+      setLoadingProtests(false);
+      console.log(e);
+    }
   };
 
   return (
@@ -22,6 +30,7 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
         protests={store.protestStore.closeProtests.slice(0, 5)}
         setProtest={(protest) => onProtestSelection(protest)}
       />
+      {isLoadingProgress && <LoadingSpinner />}
     </ProtestSelectionWrapper>
   );
 }

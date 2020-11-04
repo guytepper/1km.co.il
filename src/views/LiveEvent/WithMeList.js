@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTransition } from 'react-spring';
 import { WithMe, UserAvatar } from './LiveEventElements';
 import { realtimeDB } from '../../firebase';
+import { LoadingSpinner } from '../../components';
 
 function WithMeList({ currentProtest }) {
   const [withMeUsers, setWithMeUsers] = useState([]);
@@ -51,7 +52,7 @@ function WithMeList({ currentProtest }) {
     return (
       <WithMe style={{ textAlign: 'center' }}>
         <p>טוען נתונים...</p>
-        <img src="/icons/loading-spinner.svg" alt="" />
+        <LoadingSpinner />
       </WithMe>
     );
   }

@@ -6,6 +6,7 @@ import { Modal, Button as AntButton, Form, Input, Typography } from 'antd';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore, updateUserName } from '../api';
 import styled from 'styled-components/macro';
 import queryString from 'query-string';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const { Title } = Typography;
 
@@ -118,7 +119,7 @@ export default function SignUp(props) {
     return (
       <PageWrapper>
         <p style={{ marginTop: 25 }}>רק כמה שניות...</p>
-        <img src="/icons/loading-spinner.svg" alt="" />
+        <LoadingSpinner />
       </PageWrapper>
     );
   }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, LocationButtons } from '../';
+import { Modal, LocationButtons, LoadingSpinner } from '../';
 import SignUp from '../SignUp/SignUpV2';
 import { useHistory } from 'react-router-dom';
 import { ProtestListSelection, CheckInForm } from './';
@@ -104,7 +104,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
         return (
           <>
             <p>טוען...</p>
-            <img src="/icons/loading-spinner.svg" alt="" />
+            <LoadingSpinner />
           </>
         );
       case steps.PICK_LOCATION:

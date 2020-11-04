@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, PageParagraph } from '../';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
+import LoadingSpinner from '../LoadingSpinner';
 
 function SignUpBeforeRedirect({ returnUrl, onAnnonymousClick }) {
   return (
@@ -54,7 +55,7 @@ export default function SignUp({ onAuth, onAnnonymousClick }) {
     return (
       <>
         <p>רק כמה שניות...</p>
-        <img src="/icons/loading-spinner.svg" alt="" />
+        <LoadingSpinner />
       </>
     );
   }
