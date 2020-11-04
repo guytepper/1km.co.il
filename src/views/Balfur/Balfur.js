@@ -4,6 +4,7 @@ import { realtimeDB } from '../../firebase';
 import styled from 'styled-components/macro';
 import { BalfurModal, BalfurCheckIns } from './';
 import { ProgressBar, SimpleProgress } from './ProgressBar';
+import Loader from '../../components/Loader';
 
 export default function Balfur({ user, setUser }) {
   const history = useHistory();
@@ -64,7 +65,7 @@ export default function Balfur({ user, setUser }) {
               <EventBoxTitle>מי בבלפור?</EventBoxTitle>
               {loading ? (
                 <div style={{ textAlign: 'center' }}>
-                  <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
+                  <Loader style={{ display: 'flex', margin: '40px auto' }} />
                   <p>טוענים את המהפכה..</p>
                 </div>
               ) : (
@@ -77,7 +78,7 @@ export default function Balfur({ user, setUser }) {
               <EventBoxTitle>מדד העצבים של ביבי</EventBoxTitle>
               {loading || checkInsCount === -1 ? (
                 <div style={{ textAlign: 'center' }}>
-                  <LoadingIcon src="/icons/loading-spinner.svg" alt="" />
+                  <Loader style={{ display: 'flex', margin: '40px auto' }} />
                   <p>טוענים את המהפכה..</p>
                 </div>
               ) : (
@@ -157,7 +158,4 @@ const EventBoxTitle = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 `;
 
-const LoadingIcon = styled.img`
-  display: flex;
-  margin: 40px auto;
-`;
+const LoadingIcon = styled.img``;

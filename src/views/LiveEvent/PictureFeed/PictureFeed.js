@@ -7,6 +7,7 @@ import ActionButton from '../../../components/elements/Button/ActionButton';
 import GalleryIcon from '../../../assets/icons/gallery.svg';
 import { realtimeDB } from '../../../firebase';
 import { nanoid } from 'nanoid';
+import Loader from '../../../components/Loader';
 
 function PictureFeed() {
   const store = useStore();
@@ -49,7 +50,7 @@ function PictureFeed() {
           style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: '25px 0' }}
         >
           <p style={{ fontSize: 17 }}>טוען ...</p>
-          <img src="/icons/loading-spinner.svg" alt="" />
+          <Loader />
         </div>
       ) : (
         <>
