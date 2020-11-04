@@ -4,6 +4,7 @@ import { PageWrapper, PageContentWrapper, PageParagraph, LoadingSpinner } from '
 import { Button } from '../elements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import queryString from 'query-string';
+import LoadingSpinner from '../LoadingSpinner';
 
 const stages = {
   UNKNOWN: 'unkonwn',
