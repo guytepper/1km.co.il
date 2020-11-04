@@ -4,11 +4,11 @@ import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
 import { PlacesAutocomplete } from '../';
 import ProtestListSelection from './ProtestListSelection';
-import Loader from '../Loader';
+import LoadingSpinner from '../LoadingSpinner';
 
 function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   const store = useStore();
-  const [loadingProtests, setLoadingProtests] = useState(false);
+  const [isLoadingProgress, setLoadingProtests] = useState(false);
   // const [protests, setProtests] = useState([])
 
   const handleAddressSelection = async (position) => {
@@ -31,7 +31,7 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
         protests={store.protestStore.closeProtests.slice(0, 5)}
         setProtest={(protest) => onProtestSelection(protest)}
       />
-      {loadingProtests && <Loader />}
+      {isLoadingProgress && <LoadingSpinner />}
     </ProtestSelectionWrapper>
   );
 }

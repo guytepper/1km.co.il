@@ -4,7 +4,7 @@ import { PageWrapper, PageContentWrapper, PageParagraph } from '../';
 import { Button } from '../elements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import queryString from 'query-string';
-import Loader from '../Loader';
+import LoadingSpinner from '../LoadingSpinner';
 
 const stages = {
   UNKNOWN: 'unkonwn',
@@ -49,7 +49,7 @@ export default function SignUp(props) {
     return (
       <PageWrapper>
         <p>רק כמה שניות...</p>
-        <Loader />
+        <LoadingSpinner />
       </PageWrapper>
     );
   }

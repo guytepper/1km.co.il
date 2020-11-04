@@ -3,7 +3,7 @@ import { useTransition, config } from 'react-spring';
 import { CheckInListWrapper, CheckIn, UserAvatar } from './LiveEventElements';
 import TimeAgo from 'timeago-react';
 import * as timeago from 'timeago.js';
-import Loader from '../../components/Loader';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 import he from 'timeago.js/lib/lang/he';
 timeago.register('he', he);
@@ -37,7 +37,7 @@ function CheckInList({ checkIns }) {
       ) : (
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column' }}>
           <span>טוען...</span>
-          <Loader style={{ marginTop: 15 }} />
+          <LoadingSpinner style={{ marginTop: 15 }} />
         </div>
       )}
     </CheckInListWrapper>

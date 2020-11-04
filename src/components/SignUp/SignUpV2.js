@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, PageParagraph } from '../';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
-import Loader from '../Loader';
+import LoadingSpinner from '../LoadingSpinner';
 
 function SignUpBeforeRedirect({ returnUrl, onAnnonymousClick }) {
   return (
@@ -55,7 +55,7 @@ export default function SignUp({ onAuth, onAnnonymousClick }) {
     return (
       <>
         <p>רק כמה שניות...</p>
-        <Loader />
+        <LoadingSpinner />
       </>
     );
   }

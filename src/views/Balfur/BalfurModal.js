@@ -7,7 +7,7 @@ import { FormLabel, TextInput } from '../../components/FormElements';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
 import { isVisitor } from '../../utils';
 import { setLocalStorage, getLocalStorage } from '../../localStorage';
-import Loader from '../../components/Loader';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 import firebase, { realtimeDB } from '../../firebase';
 
@@ -119,7 +119,7 @@ export default function BalfurModal({ user, setUser }) {
       <BalfurModalWrapper isOpen={true}>
         <BalfurModalContent>
           <p>רק כמה שניות...</p>
-          <Loader />
+          <LoadingSpinner />
         </BalfurModalContent>
       </BalfurModalWrapper>
     );

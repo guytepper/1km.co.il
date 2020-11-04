@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { ProtestListSelection, CheckInForm } from './';
 import { getLocalStorage } from '../../localStorage';
 import { createCheckIn, updateUserName } from './CheckInService';
-import Loader from '../Loader';
+import LoadingSpinner from '../LoadingSpinner';
 
 const steps = {
   LOADING: 'loading',
@@ -105,7 +105,7 @@ function CheckInModal({ currentProtest, setProtest, setCoordinates, setCheckedIn
         return (
           <>
             <p>טוען...</p>
-            <Loader />
+            <LoadingSpinner />
           </>
         );
       case steps.PICK_LOCATION:
