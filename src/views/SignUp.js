@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useStore } from '../stores';
-import { Button, PageWrapper, PageContentWrapper, PageParagraph } from '../components';
+import { Button, PageWrapper, PageContentWrapper, PageParagraph, LoadingSpinner } from '../components';
 import { Modal, Button as AntButton, Form, Input, Typography } from 'antd';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore, updateUserName } from '../api';
 import styled from 'styled-components/macro';
 import queryString from 'query-string';
-import LoadingSpinner from '../components/LoadingSpinner';
 
 const { Title } = Typography;
 
