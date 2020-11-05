@@ -330,7 +330,7 @@ export async function getPicturesForEvent({ protestId, date }) {
   const eventPictures = await firestore
     .collection('pictures')
     .where('protestId', '==', protestId)
-    .where('eventDate', '==', date)
+    // .where('eventDate', '==', date)
     .orderBy('createdAt')
     .get();
 

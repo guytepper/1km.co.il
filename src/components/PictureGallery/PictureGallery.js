@@ -22,7 +22,7 @@ function PictureGallery({ protestId, date }) {
   return (
     <>
       <SectionContainer>
-        <SectionTitle>תמונות מיום שבת, 31.10</SectionTitle>
+        <SectionTitle>תמונות אחרונות</SectionTitle>
         {pictures.length > 0 ? pictures.map((picture) => <ImageThumbnail src={picture.imageUrl} />) : null}
         <EditButton
           onClick={async () => {
