@@ -15,7 +15,7 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
       setLoadingProtests(true);
       store.setCoordinates(position);
       await store.protestStore.fetchProtests({ onlyMarkers: false, position });
-      setLoadingProtests(false);
+      // setLoadingProtests(false);
     } catch (e) {
       setLoadingProtests(false);
       console.log(e);
@@ -26,10 +26,10 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
     <ProtestSelectionWrapper>
       <h2 style={{ textAlign: 'center', fontWeight: 600 }}>בחירת הפגנה</h2>
       {manualAddress && <PlacesAutocomplete setManualAddress={(coords) => handleAddressSelection(coords)} />}
-      <ProtestListSelection
+      {/* <ProtestListSelection
         protests={store.protestStore.closeProtests.slice(0, 5)}
         setProtest={(protest) => onProtestSelection(protest)}
-      />
+      /> */}
       {isLoadingProgress && <LoadingSpinner />}
     </ProtestSelectionWrapper>
   );
