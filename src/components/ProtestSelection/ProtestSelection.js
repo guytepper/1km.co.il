@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
@@ -8,7 +8,6 @@ import ProtestListSelection from './ProtestListSelection';
 function ProtestSelection({ onProtestSelection, manualAddress = false }) {
   const store = useStore();
   const [isLoadingProgress, setLoadingProtests] = useState(false);
-  // const [protests, setProtests] = useState([])
 
   const handleAddressSelection = async (position) => {
     try {
