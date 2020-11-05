@@ -77,7 +77,15 @@ function useFetchProtest() {
 
 function getFutureDates(dateTimeList) {
   if (dateTimeList?.length) {
-    return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+    return dateTimeList.filter((dateTime) => {
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+      const demoDate = new Date(dateTime.date);
+      const demoDateNoTime = new Date(Date.UTC(demoDate.getUTCFullYear(), demoDate.getUTCMonth(), demoDate.getUTCDate()));
+
+      return demoDateNoTime >= today;
+    });
   }
   return [];
 }
