@@ -29,7 +29,7 @@ function ProtestSelection({ onProtestSelection, manualAddress = false }) {
         protests={store.protestStore.closeProtests.slice(0, 5)}
         setProtest={(protest) => onProtestSelection(protest)}
       />
-      {isLoadingProgress && <LoadingSpinner />}
+      {isLoadingProgress && <LoadingSpinner style={{ marginTop: 15 }} />}
     </ProtestSelectionWrapper>
   );
 }
