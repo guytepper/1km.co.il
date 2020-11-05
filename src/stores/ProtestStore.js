@@ -13,8 +13,18 @@ class ProtestStore {
 
   get closeProtests() {
     if (this.nearbyProtests.length > 0) {
-      return this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance);
+      const closeList = this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance);
+
+      // Temporary code for Ramart Gan - Givayayim march.
+      const marchProtest = this.nearbyProtests.find((p) => p.id === 'eoLv9Kb4x3sFBcAkcdMh');
+      console.log(marchProtest.id);
+      if (marchProtest) {
+        closeList.splice(closeList.indexOf(marchProtest), 1);
+        closeList.unshift(marchProtest);
+      }
+      return closeList;
     }
+
     return [];
   }
 
