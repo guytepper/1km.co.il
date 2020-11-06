@@ -3,7 +3,7 @@ import Helmet from 'react-helmet';
 import { observer } from 'mobx-react-lite';
 import { useTracking } from './hooks/useTracking';
 import { RenderRoutes as Routes } from './routes/RenderRoutes';
-import { Header, ScrollToTop } from './components';
+import { Header } from './components';
 import styled from 'styled-components/macro';
 
 function App() {

@@ -1,4 +1,4 @@
-import { Admin, SignUp, ProtestMap, ProtestPage, AddProtest, PostView, LiveEvent, FourOhFour, Weekly } from '../views';
+import { Admin, SignUp, ProtestMap, ProtestPage, AddProtest, PostView, LiveEvent, Weekly } from '../views';
 import { UploadForm } from '../components';
 
 const routes = [

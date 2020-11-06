@@ -5,7 +5,6 @@ import { ConfigProvider } from 'antd';
 import heIL from 'antd/lib/locale/he_IL';
 import './index.css';
 import { StoreProvider } from './stores';
-import { RenderRoutes as Routes } from './routes/RenderRoutes';
 import App from './App';
 
 ReactDOM.render(
