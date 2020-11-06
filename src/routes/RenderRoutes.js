@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import routes from './routes';
+import { FourOhFour } from '../views';
 
 function RouteWithSubRoutes(route) {
   console.log(route);
@@ -13,7 +14,7 @@ export function RenderRoutes() {
       {routes.map((route) => {
         return <RouteWithSubRoutes key={route.key} {...route} />;
       })}
-      <Route component={() => <h1>Not Found!</h1>} />
+      <Route component={() => <FourOhFour />} />
     </Switch>
   );
 }
