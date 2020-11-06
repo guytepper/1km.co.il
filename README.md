@@ -1,13 +1,22 @@
-<h3 align="center"><a href="https://1km.co.il">One Kilometer</a></h3>
+<h3 align="center">
+  <img width="100" src="https://raw.githubusercontent.com/guytepper/1km.co.il/master/public/apple-touch-icon.png" alt="" />
+  <br />
+  <a href="https://1km.co.il">One Kilometer</a>
+</h3>
 <p align="center">
-Fighting for democracy during lockdown.<br>
+Fighting for democracy in Israel.<br>
 </p>
 
 <hr/>
 
 ## Welcome to 1km
 
-Something bad is happening in Israel, and we cannot afford to stand still. We've got to React.
+The original goal of 1 Kilometer was to provide a solution to help find local protests during Israel's 2nd lockdown, which limited the protesting radius to 1km from your home.  
+Since then the project grew bigger, and now our goal is to serve as the virual homepage for the protest movement in Israel. 
+
+**Want to help?** Check out our [up for grabs](https://github.com/guytepper/1km.co.il/issues?q=is%3Aissue+is%3Aopen+label%3A%22up+for+grabs%22) list, fork the repo and submit a PR!  
+We welcome anyone, and would appreciate any help. 
+If you have an installation issues, got a question or just want to chat, join our [discord channel](https://discord.gg/VuzxwKN) :)
 
 ## Introduction
 
@@ -20,21 +29,11 @@ Something bad is happening in Israel, and we cannot afford to stand still. We've
 
 - Fork the repository.
 - Install dependencies using `yarn install`
-- Start coding!
+- Run `yarn start` and start coding!
 
-## Advanced Installation
-
-If you want to tinker with the database, view the UI & set up security rules, you need to get your own firebase project.
-
-- Go to the [firebase console](https://console.firebase.google.com) and create a new project. Call it whatever you want.
-- Add a new web app from the dashboard, by clicking the </> icon.
-- Give it whatever name you want. No need for hosting.
-- Set up the enviorment to work with your project:  
-  Inside the project directory, `cp .env .env.local` and fill the `REACT_APP_FIREBASE_*` variables with the firebase configuration being shown.
-- Go back to firebase dashboard and select **Cloud Firestore** from the sidebar. Click **Create Database**, start in test mode, and press enable.
+> If you need to use Facebook Authentication / Google Maps API in the project, reach out to me (@guytepper) via our [discord channel](https://discord.gg/VuzxwKN) and I'll grant you permissions. 
 
 <hr/>
 
-Got an installation issue, want to bring up your ideas or just up for a chat? Join our [discord channel](https://discord.gg/VuzxwKN).
 
 
