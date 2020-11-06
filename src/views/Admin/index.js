@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+import { useStore } from '../../stores';
 import { Button } from '../../components';
 import { AdminWrapper, AdminNavigation, AdminNavButton } from './components';
 import LeaderAdmin from './LeaderAdmin';
@@ -7,8 +8,10 @@ import ProtestAdmin from './ProtestAdmin';
 import { handleSignIn } from '../../api';
 import { isAdmin } from '../../utils';
 
-const Admin = ({ user }) => {
+const Admin = () => {
   const location = useLocation();
+  const store = useStore();
+  const { user } = store.userStore;
 
   return (
     <AdminWrapper>
