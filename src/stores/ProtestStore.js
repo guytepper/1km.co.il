@@ -13,8 +13,21 @@ class ProtestStore {
 
   get closeProtests() {
     if (this.nearbyProtests.length > 0) {
-      return this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance);
+      const closeList = this.nearbyProtests.filter((p) => p.distance < 2000).sort((p1, p2) => p1.distance - p2.distance);
+      return closeList;
+
+      // Use in times when need to push a protest up in the list
+      // For example, during marches, we want the protest to be the first available even if
+      // the protest location is not the closest to the user.
+
+      // const marchProtest = this.nearbyProtests.find((p) => p.id === 'eoLv9Kb4x3sFBcAkcdMh');
+      // if (marchProtest) {
+      //   closeList.splice(closeList.indexOf(marchProtest), 1);
+      //   closeList.unshift(marchProtest);
+      // }
+      // return closeList;
     }
+
     return [];
   }
 
