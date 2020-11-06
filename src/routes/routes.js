@@ -41,6 +41,7 @@ const routes = [
     path: '/upload-image',
     component: UploadForm,
   },
+  { path: ['/about', '/donate', '/project-updates/:slug', '/legal-notice'], component: PostView },
 ];
 
 export default routes;

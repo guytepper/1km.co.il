@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import routes from './routes';
 
 function RouteWithSubRoutes(route) {
+  console.log(route);
   return <Route path={route.path} exact={route.exact} render={(props) => <route.component {...props} routes={route.routes} />} />;
 }
 
