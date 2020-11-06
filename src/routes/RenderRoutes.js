@@ -4,7 +4,6 @@ import routes from './routes';
 import { FourOhFour } from '../views';
 
 function RouteWithSubRoutes(route) {
-  console.log(route);
   return <Route path={route.path} exact={route.exact} render={(props) => <route.component {...props} routes={route.routes} />} />;
 }
 
