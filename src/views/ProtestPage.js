@@ -252,10 +252,11 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   );
 }
 
-function ProtestPage({ user }) {
+function ProtestPage() {
   const { protest, setProtest } = useFetchProtest();
   const store = useStore();
   const history = useHistory();
+  const { user } = store.userStore;
 
   // const { onFileUpload } = useFileUpload(false);
   if (!protest) {

@@ -28,13 +28,16 @@ function renderView({ currentView, currentProtest, checkIns }) {
   }
 }
 
-function LiveEvent({ user, closeProtests }) {
+function LiveEvent() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
   const [currentView, setCurrentView] = useState(VIEWS.pictures);
   // const [checkIns, setCheckIns] = useState([]);
   // const [hasCheckedIn, setCheckedIn] = useState(false);
   const store = useStore();
+  const { user } = store.userStore;
+  const { closeProtests } = store.protestStore;
+
   const wrapper = useRef(null);
   const history = useHistory();
 

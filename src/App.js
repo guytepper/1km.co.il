@@ -1,32 +1,17 @@
 import React, { useReducer, useEffect } from 'react';
 import Helmet from 'react-helmet';
 import { observer } from 'mobx-react-lite';
+import { useTracking } from './hooks/useTracking';
 import { useStore } from './stores';
-import { BrowserRouter as Router, Route, Redirect, Link, Switch } from 'react-router-dom';
-import Menu from 'react-burger-menu/lib/menus/slide';
-import {
-  Admin,
-  SignUp,
-  ProtestMap,
-  ProtestPage,
-  AddProtest,
-  Profile,
-  LeaderRequest,
-  PostView,
-  LiveEvent,
-  FourOhFour,
-  Weekly,
-} from './views';
-import { UploadForm, ScrollToTop } from './components';
+import { RenderRoutes as Routes } from './routes/RenderRoutes';
+import { Header, UploadForm, ScrollToTop } from './components';
 import { isAdmin } from './utils';
-import styled, { keyframes } from 'styled-components/macro';
 import firebase from './firebase';
-import { DispatchContext } from './context';
 import { getFullUserData } from './api';
+import styled from 'styled-components/macro';
 
 const initialState = {
   isModalOpen: true,
-  menuOpen: false,
   hoveredProtest: null,
   loading: false,
   user: undefined,
@@ -39,8 +24,6 @@ function reducer(state, action) {
 
     case 'setUser':
       return { ...state, user: action.payload };
-    case 'setMenuState':
-      return { ...state, menuOpen: action.payload };
     default:
       throw new Error('Unexpected action');
   }
@@ -49,10 +32,7 @@ function reducer(state, action) {
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const store = useStore();
-
-  const updateMenuState = (state) => {
-    dispatch({ type: 'setMenuState', payload: state });
-  };
+  // useTracking();
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -77,68 +57,11 @@ function App() {
   }, []);
 
   return (
-    <DispatchContext.Provider value={dispatch}>
-      <AppWrapper>
-        <Helmet titleTemplate="%s - קילומטר אחד" defaultTitle="קילומטר אחד"></Helmet>
-        <Router>
-          <ScrollToTop />
-          <Header path={window.location.pathname}>
-            {/* TODO: Use useLocation - need to move router out of this file */}
-            <NavItemLive to="/live">
-              <LiveIcon src="/icons/live.svg" alt="" style={{ marginRight: 10 }} />
-            </NavItemLive>
-            <Link to="/">
-              <img src="/logo.svg" alt=" קילומטר אחד" />
-            </Link>
-            <NavProfileWrapper>
-              <Menu
-                isOpen={state.menuOpen}
-                onStateChange={(state) => updateMenuState(state.isOpen)}
-                customBurgerIcon={<img src="/icons/hamburger.svg" alt="תפריט" />}
-                customCrossIcon={false}
-                disableAutoFocus
-              >
-                <Link to="/weekly" onClick={() => updateMenuState(false)} className="bm-item">
-                  יומן
-                </Link>
-                <Link to="/live" onClick={() => updateMenuState(false)} className="bm-item">
-                  פיד מחאה
-                </Link>
-                <Link
-                  to={store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`}
-                  onClick={() => updateMenuState(false)}
-                  className="bm-item"
-                >
-                  העלאת תמונה
-                </Link>
-                <Link to="/map" onClick={() => updateMenuState(false)} className="bm-item">
-                  מפת הפגנות
-                </Link>
-                <hr />
-                <Link to="/about" onClick={() => updateMenuState(false)}>
-                  על הפרוייקט
-                </Link>
-                <Link to="/donate" onClick={() => updateMenuState(false)}>
-                  תרומה
-                </Link>
-                <hr />
-                <a href="https://www.facebook.com/1km.co.il" target="_blank" rel="noreferrer noopener">
-                  פייסבוק
-                </a>
-                <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer noopener">
-                  טוויטר
-                </a>
-                <a href="https://www.instagram.com/1km.co.il/" target="_blank" rel="noreferrer noopener">
-                  אינסטגרם
-                </a>
-                <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
-                  קוד פתוח
-                </a>
-                {isAdmin(state.user) && <Link to="/admin">ניהול</Link>}
-              </Menu>
-            </NavProfileWrapper>
-          </Header>
-          <Switch>
+    <AppWrapper>
+      <Helmet titleTemplate="%s - קילומטר אחד" defaultTitle="קילומטר אחד"></Helmet>
+      <Header />
+      <Routes />
+      {/*<Switch>
             <Route exact path={['/', '/weekly']}>
               <Weekly />
             </Route>
@@ -192,14 +115,14 @@ function App() {
               <PostView />
             </Route>
 
-            {/* 404 */}
+            
             <Route>
               <FourOhFour />
             </Route>
           </Switch>
-        </Router>
-      </AppWrapper>
-    </DispatchContext.Provider>
+          
+          */}
+    </AppWrapper>
   );
 }
 
@@ -207,55 +130,6 @@ const AppWrapper = styled.div`
   display: grid;
   grid-template-rows: 60px 1fr;
   min-height: 100vh;
-`;
-
-const Header = styled.header`
-  display: flex;
-  /* position: sticky;
-  top: 0; */
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 8px 5px 20px;
-  grid-row: 1;
-  box-shadow: ${(props) => {
-    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
-    return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
-  }};
-  z-index: 10;
-`;
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0.75;
-  }
-
-  to {
-    opacity: 1;
-  }
-`;
-
-const NavItemLive = styled(Link)`
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  color: tomato;
-  font-weight: bold;
-  font-size: 18px;
-  animation: ${fadeIn} 1.2s linear 1s infinite alternate;
-  visibility: hidden;
-`;
-
-const NavProfileWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const LiveIcon = styled.img`
-  width: 27px;
-  border-radius: 50px;
-  margin-left: 5px;
-  user-select: none;
 `;
 
 export default observer(App);
