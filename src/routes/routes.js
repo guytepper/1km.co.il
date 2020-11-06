@@ -13,11 +13,11 @@ const routes = [
     component: ProtestMap,
     key: 'PROTEST_MAP',
   },
-  // {
-  //   path: '/admin',
-  //   component: Admin,
-  //   key: 'PROTEST_MAP',
-  // },
+  {
+    path: '/admin',
+    component: Admin,
+    key: 'PROTEST_MAP',
+  },
   {
     path: ['/protest/:id', '/protest/:id/gallery'],
     component: ProtestPage,

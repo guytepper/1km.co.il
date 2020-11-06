@@ -63,7 +63,11 @@ function Header() {
           <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
             קוד פתוח
           </a>
-          {isAdmin(store.userStore.user) && <Link to="/admin">ניהול</Link>}
+          {isAdmin(store.userStore.user) && (
+            <Link to="/admin" onClick={() => setMenuState(false)}>
+              ניהול
+            </Link>
+          )}
         </Menu>
       </NavProfileWrapper>
     </HeaderWrapper>
