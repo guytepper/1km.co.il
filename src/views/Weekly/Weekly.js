@@ -165,7 +165,7 @@ function Weekly() {
         </ProtestImage>
       </WeeklySection>
       <WeeklySection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
-        <div class="nationwide-section-text">
+        <div className="nationwide-section-text">
           <Fade triggerOnce>
             <WeeklyHeader>כל הארץ דגלים</WeeklyHeader>
             <WeeklyText>
