@@ -2,24 +2,33 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
+import { getCurrentPosition } from '../../../utils';
+import { useStore } from '../../../stores';
 import '@reach/combobox/styles.css';
 
-export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates, inputRef, defaultValue, getUserPosition }) {
+const getUserPosition = async ({ setCoordinates }) => {
+  try {
+    const position = await getCurrentPosition();
+    setCoordinates(position);
+  } catch (err) {
+    alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
+  }
+};
+
+export default function MapSearchAutocomplete({ inputRef }) {
   const {
     ready,
     value,
     suggestions: { status, data },
     setValue,
-  } = usePlacesAutocomplete({ debounce: 900, defaultValue });
-
-  const updateStreetAddress = (address) => setStreetAddress && setStreetAddress(address);
+  } = usePlacesAutocomplete({ debounce: 900 });
+  const store = useStore();
 
   const handleInput = (e) => {
     const charactersThreshold = 3;
     const term = e.target.value;
     const shouldFetch = term.length >= charactersThreshold;
     setValue(term, shouldFetch);
-    updateStreetAddress(term);
   };
 
   const handleSelect = (address) => {
@@ -29,8 +38,7 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
         const { lat, lng } = latLng;
-        setCoordinates([lat, lng]);
-        updateStreetAddress(address);
+        store.setCoordinates([lat, lng]);
       })
       .catch((error) => {
         console.log('Error: ', error);
@@ -53,7 +61,7 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
   return (
     <Combobox style={{ position: 'absolute', zIndex: 10000, width: '100%' }} onSelect={handleSelect}>
       <LocationIcon src="/icons/marker-purple.svg" />
-      <GPSIcon src="/icons/gps.svg" alt="" onClick={() => getUserPosition()} />
+      <GPSIcon src="/icons/gps.svg" alt="" onClick={() => getUserPosition({ setCoordinates: store.setCoordinates })} />
       <ComboboxInputWrapper
         value={value}
         name="streetAddress"

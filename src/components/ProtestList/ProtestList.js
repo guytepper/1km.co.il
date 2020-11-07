@@ -78,7 +78,7 @@ const ProtestListWrapper = styled.div`
 `;
 
 const ProtestListHeader = styled.h2`
-  margin: 15px 0 0;
+  margin: 5px 0;
   text-align: center;
   font-weight: 600;
 `;

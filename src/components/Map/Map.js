@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { getCurrentPosition, pointWithinRadius } from '../../utils';
+import { pointWithinRadius } from '../../utils';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
 import L from 'leaflet';
-import MapSearchAutocomplete from '../MapSearchAutocomplete';
+import MapSearchAutocomplete from './AddressBar';
 import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -63,7 +63,7 @@ const balfur = [31.7749837, 35.219797];
 function AppMap({ hoveredProtest }) {
   const store = useStore();
   const { mapStore, protestStore, userCoordinates: coordinates } = store;
-  const addressInputRef = useRef(); // Search Bar ref
+  const addressInputRef = useRef(); // Search Bar ref, used by the combobox
 
   const updateMap = (currentMapPosition) => {
     // The following if condition is a 'hack' to check if the userCoordinates have just updated their position
@@ -92,12 +92,7 @@ function AppMap({ hoveredProtest }) {
       zoom={14}
       zoomControl={false}
     >
-      <SearchPlaceAutoComplete
-        setCoordinates={store.setCoordinates}
-        inputRef={addressInputRef}
-        className="leaflet-pane leaflet-map-pane"
-        getUserPosition={getCurrentPosition}
-      />
+      <SearchPlaceAutoComplete inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
