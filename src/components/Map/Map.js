@@ -6,7 +6,7 @@ import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
 import L from 'leaflet';
-import MapSearchAutocomplete from './AddressBar';
+import AddressBar from './AddressBar';
 import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -92,7 +92,7 @@ function AppMap({ hoveredProtest }) {
       zoom={14}
       zoomControl={false}
     >
-      <SearchPlaceAutoComplete inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
+      <AddressBarWrapper inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -112,7 +112,7 @@ function AppMap({ hoveredProtest }) {
     </MapWrapper>
   );
 }
-const SearchPlaceAutoComplete = styled(MapSearchAutocomplete)`
+const AddressBarWrapper = styled(AddressBar)`
   z-index: 10000;
   position: absolute;
   top: 30px;

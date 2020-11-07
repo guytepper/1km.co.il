@@ -1,3 +1,3 @@
-import MapSearchAutocomplete from './MapSearchAutocomplete';
+import AddressBar from './AddressBar';
 
-export default MapSearchAutocomplete;
+export default AddressBar;
