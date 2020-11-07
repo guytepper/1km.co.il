@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { pointWithinRadius } from '../../utils';
+import { getCurrentPosition, pointWithinRadius } from '../../utils';
 import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
@@ -92,10 +92,10 @@ function AppMap({ hoveredProtest }) {
       zoom={14}
     >
       <SearchPlaceAutoComplete
-        setCoordinates={setCoordinates}
+        setCoordinates={store.setCoordinates}
         inputRef={addressInputRef}
         className="leaflet-pane leaflet-map-pane"
-        getUserPosition={getUserPosition}
+        getUserPosition={getCurrentPosition}
       />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
