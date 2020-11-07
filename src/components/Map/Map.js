@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { pointWithinRadius } from '../../utils';
@@ -6,6 +6,7 @@ import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
 import L from 'leaflet';
+import AddressBar from './AddressBar';
 import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -62,6 +63,7 @@ const balfur = [31.7749837, 35.219797];
 function AppMap({ hoveredProtest }) {
   const store = useStore();
   const { mapStore, protestStore, userCoordinates: coordinates } = store;
+  const addressInputRef = useRef(); // Search Bar ref, used by the combobox
 
   const updateMap = (currentMapPosition) => {
     // The following if condition is a 'hack' to check if the userCoordinates have just updated their position
@@ -88,7 +90,9 @@ function AppMap({ hoveredProtest }) {
         updateMap([target.getCenter().lat, target.getCenter().lng]);
       }}
       zoom={14}
+      zoomControl={false}
     >
+      <AddressBarWrapper inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
       <TileLayer
         attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -108,6 +112,11 @@ function AppMap({ hoveredProtest }) {
     </MapWrapper>
   );
 }
+const AddressBarWrapper = styled(AddressBar)`
+  z-index: 10000;
+  position: absolute;
+  top: 30px;
+`;
 
 const MapWrapper = styled(Map)`
   width: 100%;
