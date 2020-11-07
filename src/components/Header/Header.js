@@ -82,6 +82,10 @@ const HeaderWrapper = styled.header`
   align-items: center;
   padding: 5px 8px 5px 20px;
   grid-row: 1;
+  background: ${(props) => {
+    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
+    return '#fff';
+  }};
   box-shadow: ${(props) => {
     if (['/weekly', '/'].indexOf(props.path) > -1) return null;
     return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';

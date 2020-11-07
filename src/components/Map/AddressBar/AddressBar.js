@@ -59,23 +59,36 @@ export default function MapSearchAutocomplete({ inputRef }) {
   };
 
   return (
-    <Combobox style={{ position: 'absolute', zIndex: 10000, width: '100%' }} onSelect={handleSelect}>
-      <LocationIcon src="/icons/marker-purple.svg" />
-      <GPSIcon src="/icons/gps.svg" alt="" onClick={() => getUserPosition({ setCoordinates: store.setCoordinates })} />
-      <ComboboxInputWrapper
-        value={value}
-        name="streetAddress"
-        onChange={handleInput}
-        disabled={!ready}
-        ref={inputRef}
-        placeholder="מה הכתובת?"
-      />
+    <ComboboxWrapper onSelect={handleSelect}>
+      <div style={{ position: 'absolute', width: '100%' }}>
+        <LocationIcon src="/icons/marker-purple.svg" />
+        <GPSIcon src="/icons/gps.svg" alt="" onClick={() => getUserPosition({ setCoordinates: store.setCoordinates })} />
+        <ComboboxInputWrapper
+          value={value}
+          name="streetAddress"
+          onChange={handleInput}
+          disabled={!ready}
+          ref={inputRef}
+          placeholder="מה הכתובת?"
+        />
+      </div>
       <ComboboxPopover>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>
-    </Combobox>
+    </ComboboxWrapper>
   );
 }
+const ComboboxWrapper = styled(Combobox)`
+  position: absolute;
+  z-index: 1000;
+  width: 100%;
+
+  @media (min-width: 768px) {
+    position: static;
+    grid-row: 2 / 3;
+    grid-column: 2 / 3;
+  }
+`;
 
 const ComboboxInputWrapper = styled(ComboboxInput)`
   z-index: 10000;
@@ -83,57 +96,56 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   top: 20px;
   left: 10%;
   right: 5%;
-
   width: 90%;
   margin-bottom: 10px;
-  padding: 10px 50px;
-
-  border: 0px;
+  padding: 10px 45px;
+  border: 0;
   border-radius: 50px;
   font-family: Simpler, sans-serif;
   font-size: 16px;
   appearance: none;
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
 
   @media (min-width: 768px) {
-    left: 10%;
     right: 10%;
-    width: 80%;
+    width: 50%;
+    position: static;
   }
 `;
 
 /*1. z-index should be higher then 10000-(the input z-index)*/
 const LocationIcon = styled.img`
-  z-index: 10001; /* 1 */
+  z-index: 10001;
   top: 31px;
-  right: calc(6.5% + 17px);
+  right: calc(5% + 17px);
   position: absolute;
 
+  grid-column: 1 / 2;
   height: 20px;
   user-select: none;
+  z-index: 10001;
 
   @media (min-width: 768px) {
-    right: calc(10% + 20px);
+    top: 10px;
+    right: 20px;
   }
 `;
 
 const GPSIcon = styled.img`
-  z-index: 10001; /* 1 */
+  z-index: 10001;
   top: 31px;
-  left: calc(6.5% + 17px);
+  left: calc(5% + 17px);
   position: absolute;
-
+  grid-column: 2 / 3;
   height: 20px;
   user-select: none;
   cursor: pointer;
-
+  z-index: 10001;
   filter: invert(100%); /* GPS Icon is white - changed it to black */
 
-  &:hover {
-    filter: invert(47%) sepia(98%) saturate(2296%) hue-rotate(174deg);
-  }
-
   @media (min-width: 768px) {
-    left: calc(10% + 20px);
+    top: 10px;
+    left: calc(50% + 17px);
   }
 `;

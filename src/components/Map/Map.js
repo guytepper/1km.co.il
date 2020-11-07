@@ -84,9 +84,9 @@ function AppMap({ hoveredProtest }) {
   };
 
   return (
-    <>
-      <AddressBarWrapper inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
-      <MapWrapper
+    <MapWrapper>
+      <AddressBar inputRef={addressInputRef} />
+      <MapElement
         center={coordinates.length > 0 ? coordinates : balfur}
         onMoveEnd={({ target }) => {
           updateMap([target.getCenter().lat, target.getCenter().lng]);
@@ -110,17 +110,12 @@ function AppMap({ hoveredProtest }) {
             <Circle radius={1000} center={coordinates} />
           </>
         )}
-      </MapWrapper>
-    </>
+      </MapElement>
+    </MapWrapper>
   );
 }
-const AddressBarWrapper = styled(AddressBar)`
-  z-index: 10000;
-  position: absolute;
-  top: 30px;
-`;
 
-const MapWrapper = styled(Map)`
+const MapWrapper = styled.div`
   width: 100%;
   height: 350px;
   grid-row: 1;
@@ -129,7 +124,19 @@ const MapWrapper = styled(Map)`
 
   @media (min-width: 768px) {
     height: 100%;
+
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 25px 50px 1fr;
   }
+`;
+
+const MapElement = styled(Map)`
+  width: 100%;
+  height: 100%;
+
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
 `;
 
 export default observer(AppMap);
