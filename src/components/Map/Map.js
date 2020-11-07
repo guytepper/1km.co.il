@@ -90,6 +90,7 @@ function AppMap({ hoveredProtest }) {
         updateMap([target.getCenter().lat, target.getCenter().lng]);
       }}
       zoom={14}
+      zoomControl={false}
     >
       <SearchPlaceAutoComplete
         setCoordinates={store.setCoordinates}
