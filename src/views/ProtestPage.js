@@ -1,31 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
+import { useStore } from '../stores';
 import styled from 'styled-components/macro';
-import { useHistory, useParams } from 'react-router-dom';
-import { fetchProtest, makeUserProtestLeader, sendProtestLeaderRequest, updateProtest } from '../api';
-import { Map, TileLayer, Marker } from 'react-leaflet';
-import { ProtestForm } from '../components';
-import { Switch, Route } from 'react-router-dom';
+import { Route, Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import {
-  ProtestCardInfo,
+  fetchProtest,
+  getProtestsForLeader,
+  makeUserProtestLeader,
+  sendProtestLeaderRequest,
+  updateProtest,
+  getLatestProtestPictures,
+} from '../api';
+import { Map, Marker, Polyline, TileLayer } from 'react-leaflet';
+import { ProtectedRoute, ProtestForm, PictureGallery } from '../components';
+import {
   ProtestCardDetail,
-  ProtestCardIcon,
   ProtestCardGroupButton,
+  ProtestCardIcon,
+  ProtestCardInfo,
 } from '../components/ProtestCard/ProtestCardStyles';
-import * as texts from './ProtestPageTexts.json';
 import {
+  calculateDistance,
   dateToDayOfWeek,
   formatDate,
+  formatDistance,
   isAdmin,
-  sortDateTimeList,
   isAuthenticated,
   isVisitor,
-  getCurrentPosition,
-  calculateDistance,
-  formatDistance,
+  sortDateTimeList,
 } from '../utils';
-import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
-
-const mobile = `@media (max-width: 768px)`;
+import { Image } from 'antd';
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
@@ -40,20 +44,6 @@ function getEditButtonLink(user, protest) {
   }
 
   throw new Error(`couldn't find route`);
-}
-
-function getSocialLinks(protest) {
-  const items = [];
-  const { whatsAppLink, telegramLink } = protest;
-
-  if (whatsAppLink) {
-    items.push({ type: 'whatsapp', url: whatsAppLink, text: 'הצטרפות לקבוצת הוואטסאפ' });
-  }
-  if (telegramLink) {
-    items.push({ type: 'telegram', url: telegramLink, text: 'הצטרפות לקבוצת הטלגרם' });
-  }
-
-  return items;
 }
 
 async function _fetchProtest(id, setProtest) {
@@ -85,20 +75,66 @@ function useFetchProtest() {
   };
 }
 
+function getFutureDates(dateTimeList) {
+  if (dateTimeList?.length) {
+    return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+  }
+  return [];
+}
+
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
+  const mapElement = useRef(null);
+  const polylineElement = useRef(null);
+  const [polyPositions, setPolyPositions] = useState([]);
+  const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
+  const [latestPictures, setLatestPictures] = useState([]);
+  const galleryMatch = useRouteMatch('/protest/:id/gallery');
+  const store = useStore();
 
-  const { coordinates, displayName, streetAddress, notes, dateTimeList, meeting_time } = protest;
-  const socialLinks = getSocialLinks(protest);
+  useEffect(() => {
+    async function getLatestPictures() {
+      const pictures = await getLatestProtestPictures(protest.id);
+      setLatestPictures(pictures);
+    }
+
+    getLatestPictures();
+  }, [protest]);
+
+  useEffect(() => {
+    if (protest.positions?.length > 0) {
+      const polyPositions = protest.positions.map((p) => [p.latlng.latitude, p.latlng.longitude]);
+      setPolyPositions(polyPositions);
+    }
+  }, [protest]);
+
+  useEffect(() => {
+    if (polyPositions.length > 0 && polylineElement.current) {
+      const polyBounds = polylineElement.current.leafletElement.getBounds();
+      mapElement.current.leafletElement.flyToBounds(polyBounds);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [polyPositions]);
+
+  const futureDates = getFutureDates(dateTimeList);
 
   return (
     <ProtestPageContainer>
-      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
+      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14} ref={mapElement}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
+        {polyPositions.length > 0 && (
+          <>
+            <Polyline ref={polylineElement} positions={polyPositions} />
+            {polyPositions.map((position) => (
+              <Marker position={{ lat: position[0], lng: position[1] }} key={position[0]}></Marker>
+            ))}
+          </>
+        )}
       </MapWrapper>
 
       <ProtestContainer>
@@ -122,74 +158,114 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
             </ProtestCardInfo>
           </Details>
-          <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עריכה</EditButton>
         </Info>
 
-        <DatesAndSocial>
-          {/* Dates */}
-          <SectionContainer>
-            <SectionTitle>
-              <img src="/icons/clock.svg" alt="clock icon" />
-              מועדי הפגנה קרובים
-            </SectionTitle>
+        {galleryMatch?.isExact ? (
+          <PictureGallery protestId={protest.id} date={'2020-10-31'} />
+        ) : (
+          <>
+            <SectionContainer style={{ marginTop: 20 }}>
+              <SectionTitle>
+                <img src="/icons/photo-gallery-blueish.svg" alt="" />
+                תמונות אחרונות מההפגנה
+              </SectionTitle>
 
-            <Dates>
-              {dateTimeList ? (
-                dateTimeList.map((dateTime) => (
-                  <Date key={dateTime.id}>
-                    <BoldDateText>{formatDate(dateTime.date)}</BoldDateText>
-                    <DateText>
-                      יום {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
-                    </DateText>
-                  </Date>
-                ))
+              {latestPictures.length > 0 ? (
+                <>
+                  <LatestPicturesWrapper>
+                    {latestPictures.map((picture) => (
+                      <PictureThumbnail src={picture.imageUrl} alt="" key={picture.id} />
+                    ))}
+                  </LatestPicturesWrapper>
+                  <EditButton onClick={() => history.push(`${history.location.pathname}/gallery`)}>
+                    לצפייה בגלריית ההפגנה
+                  </EditButton>
+                </>
               ) : (
-                <Date>
-                  <BoldDateText> שעת מפגש: {meeting_time}</BoldDateText>
-                </Date>
+                <>
+                  <p>עדיין לא העלו תמונות להפגנה הזו.</p>
+                  <EditButton
+                    onClick={() => {
+                      store.userStore.setUserProtest(protest);
+                      history.push(
+                        store.userStore.user
+                          ? `/upload-image?returnUrl=${history.location.pathname}`
+                          : `/sign-up?returnUrl=/upload-image?returnUrl=${history.location.pathname}`
+                      );
+                    }}
+                  >
+                    היו ראשונים להעלות תמונה!
+                  </EditButton>
+                </>
               )}
-            </Dates>
-          </SectionContainer>
+            </SectionContainer>
+            <DatesAndSocial>
+              <SectionContainer>
+                <SectionTitle>
+                  <img src="/icons/clock.svg" alt="" />
+                  מועדי הפגנה קרובים
+                </SectionTitle>
 
-          {/* Social */}
-          <SocialContainer>
-            <SectionTitle>
-              <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
-              ערוצי תקשורת
-            </SectionTitle>
-            {socialLinks.length > 0 ? (
-              <>
-                <SocialButtons>
-                  {socialLinks.map(({ url, type, text }) => (
-                    <ProtestCardGroupButton key={type} type={type} href={url} target="_blank">
-                      {text}
-                    </ProtestCardGroupButton>
-                  ))}
-                </SocialButtons>
-              </>
-            ) : (
-              <p>להפגנה זו אין ערוצי תקשורת.</p>
-            )}
-          </SocialContainer>
-        </DatesAndSocial>
+                <Dates>
+                  {futureDates.length > 0 ? (
+                    futureDates.map((dateTime) => (
+                      <DateCard key={dateTime.id}>
+                        <DateText>
+                          <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
+                          {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                        </DateText>
+                      </DateCard>
+                    ))
+                  ) : (
+                    <DateCard>
+                      <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
+                      <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
+                    </DateCard>
+                  )}
+                </Dates>
+                <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</EditButton>
+              </SectionContainer>
+
+              <SectionContainer>
+                <SectionTitle>
+                  <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
+                  ערוצי תקשורת
+                </SectionTitle>
+                {protest.whatsAppLink && (
+                  <ProtestCardGroupButton type="whatsapp" href={protest.whatsAppLink} target="_blank">
+                    הצטרפות לקבוצת הוואטסאפ
+                  </ProtestCardGroupButton>
+                )}
+                {protest.telegramLink && (
+                  <ProtestCardGroupButton type="telegram" href={protest.telegramLink} target="_blank">
+                    הצטרפות לקבוצת הטלגרם
+                  </ProtestCardGroupButton>
+                )}
+                {!protest.whatsAppLink && !protest.telegramLink && <p>להפגנה זו אין דרכי תקשורת.</p>}
+                <EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</EditButton>
+              </SectionContainer>
+            </DatesAndSocial>
+          </>
+        )}
       </ProtestContainer>
     </ProtestPageContainer>
   );
 }
 
-export default function ProtestPage({ user, userCoordinates }) {
+function ProtestPage() {
   const { protest, setProtest } = useFetchProtest();
+  const store = useStore();
   const history = useHistory();
-  // const { onFileUpload } = useFileUpload(false);
+  const { user } = store.userStore;
 
+  // const { onFileUpload } = useFileUpload(false);
   if (!protest) {
     // TODO: loading state
-    return <div>Loading...</div>;
+    return <div>טוען...</div>;
   }
 
-  const { coordinates, id } = protest;
-
-  const canEdit = !!user; //isAdmin(user) || isLeader(user, protest);
+  const { coordinates, id: protestId } = protest;
+  const canEdit = !isVisitor(user);
 
   return (
     <Switch>
@@ -198,17 +274,27 @@ export default function ProtestPage({ user, userCoordinates }) {
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
-              const response = await updateProtest(id, params);
-              // refetch the protest once update is complete
-              _fetchProtest(id, setProtest);
+              // If the user is not a leader for this protest, check if they've reached the amount of protests limit.
+              if (!protest.roles?.leader.includes(user.uid) && !isAdmin(user)) {
+                const userProtests = await getProtestsForLeader(user.uid);
 
-              if (!isAdmin(user)) {
-                sendProtestLeaderRequest(user, null, id);
-                makeUserProtestLeader(id, user.uid);
+                if (userProtests.length > 4) {
+                  alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
+                  throw new Error('Reached the max amount of protests a user can lead');
+                }
+
+                await sendProtestLeaderRequest(user, null, protestId);
+                await makeUserProtestLeader(protestId, user.uid);
               }
+
+              const response = await updateProtest({ protestId, params, userId: user.uid });
+
+              // Refetch the protest once update is complete
+              _fetchProtest(protestId, setProtest);
+
               return response;
             }}
-            afterSubmitCallback={() => history.push(`/protest/${id}`)}
+            afterSubmitCallback={() => history.push(`/protest/${protestId}`)}
             defaultValues={protest}
             editMode={true}
             isAdmin={isAdmin(user)}
@@ -216,11 +302,13 @@ export default function ProtestPage({ user, userCoordinates }) {
         </EditViewContainer>
       </ProtectedRoute>
       <Route>
-        <ProtestPageContent protest={protest} userCoordinates={userCoordinates} user={user} />
+        <ProtestPageContent protest={protest} userCoordinates={store.userCoordinates} user={user} />
       </Route>
     </Switch>
   );
 }
+
+export default observer(ProtestPage);
 
 //----------------- Styles -------------------------//
 
@@ -231,17 +319,10 @@ const EditViewContainer = styled.div`
   margin: 0 auto;
 `;
 
-const ProtestPageContainer = styled.div`
-  color: #000000;
-  padding-bottom: 150px;
-  h1,
-  h1 {
-    margin: 0;
-  }
-`;
+const ProtestPageContainer = styled.div``;
 
 const ProtestContainer = styled.div`
-  margin: 0 auto;
+  margin: 0 auto 30px;
   max-width: 700px;
   padding: 0 15px;
   z-index: 1;
@@ -266,11 +347,6 @@ const Info = styled.div`
   }
 `;
 
-const ProfilePic = styled.img`
-  width: 163px;
-  object-fit: cover;
-`;
-
 const Title = styled.h1`
   font-weight: bold;
   font-size: 28px;
@@ -278,25 +354,6 @@ const Title = styled.h1`
   color: #000000;
   margin-bottom: 8px;
 `;
-
-const DetailItem = styled.h2`
-  font-size: 24px;
-  line-height: 28px;
-  font-weight: normal;
-  display: flex;
-  align-items: center;
-  img {
-    margin-left: 11px;
-  }
-`;
-
-const Notes = styled.div`
-  margin-top: 27px;
-  font-size: 16px;
-  line-height: 19px;
-`;
-
-const FlagIcon = styled.img``;
 
 const MapWrapper = styled(Map)`
   width: 100%;
@@ -306,7 +363,7 @@ const MapWrapper = styled(Map)`
 
 const EditButton = styled.button`
   width: 100%;
-  height: 32px;
+  height: auto;
   color: #1251f3;
   border: 1px solid #1251f3;
   box-sizing: border-box;
@@ -330,9 +387,14 @@ const EditButton = styled.button`
 
 const SectionContainer = styled.div`
   width: 100%;
-  padding: 40px 40px 34px 40px;
+  padding: 35px 30px;
+  margin-bottom: 20px;
   box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
   background-color: white;
+
+  @media (min-width: 1024px) {
+    margin: 0;
+  }
 `;
 
 const SectionTitle = styled.div`
@@ -362,39 +424,50 @@ const DatesAndSocial = styled.div`
 `;
 
 const Dates = styled.ul`
-  max-width: 420px;
-  width: 420px;
+  width: 100%;
   padding: 0;
-  margin: 0;
-  ${mobile} {
-    width: 100%;
+  margin: 0 0 20px;
+
+  @media (min-width: 768px) {
+    max-width: 420px;
   }
 `;
 
-const Date = styled.li`
+const DateCard = styled.li`
   list-style: none;
 `;
 
 const DateText = styled.span`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 400;
   line-height: 28px;
-  letter-spacing: 0em;
 `;
 
-const BoldDateText = styled(DateText)`
-  font-weight: 700;
-  margin-left: 17.5px;
-`;
+const LatestPicturesWrapper = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  margin-bottom: 12.5px;
 
-const SocialButtons = styled.div``;
+  @media (min-width: 580px) {
+    gap: 10px;
+  }
 
-const SocialContainer = styled(SectionContainer)`
-  ${mobile} {
-    margin-top: 20px;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
-const SocialButtonWrapper = styled.span`
-  margin: 0px 10px 10px 10px;
+const PictureThumbnail = styled(Image)`
+  width: 100%;
+  cursor: pointer;
+
+  img {
+    height: 120px;
+    object-fit: cover;
+
+    @media (min-width: 580px) {
+      height: 220px;
+    }
+  }
 `;

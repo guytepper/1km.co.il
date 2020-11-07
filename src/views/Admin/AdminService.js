@@ -8,7 +8,7 @@ import * as API from '../../api';
  */
 const createProtest = async (params, protestId) => {
   try {
-    const a = await API.createProtest(params);
+    const a = await API.createProtest(params, true);
     const b = await API.archivePendingProtest(protestId);
     if (a === undefined && b === true) {
       return true;
@@ -43,7 +43,7 @@ export async function fetchPendingProtests() {
 export async function updateProtest({ protestId, params, updateCallback }) {
   try {
     const updated = await API.updateProtest(protestId, params);
-    if (updated) {
+    if (updated && updateCallback) {
       updateCallback(updated);
     }
     return updated;

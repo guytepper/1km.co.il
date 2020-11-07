@@ -16,7 +16,8 @@ export const PageContentWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: 320px;
+  max-width: 350px;
+  margin-top: 20px;
 `;
 
 export const PageParagraph = styled.p`

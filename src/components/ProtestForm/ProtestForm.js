@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
-import Button from '../Button';
+import Button from '../elements/Button';
 import { validateLatLng, isValidUrl } from '../../utils';
 import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
@@ -44,7 +44,7 @@ function ProtestForm({
   // position of marker
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
-  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+  const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-24', time: '17:30' }]);
 
   // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -70,7 +70,7 @@ function ProtestForm({
       setSubmitSuccess(false);
       setStreetAddressDefaultValue(defaultValues.streetAddress);
       setStreetAddress(defaultValues.streetAddress);
-      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-17', time: '17:30' }]);
+      setDateTimeList(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-24', time: '17:30' }]);
 
       if (validateLatLng(defaultValues.latlng)) {
         setMapCenter(defaultValues.latlng);
@@ -112,6 +112,10 @@ function ProtestForm({
       try {
         params.coords = mapCenter;
         params.dateTimeList = dateTimeList;
+        if (defaultValues.protestRef) {
+          params.protestRef = defaultValues.protestRef;
+        }
+
         // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
@@ -131,7 +135,7 @@ function ProtestForm({
           throw new Error('protest._document was null.');
         }
       } catch (err) {
-        console.log('error!!', err);
+        console.error(err);
         setSubmitSuccess(true);
         setSubmitMessage('תקלה התרחשה בתהליך השליחה. אנא פנו אלינו וננסה להבין את הבעיה: support@1km.zendesk.com');
       }
@@ -256,20 +260,25 @@ function ProtestForm({
                 <label htmlFor="contact-approve">אני מעוניין/מעוניינת לקבל עדכונים מיוצר האתר</label>
               </ProtestFormCheckboxWrapper>
 
-              {/* <ReCaptcha
-            ref={recaptcha}
-            sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
-            action="action_name"
-            verifyCallback={verifyCallback}
-          /> */}
               <Button type="submit" color="#1ED96E">
                 הוספת הפגנה
               </Button>
             </>
           ) : (
-            <Button type="submit" color="#1ED96E">
-              {editMode === 'pending' ? 'יצירת הפגנה' : 'עריכת הפגנה'}
-            </Button>
+            <>
+              {defaultValues.protestRef ? (
+                <>
+                  <p style={{ textAlign: 'center' }}>.ההפגנה כבר נוצרה, רק צריך לאשר שהיא תקינה</p>
+                  <Button type="submit" color="#1ED96E">
+                    אישור הפגנה
+                  </Button>
+                </>
+              ) : (
+                <Button type="submit" color="#1ED96E">
+                  {editMode === 'pending' ? 'יצירת הפגנה' : 'עריכת הפגנה'}
+                </Button>
+              )}
+            </>
           )}
         </>
       )}

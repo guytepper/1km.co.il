@@ -1,77 +1,53 @@
-import firebase, { firestore } from '../firebase';
+import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
+import { nanoid } from 'nanoid';
+import { calculateDistance } from '../utils';
+
 const GeoFirestore = geofirestore.initializeApp(firestore);
 
-// async function verifyRecaptcha(token) {
-//   try {
-//     const request = await fetch(`https://us-central1-one-kol.cloudfunctions.net/sendRecaptcha?token=${token}`);
-//     const response = await request.json();
-//     return response;
-//   } catch (err) {
-//     throw err;
-//   }
-// }
-
-export async function createPendingProtest(params) {
-  const {
-    // recaptchaToken,
-    displayName,
-    streetAddress,
-    telegramLink,
-    whatsAppLink,
-    dateTimeList,
-    notes,
-    coords,
-    approveContact,
-  } = params;
-
-  try {
-    // Skip protest approval during development
-    const tableName = process.env.NODE_ENV === 'development' ? 'protests' : 'pending_protests';
-
-    // const verification = await verifyRecaptcha(recaptchaToken);
-
-    // if (verification.success) {
-    const [lat, lng] = coords;
-    const geocollection = GeoFirestore.collection(tableName);
-
-    const request = geocollection.add({
-      displayName,
-      streetAddress,
-      whatsAppLink,
-      telegramLink,
-      notes,
-      dateTimeList,
-      created_at: firebase.firestore.FieldValue.serverTimestamp(),
-      coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-      approveContact,
-      archived: false,
-    });
-
-    return request;
-    // } else {
-    //   throw new Error('Recaptcha error');
-    // }
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
-}
-
-export function createProtest(params) {
-  const { coords, ...restParams } = params;
+/**
+ * Creates a new protest document.
+ * - If the visitor is authenticated - add the protest to the public protests & pending protests collection.
+ *   The protest will exist in the pending protests only for tracking it's validity.
+ * - If the visitor is a guest - add the protest only to the pending protests collection.
+ * @param {object} params - The protest object parameters.
+ * @param {boolean} fromPending - Is the protest being created from a pending protest.
+ * @returns {object} The new protest.
+ */
+export async function createProtest(params, fromPending = false) {
+  const { coords, user, ...restParams } = params;
   const [lat, lng] = coords;
-  const geocollection = GeoFirestore.collection('protests');
-  const request = geocollection.add({
+  console.log(user);
+
+  const protestsCollection = GeoFirestore.collection('protests');
+  const pendingCollection = GeoFirestore.collection('pending_protests');
+
+  const protestParams = {
     ...restParams,
     created_at: firebase.firestore.FieldValue.serverTimestamp(),
     coordinates: new firebase.firestore.GeoPoint(Number(lat), Number(lng)),
-  });
+  };
 
+  // If an authed user created  the protest, add them as a leader.
+  // Protests created from pending should not have a user attached to them initially.
+  if (user?.uid && fromPending === false) {
+    protestParams.roles = { leader: [user.uid] };
+  }
+
+  if (user?.uid || fromPending === true) {
+    const protestDoc = await protestsCollection.add(protestParams);
+    protestParams.protestRef = protestDoc.id;
+  }
+
+  // Set archived field for pending protests verifcations.
+  protestParams.archived = false;
+
+  // Add protest to `pending_protests` collection
+  const request = await pendingCollection.add(protestParams);
   return request;
 }
 
-export async function updateProtest(protestId, params) {
+export async function updateProtest({ protestId, params }) {
   const [lat, lng] = params.coords;
   await firestore
     .collection('protests')
@@ -125,33 +101,27 @@ export async function fetchProtest(protestId) {
   }
 }
 
-export async function uploadFile(params) {
-  const request = await fetch('http://localhost:5001/onekm-50c7f/us-central1/uploadImage', {
-    method: 'post',
-    body: params,
-  });
-  const response = await request.json();
-
-  console.log(response);
-  // TODO: assign s3 url to protest
-}
-
 export async function fetchNearbyProtests(position) {
   const geocollection = GeoFirestore.collection('protests');
+
   const query = geocollection.near({
     center: new firebase.firestore.GeoPoint(position[0], position[1]),
-    radius: 2,
+    radius: 20,
   });
-  const snapshot = await query.limit(10).get();
+
+  const snapshot = await query.limit(35).get();
+
   const protests = snapshot.docs.map((doc) => {
     const { latitude, longitude } = doc.data().g.geopoint;
     const protestLatlng = [latitude, longitude];
     return {
       id: doc.id,
       latlng: protestLatlng,
+      distance: calculateDistance(position, protestLatlng),
       ...doc.data(),
     };
   });
+
   return protests;
 }
 
@@ -191,11 +161,43 @@ export function createLeaderRequestId(userId, protestId) {
 
 export async function saveUserInFirestore(userData) {
   const userRef = firestore.collection('users').doc(userData.uid);
+  const userDoc = await userRef.get();
 
-  if ((await userRef.get()).exists) {
-    await userRef.update(userData);
+  if (userDoc.exists) {
+    return { ...userDoc, exists: true };
   } else {
-    await userRef.set(userData);
+    const { pictureUrl } = userData;
+    const filename = `${nanoid()}.jpeg`;
+    const profilePicsRef = storage.child('profile_pics/' + filename);
+
+    return fetch(pictureUrl)
+      .then((res) => {
+        return res.blob();
+      })
+      .then((blob) => {
+        // Upload blob to firebase storage
+        return profilePicsRef
+          .put(blob)
+          .then(function (snapshot) {
+            const url = snapshot.ref.getDownloadURL();
+            return url;
+          })
+          .then((pictureUrl) => {
+            const { uid, first_name: initialFirst, last_name: initialLast, displayName } = userData;
+            const updatedUserObject = {
+              uid,
+              initialFirst,
+              initialLast,
+              displayName,
+              pictureUrl,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            };
+            return userRef.set(updatedUserObject).then(() => updatedUserObject);
+          });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 
@@ -247,17 +249,16 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 }
 
 export function extractUserData(result) {
-  const { uid, displayName, email } = result.user;
+  const { uid, displayName } = result.user;
   const { first_name, last_name, picture } = result.additionalUserInfo.profile;
-  const picture_url = picture.data.url;
+  const pictureUrl = picture.data.url;
 
   const userData = {
     uid,
-    email,
     first_name,
     last_name,
     displayName,
-    picture_url,
+    pictureUrl,
   };
 
   return userData;
@@ -304,4 +305,35 @@ export async function assignRoleOnProtest({ userId, protestId, requestId, status
 
   // Update request
   await firestore.collection('leader_requests').doc(requestId).update({ status, approved_by: adminId });
+}
+
+export async function updateUserName({ userId, firstName, lastName = '' }) {
+  const userRef = firestore.collection('users').doc(userId);
+
+  const updatedUser = await userRef.update({ firstName, lastName });
+  return updatedUser;
+}
+
+export async function getLatestProtestPictures(protestId) {
+  const latestSnapshot = await firestore
+    .collection('pictures')
+    .where('protestId', '==', protestId)
+    .orderBy('createdAt', 'desc')
+    .limit(6)
+    .get();
+
+  const pictureList = latestSnapshot.docs.map((picture) => ({ ...picture.data(), id: picture.id }));
+  return pictureList;
+}
+
+export async function getPicturesForEvent({ protestId, date }) {
+  const eventPictures = await firestore
+    .collection('pictures')
+    .where('protestId', '==', protestId)
+    // .where('eventDate', '==', date)
+    .orderBy('createdAt')
+    .get();
+
+  const pictureList = eventPictures.docs.map((picture) => ({ ...picture.data(), id: picture.id }));
+  return pictureList;
 }

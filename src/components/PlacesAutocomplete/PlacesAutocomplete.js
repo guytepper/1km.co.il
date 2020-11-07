@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete';
 import { Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption } from '@reach/combobox';
@@ -16,16 +16,20 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
 
   // updates value when defaultValue changes
   // happens on the admin page when choosing a protest
-  React.useEffect(() => {
+  useEffect(() => {
     setValue(defaultValue, false);
     clearSuggestions();
-  }, [defaultValue, setValue, clearSuggestions]);
 
-  React.useEffect(() => {
-    if (value === '') {
-      setManualAddress(null);
-    }
-  }, [value, setManualAddress]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultValue]);
+
+  // useEffect(() => {
+  //   if (value === '') {
+  //     setManualAddress(null);
+  //   }
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [value]);
 
   const updateStreetAddress = (address) => setStreetAddress && setStreetAddress(address);
 
@@ -66,7 +70,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
   };
 
   return (
-    <Combobox onSelect={handleSelect} aria-labelledby="demo">
+    <Combobox onSelect={handleSelect} style={{ width: '100%' }} aria-label="הזנת כתובת ידנית" s>
       <ComboboxInputWrapper
         value={value}
         name="streetAddress"
@@ -75,7 +79,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
         ref={inputRef}
         placeholder="מה הכתובת?"
       />
-      <ComboboxPopover style={{ zIndex: 30 }}>
+      <ComboboxPopover style={{ zIndex: 1000 }}>
         <ComboboxList>{status === 'OK' && renderSuggestions()}</ComboboxList>
       </ComboboxPopover>
     </Combobox>
