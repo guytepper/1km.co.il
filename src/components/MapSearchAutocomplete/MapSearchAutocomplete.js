@@ -119,8 +119,11 @@ const GPSIcon = styled.img`
   user-select: none;
   cursor: pointer;
 
-  /****gps icon is white-changed it to black****/
-  filter: invert(100%);
+  filter: invert(100%); /* GPS Icon is white - changed it to black */
+
+  &:hover {
+    filter: invert(47%) sepia(98%) saturate(2296%) hue-rotate(174deg);
+  }
 
   @media (min-width: 768px) {
     left: calc(10% + 20px);
