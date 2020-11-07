@@ -32,7 +32,7 @@ function ProtestList({ loading, closeProtests, farProtests }) {
       ) : (
         <>
           {closeProtests.length === 0 ? (
-            <ProtestListHeader>
+            <ProtestListHeader style={{ marginTop: 15 }}>
               לא נמצאו הפגנות ברדיוס של קילומטר ממך.
               <br />
               <Link to="/add-protest/">הוסיפו את ההפגנה הראשונה!</Link>
