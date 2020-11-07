@@ -6,12 +6,16 @@ import { Modal, Button as AntButton, Form, Input, Typography } from 'antd';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore, updateUserName } from '../api';
 import styled from 'styled-components/macro';
 import queryString from 'query-string';
+import Helmet from 'react-helmet';
 
 const { Title } = Typography;
 
 function SignUpBeforeRedirect({ returnUrl }) {
   return (
     <PageContentWrapper>
+      <Helmet>
+        <title>הרשמה</title>
+      </Helmet>
       {returnUrl === '/add-protest' ? (
         <>
           <p style={{ marginBottom: 10 }}>על מנת ליצור הפגנה יש להזדהות דרך פייסבוק. </p>
@@ -134,6 +138,10 @@ export default function SignUp(props) {
   if (stage === stages.AFTER_FACEBOOK_AUTH) {
     return (
       <PageWrapper>
+        <Helmet>
+          <title>סיום הרשמה</title>
+        </Helmet>
+
         <PageContentWrapper>
           <Title level={3}>התחברת בהצלחה!</Title>
           <p style={{ fontSize: 16 }}>יש להזין את שמכם על מנת לסיים את ההרשמה.</p>
