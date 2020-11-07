@@ -1,6 +1,5 @@
 export { default as Header } from './Header';
 export { default as Button } from './elements/Button';
-export { default as Footer } from './Footer';
 export { default as Map } from './Map';
 export { default as Modal } from './Modal';
 export { default as IntroModal } from './IntroModal';
