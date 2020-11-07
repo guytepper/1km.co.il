@@ -31,10 +31,10 @@ class RootStore {
    * Updates the current user coordinates.
    * @param {array} coordinates - Array of [lat, lng]
    */
-  setCoordinates(coordinates) {
+  setCoordinates = (coordinates) => {
     setLocalStorage('1km_user_coordinates', coordinates);
     this.userCoordinates = coordinates;
-  }
+  };
 
   setCurrentPageTitle(title) {
     let pageTitle = title;
