@@ -84,32 +84,34 @@ function AppMap({ hoveredProtest }) {
   };
 
   return (
-    <MapWrapper
-      center={coordinates.length > 0 ? coordinates : balfur}
-      onMoveEnd={({ target }) => {
-        updateMap([target.getCenter().lat, target.getCenter().lng]);
-      }}
-      zoom={14}
-      zoomControl={false}
-    >
+    <>
       <AddressBarWrapper inputRef={addressInputRef} className="leaflet-pane leaflet-map-pane" />
-      <TileLayer
-        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {coordinates.length > 0 && (
-        <>
-          <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={mapStore.markers} hoveredProtest={hoveredProtest} />
-          {MKs.map((mk) => (
-            <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
-              <Popup>{mk.name}</Popup>
-            </Marker>
-          ))}
-          <Circle radius={1000} center={coordinates} />
-        </>
-      )}
-    </MapWrapper>
+      <MapWrapper
+        center={coordinates.length > 0 ? coordinates : balfur}
+        onMoveEnd={({ target }) => {
+          updateMap([target.getCenter().lat, target.getCenter().lng]);
+        }}
+        zoom={14}
+        zoomControl={false}
+      >
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {coordinates.length > 0 && (
+          <>
+            <Marker position={coordinates} icon={positionPoint}></Marker>
+            <MarkersList markers={mapStore.markers} hoveredProtest={hoveredProtest} />
+            {MKs.map((mk) => (
+              <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
+                <Popup>{mk.name}</Popup>
+              </Marker>
+            ))}
+            <Circle radius={1000} center={coordinates} />
+          </>
+        )}
+      </MapWrapper>
+    </>
   );
 }
 const AddressBarWrapper = styled(AddressBar)`
