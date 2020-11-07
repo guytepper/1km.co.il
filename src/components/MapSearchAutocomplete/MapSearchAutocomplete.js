@@ -9,23 +9,9 @@ export default function MapSearchAutocomplete({ setStreetAddress, setCoordinates
     ready,
     value,
     suggestions: { status, data },
-    clearSuggestions,
     setValue,
   } = usePlacesAutocomplete({ debounce: 900, defaultValue });
 
-  // updates value when defaultValue changes
-  // happens on the admin page when choosing a protest
-  /*React.useEffect(() => {
-    setValue(defaultValue, false);
-    clearSuggestions();
-  }, [defaultValue, setValue, clearSuggestions]);
-
-  React.useEffect(() => {
-    if (value === '') {
-      setCoordinates(null);
-    }
-  }, [value, setCoordinates]);
-*/
   const updateStreetAddress = (address) => setStreetAddress && setStreetAddress(address);
 
   const handleInput = (e) => {
@@ -87,18 +73,19 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   z-index: 10000;
   position: absolute;
   top: 20px;
-  left: 15%;
-  right: 15%;
+  left: 10%;
+  right: 5%;
 
-  width: 70%;
+  width: 90%;
   margin-bottom: 10px;
   padding: 10px 50px;
 
   border: 0px;
   border-radius: 50px;
+  font-family: Simpler, sans-serif;
   font-size: 16px;
   appearance: none;
-  box-shadow: 14px 19px 22px -7px rgba(0, 0, 0, 0.19);
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
 
   @media (min-width: 768px) {
     left: 10%;
@@ -110,8 +97,8 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
 /*1. z-index should be higher then 10000-(the input z-index)*/
 const LocationIcon = styled.img`
   z-index: 10001; /* 1 */
-  top: 29px;
-  right: calc(15% + 17px);
+  top: 31px;
+  right: calc(6.5% + 17px);
   position: absolute;
 
   height: 20px;
@@ -124,8 +111,8 @@ const LocationIcon = styled.img`
 
 const GPSIcon = styled.img`
   z-index: 10001; /* 1 */
-  top: 29px;
-  left: calc(15% + 17px);
+  top: 31px;
+  left: calc(6.5% + 17px);
   position: absolute;
 
   height: 20px;
