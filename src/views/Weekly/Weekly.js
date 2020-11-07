@@ -165,7 +165,7 @@ function Weekly() {
         </ProtestImage>
       </WeeklySection>
       <WeeklySection style={{ background: '#d83039' }} className="weekly-section" id="nationwide-section">
-        <div class="nationwide-section-text">
+        <div className="nationwide-section-text">
           <Fade triggerOnce>
             <WeeklyHeader>כל הארץ דגלים</WeeklyHeader>
             <WeeklyText>
@@ -317,7 +317,7 @@ function Weekly() {
         <CompactLiveFeed>
           {liveStore.entries.length > 0 &&
             liveStore.entries.map((entry) => (
-              <CompactLiveFeed.Card>
+              <CompactLiveFeed.Card key={entry.id}>
                 <CompactLiveFeed.Card.Image src={entry.imageUrl} />
                 <CompactLiveFeed.Card.Title style={{ height: '37.8px' }}>
                   <TimeAgo datetime={entry.createdAt} locale="he" />
