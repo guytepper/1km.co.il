@@ -36,12 +36,14 @@ const routes = [
   {
     path: ['/live', '/live/qr'],
     component: LiveEvent,
+    key: 'LIVE_EVENT',
   },
   {
     path: '/upload-image',
     component: UploadForm,
+    key: 'UPLOAD_FORM',
   },
-  { path: ['/about', '/donate', '/project-updates/:slug', '/legal-notice'], component: PostView },
+  { path: ['/about', '/donate', '/project-updates/:slug', '/legal-notice'], component: PostView, key: 'POST_VIEW' },
 ];
 
 export default routes;
