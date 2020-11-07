@@ -122,6 +122,7 @@ const SearchPlaceAutoComplete = styled(MapSearchAutocomplete)`
   position: absolute;
   top: 30px;
 `;
+
 const MapWrapper = styled(Map)`
   width: 100%;
   height: 350px;

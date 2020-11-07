@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { Map, ProtestList, IntroModal, Button, Footer } from '../../components';
+import { Map, ProtestList, IntroModal, Button } from '../../components';
 import Helmet from 'react-helmet';
 import styled from 'styled-components/macro';
 
@@ -46,7 +46,6 @@ function ProtestMap() {
             farProtests={protestStore.farProtests}
             loading={protestStore.protests?.length === 0 && protestStore.state === 'pending'}
           />
-          <Footer />
         </ProtestListWrapper>
 
         <Map hoveredProtest={hoveredProtest} />
