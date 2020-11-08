@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import heIL from 'antd/lib/locale/he_IL';
 import './index.css';
@@ -10,7 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <StoreProvider>
       <ConfigProvider locale={heIL} direction="rtl">
-        <App />
+        <Router>
+          <App />
+        </Router>
       </ConfigProvider>
     </StoreProvider>
   </React.StrictMode>,

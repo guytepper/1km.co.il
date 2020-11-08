@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
-import { Map, ProtestList, IntroModal, Button, Footer } from '../../components';
+import { Map, ProtestList, IntroModal, Button } from '../../components';
 import Helmet from 'react-helmet';
 import styled from 'styled-components/macro';
 
 function ProtestMap() {
   const store = useStore();
   const { mapStore, protestStore } = store;
-  const [modalState, setModalState] = useState(false);
 
   const hoveredProtest = useMemo(() => {
     if (!mapStore.hoveredProtestId) {
@@ -36,22 +35,15 @@ function ProtestMap() {
       </Helmet>
       <HomepageWrapper>
         <ProtestListWrapper>
-          <ProtestListHead>
-            <Button style={{ width: '100%' }} onClick={() => setModalState(true)}>
-              שינוי כתובת
-            </Button>
-          </ProtestListHead>
           <ProtestList
             closeProtests={protestStore.closeProtests}
             farProtests={protestStore.farProtests}
             loading={protestStore.protests?.length === 0 && protestStore.state === 'pending'}
           />
-          <Footer />
         </ProtestListWrapper>
 
         <Map hoveredProtest={hoveredProtest} />
       </HomepageWrapper>
-      <IntroModal isOpen={modalState} setIsOpen={setModalState} />
     </>
   );
 }
@@ -94,8 +86,4 @@ const ProtestListWrapper = styled.div`
     padding: 10px 15px 0;
     max-height: calc(100vh - 60px);
   }
-`;
-
-const ProtestListHead = styled.div`
-  margin-bottom: 8px;
 `;

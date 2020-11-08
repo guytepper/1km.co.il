@@ -18,6 +18,7 @@ import {
 import reducer from 'image-blob-reduce';
 import { getCurrentPosition, getDateString } from '../../utils';
 import queryString from 'query-string';
+import Helmet from 'react-helmet';
 
 const { Title } = Typography;
 
@@ -124,6 +125,9 @@ function UploadForm({ afterUpload, protest }) {
 
   return (
     <UploadFormWrapper>
+      <Helmet>
+        <title>העלאת תמונה</title>
+      </Helmet>
       <UploadFormSection.Header style={{ textAlign: 'center', fontWeight: 600 }}>העלאת תמונה</UploadFormSection.Header>
       <UploadFormSection>
         <Upload showUploadList={false} beforeUpload={setFile} accept="image/*">

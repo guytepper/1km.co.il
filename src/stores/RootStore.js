@@ -7,6 +7,7 @@ import userStore from './UserStore';
 
 class RootStore {
   userCoordinates = [];
+  currentPageTitle = 'קילומטר אחד';
 
   constructor() {
     makeAutoObservable(this);
@@ -30,9 +31,20 @@ class RootStore {
    * Updates the current user coordinates.
    * @param {array} coordinates - Array of [lat, lng]
    */
-  setCoordinates(coordinates) {
+  setCoordinates = (coordinates) => {
     setLocalStorage('1km_user_coordinates', coordinates);
     this.userCoordinates = coordinates;
+  };
+
+  setCurrentPageTitle(title) {
+    let pageTitle = title;
+    const hyphenIndex = title.indexOf(' -');
+
+    if (hyphenIndex > 0) {
+      pageTitle = title.substr(0, hyphenIndex);
+    }
+
+    this.currentPageTitle = pageTitle;
   }
 }
 
