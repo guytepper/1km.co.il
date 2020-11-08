@@ -9,7 +9,6 @@ import styled from 'styled-components/macro';
 function ProtestMap() {
   const store = useStore();
   const { mapStore, protestStore, userCoordinates } = store;
-  console.log(store);
   const hoveredProtest = useMemo(() => {
     if (!mapStore.hoveredProtestId) {
       return null;
