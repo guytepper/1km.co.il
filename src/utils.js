@@ -69,9 +69,9 @@ export function getDateString(date) {
   return [year, month, day].join('-');
 }
 
-export function formatDate(dateStr) {
+export function formatDate(dateStr, withYear = false) {
   const date = new Date(dateStr);
-  return `${date.getDate()}.${date.getMonth() + 1}`;
+  return `${date.getDate()}.${date.getMonth() + 1}${withYear ? '.' + date.getFullYear() : ''}`;
 }
 
 export function dateToDayOfWeek(dateStr) {
@@ -79,6 +79,10 @@ export function dateToDayOfWeek(dateStr) {
   const date = new Date(dateStr);
 
   return daysOfWeek[date.getDay()];
+}
+
+export function dateToDayOfWeekAndDate(dateStr) {
+  return `יום ${dateToDayOfWeek(dateStr)}, ${formatDate(dateStr, true)}`;
 }
 
 export function sortDateTimeList(dateTimeList) {

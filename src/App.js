@@ -157,6 +157,9 @@ function App() {
             <Route path="/protest/:id/gallery">
               <ProtestPage user={state.user} />
             </Route>
+            <Route path="/protest/:id/gallery/:date">
+              <ProtestPage user={state.user} />
+            </Route>
             <Route exact path="/sign-up">
               <SignUp />
             </Route>

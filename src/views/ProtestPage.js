@@ -87,6 +87,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
   const [latestPictures, setLatestPictures] = useState([]);
   const galleryMatch = useRouteMatch('/protest/:id/gallery');
+  const galleryDateMatch = useRouteMatch('/protest/:id/gallery/:date');
   const store = useStore();
 
   useEffect(() => {
@@ -133,7 +134,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
           </Details>
         </Info>
 
-        {galleryMatch?.isExact ? (
+        {galleryMatch?.isExact || galleryDateMatch?.isExact ? (
           <PictureGallery protestId={protest.id} date={'2020-10-31'} />
         ) : (
           <>
