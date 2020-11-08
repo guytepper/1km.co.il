@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, matchPath } from 'react-router-dom';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
 import { Image } from 'antd';
@@ -9,37 +9,38 @@ import { dateToDayOfWeekAndDate } from '../../utils';
 function PictureGallery({ protestId }) {
   const history = useHistory();
   const store = useStore();
-  const { date } = useParams();
+  const route = matchPath(history.location.pathname, {
+    path: '/protest/:id/gallery/:date',
+  });
+  const galleryDate = route ? route.params.date : null;
   const [pictures, setPictures] = useState([]);
-  const [galleryDate, setGalleryDate] = useState(date);
+  const [isGotPictures, setIsGotPictures] = useState(false);
 
   const getPictures = async () => {
     const pictureList = await getPicturesForEvent({ protestId });
     setPictures(pictureList);
+    setIsGotPictures(true);
   };
 
   useEffect(() => {
     getPictures();
   }, []);
 
-  useEffect(() => {
-    setGalleryDate(date);
-  }, [date]);
-
   const handleDateClick = (date) => {
     history.push(`${history.location.pathname}/${date}`);
   };
 
   const picArr = galleryDate ? getAllDatePics(pictures, galleryDate) : getPictureForEveryDate(pictures);
-  // if (!picArr.length && galleryDate) {
-  //   history.push(`${history.location.pathname}/gallery`);
-  // }
-  console.log('<<1', picArr, date, galleryDate);
+  if (isGotPictures && !picArr.length && galleryDate) {
+    const paths = history.location.pathname.split('/');
+    paths.pop();
+    history.push(paths.join('/'));
+  }
 
   return (
     <>
       <SectionContainer>
-        <SectionTitle>{galleryDate ? `תמונות מ${dateToDayOfWeekAndDate(date)}` : 'גלריית תמונות'}</SectionTitle>
+        <SectionTitle>{galleryDate ? `תמונות מ${dateToDayOfWeekAndDate(galleryDate)}` : 'גלריית תמונות'}</SectionTitle>
         {pictures.length > 0 && (
           <>
             {galleryDate
@@ -143,6 +144,7 @@ const DateTitle = styled.div`
   color: black;
   margin-top: 10px;
   font-weight: 600;
+  text-align: center;
 `;
 
 const ImageThumbnail = styled(Image)`
