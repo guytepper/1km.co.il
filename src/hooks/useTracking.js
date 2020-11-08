@@ -1,20 +1,24 @@
 import { useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { analytics } from '../firebase';
+import { useStore } from '../stores';
 
-export const useTracking = (trackingId = process.env.GA_MEASUREMENT_ID) => {
-  const { listen } = useHistory();
+/**
+ * Tracks page views through firebase analytics.
+ */
+
+export const useTracking = () => {
+  const store = useStore();
+  let location = useLocation();
 
   useEffect(() => {
-    const unlisten = listen((location) => {
-      if (!window.gtag) return;
-      if (!trackingId) {
-        console.log('Tracking not enabled, as `trackingId` was not given and there is no `GA_MEASUREMENT_ID`.');
-        return;
-      }
+    // Give the page title time to update after route change.
+    setTimeout(() => {
+      const page_path = location.pathname;
+      const page_title = store.currentPageTitle;
+      analytics.logEvent('page_view', { page_path, page_title });
+    }, 500);
 
-      window.gtag('config', trackingId, { page_path: location.pathname });
-    });
-
-    return unlisten;
-  }, [trackingId, listen]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 };

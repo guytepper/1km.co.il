@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, PageParagraph } from '../';
+import { Button, PageParagraph, LoadingSpinner } from '../';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore } from '../../api';
-import LoadingSpinner from '../LoadingSpinner';
 
 function SignUpBeforeRedirect({ returnUrl, onAnnonymousClick }) {
   return (

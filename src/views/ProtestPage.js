@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../stores';
 import styled from 'styled-components/macro';
@@ -11,7 +11,7 @@ import {
   updateProtest,
   getLatestProtestPictures,
 } from '../api';
-import { Map, Marker, TileLayer } from 'react-leaflet';
+import { Map, Marker, Polyline, TileLayer } from 'react-leaflet';
 import { ProtectedRoute, ProtestForm, PictureGallery } from '../components';
 import {
   ProtestCardDetail,
@@ -84,6 +84,9 @@ function getFutureDates(dateTimeList) {
 
 function ProtestPageContent({ protest, user, userCoordinates }) {
   const history = useHistory();
+  const mapElement = useRef(null);
+  const polylineElement = useRef(null);
+  const [polyPositions, setPolyPositions] = useState([]);
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
   const [latestPictures, setLatestPictures] = useState([]);
   const galleryMatch = useRouteMatch('/protest/:id/gallery');
@@ -99,16 +102,40 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
     getLatestPictures();
   }, [protest]);
 
+  useEffect(() => {
+    if (protest.positions?.length > 0) {
+      const polyPositions = protest.positions.map((p) => [p.latlng.latitude, p.latlng.longitude]);
+      setPolyPositions(polyPositions);
+    }
+  }, [protest]);
+
+  useEffect(() => {
+    if (polyPositions.length > 0 && polylineElement.current) {
+      const polyBounds = polylineElement.current.leafletElement.getBounds();
+      mapElement.current.leafletElement.flyToBounds(polyBounds);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [polyPositions]);
+
   const futureDates = getFutureDates(dateTimeList);
 
   return (
     <ProtestPageContainer>
-      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14}>
+      <MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14} ref={mapElement}>
         <TileLayer
           attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
+        {polyPositions.length > 0 && (
+          <>
+            <Polyline ref={polylineElement} positions={polyPositions} />
+            {polyPositions.map((position) => (
+              <Marker position={{ lat: position[0], lng: position[1] }} key={position[0]}></Marker>
+            ))}
+          </>
+        )}
       </MapWrapper>
 
       <ProtestContainer>
@@ -226,10 +253,11 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   );
 }
 
-function ProtestPage({ user }) {
+function ProtestPage() {
   const { protest, setProtest } = useFetchProtest();
   const store = useStore();
   const history = useHistory();
+  const { user } = store.userStore;
 
   // const { onFileUpload } = useFileUpload(false);
   if (!protest) {

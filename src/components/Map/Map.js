@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import { pointWithinRadius } from '../../utils';
@@ -6,6 +6,7 @@ import { Map, Circle, TileLayer, Marker, Popup } from 'react-leaflet';
 import styled from 'styled-components/macro';
 import MKs from './MKs.json';
 import L from 'leaflet';
+import AddressBar from './AddressBar';
 import ProtestCard from '../ProtestCard';
 
 const protestPoint = ({ iconUrl, iconRetinaUrl, iconSize, iconAnchor }) =>
@@ -62,6 +63,7 @@ const balfur = [31.7749837, 35.219797];
 function AppMap({ hoveredProtest }) {
   const store = useStore();
   const { mapStore, protestStore, userCoordinates: coordinates } = store;
+  const addressInputRef = useRef(); // Search Bar ref, used by the combobox
 
   const updateMap = (currentMapPosition) => {
     // The following if condition is a 'hack' to check if the userCoordinates have just updated their position
@@ -82,34 +84,38 @@ function AppMap({ hoveredProtest }) {
   };
 
   return (
-    <MapWrapper
-      center={coordinates.length > 0 ? coordinates : balfur}
-      onMoveEnd={({ target }) => {
-        updateMap([target.getCenter().lat, target.getCenter().lng]);
-      }}
-      zoom={14}
-    >
-      <TileLayer
-        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      {coordinates.length > 0 && (
-        <>
-          <Marker position={coordinates} icon={positionPoint}></Marker>
-          <MarkersList markers={mapStore.markers} hoveredProtest={hoveredProtest} />
-          {MKs.map((mk) => (
-            <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
-              <Popup>{mk.name}</Popup>
-            </Marker>
-          ))}
-          <Circle radius={1000} center={coordinates} />
-        </>
-      )}
+    <MapWrapper>
+      <AddressBar inputRef={addressInputRef} />
+      <MapElement
+        center={coordinates.length > 0 ? coordinates : balfur}
+        onMoveEnd={({ target }) => {
+          updateMap([target.getCenter().lat, target.getCenter().lng]);
+        }}
+        zoom={14}
+        zoomControl={false}
+      >
+        <TileLayer
+          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        {coordinates.length > 0 && (
+          <>
+            <Marker position={coordinates} icon={positionPoint}></Marker>
+            <MarkersList markers={mapStore.markers} hoveredProtest={hoveredProtest} />
+            {MKs.map((mk) => (
+              <Marker position={mk.position} icon={new L.icon(mk.icon)} key={mk.position[0]}>
+                <Popup>{mk.name}</Popup>
+              </Marker>
+            ))}
+            <Circle radius={1000} center={coordinates} />
+          </>
+        )}
+      </MapElement>
     </MapWrapper>
   );
 }
 
-const MapWrapper = styled(Map)`
+const MapWrapper = styled.div`
   width: 100%;
   height: 350px;
   grid-row: 1;
@@ -118,7 +124,19 @@ const MapWrapper = styled(Map)`
 
   @media (min-width: 768px) {
     height: 100%;
+
+    display: grid;
+    grid-template-columns: 0.2fr 1fr 0.2fr;
+    grid-template-rows: 25px 50px 1fr;
   }
+`;
+
+const MapElement = styled(Map)`
+  width: 100%;
+  height: 100%;
+
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
 `;
 
 export default observer(AppMap);

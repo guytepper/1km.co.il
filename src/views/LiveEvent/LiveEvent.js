@@ -7,6 +7,7 @@ import { CheckInModal, Button } from '../../components';
 import { PictureFeed, CheckInList, WithMeList } from './';
 import { getLocalStorage, setLocalStorage } from '../../localStorage';
 import { LiveEventWrapper, LiveEventHeader, LiveEventMessage, LiveCurrentView } from './LiveEventElements';
+import Helmet from 'react-helmet';
 
 const VIEWS = {
   feed: 'liveFeed',
@@ -28,13 +29,15 @@ function renderView({ currentView, currentProtest, checkIns }) {
   }
 }
 
-function LiveEvent({ user, closeProtests }) {
+function LiveEvent() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [currentProtest, setProtest] = useState(null);
   const [currentView, setCurrentView] = useState(VIEWS.pictures);
   // const [checkIns, setCheckIns] = useState([]);
   // const [hasCheckedIn, setCheckedIn] = useState(false);
   const store = useStore();
+  const { user } = store.userStore;
+
   const wrapper = useRef(null);
   const history = useHistory();
 
@@ -90,6 +93,10 @@ function LiveEvent({ user, closeProtests }) {
 
   return (
     <LiveEventWrapper ref={wrapper}>
+      <Helmet>
+        <title>פיד מחאה</title>
+      </Helmet>
+
       <LiveEventHeader>
         <LiveEventHeader.Button selected={currentView === VIEWS.pictures} onClick={() => setCurrentView(VIEWS.pictures)}>
           <LiveEventHeader.Button.Icon src="/icons/image-gallery.svg" />
