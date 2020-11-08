@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useParams, matchPath } from 'react-router-dom';
+import { useHistory, matchPath } from 'react-router-dom';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
 import { Image } from 'antd';
