@@ -81,10 +81,10 @@ function getFutureDates(dateTimeList) {
       const now = new Date();
       const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
 
-      const demoDate = new Date(dateTime.date);
-      const demoDateNoTime = new Date(Date.UTC(demoDate.getUTCFullYear(), demoDate.getUTCMonth(), demoDate.getUTCDate()));
+      const protestDate = new Date(dateTime.date);
+      const protestDay = new Date(Date.UTC(protestDate.getUTCFullYear(), protestDate.getUTCMonth(), protestDate.getUTCDate()));
 
-      return demoDateNoTime >= today;
+      return protestDay >= today;
     });
   }
   return [];
