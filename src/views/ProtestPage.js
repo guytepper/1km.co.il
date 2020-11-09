@@ -29,6 +29,7 @@ import {
   isVisitor,
   sortDateTimeList,
 } from '../utils';
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
 import { Image } from 'antd';
 
 function getEditButtonLink(user, protest) {
@@ -261,7 +262,7 @@ function ProtestPage() {
   // const { onFileUpload } = useFileUpload(false);
   if (!protest) {
     // TODO: loading state
-    return <div>טוען...</div>;
+    return <LoadingSpinner />;
   }
 
   const { coordinates, id: protestId } = protest;
