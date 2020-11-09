@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useStore } from '../stores';
-import { Button, PageWrapper, PageContentWrapper, PageParagraph, LoadingSpinner } from '../components';
+import { Button, PageWrapper, PageContentWrapper, LoadingSpinner } from '../components';
 import { Modal, Button as AntButton, Form, Input, Typography } from 'antd';
 import { extractUserData, getUserFromRedirect, handleSignIn, saveUserInFirestore, updateUserName } from '../api';
 import styled from 'styled-components/macro';
@@ -116,6 +116,8 @@ export default function SignUp(props) {
       .catch((error) => {
         console.log(error);
       });
+
+    //  eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history.pathname]);
 
   if (stage === stages.UNKNOWN) {
