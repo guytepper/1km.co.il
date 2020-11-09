@@ -10,7 +10,7 @@ class LiveStore {
     this.rootStore = rootStore;
   }
 
-  fetchEntries({ offset }) {
+  fetchEntries() {
     const livePictures = realtimeDB.ref('live_feed').orderByChild('createdAt').limitToLast(10);
 
     livePictures.once('value', (dataSnapshot) => {
