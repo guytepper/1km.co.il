@@ -36,6 +36,7 @@ function ProtestMap() {
         store.setCoordinates(coordinates);
       }
     };
+
     setCoordinates();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
