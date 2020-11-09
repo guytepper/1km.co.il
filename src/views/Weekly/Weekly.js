@@ -46,10 +46,14 @@ function Weekly() {
           <title>יומן מחאה</title>
         </Helmet>
       )}
-      <HeroImage>
+      <HeroImage
+        style={{
+          backgroundImage: 'url(https://res.cloudinary.com/onekm/image/upload/v1604923763/weekend_pictures/07-11-2020/bb.jpg)',
+        }}
+      >
         <HeroImage.TextWrapper>
           <HeroImage.Title>יומן מחאה</HeroImage.Title>
-          <HeroImage.Subtitle>29-31.10.20</HeroImage.Subtitle>
+          <HeroImage.Subtitle>01-07.11.20</HeroImage.Subtitle>
         </HeroImage.TextWrapper>
       </HeroImage>
       <WeeklySection
