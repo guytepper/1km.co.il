@@ -69,6 +69,12 @@ export function getDateString(date) {
   return [year, month, day].join('-');
 }
 
+/**
+ * Get a date UI string,from a parseable to Date type of string, fomratted as DD.MM.
+ * @param {string} dateStr - The date string to parse to Date (can use the YYYY-MM-DD).
+ * @param {boolean} withYear - Optional to include year in format (DD.MM.YYYY).
+ * @returns {string} The date formatted as DD.MM or DD.MM.YYYY string.
+ */
 export function formatDate(dateStr, withYear = false) {
   const date = new Date(dateStr);
   return `${date.getDate()}.${date.getMonth() + 1}${withYear ? '.' + date.getFullYear() : ''}`;
@@ -81,6 +87,11 @@ export function dateToDayOfWeek(dateStr) {
   return daysOfWeek[date.getDay()];
 }
 
+/**
+ * Get a date and day of the week UI string,from a parseable to Date type of string.
+ * @param {string} dateStr - The date string to parse to Date (can use the YYYY-MM-DD).
+ * @returns {string} The date and day formatted as יום שני, DD.MM.YYYY
+ */
 export function dateToDayOfWeekAndDate(dateStr) {
   return `יום ${dateToDayOfWeek(dateStr)}, ${formatDate(dateStr, true)}`;
 }

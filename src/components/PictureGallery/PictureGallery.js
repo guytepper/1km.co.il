@@ -5,6 +5,7 @@ import styled from 'styled-components/macro';
 import { Image } from 'antd';
 import { getPicturesForEvent } from '../../api';
 import { dateToDayOfWeekAndDate } from '../../utils';
+import { getGalleryThumbnails, getPicturesForDate } from './PictureGalleryUtils';
 
 function PictureGallery({ protestId }) {
   const history = useHistory();
@@ -12,14 +13,14 @@ function PictureGallery({ protestId }) {
   const route = matchPath(history.location.pathname, {
     path: '/protest/:id/gallery/:date',
   });
-  const galleryDate = route ? route.params.date : null;
+  const galleryDate = route?.params.date;
   const [pictures, setPictures] = useState([]);
-  const [isGotPictures, setIsGotPictures] = useState(false);
+  const [picturesFetchState, setPicturesFetchState] = useState(false);
 
   const getPictures = async () => {
     const pictureList = await getPicturesForEvent({ protestId });
     setPictures(pictureList);
-    setIsGotPictures(true);
+    setPicturesFetchState(true);
   };
 
   useEffect(() => {
@@ -30,8 +31,8 @@ function PictureGallery({ protestId }) {
     history.push(`${history.location.pathname}/${date}`);
   };
 
-  const picArr = galleryDate ? getAllDatePics(pictures, galleryDate) : getPictureForEveryDate(pictures);
-  if (isGotPictures && !picArr.length && galleryDate) {
+  const picArr = galleryDate ? getPicturesForDate(pictures, galleryDate) : getGalleryThumbnails(pictures);
+  if (picturesFetchState && !picArr.length && galleryDate) {
     const paths = history.location.pathname.split('/');
     paths.pop();
     history.push(paths.join('/'));
@@ -80,23 +81,6 @@ function ImageDateSection({ src, date, onClick }) {
   );
 }
 
-function getPictureForEveryDate(pictures) {
-  const datesValidation = [];
-  const picturesForEveryDate = [];
-  pictures.forEach((picture) => {
-    if (!datesValidation.includes(picture.eventDate)) {
-      datesValidation.push(picture.eventDate);
-      picturesForEveryDate.push(picture);
-    }
-  });
-
-  return picturesForEveryDate;
-}
-
-function getAllDatePics(pictures, date) {
-  return pictures.filter((picture) => picture.eventDate === date);
-}
-
 export default PictureGallery;
 
 const SectionContainer = styled.div`
@@ -139,10 +123,10 @@ const ImageDateContainer = styled.div`
 `;
 
 const DateTitle = styled.div`
+  margin-top: 10px;
   font-size: 16px;
   line-height: 19px;
   color: black;
-  margin-top: 10px;
   font-weight: 600;
   text-align: center;
 `;

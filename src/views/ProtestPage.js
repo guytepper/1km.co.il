@@ -162,7 +162,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
         </Info>
 
         {galleryMatch?.isExact || galleryDateMatch?.isExact ? (
-          <PictureGallery protestId={protest.id} date={'2020-10-31'} />
+          <PictureGallery protestId={protest.id} />
         ) : (
           <>
             <SectionContainer style={{ marginTop: 20 }}>
