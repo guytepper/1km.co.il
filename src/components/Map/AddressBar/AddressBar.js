@@ -109,7 +109,7 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 2px #b8c0fc;
+    box-shadow: 0 0 0 3px #b8c0fc;
   }
 
   @media (min-width: 768px) {
