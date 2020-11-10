@@ -1,7 +1,7 @@
 /**
  * Get a Picture array - first one of each date.
- * @param {Picture[]} pictures - An array of picture objects.
- * @returns {Picture[]} - one for of each date
+ * @param {array} pictures - An array of picture objects.
+ * @returns {array} - one for of each date
  */
 export function getGalleryThumbnails(pictures) {
   const uniqueDates = [];
@@ -18,9 +18,9 @@ export function getGalleryThumbnails(pictures) {
 
 /**
  * Get a Picture array for specific date.
- * @param {Picture[]} pictures - An array of picture objects.
+ * @param {array} pictures - An array of picture objects.
  * @param {string} date - For the date you want - format YYYY-MM-DD.
- * @returns {Picture[]} - All the picture of the date.
+ * @returns {array} - All the picture of the date.
  */
 export function getPicturesForDate(pictures, date) {
   return pictures.filter((picture) => picture.eventDate === date);
