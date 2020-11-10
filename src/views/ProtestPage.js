@@ -29,7 +29,7 @@ import {
   isVisitor,
   sortDateTimeList,
 } from '../utils';
-import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 import { Image } from 'antd';
 
 function getEditButtonLink(user, protest) {
@@ -262,7 +262,12 @@ function ProtestPage() {
   // const { onFileUpload } = useFileUpload(false);
   if (!protest) {
     // TODO: loading state
-    return <LoadingSpinner />;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '25px 0' }}>
+        <p style={{ fontSize: 17 }}>טוען ...</p>
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   const { coordinates, id: protestId } = protest;
