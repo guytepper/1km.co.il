@@ -25,6 +25,8 @@ function PictureGallery({ protestId }) {
 
   useEffect(() => {
     getPictures();
+
+    //  eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDateClick = (date) => {

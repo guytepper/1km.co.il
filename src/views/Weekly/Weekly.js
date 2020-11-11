@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import Helmet from 'react-helmet';
 import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
-import { Fade, Slide } from 'react-awesome-reveal';
+import { Fade } from 'react-awesome-reveal';
 import { Avatar } from 'antd';
 import { Button } from '../../components';
 import {
@@ -35,6 +35,8 @@ function Weekly() {
 
   useEffect(() => {
     liveStore.fetchEntries({ offset: 0 });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

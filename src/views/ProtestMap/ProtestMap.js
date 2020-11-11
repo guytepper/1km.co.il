@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { observer } from 'mobx-react-lite';
+import { getCurrentPosition } from '../../utils';
 import { useStore } from '../../stores';
-import { Map, ProtestList, IntroModal, Button } from '../../components';
+import { Map, ProtestList } from '../../components';
 import Helmet from 'react-helmet';
 import styled from 'styled-components/macro';
 
 function ProtestMap() {
   const store = useStore();
-  const { mapStore, protestStore } = store;
-
+  const { mapStore, protestStore, userCoordinates } = store;
   const hoveredProtest = useMemo(() => {
     if (!mapStore.hoveredProtestId) {
       return null;
@@ -26,8 +26,22 @@ function ProtestMap() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [store.userCoordinates]);
+  }, [userCoordinates]);
 
+  // Ask for user location on map initial load
+  useEffect(() => {
+    const setCoordinates = async () => {
+      if (userCoordinates.length === 0) {
+        const coordinates = await getCurrentPosition();
+        store.setCoordinates(coordinates);
+      }
+    };
+
+    setCoordinates();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
   return (
     <>
       <Helmet>
