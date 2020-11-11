@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, matchPath } from 'react-router-dom';
 import { useStore } from '../../stores';
 import styled from 'styled-components/macro';
 import { Image } from 'antd';
 import { getPicturesForEvent } from '../../api';
+import { dateToDayOfWeekAndDate } from '../../utils';
+import { getGalleryThumbnails, getPicturesForDate } from './PictureGalleryUtils';
 
-function PictureGallery({ protestId, date }) {
-  const [pictures, setPictures] = useState([]);
+function PictureGallery({ protestId }) {
   const history = useHistory();
   const store = useStore();
+  const route = matchPath(history.location.pathname, {
+    path: '/protest/:id/gallery/:date',
+  });
+  const galleryDate = route?.params.date;
+  const [pictures, setPictures] = useState([]);
+  const [picturesFetchState, setPicturesFetchState] = useState(false);
 
   const getPictures = async () => {
-    const pictureList = await getPicturesForEvent({ protestId, date });
+    const pictureList = await getPicturesForEvent({ protestId });
     setPictures(pictureList);
+    setPicturesFetchState(true);
   };
 
   useEffect(() => {
@@ -21,11 +29,34 @@ function PictureGallery({ protestId, date }) {
     //  eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleDateClick = (date) => {
+    history.push(`${history.location.pathname}/${date}`);
+  };
+
+  const picArr = galleryDate ? getPicturesForDate(pictures, galleryDate) : getGalleryThumbnails(pictures);
+  if (picturesFetchState && !picArr.length && galleryDate) {
+    const paths = history.location.pathname.split('/');
+    paths.pop();
+    history.push(paths.join('/'));
+  }
+
   return (
     <>
       <SectionContainer>
-        <SectionTitle>תמונות אחרונות</SectionTitle>
-        {pictures.length > 0 ? pictures.map((picture) => <ImageThumbnail src={picture.imageUrl} />) : null}
+        <SectionTitle>{galleryDate ? `תמונות מ${dateToDayOfWeekAndDate(galleryDate)}` : 'גלריית תמונות'}</SectionTitle>
+        {pictures.length > 0 && (
+          <>
+            {galleryDate
+              ? picArr.map((picture) => <ImageThumbnail src={picture.imageUrl} />)
+              : picArr.map((picture) => (
+                  <ImageDateSection
+                    src={picture.imageUrl}
+                    date={picture.eventDate}
+                    onClick={() => handleDateClick(picture.eventDate)}
+                  />
+                ))}
+          </>
+        )}
         <EditButton
           onClick={async () => {
             store.userStore.setUserProtestById(protestId);
@@ -40,6 +71,15 @@ function PictureGallery({ protestId, date }) {
         </EditButton>
       </SectionContainer>
     </>
+  );
+}
+
+function ImageDateSection({ src, date, onClick }) {
+  return (
+    <ImageDateContainer onClick={onClick}>
+      <ImageThumbnail src={src} />
+      <DateTitle>{dateToDayOfWeekAndDate(date)}</DateTitle>
+    </ImageDateContainer>
   );
 }
 
@@ -75,6 +115,22 @@ const SectionTitle = styled.div`
   align-items: center;
   margin-bottom: 20px;
   grid-column: 1 / -1;
+`;
+
+const ImageDateContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+`;
+
+const DateTitle = styled.div`
+  margin-top: 10px;
+  font-size: 16px;
+  line-height: 19px;
+  color: black;
+  font-weight: 600;
+  text-align: center;
 `;
 
 const ImageThumbnail = styled(Image)`
