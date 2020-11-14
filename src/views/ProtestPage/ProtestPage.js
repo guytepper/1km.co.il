@@ -4,41 +4,25 @@ import { observer } from 'mobx-react-lite';
 import { useStore } from '../../stores';
 import * as S from './ProtestPage.style';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import {
-  fetchProtest,
-  getProtestsForLeader,
-  makeUserProtestLeader,
-  sendProtestLeaderRequest,
-  updateProtest,
-  getLatestProtestPictures,
-} from '../../api';
+import * as api from '../../api';
 import { Marker, Polyline, TileLayer } from 'react-leaflet';
 import { ProtectedRoute, ProtestForm, PictureGallery } from '../../components';
+import * as utils from '../../utils';
 import {
   ProtestCardDetail,
   ProtestCardGroupButton,
   ProtestCardIcon,
   ProtestCardInfo,
 } from '../../components/ProtestCard/ProtestCardStyles';
-import {
-  calculateDistance,
-  dateToDayOfWeek,
-  formatDate,
-  formatDistance,
-  isAdmin,
-  isAuthenticated,
-  isVisitor,
-  sortDateTimeList,
-} from '../../utils';
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
 
-  if (isAdmin(user) || isAuthenticated(user)) {
+  if (utils.isAdmin(user) || utils.isAuthenticated(user)) {
     return editRoute;
   }
 
-  if (isVisitor(user)) {
+  if (utils.isVisitor(user)) {
     // Sign up before redirected to leader request
     return `/sign-up?returnUrl=${editRoute}`;
   }
@@ -47,7 +31,7 @@ function getEditButtonLink(user, protest) {
 }
 
 async function _fetchProtest(id, setProtest) {
-  const protest = await fetchProtest(id);
+  const protest = await api.fetchProtest(id);
 
   if (protest) {
     setProtest(protest);
@@ -68,7 +52,7 @@ function useFetchProtest() {
     protest: protest
       ? {
           ...protest,
-          dateTimeList: sortDateTimeList(protest.dateTimeList),
+          dateTimeList: utils.sortDateTimeList(protest.dateTimeList),
         }
       : null,
     setProtest,
@@ -103,7 +87,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
 
   useEffect(() => {
     async function getLatestPictures() {
-      const pictures = await getLatestProtestPictures(protest.id);
+      const pictures = await api.getLatestProtestPictures(protest.id);
       setLatestPictures(pictures);
     }
 
@@ -162,7 +146,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
               {userCoordinates.length > 0 && (
                 <ProtestCardDetail>
                   <ProtestCardIcon src="/icons/ruler.svg" alt="" />
-                  {formatDistance(calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
+                  {utils.formatDistance(utils.calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
                 </ProtestCardDetail>
               )}
               {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
@@ -220,8 +204,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
                     futureDates.map((dateTime) => (
                       <S.DateCard key={dateTime.id}>
                         <S.DateText>
-                          <h3 style={{ display: 'inline-block', margin: 0 }}>{formatDate(dateTime.date)}</h3> - יום{' '}
-                          {dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
+                          <h3 style={{ display: 'inline-block', margin: 0 }}>{utils.formatDate(dateTime.date)}</h3> - יום{' '}
+                          {utils.dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
                         </S.DateText>
                       </S.DateCard>
                     ))
@@ -279,7 +263,7 @@ function ProtestPage() {
   }
 
   const { coordinates, id: protestId } = protest;
-  const canEdit = !isVisitor(user);
+  const canEdit = !utils.isVisitor(user);
 
   return (
     <Switch>
@@ -289,19 +273,19 @@ function ProtestPage() {
             initialCoords={[coordinates.latitude, coordinates.longitude]}
             submitCallback={async (params) => {
               // If the user is not a leader for this protest, check if they've reached the amount of protests limit.
-              if (!protest.roles?.leader.includes(user.uid) && !isAdmin(user)) {
-                const userProtests = await getProtestsForLeader(user.uid);
+              if (!protest.roles?.leader.includes(user.uid) && !utils.isAdmin(user)) {
+                const userProtests = await api.getProtestsForLeader(user.uid);
 
                 if (userProtests.length > 4) {
                   alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
                   throw new Error('Reached the max amount of protests a user can lead');
                 }
 
-                await sendProtestLeaderRequest(user, null, protestId);
-                await makeUserProtestLeader(protestId, user.uid);
+                await api.sendProtestLeaderRequest(user, null, protestId);
+                await api.makeUserProtestLeader(protestId, user.uid);
               }
 
-              const response = await updateProtest({ protestId, params, userId: user.uid });
+              const response = await api.updateProtest({ protestId, params, userId: user.uid });
 
               // Refetch the protest once update is complete
               _fetchProtest(protestId, setProtest);
@@ -311,7 +295,7 @@ function ProtestPage() {
             afterSubmitCallback={() => history.push(`/protest/${protestId}`)}
             defaultValues={protest}
             editMode={true}
-            isAdmin={isAdmin(user)}
+            isAdmin={utils.isAdmin(user)}
           />
         </S.EditViewContainer>
       </ProtectedRoute>
