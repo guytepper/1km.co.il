@@ -26,7 +26,6 @@ function getEditButtonLink(user, protest) {
     // Sign up before redirected to leader request
     return `/sign-up?returnUrl=${editRoute}`;
   }
-
   throw new Error(`couldn't find route`);
 }
 
@@ -264,6 +263,27 @@ function ProtestPage() {
 
   const { coordinates, id: protestId } = protest;
   const canEdit = !utils.isVisitor(user);
+  const handleSubmit = async (params) => {
+    // If the user is not a leader for this protest, check if they've reached the amount of protests limit.
+    if (!protest.roles?.leader.includes(user.uid) && !utils.isAdmin(user)) {
+      const userProtests = await api.getProtestsForLeader(user.uid);
+
+      if (userProtests.length > 4) {
+        alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
+        throw new Error('Reached the max amount of protests a user can lead');
+      }
+
+      await api.sendProtestLeaderRequest(user, null, protestId);
+      await api.makeUserProtestLeader(protestId, user.uid);
+    }
+
+    const response = await api.updateProtest({ protestId, params, userId: user.uid });
+
+    // Refetch the protest once update is complete
+    _fetchProtest(protestId, setProtest);
+
+    return response;
+  };
 
   return (
     <Switch>
@@ -271,27 +291,7 @@ function ProtestPage() {
         <S.EditViewContainer>
           <ProtestForm
             initialCoords={[coordinates.latitude, coordinates.longitude]}
-            submitCallback={async (params) => {
-              // If the user is not a leader for this protest, check if they've reached the amount of protests limit.
-              if (!protest.roles?.leader.includes(user.uid) && !utils.isAdmin(user)) {
-                const userProtests = await api.getProtestsForLeader(user.uid);
-
-                if (userProtests.length > 4) {
-                  alert('לא ניתן לערוך מידע על יותר מ- 5 הפגנות.\n צרו איתנו קשר אם ישנו צורך לערוך הפגנות מעבר למכסה.');
-                  throw new Error('Reached the max amount of protests a user can lead');
-                }
-
-                await api.sendProtestLeaderRequest(user, null, protestId);
-                await api.makeUserProtestLeader(protestId, user.uid);
-              }
-
-              const response = await api.updateProtest({ protestId, params, userId: user.uid });
-
-              // Refetch the protest once update is complete
-              _fetchProtest(protestId, setProtest);
-
-              return response;
-            }}
+            submitCallback={(params) => handleSubmit(params)}
             afterSubmitCallback={() => history.push(`/protest/${protestId}`)}
             defaultValues={protest}
             editMode={true}
