@@ -12,6 +12,8 @@ export { default as ProtestCard } from './ProtestCard';
 export { default as ProtestList } from './ProtestList';
 export { default as ProtectedRoute } from './ProtectedRoute';
 export { default as ProtestForm } from './ProtestForm';
+export { default as ProtestMap } from './ProtestMap';
+export { default as ProtestInfo } from './ProtestInfo';
 export { default as SignUp } from './SignUp';
 export { default as ScrollToTop } from './ScrollToTop';
 export { default as LoadingSpinner } from './LoadingSpinner';

@@ -1,5 +1,4 @@
 import styled from 'styled-components/macro';
-import { Map } from 'react-leaflet';
 import { Image } from 'antd';
 
 export const EditViewContainer = styled.div`
@@ -20,35 +19,6 @@ export const ProtestContainer = styled.div`
   @media (min-width: 1024px) {
     max-width: 920px;
   }
-`;
-
-export const Info = styled.div`
-  position: relative;
-  padding: 20px 34px;
-  background: #ffffff;
-  box-shadow: 0px 4px 10px -1px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  margin-top: -30px;
-  z-index: 5;
-
-  @media (min-width: 600px) {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-  }
-`;
-
-export const Title = styled.h1`
-  font-weight: bold;
-  font-size: 28px;
-  line-height: 47px;
-  color: #000000;
-  margin-bottom: 8px;
-`;
-
-export const MapWrapper = styled(Map)`
-  width: 100%;
-  height: 256px;
-  z-index: 0;
 `;
 
 export const EditButton = styled.button`
@@ -100,8 +70,6 @@ export const SectionTitle = styled.div`
     margin-left: 9px;
   }
 `;
-
-export const Details = styled.div``;
 
 export const DatesAndSocial = styled.div`
   margin-top: 24px;

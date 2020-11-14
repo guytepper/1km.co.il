@@ -1,24 +1,17 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Route, Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
+import { Switch, useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import * as api from '../../api';
+import * as utils from '../../utils';
 import { useStore } from '../../stores';
 import * as S from './ProtestPage.style';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import * as api from '../../api';
-import { Marker, Polyline, TileLayer } from 'react-leaflet';
-import { ProtectedRoute, ProtestForm, PictureGallery } from '../../components';
-import * as utils from '../../utils';
-import {
-  ProtestCardDetail,
-  ProtestCardGroupButton,
-  ProtestCardIcon,
-  ProtestCardInfo,
-} from '../../components/ProtestCard/ProtestCardStyles';
+import { ProtestCardGroupButton, ProtestCardIcon } from '../../components/ProtestCard/ProtestCardStyles';
+import { ProtectedRoute, ProtestForm, PictureGallery, ProtestMap, ProtestInfo, LoadingSpinner } from '../../components';
 
 function getEditButtonLink(user, protest) {
   const editRoute = `/protest/${protest.id}/edit`;
 
-  if (utils.isAdmin(user) || utils.isAuthenticated(user)) {
+  if (!utils.isAdmin(user) || utils.isAuthenticated(user)) {
     return editRoute;
   }
 
@@ -113,45 +106,21 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
 
   return (
     <S.ProtestPageContainer>
-      <S.MapWrapper center={{ lat: coordinates.latitude, lng: coordinates.longitude }} zoom={14} ref={mapElement}>
-        <TileLayer
-          attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        <Marker position={{ lat: coordinates.latitude, lng: coordinates.longitude }}></Marker>
-        {polyPositions.length > 0 && (
-          <>
-            <Polyline ref={polylineElement} positions={polyPositions} />
-            {polyPositions.map((position) => (
-              <Marker position={{ lat: position[0], lng: position[1] }} key={position[0]}></Marker>
-            ))}
-          </>
-        )}
-      </S.MapWrapper>
+      <ProtestMap
+        coordinates={coordinates}
+        mapElement={mapElement}
+        polylineElement={polylineElement}
+        polyPositions={polyPositions}
+      />
 
       <S.ProtestContainer>
-        S.{' '}
-        <S.Info>
-          {/* <ProfilePic src="/protest-profile-pic.png" alt="Protester with flag getting sprayed" /> */}
-          <S.Details>
-            <S.Title>{displayName}</S.Title>
-            <ProtestCardInfo>
-              {streetAddress && (
-                <ProtestCardDetail>
-                  <ProtestCardIcon src="/icons/location.svg" alt="" aria-hidden="true" title="מיקום ההפגנה" />
-                  {streetAddress}
-                </ProtestCardDetail>
-              )}
-              {userCoordinates.length > 0 && (
-                <ProtestCardDetail>
-                  <ProtestCardIcon src="/icons/ruler.svg" alt="" />
-                  {utils.formatDistance(utils.calculateDistance(userCoordinates, [coordinates.latitude, coordinates.longitude]))}
-                </ProtestCardDetail>
-              )}
-              {notes && <ProtestCardDetail style={{ textAlign: 'center' }}>{notes}</ProtestCardDetail>}
-            </ProtestCardInfo>
-          </S.Details>
-        </S.Info>
+        <ProtestInfo
+          coordinates={coordinates}
+          displayName={displayName}
+          streetAddress={streetAddress}
+          userCoordinates={userCoordinates}
+          notes={notes}
+        />
         {galleryMatch?.isExact || galleryDateMatch?.isExact ? (
           <PictureGallery protestId={protest.id} />
         ) : (
@@ -299,9 +268,8 @@ function ProtestPage() {
           />
         </S.EditViewContainer>
       </ProtectedRoute>
-      <Route>
-        <ProtestPageContent protest={protest} userCoordinates={store.userCoordinates} user={user} />
-      </Route>
+
+      <ProtestPageContent protest={protest} userCoordinates={store.userCoordinates} user={user} />
     </Switch>
   );
 }
