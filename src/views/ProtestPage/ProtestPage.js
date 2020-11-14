@@ -5,22 +5,17 @@ import * as api from '../../api';
 import * as utils from '../../utils';
 import { useStore } from '../../stores';
 import * as S from './ProtestPage.style';
-import { ProtestCardGroupButton, ProtestCardIcon } from '../../components/ProtestCard/ProtestCardStyles';
-import { ProtectedRoute, ProtestForm, PictureGallery, ProtestMap, ProtestInfo, LoadingSpinner } from '../../components';
-
-function getEditButtonLink(user, protest) {
-  const editRoute = `/protest/${protest.id}/edit`;
-
-  if (!utils.isAdmin(user) || utils.isAuthenticated(user)) {
-    return editRoute;
-  }
-
-  if (utils.isVisitor(user)) {
-    // Sign up before redirected to leader request
-    return `/sign-up?returnUrl=${editRoute}`;
-  }
-  throw new Error(`couldn't find route`);
-}
+import ProtestLatestPictures from './ProtestLatestPictures';
+import {
+  ProtectedRoute,
+  ProtestForm,
+  PictureGallery,
+  ProtestMap,
+  ProtestInfo,
+  ProtestDates,
+  LoadingSpinner,
+  ProtestLatestPictures,
+} from '../../components';
 
 async function _fetchProtest(id, setProtest) {
   const protest = await api.fetchProtest(id);
@@ -75,7 +70,6 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   const [latestPictures, setLatestPictures] = useState([]);
   const galleryMatch = useRouteMatch('/protest/:id/gallery');
   const galleryDateMatch = useRouteMatch('/protest/:id/gallery/:date');
-  const store = useStore();
 
   useEffect(() => {
     async function getLatestPictures() {
@@ -125,87 +119,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
           <PictureGallery protestId={protest.id} />
         ) : (
           <>
-            <S.SectionContainer style={{ marginTop: 20 }}>
-              <S.SectionTitle>
-                <img src="/icons/photo-gallery-blueish.svg" alt="" />
-                תמונות אחרונות מההפגנה
-              </S.SectionTitle>
-
-              {latestPictures.length > 0 ? (
-                <>
-                  <S.LatestPicturesWrapper>
-                    {latestPictures.map((picture) => (
-                      <S.PictureThumbnail src={picture.imageUrl} alt="" key={picture.id} />
-                    ))}
-                  </S.LatestPicturesWrapper>
-                  <S.EditButton onClick={() => history.push(`${history.location.pathname}/gallery`)}>
-                    לצפייה בגלריית ההפגנה
-                  </S.EditButton>
-                </>
-              ) : (
-                <>
-                  <p>עדיין לא העלו תמונות להפגנה הזו.</p>
-                  <S.EditButton
-                    onClick={() => {
-                      store.userStore.setUserProtest(protest);
-                      history.push(
-                        store.userStore.user
-                          ? `/upload-image?returnUrl=${history.location.pathname}`
-                          : `/sign-up?returnUrl=/upload-image?returnUrl=${history.location.pathname}`
-                      );
-                    }}
-                  >
-                    היו ראשונים להעלות תמונה!
-                  </S.EditButton>
-                </>
-              )}
-            </S.SectionContainer>
-            <S.DatesAndSocial>
-              <S.SectionContainer>
-                <S.SectionTitle>
-                  <img src="/icons/clock.svg" alt="" />
-                  מועדי הפגנה קרובים
-                </S.SectionTitle>
-
-                <S.Dates>
-                  {futureDates.length > 0 ? (
-                    futureDates.map((dateTime) => (
-                      <S.DateCard key={dateTime.id}>
-                        <S.DateText>
-                          <h3 style={{ display: 'inline-block', margin: 0 }}>{utils.formatDate(dateTime.date)}</h3> - יום{' '}
-                          {utils.dateToDayOfWeek(dateTime.date)} בשעה {dateTime.time}
-                        </S.DateText>
-                      </S.DateCard>
-                    ))
-                  ) : (
-                    <S.DateCard>
-                      <h3>לא עודכנו מועדי הפגנה קרובים.</h3>
-                      <p>יודעים מתי ההפגנה הבאה? לחצו על הכפתור לעדכון!</p>
-                    </S.DateCard>
-                  )}
-                </S.Dates>
-                <S.EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון מועדי הפגנה</S.EditButton>
-              </S.SectionContainer>
-
-              <S.SectionContainer>
-                <S.SectionTitle>
-                  <ProtestCardIcon src="/icons/social.svg" alt="share icon" />
-                  ערוצי תקשורת
-                </S.SectionTitle>
-                {protest.whatsAppLink && (
-                  <ProtestCardGroupButton type="whatsapp" href={protest.whatsAppLink} target="_blank">
-                    הצטרפות לקבוצת הוואטסאפ
-                  </ProtestCardGroupButton>
-                )}
-                {protest.telegramLink && (
-                  <ProtestCardGroupButton type="telegram" href={protest.telegramLink} target="_blank">
-                    הצטרפות לקבוצת הטלגרם
-                  </ProtestCardGroupButton>
-                )}
-                {!protest.whatsAppLink && !protest.telegramLink && <p>להפגנה זו אין דרכי תקשורת.</p>}
-                <S.EditButton onClick={() => history.push(getEditButtonLink(user, protest))}>עדכון דרכי תקשורת</S.EditButton>
-              </S.SectionContainer>
-            </S.DatesAndSocial>
+            <ProtestDates history={history} latestPictures={latestPictures} userStore={user.userStore} />
+            <ProtestLatestPictures protest={protest} futureDates={futureDates} user={user} />
           </>
         )}
       </S.ProtestContainer>
