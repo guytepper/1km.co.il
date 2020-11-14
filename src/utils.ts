@@ -100,7 +100,7 @@ export function sortDateTimeList(dateTimeList) {
   if (!dateTimeList) {
     return null;
   }
-  return dateTimeList.sort((a, b) => new Date(a.date) - new Date(b.date));
+  return dateTimeList.sort((a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf());
 }
 
 export function getUpcomingDate(dateTimeList) {
