@@ -231,6 +231,7 @@ a:hover {
 #react-burger-menu-btn {
   width: inherit !important;
   left: unset !important;
+  height:30px !important;
 }
 
 /*
