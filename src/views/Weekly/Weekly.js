@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 import Helmet from 'react-helmet';
 import { useStore } from '../../stores';
 import { Link } from 'react-router-dom';
-import { Fade, Slide } from 'react-awesome-reveal';
+import { Fade } from 'react-awesome-reveal';
 import { Avatar } from 'antd';
 import { Button } from '../../components';
 import {
@@ -35,6 +35,8 @@ function Weekly() {
 
   useEffect(() => {
     liveStore.fetchEntries({ offset: 0 });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -47,9 +49,61 @@ function Weekly() {
       <HeroImage>
         <HeroImage.TextWrapper>
           <HeroImage.Title>יומן מחאה</HeroImage.Title>
-          <HeroImage.Subtitle>29-31.10.20</HeroImage.Subtitle>
         </HeroImage.TextWrapper>
       </HeroImage>
+      <WeeklySection
+        style={{ backgroundPosition: 'center' }}
+        className="weekly-section compact-feed-section"
+        imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
+      >
+        <div className="compact-feed-section-text">
+          <WeeklyHeader>פיד מחאה</WeeklyHeader>
+          <p>כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.</p>
+        </div>
+        <CompactLiveFeed>
+          {liveStore.entries.length > 0 &&
+            liveStore.entries.map((entry) => (
+              <CompactLiveFeed.Card key={entry.id}>
+                <CompactLiveFeed.Card.Image src={entry.imageUrl} />
+                <CompactLiveFeed.Card.Title style={{ height: '37.8px' }}>
+                  <TimeAgo datetime={entry.createdAt} locale="he" />
+                  {' ב'}
+                  {entry.protestName}
+                  {entry.cityName && `, ${entry.cityName}`}{' '}
+                </CompactLiveFeed.Card.Title>
+                <CompactLiveFeed.Card.Subtitle>
+                  {entry.uploaderName?.length > 1 && (
+                    <>
+                      <Avatar
+                        size={21}
+                        src={entry.userAvatar || 'https://1km.co.il/anonymousPofile.png'}
+                        style={{ marginLeft: 6 }}
+                      />
+                      {entry.uploaderName}
+                    </>
+                  )}
+                </CompactLiveFeed.Card.Subtitle>
+              </CompactLiveFeed.Card>
+            ))}
+          <Button style={{ width: 150, height: 112.5 }} onClick={() => history.push('/live')}>
+            לצפייה בפיד המלא
+          </Button>
+          {/* Empty div to add space in the end of the feed */}
+          <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
+        </CompactLiveFeed>
+        <div style={{ justifySelf: 'center' }}>
+          <Button
+            style={{ marginBottom: 10, backgroundImage: 'linear-gradient(to right, #76b852 0%, #8DC26F 51%, #76b852 100%)' }}
+            onClick={() =>
+              history.push(
+                store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`
+              )
+            }
+          >
+            הוספת תמונה לפיד
+          </Button>
+        </div>
+      </WeeklySection>
       <WeeklySection
         className="weekly-section"
         id="intro-section"
@@ -305,59 +359,7 @@ function Weekly() {
           ></ProtestImage>
         </div>
       </WeeklySection>
-      <WeeklySection
-        style={{ backgroundPosition: 'center' }}
-        className="weekly-section compact-feed-section"
-        imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604331499/weekend_pictures/cover_bg.jpg"
-      >
-        <div className="compact-feed-section-text">
-          <WeeklyHeader>פיד מחאה</WeeklyHeader>
-          <p>כל עדכון ותמונה שנשלח מתווסף לצפייה בזמן אמת בפיד המחאה.</p>
-        </div>
-        <CompactLiveFeed>
-          {liveStore.entries.length > 0 &&
-            liveStore.entries.map((entry) => (
-              <CompactLiveFeed.Card key={entry.id}>
-                <CompactLiveFeed.Card.Image src={entry.imageUrl} />
-                <CompactLiveFeed.Card.Title style={{ height: '37.8px' }}>
-                  <TimeAgo datetime={entry.createdAt} locale="he" />
-                  {' ב'}
-                  {entry.protestName}
-                  {entry.cityName && `, ${entry.cityName}`}{' '}
-                </CompactLiveFeed.Card.Title>
-                <CompactLiveFeed.Card.Subtitle>
-                  {entry.uploaderName?.length > 1 && (
-                    <>
-                      <Avatar
-                        size={21}
-                        src={entry.userAvatar || 'https://1km.co.il/anonymousPofile.png'}
-                        style={{ marginLeft: 6 }}
-                      />
-                      {entry.uploaderName}
-                    </>
-                  )}
-                </CompactLiveFeed.Card.Subtitle>
-              </CompactLiveFeed.Card>
-            ))}
-          <Button style={{ width: 150, height: 112.5 }} onClick={() => history.push('/live')}>
-            לצפייה בפיד המלא
-          </Button>
-          {/* Empty div to add space in the end of the feed */}
-          <div style={{ width: 25 }}></div> {/* Empty div to add space in the end of the feed */}
-        </CompactLiveFeed>
-        <div style={{ justifySelf: 'center' }}>
-          <Button
-            style={{ marginBottom: 10, backgroundImage: 'linear-gradient(to right, #76b852 0%, #8DC26F 51%, #76b852 100%)' }}
-            onClick={() =>
-              history.push(
-                store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`
-              )
-            }
-          >
-            הוספת תמונה לפיד
-          </Button>
-        </div>
-      </WeeklySection>
+
       <WeeklySection
         imageUrl="https://res.cloudinary.com/onekm/image/upload/v1604160754/protest_pictures/FueqajqQRbwyMMIaF5S3/2020-31-10/89kkGsmuFVVIkZdG5BSyO.jpg"
         className="weekly-section"

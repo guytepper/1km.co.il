@@ -326,12 +326,11 @@ export async function getLatestProtestPictures(protestId) {
   return pictureList;
 }
 
-export async function getPicturesForEvent({ protestId, date }) {
+export async function getPicturesForEvent({ protestId }) {
   const eventPictures = await firestore
     .collection('pictures')
     .where('protestId', '==', protestId)
-    // .where('eventDate', '==', date)
-    .orderBy('createdAt')
+    .orderBy('createdAt', 'desc')
     .get();
 
   const pictureList = eventPictures.docs.map((picture) => ({ ...picture.data(), id: picture.id }));
