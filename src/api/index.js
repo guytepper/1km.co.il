@@ -1,6 +1,5 @@
 import firebase, { firestore, storage } from '../firebase';
 import * as geofirestore from 'geofirestore';
-import { nanoid } from 'nanoid';
 import { calculateDistance } from '../utils';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
@@ -166,38 +165,16 @@ export async function saveUserInFirestore(userData) {
   if (userDoc.exists) {
     return { ...userDoc, exists: true };
   } else {
-    const { pictureUrl } = userData;
-    const filename = `${nanoid()}.jpeg`;
-    const profilePicsRef = storage.child('profile_pics/' + filename);
-
-    return fetch(pictureUrl)
-      .then((res) => {
-        return res.blob();
-      })
-      .then((blob) => {
-        // Upload blob to firebase storage
-        return profilePicsRef
-          .put(blob)
-          .then(function (snapshot) {
-            const url = snapshot.ref.getDownloadURL();
-            return url;
-          })
-          .then((pictureUrl) => {
-            const { uid, first_name: initialFirst, last_name: initialLast, displayName } = userData;
-            const updatedUserObject = {
-              uid,
-              initialFirst,
-              initialLast,
-              displayName,
-              pictureUrl,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            return userRef.set(updatedUserObject).then(() => updatedUserObject);
-          });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const { uid, first_name: initialFirst, last_name: initialLast, displayName, pictureUrl } = userData;
+    const updatedUserObject = {
+      uid,
+      initialFirst,
+      initialLast,
+      displayName,
+      pictureUrl,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    return userRef.set(updatedUserObject).then(() => updatedUserObject);
   }
 }
 

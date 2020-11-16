@@ -14,7 +14,7 @@ admin.initializeApp();
 exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate(async (snap, context) => {
   // Grab the current value of what was written to Cloud Firestore.
   const pictureUrl = snap.data().pictureUrl;
-  const bucket = gcs.bucket('first-e91ca.appspot.com');
+  const bucket = gcs.bucket(procces.env.FIREBASE_STORAGE);
   const filename = `${nanoid()}.jpeg`;
   const filePath = `profile_pics/${filename}`;
   const tempFilePath = path.join(os.tmpdir(), filename);
