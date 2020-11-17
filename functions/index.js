@@ -14,13 +14,13 @@ admin.initializeApp();
 exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate(async (snap, context) => {
   // Grab the current value of what was written to Cloud Firestore.
   const pictureUrl = snap.data().pictureUrl;
-  const bucket = gcs.bucket(procces.env.FIREBASE_STORAGE);
+  const bucket = gcs.bucket(process.env.FIREBASE_STORAGE);
   const filename = `${nanoid()}.jpeg`;
   const filePath = `profile_pics/${filename}`;
   const tempFilePath = path.join(os.tmpdir(), filename);
 
   try {
-    //downloading the image
+   // Download the image
     const img = await fetch(pictureUrl);
     const imgBlob = img.body;
     const fileStream = fs.createWriteStream(tempFilePath);
@@ -31,7 +31,7 @@ exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate(
         reject(pictureUrl);
       });
 
-      //uploading the image to google cloud
+      // Upload the image to our storage 
       fileStream.on('finish', async () => {
         const file = await bucket.upload(tempFilePath, {
           destination: filePath,
