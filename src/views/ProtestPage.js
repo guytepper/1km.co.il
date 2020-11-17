@@ -78,7 +78,15 @@ function useFetchProtest() {
 
 function getFutureDates(dateTimeList) {
   if (dateTimeList?.length) {
-    return dateTimeList.filter((dateTime) => new Date(dateTime.date) >= new Date());
+    return dateTimeList.filter((dateTime) => {
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+
+      const protestDate = new Date(dateTime.date);
+      const protestDay = new Date(Date.UTC(protestDate.getUTCFullYear(), protestDate.getUTCMonth(), protestDate.getUTCDate()));
+
+      return protestDay >= today;
+    });
   }
   return [];
 }
@@ -91,6 +99,7 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
   const { coordinates, displayName, streetAddress, notes, dateTimeList } = protest;
   const [latestPictures, setLatestPictures] = useState([]);
   const galleryMatch = useRouteMatch('/protest/:id/gallery');
+  const galleryDateMatch = useRouteMatch('/protest/:id/gallery/:date');
   const store = useStore();
 
   useEffect(() => {
@@ -161,8 +170,8 @@ function ProtestPageContent({ protest, user, userCoordinates }) {
           </Details>
         </Info>
 
-        {galleryMatch?.isExact ? (
-          <PictureGallery protestId={protest.id} date={'2020-10-31'} />
+        {galleryMatch?.isExact || galleryDateMatch?.isExact ? (
+          <PictureGallery protestId={protest.id} />
         ) : (
           <>
             <SectionContainer style={{ marginTop: 20 }}>
@@ -315,8 +324,6 @@ function ProtestPage() {
 }
 
 export default observer(ProtestPage);
-
-//----------------- Styles -------------------------//
 
 const EditViewContainer = styled.div`
   width: 80%;

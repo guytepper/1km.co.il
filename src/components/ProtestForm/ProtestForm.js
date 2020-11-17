@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components/macro';
 import { Link } from 'react-router-dom';
-// import { ReCaptcha, loadReCaptcha } from 'react-recaptcha-v3';
 import PlacesAutocomplete from '../PlacesAutocomplete';
 import { useForm } from 'react-hook-form';
 import { Map, TileLayer, Marker } from 'react-leaflet';
@@ -41,14 +40,11 @@ function ProtestForm({
   const [streetAddressDefaultValue, setStreetAddressDefaultValue] = useState(defaultValues.streetAddress);
 
   // These two are separate so that onMoveEnd isn't called on every map move
-  // map center
   const [mapCenter, setMapCenter] = useState(coordinatesUpdater);
-  // position of marker
+  // Marker position
   const [markerPostion, setMarkerPosition] = useState(coordinatesUpdater);
 
   const [dateTimeList, setDateTimeList] = useState(defaultValues.dateTimeList || [{ id: 0, date: '2020-10-24', time: '17:30' }]);
-
-  // const [recaptchaToken, setRecaptchaToken] = useState('');
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitMessage, setSubmitMessage] = useState('');
   const [nearbyProtests, setNearbyProtests] = useState([]);
@@ -63,8 +59,7 @@ function ProtestForm({
     setStreetAddress('');
   }, [editMode, reset, setStreetAddress]);
 
-  // the two useEffects below this are in order to deal
-  // with the defaultValues and the places auto complete
+  // The two useEffects below this are in order to deal with the defaultValues & Places Autocomplete
   useEffect(() => {
     if (Object.keys(defaultValues).length > 0) {
       reset(defaultValues);
@@ -120,8 +115,6 @@ function ProtestForm({
         if (defaultValues.protestRef) {
           params.protestRef = defaultValues.protestRef;
         }
-
-        // params.recaptchaToken = recaptchaToken;
 
         let protest = await submitCallback(params);
 
@@ -204,7 +197,7 @@ function ProtestForm({
                   setMarkerPosition(newPosition);
                   setZoomLevel(t.target._zoom);
 
-                  // fetch protests on move end
+                  // Fetch protests on move end
                   if (mapCenter) {
                     const protests = await fetchNearbyProtests(mapCenter);
                     setNearbyProtests(protests);

@@ -128,7 +128,7 @@ CheckIn.TimeAgo = styled.span`
   }
 `;
 
-//*** With Me View ***//
+/** With Me View **/
 
 export const WithMe = styled.div`
   padding: 10px 25px;
