@@ -325,8 +325,6 @@ function ProtestPage() {
 
 export default observer(ProtestPage);
 
-//----------------- Styles -------------------------//
-
 const EditViewContainer = styled.div`
   width: 80%;
   max-width: 1000px;

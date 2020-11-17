@@ -1,0 +1,19 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "semi": "error",
+    "capitalized-comments": [
+      "error",
+      "always",
+      {
+        "ignorePattern": "import|export|const|if|useEffect",
+        "ignoreConsecutiveComments": true
+      }
+    ],
+    "spaced-comment": ["error", "always", { "exceptions": ["*"], "markers": ["*"] }],
+    "keyword-spacing": ["error", { "before": true }]
+  },
+  "globals": {
+    "cy": true
+  }
+}

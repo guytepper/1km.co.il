@@ -14,8 +14,7 @@ export default function PlacesAutocomplete({ setManualAddress, setStreetAddress,
     setValue,
   } = usePlacesAutocomplete({ debounce: 900, defaultValue });
 
-  // updates value when defaultValue changes
-  // happens on the admin page when choosing a protest
+  // Updates value when defaultValue changes (happens on the admin page when choosing a protest)
   useEffect(() => {
     setValue(defaultValue, false);
     clearSuggestions();
