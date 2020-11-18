@@ -26,7 +26,7 @@ function ProtestForm({
   editMode = null,
   isAdmin,
 }) {
-  let history = useHistory();
+  const history = useHistory();
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
@@ -87,7 +87,9 @@ function ProtestForm({
   }, [coordinatesUpdater]);
 
   const onCancel = () => {
-    history.goBack();
+    if (window.confirm('המידע שהזנת לא יישמר. לחזור אחורה?')) {
+      history.goBack();
+    }
   };
   const onSubmit = async (params) => {
     if (!editMode && !params.streetAddress) {
