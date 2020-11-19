@@ -3,15 +3,15 @@ import { UploadForm } from '../components';
 
 const routes = [
   {
-    path: ['/', '/weekly'],
-    component: Weekly,
-    key: 'WEEKLY',
+    path: ['/', '/map'],
+    component: ProtestMap,
+    key: 'PROTEST_MAP',
     exact: true,
   },
   {
-    path: '/map',
-    component: ProtestMap,
-    key: 'PROTEST_MAP',
+    path: ['/weekly'],
+    component: Weekly,
+    key: 'WEEKLY',
   },
   {
     path: '/admin',
