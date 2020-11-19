@@ -53,6 +53,7 @@ body {
   background-color: #f4f6fa;
   font-size: 16px;
   line-height: 1.35;
+  overflow-x: hidden;
 }
 
 a {

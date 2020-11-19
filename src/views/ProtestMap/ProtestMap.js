@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import { toJS } from 'mobx';
 import { observer } from 'mobx-react-lite';
 import { getCurrentPosition } from '../../utils';
 import { useStore } from '../../stores';
@@ -21,7 +22,7 @@ function ProtestMap() {
 
   // Fetch protests initially
   useEffect(() => {
-    if (protestStore.nearbyProtests.length === 0 && protestStore.state === 'pending') {
+    if (protestStore.nearbyProtests.length === 0) {
       protestStore.fetchProtests({ onlyMarkers: false });
     }
 
@@ -31,9 +32,13 @@ function ProtestMap() {
   // Ask for user location on map initial load
   useEffect(() => {
     const setCoordinates = async () => {
-      if (userCoordinates.length === 0) {
-        const coordinates = await getCurrentPosition();
-        store.setCoordinates(coordinates);
+      try {
+        if (userCoordinates.length === 0) {
+          const coordinates = await getCurrentPosition();
+          store.setCoordinates(coordinates);
+        }
+      } catch (err) {
+        alert('לא הצלחנו לאתר את המיקום.\nניתן להזין את המיקום ידנית :)');
       }
     };
 
@@ -41,7 +46,7 @@ function ProtestMap() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   return (
     <>
       <Helmet>
