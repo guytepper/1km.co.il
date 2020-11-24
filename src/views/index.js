@@ -5,7 +5,6 @@ export { default as Weekly } from './Weekly';
 export { default as PostView } from './PostView';
 export { default as AddProtest } from './AddProtest';
 export { default as SignUp } from './SignUp';
-export { default as Balfur } from './Balfur';
 export { default as LiveEvent } from './LiveEvent';
 export { default as Profile } from './Profile';
 export { default as FourOhFour } from './FourOhFour';

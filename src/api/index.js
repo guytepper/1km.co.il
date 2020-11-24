@@ -182,7 +182,7 @@ export async function setPhoneNumberForUser(uid, phoneNumber) {
   await firestore.collection('users').doc(uid).update({ phoneNumber });
 }
 
-// return true is the protest exist in the database
+// Check if the protest exist in the database
 export async function isProtestValid(protestId) {
   try {
     const doc = await firestore.collection('protests').doc(protestId).get();
@@ -201,7 +201,7 @@ export async function getUserFromRedirect() {
   const result = await firebase.auth().getRedirectResult();
 
   if (!result.user) {
-    // before redirect we don't have a user
+    // Before redirect we don't have a user
     return false;
   }
 
@@ -247,10 +247,11 @@ export function handleSignIn() {
   firebase.auth().signInWithRedirect(provider);
 }
 
-///////////////////////////////////////////////////////
-// functions to be used by the admin page
-// in order to show data and complete the process of
-// assigning the leader role on protests
+/**
+ * Functions to be used by the admin page in order to show data
+ * and complete the process of assigning the leader role on protests
+ **/
+
 export async function listLeaderRequests() {
   const leaderRequests = [];
   const snapshot = await firestore

@@ -119,7 +119,6 @@ const ComboboxInputWrapper = styled(ComboboxInput)`
   }
 `;
 
-/*1. z-index should be higher then 10000-(the input z-index)*/
 const LocationIcon = styled.img`
   z-index: 10001;
   top: 31px;
