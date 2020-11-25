@@ -6,7 +6,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.7.3",
-    "firebase": "^7.21.1",
+    "firebase": "7.24.0",
     "geofirestore": "^4.3.0",
     "geolib": "^3.3.1",
     "image-blob-reduce": "^2.0.0",

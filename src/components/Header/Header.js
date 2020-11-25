@@ -27,8 +27,8 @@ function Header() {
           customCrossIcon={false}
           disableAutoFocus
         >
-          <Link to="/weekly" onClick={() => setMenuState(false)} className="bm-item">
-            יומן
+          <Link to="/map" onClick={() => setMenuState(false)} className="bm-item">
+            מפת הפגנות
           </Link>
           <Link to="/live" onClick={() => setMenuState(false)} className="bm-item">
             פיד מחאה
@@ -39,9 +39,6 @@ function Header() {
             className="bm-item"
           >
             העלאת תמונה
-          </Link>
-          <Link to="/map" onClick={() => setMenuState(false)} className="bm-item">
-            מפת הפגנות
           </Link>
           <hr />
           <Link to="/about" onClick={() => setMenuState(false)}>
@@ -82,14 +79,8 @@ const HeaderWrapper = styled.header`
   align-items: center;
   padding: 5px 8px 5px 20px;
   grid-row: 1;
-  background: ${(props) => {
-    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
-    return '#fff';
-  }};
-  box-shadow: ${(props) => {
-    if (['/weekly', '/'].indexOf(props.path) > -1) return null;
-    return '#e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px';
-  }};
+  background: #fff;
+  box-shadow: #e1e4e8 0px -1px 0px inset, #00000026 0px 4px 5px -1px;
   z-index: 10;
 `;
 

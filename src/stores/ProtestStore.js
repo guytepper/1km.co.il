@@ -42,14 +42,18 @@ class ProtestStore {
     this.state = 'pending';
 
     try {
-      const protests = await fetchNearbyProtests(position || this.rootStore.userCoordinates);
-      if (!onlyMarkers) {
-        runInAction(() => {
-          this.nearbyProtests = protests;
-        });
+      const coordinates = position || this.rootStore.userCoordinates;
+      if (coordinates?.length === 2) {
+        const protests = await fetchNearbyProtests(coordinates);
+        if (!onlyMarkers) {
+          runInAction(() => {
+            this.nearbyProtests = protests;
+          });
+        }
+
+        this.rootStore.mapStore.updateMarkers(protests);
       }
 
-      this.rootStore.mapStore.updateMarkers(protests);
       runInAction(() => {
         this.state = 'done';
       });
