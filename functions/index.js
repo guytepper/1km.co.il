@@ -12,7 +12,21 @@ admin.initializeApp({
   databaseURL: databaseURL,
 });
 
-exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate(async (snap, context) => {
+/**
+ * Listens for new users added to /users/:userId/
+ * @param {object} snap - A data object that contains a snapshot of the data stored in the specified document..
+ * @param {boolean} context - The context in which an event occurred.
+ * @returns {Promise} Reference to the updated user document.
+ */
+exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate((snap, context) => {
+  return reuploadUserPicture(snap, context);
+});
+
+/**
+ * Reuploads the user profile picture to firebase storage and update the relevant user document in firestore.
+ * @returns {Promise} Reference to the updated user document.
+ */
+async function reuploadUserPicture(snap, context) {
   // Grab the current value of what was written to Cloud Firestore.
   const pictureUrl = snap.data().pictureUrl;
   const bucket = admin.storage().bucket();
@@ -48,4 +62,4 @@ exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate(
   } catch (error) {
     return new functions.https.HttpsError('cancelled', error);
   }
-});
+}

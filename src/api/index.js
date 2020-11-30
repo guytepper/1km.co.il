@@ -1,4 +1,4 @@
-import firebase, { firestore, storage } from '../firebase';
+import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
 import { calculateDistance } from '../utils';
 
