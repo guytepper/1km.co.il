@@ -28,6 +28,7 @@ if (process.env.NODE_ENV === 'development') {
   firebase.auth().useEmulator('http://localhost:9099/');
   firestore.useEmulator('localhost', 6001);
   firebase.functions().useEmulator('localhost', 5001);
+  realtimeDB.useEmulator("localhost", 9000);
 }
 
 export const provider = new firebase.auth.GoogleAuthProvider();
