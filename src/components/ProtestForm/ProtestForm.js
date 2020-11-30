@@ -283,7 +283,7 @@ function ProtestForm({
         </>
       )}
       <br />
-      <Button type="button" onClick={onCancel} color="#1ED96E">
+      <Button type="button" onClick={onCancel} color="tomato">
         ביטול
       </Button>
     </ProtestFormWrapper>
