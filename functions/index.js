@@ -57,9 +57,12 @@ async function reuploadUserPicture(snap, context) {
         resolve(file[0].metadata.mediaLink);
       });
     });
+
+    const updatedUser = await snap.ref.set({ pictureUrl: newPictureUrl }, { merge: true });
     functions.logger.log('Changed user picutre url', context.params.userId, newPictureUrl);
-    return snap.ref.set({ pictureUrl: newPictureUrl }, { merge: true });
+    return updatedUser;
   } catch (error) {
-    return new functions.https.HttpsError('cancelled', error);
+    functions.logger.log('Error updating user profile picture', error);
+    throw new functions.https.HttpsError('cancelled', error);
   }
 }
