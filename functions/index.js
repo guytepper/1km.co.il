@@ -15,7 +15,7 @@ admin.initializeApp({
 /**
  * Listens for new users added to /users/:userId/
  * @param {object} snap - A data object that contains a snapshot of the data stored in the specified document..
- * @param {boolean} context - The context in which an event occurred.
+ * @param {object} context - The context in which an event occurred.
  * @returns {Promise} Reference to the updated user document.
  */
 exports.onUserCreate = functions.firestore.document('/users/{userId}').onCreate((snap, context) => {
