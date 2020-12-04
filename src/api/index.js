@@ -228,15 +228,18 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 export function extractUserData(result) {
   const { uid, displayName } = result.user;
   let first_name, last_name, pictureUrl;
+  const isEmulator = result.additionalUserInfo.profile.picture.data ? false : true;
 
-  // The additinalUser.info.proifle keys are diffrent when using firebase authentication emulator
-  if (process.env.NODE_ENV === 'development') {
+  /* If isEmulator is True, that's mean we are using firebase authentication emulator and 
+     additinalUser.info.proifle keys are different when using it.
+  */
+  if (isEmulator) {
     [first_name, last_name] = result.additionalUserInfo.profile.name.split(' ');
     pictureUrl = result.additionalUserInfo.profile.picture;
   } else {
     first_name = result.additionalUserInfo.profile.first_name;
     last_name = result.additionalUserInfo.profile.last_name;
-    pictureUrl = result.additionalUserInfo.profile.data.url;
+    pictureUrl = result.additionalUserInfo.profile.picture.data.url;
   }
   const userData = {
     uid,
