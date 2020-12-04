@@ -230,8 +230,7 @@ export function extractUserData(result) {
   let first_name, last_name, pictureUrl;
   const isEmulator = result.additionalUserInfo.profile.picture.data ? false : true;
 
-  /* If isEmulator is True, that's mean we are using firebase authentication emulator and 
-     additinalUser.info.proifle keys are different when using it.
+  // In development mode we are using the authentication emulator; note that the additionalUserInfo.info.profile properties are different while using it.
   */
   if (isEmulator) {
     [first_name, last_name] = result.additionalUserInfo.profile.name.split(' ');
