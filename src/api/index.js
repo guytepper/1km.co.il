@@ -231,7 +231,6 @@ export function extractUserData(result) {
   const isEmulator = result.additionalUserInfo.profile.picture.data ? false : true;
 
   // In development mode we are using the authentication emulator; note that the additionalUserInfo.info.profile properties are different while using it.
-  */
   if (isEmulator) {
     [first_name, last_name] = result.additionalUserInfo.profile.name.split(' ');
     pictureUrl = result.additionalUserInfo.profile.picture;
