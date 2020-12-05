@@ -1,6 +1,5 @@
-import firebase, { firestore, storage } from '../firebase';
+import firebase, { firestore } from '../firebase';
 import * as geofirestore from 'geofirestore';
-import { nanoid } from 'nanoid';
 import { calculateDistance } from '../utils';
 
 const GeoFirestore = geofirestore.initializeApp(firestore);
@@ -166,38 +165,16 @@ export async function saveUserInFirestore(userData) {
   if (userDoc.exists) {
     return { ...userDoc, exists: true };
   } else {
-    const { pictureUrl } = userData;
-    const filename = `${nanoid()}.jpeg`;
-    const profilePicsRef = storage.child('profile_pics/' + filename);
-
-    return fetch(pictureUrl)
-      .then((res) => {
-        return res.blob();
-      })
-      .then((blob) => {
-        // Upload blob to firebase storage
-        return profilePicsRef
-          .put(blob)
-          .then(function (snapshot) {
-            const url = snapshot.ref.getDownloadURL();
-            return url;
-          })
-          .then((pictureUrl) => {
-            const { uid, first_name: initialFirst, last_name: initialLast, displayName } = userData;
-            const updatedUserObject = {
-              uid,
-              initialFirst,
-              initialLast,
-              displayName,
-              pictureUrl,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            };
-            return userRef.set(updatedUserObject).then(() => updatedUserObject);
-          });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    const { uid, first_name: initialFirst, last_name: initialLast, displayName, pictureUrl } = userData;
+    const updatedUserObject = {
+      uid,
+      initialFirst,
+      initialLast,
+      displayName,
+      pictureUrl,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    return userRef.set(updatedUserObject).then(() => updatedUserObject);
   }
 }
 
@@ -250,9 +227,19 @@ export async function sendProtestLeaderRequest(userData, phoneNumber, protestId)
 
 export function extractUserData(result) {
   const { uid, displayName } = result.user;
-  const { first_name, last_name, picture } = result.additionalUserInfo.profile;
-  const pictureUrl = picture.data.url;
+  let first_name, last_name, pictureUrl;
+  const isEmulator = result.additionalUserInfo.profile.picture.data ? false : true;
 
+  // In development mode we are using the authentication emulator; note that the additionalUserInfo.info.profile properties are different while using it.
+  */
+  if (isEmulator) {
+    [first_name, last_name] = result.additionalUserInfo.profile.name.split(' ');
+    pictureUrl = result.additionalUserInfo.profile.picture;
+  } else {
+    first_name = result.additionalUserInfo.profile.first_name;
+    last_name = result.additionalUserInfo.profile.last_name;
+    pictureUrl = result.additionalUserInfo.profile.picture.data.url;
+  }
   const userData = {
     uid,
     first_name,

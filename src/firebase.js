@@ -4,6 +4,7 @@ import 'firebase/storage';
 import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/analytics';
+import 'firebase/functions';
 
 const config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -23,12 +24,12 @@ export const storage = firebase.app().storage(process.env.REACT_APP_FIREBASE_CUS
 export const auth = firebase.auth();
 export const analytics = firebase.analytics();
 
-// if (process.env.NODE_ENV === 'development') {
-//   firestore.settings({
-//     host: 'localhost:6001',
-//     ssl: false,
-//   });
-// }
+if (process.env.NODE_ENV === 'development') {
+  firebase.auth().useEmulator('http://localhost:9099/');
+  firestore.useEmulator('localhost', 6001);
+  firebase.functions().useEmulator('localhost', 5001);
+  realtimeDB.useEmulator("localhost", 9000);
+}
 
 export const provider = new firebase.auth.GoogleAuthProvider();
 export const signInWithGoogle = () => auth.signInWithPopup(provider);
