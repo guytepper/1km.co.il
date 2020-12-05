@@ -39,12 +39,7 @@ function getEditButtonLink(user, protest) {
     return editRoute;
   }
 
-  if (isVisitor(user)) {
-    // Sign up before redirected to leader request
-    return `/sign-up?returnUrl=${editRoute}`;
-  }
-
-  throw new Error(`couldn't find route`);
+  return `/sign-up?returnUrl=${editRoute}`;
 }
 
 async function _fetchProtest(id, setProtest) {
