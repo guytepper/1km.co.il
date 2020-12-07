@@ -9,6 +9,7 @@ import { validateLatLng, isValidUrl } from '../../utils';
 import { fetchNearbyProtests } from '../../api';
 import L from 'leaflet';
 import DateTimeList from '../DateTimeList';
+import { useHistory } from 'react-router-dom';
 
 const protestMarker = new L.Icon({
   iconUrl: '/icons/fist.svg',
@@ -25,6 +26,7 @@ function ProtestForm({
   editMode = null,
   isAdmin,
 }) {
+  const history = useHistory();
   const coordinatesUpdater = useCallback(() => {
     let initialState = [31.7749837, 35.219797];
     if (validateLatLng(initialCoords)) initialState = initialCoords;
@@ -84,6 +86,11 @@ function ProtestForm({
     nearbyProtests();
   }, [coordinatesUpdater]);
 
+  const onCancel = () => {
+    if (window.confirm('המידע שהזנת לא יישמר. לחזור אחורה?')) {
+      history.goBack();
+    }
+  };
   const onSubmit = async (params) => {
     if (!editMode && !params.streetAddress) {
       alert('אנא הזינו את כתובת ההפגנה');
@@ -275,6 +282,10 @@ function ProtestForm({
           )}
         </>
       )}
+      <br />
+      <Button type="button" onClick={onCancel} color="tomato">
+        ביטול
+      </Button>
     </ProtestFormWrapper>
   );
 }
