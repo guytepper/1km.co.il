@@ -383,17 +383,6 @@ function Weekly() {
         </div>
       </WeeklySection>
       <footer className="weekly-footer">
-        <div style={{ fontSize: 17, marginBottom: 20 }}>
-          <p>קילומטר אחד הוא פרוייקט ללא מטרות רווח.</p>
-          <p>
-            במידה ואתם מעוניינים לתרום לנו, <Link to="/donate">לחצו כאן.</Link>
-          </p>
-          <p style={{ marginTop: 10 }}>
-            לפידבק ופניות בכל נושא שהוא ניתן לשלוח מייל אל
-            <br />
-            <a href="mailto:support@1km.zendesk.com">support@1km.zendesk.com</a>
-          </p>
-        </div>
         <p>
           תודה ל-
           <a href="https://alefalefalef.co.il/" target="_blank" rel="noreferrer">
