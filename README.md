@@ -12,33 +12,25 @@ Fighting for democracy in Israel.<br>
 
 <p align="center">
  <a href="#"><img src="https://img.shields.io/github/contributors/guytepper/1km.co.il" /></a>
- <a href="https://github.com/guytepper/1km.co.il/issues?q=is%3Aissue+is%3Aopen+label%3A%22up+for+grabs%22"><img src="https://img.shields.io/github/issues/guytepper/1km.co.il/up%20for%20grabs?color=%57ce22&label=up%20for%20grabs" alt="Up for grabs issues" /></a>
-<a href="https://discord.gg/VuzxwKN"><img src="https://img.shields.io/discord/761593399391420467?logo=discord" alt="Chat on Discord"></a>
 <a href="#"><img src="https://img.shields.io/github/workflow/status/guytepper/1km.co.il/Deploy%20to%20Firebase%20Hosting%20on%20merge"></a>
 </p>
 <hr/>
 
-
-<p align="center" color="red">
-<b> We are looking for maintainers to help lead the project, <br/>see <a href="https://github.com/guytepper/1km.co.il/issues/202">#202</a> for details.</b>
-</p>
-
 <hr/>
 
-## Welcome to 1km
+> During Israel's 2nd lockdown, the goverment has passed a bill to prevent citizens from protesting more than 1 km from their homes. This happend just in time a huge protest movement have spread across the country.
 
-The original goal of 1 Kilometer was to provide a solution to help find local protests during Israel's 2nd lockdown, which limited the protesting radius to 1km from your home.  
-Since then the project grew bigger, and now our goal is to serve as the virual homepage for the protest movement in Israel. 
+> 1km.co.il was created to encourage citizens not to keep quiet despite this restriction - and go protest with their local community, their neighbours.
 
-**Want to help?** Check out our [up for grabs](https://github.com/guytepper/1km.co.il/issues?q=is%3Aissue+is%3Aopen+label%3A%22up+for+grabs%22) list, fork the repo and submit a PR!  
-We welcome anyone, and would appreciate any help. 
-If you have an installation issues, got a question or just want to chat, join our [discord channel](https://discord.gg/VuzxwKN) :)
+> More than 250,000 people used the website to find a local protest. More than 20 people from various of fields - developers, designers, project managers and social media specialists contributed their knowledge for the project success.
+
+> The impact of the project inpsired more inicatives come to life - such as ["Cleaning the Shores"](https://menakim-et-hahof.web.app/) map and
 
 ## Introduction
 
 - A solid knowledge of (and a desire to) React is recommended before dwelling into the code.
 - [Firebase](https://firebase.google.com/) is here to keep our the data and host our assets.
-- [MobX](https://mobx.js.org/README.html) ensures we have a single source of truth - not so obvious these days.   
+- [MobX](https://mobx.js.org/README.html) ensures we have a single source of truth - not so obvious these days.
 - We color our protest signs with [`styled-components`](https://styled-components.com/).
 
 ## Installation
@@ -47,7 +39,4 @@ If you have an installation issues, got a question or just want to chat, join ou
 - Install dependencies using `yarn install`
 - Run `yarn start` and start coding!
 
-> If you need to use Facebook Authentication / Google Maps API in the project, reach out to me (@guytepper) via our [discord channel](https://discord.gg/VuzxwKN) and I'll grant you permissions. 
-
-
-
+> If you need to use Facebook Authentication / Google Maps API in the project, reach out to me (@guytepper) via our [discord channel](https://discord.gg/VuzxwKN) and I'll grant you permissions.
