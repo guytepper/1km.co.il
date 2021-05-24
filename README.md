@@ -26,5 +26,3 @@
 - Fork the repository.
 - Install dependencies using `yarn install`
 - Run `yarn start` and start coding!
-
-> If you need to use Facebook Authentication / Google Maps API in the project, reach out to me (@guytepper) via our [discord channel](https://discord.gg/VuzxwKN) and I'll grant you permissions.
