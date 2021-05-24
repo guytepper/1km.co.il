@@ -18,13 +18,11 @@ Fighting for democracy in Israel.<br>
 
 <hr/>
 
-> During Israel's 2nd lockdown, the goverment has passed a bill to prevent citizens from protesting more than 1 km from their homes. This happened right as a nation-wide protest movement had spread across the country.
-
-> 1km.co.il was created to encourage citizens not to keep quiet despite this restriction - and go protest with their local community, their neighbours.
-
-> More than 250,000 people used the website to find a local protest. More than 20 people from various of fields - developers, designers, project managers and social media specialists contributed their knowledge for the project success.
-
-> The impact of the project inpsired more inicatives come to life - such as ["Cleaning the Shores"](https://menakim-et-hahof.web.app/) map and
+> During Israel's second lockdown, the parliament [passed a bill](https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Israel#Protests) to prevent citizens from protesting more than 1km from their homes. This happened right as a nation-wide protest movement had spread across the country.
+>
+> 1km.co.il was created to encourage citizens to protest in their neighborhoods, despite the undemocratic restrictions.
+>
+> Over 20 contributors from various fields - developers, designers, project managers and social media specialists - made it possible for more than 250,000 people to find a protest near their home.
 
 ## Introduction
 
