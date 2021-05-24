@@ -6,10 +6,6 @@
   <a href="https://1km.co.il">One Kilometer</a>
 </h3>
 
-<p align="center">
-Fighting for democracy in Israel.<br>
-</p>
-
 <hr/>
 
 > During Israel's second lockdown, the parliament [passed a bill](https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Israel#Protests) to prevent citizens from protesting more than 1km from their homes. This happened right as a nation-wide protest movement had spread across the country.
