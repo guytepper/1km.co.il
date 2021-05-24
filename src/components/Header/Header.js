@@ -27,36 +27,10 @@ function Header() {
           customCrossIcon={false}
           disableAutoFocus
         >
-          <Link to="/map" onClick={() => setMenuState(false)} className="bm-item">
-            מפת הפגנות
-          </Link>
-          <Link to="/live" onClick={() => setMenuState(false)} className="bm-item">
-            פיד מחאה
-          </Link>
-          <Link
-            to={store.userStore.user ? '/upload-image?returnUrl=/live' : `/sign-up?returnUrl=/upload-image?returnUrl=/live`}
-            onClick={() => setMenuState(false)}
-            className="bm-item"
-          >
-            העלאת תמונה
-          </Link>
-          <hr />
           <Link to="/about" onClick={() => setMenuState(false)}>
             על הפרוייקט
           </Link>
-          <Link to="/donate" onClick={() => setMenuState(false)}>
-            תרומה
-          </Link>
-          <hr />
-          <a href="https://www.facebook.com/1km.co.il" target="_blank" rel="noreferrer noopener">
-            פייסבוק
-          </a>
-          <a href="https://twitter.com/1kmcoil" target="_blank" rel="noreferrer noopener">
-            טוויטר
-          </a>
-          <a href="https://www.instagram.com/1km.co.il/" target="_blank" rel="noreferrer noopener">
-            אינסטגרם
-          </a>
+
           <a href="https://github.com/guytepper/1km.co.il" target="_blank" rel="noreferrer noopener">
             קוד פתוח
           </a>

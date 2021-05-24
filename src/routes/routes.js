@@ -43,7 +43,7 @@ const routes = [
     component: UploadForm,
     key: 'UPLOAD_FORM',
   },
-  { path: ['/about', '/donate', '/project-updates/:slug', '/legal-notice'], component: PostView, key: 'POST_VIEW' },
+  { path: ['/about', '/project-updates/:slug', '/legal-notice'], component: PostView, key: 'POST_VIEW' },
 ];
 
 export default routes;
