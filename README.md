@@ -23,6 +23,6 @@
 
 ## Installation
 
-- Fork the repository.
+- Fork the repository
 - Install dependencies using `yarn install`
 - Run `yarn start` and start coding!
