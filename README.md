@@ -16,10 +16,10 @@
 
 ## Introduction
 
-- A solid knowledge of (and a desire to) React is recommended before dwelling into the code.
-- [Firebase](https://firebase.google.com/) is here to keep our the data and host our assets.
-- [MobX](https://mobx.js.org/README.html) ensures we have a single source of truth - not so obvious these days.
-- We color our protest signs with [`styled-components`](https://styled-components.com/).
+- A solid knowledge of (and a desire to) React is recommended before dwelling into the code
+- [Firebase](https://firebase.google.com/) is here to keep our the data and host our assets
+- [MobX](https://mobx.js.org/README.html) ensures we have a single source of truth - not so obvious these days
+- We color our protest signs with [`styled-components`](https://styled-components.com/)
 
 ## Installation
 
