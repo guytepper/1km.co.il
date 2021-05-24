@@ -18,7 +18,7 @@ Fighting for democracy in Israel.<br>
 
 <hr/>
 
-> During Israel's 2nd lockdown, the goverment has passed a bill to prevent citizens from protesting more than 1 km from their homes. This happend just in time a huge protest movement have spread across the country.
+> During Israel's 2nd lockdown, the goverment has passed a bill to prevent citizens from protesting more than 1 km from their homes. This happened right as a nation-wide protest movement had spread across the country.
 
 > 1km.co.il was created to encourage citizens not to keep quiet despite this restriction - and go protest with their local community, their neighbours.
 
