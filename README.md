@@ -10,12 +10,6 @@
 Fighting for democracy in Israel.<br>
 </p>
 
-<p align="center">
- <a href="#"><img src="https://img.shields.io/github/contributors/guytepper/1km.co.il" /></a>
-<a href="#"><img src="https://img.shields.io/github/workflow/status/guytepper/1km.co.il/Deploy%20to%20Firebase%20Hosting%20on%20merge"></a>
-</p>
-<hr/>
-
 <hr/>
 
 > During Israel's second lockdown, the parliament [passed a bill](https://en.wikipedia.org/wiki/COVID-19_pandemic_in_Israel#Protests) to prevent citizens from protesting more than 1km from their homes. This happened right as a nation-wide protest movement had spread across the country.
